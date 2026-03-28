@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-grid {
+    background-size: 60px 60px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #fff 0%, #fff 50%, #FFEA00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-10 py-5 font-bold uppercase tracking-[1.5px] text-[0.85rem] inline-flex items-center gap-3 rounded cursor-pointer transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply bg-axim-gold text-black border border-axim-gold shadow-[0_10px_20px_-10px_rgba(255,234,0,0.3)] hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(255,234,0,0.5)] hover:bg-white hover:border-white;
+  }
+  
+  .btn-outline {
+    @apply border border-active text-white backdrop-blur-[10px] hover:bg-white/5 hover:border-white hover:-translate-y-1;
+  }
+
+  .section-label {
+    @apply font-mono text-axim-purple text-[0.8rem] tracking-[4px] uppercase block mb-3;
+  }
+
+  .section-title {
+    @apply text-[clamp(2rem,5vw,3.5rem)] font-black uppercase m-0 mb-[60px] tracking-[-0.02em];
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+
+@keyframes aximScroll { 
+  0% { transform: translateX(0); } 
+  100% { transform: translateX(-50%); } 
+}
+
+.animate-marquee {
+  animation: aximScroll 40s linear infinite;
+}
