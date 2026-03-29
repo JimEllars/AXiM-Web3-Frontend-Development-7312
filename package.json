@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --sourcemap false",
+    "build": "node fix-css.cjs && vite build --sourcemap false",
+    "postinstall": "node fix-css.cjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
