@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { useAximAuth } from '../hooks/useAximAuth';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import { ConnectButton } from "thirdweb/react";
+import { client } from "../lib/thirdweb-client";
+import { sepolia } from "thirdweb/chains";
 
 const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings } = LuIcons;
 
@@ -14,8 +17,21 @@ export default function Profile() {
   if (!account) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
+        <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <SafeIcon icon={LuUser} className="w-10 h-10 text-axim-gold opacity-50" />
+        </div>
         <h2 className="text-2xl font-black uppercase mb-4">Identity Required</h2>
         <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Connect your Web3 identity to access secure profile data.</p>
+        <div className="flex justify-center scale-110 origin-center mb-8">
+          <ConnectButton
+            client={client}
+            accountAbstraction={{ chain: sepolia, sponsorGas: true }}
+            theme="dark"
+          />
+        </div>
+        <div className="p-4 bg-white/5 border border-white/10 font-mono text-[10px] text-zinc-600 uppercase">
+          Status: Await_Handshake // Error: 0xAUTH_REQ
+        </div>
       </div>
     );
   }
