@@ -28,7 +28,7 @@ export const localStore = {
   saveLetter: (userId, letterData) => {
     const letters = JSON.parse(localStorage.getItem(STORAGE_KEYS.LETTERS) || '[]');
     const newLetter = {
-      id: `AXM-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      id: `AXM-${crypto.randomUUID().toUpperCase()}`,
       user_id: userId,
       ...letterData,
       created_at: new Date().toISOString(),
