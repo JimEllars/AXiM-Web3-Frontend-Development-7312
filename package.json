@@ -8,7 +8,8 @@
     "build": "node fix-css.cjs && vite build --sourcemap false",
     "postinstall": "node fix-css.cjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vite-node src/components/GovernanceVote.test.jsx && node --test src/pages/Dashboard.test.js && node --test src/lib/persistence.test.js"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.10.1",
@@ -30,15 +31,20 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
+    "global-jsdom": "^25.0.0",
     "globals": "^15.9.0",
+    "jsdom": "^26.0.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-node": "^3.0.4"
   },
   "overrides": {
     "@emotion/react": "^11.13.3",
