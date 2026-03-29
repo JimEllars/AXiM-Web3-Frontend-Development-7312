@@ -167,6 +167,21 @@ export default function Assets() {
                   </div>
                 </div>
 
+                <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 mt-4">
+                  <h4 className="text-[0.6rem] font-mono text-axim-gold uppercase tracking-[0.2em] mb-3">RWA Fractionalization</h4>
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <div className="text-sm font-bold text-white">100 AXM <span className="text-zinc-500 text-xs font-normal">/ Share</span></div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-mono text-axim-green">Available: 420 Shares</div>
+                    </div>
+                  </div>
+                  <button className="w-full py-3 bg-axim-gold/20 text-axim-gold border border-axim-gold font-black uppercase text-xs tracking-widest hover:bg-axim-gold hover:text-black transition-colors">
+                    Acquire Fractional Share
+                  </button>
+                </div>
+
                 <button className="w-full py-5 bg-white text-black font-black uppercase text-sm tracking-widest hover:bg-axim-gold transition-colors">
                   Access Real-time Monitoring
                 </button>
