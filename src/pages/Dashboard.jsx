@@ -78,7 +78,8 @@ export default function Dashboard() {
               .limit(5);
               
             if (cloudData) {
-              const combined = [...cloudData, ...localData.filter(l => !cloudData.find(c => c.recipient === l.recipient))];
+              const cloudRecipients = new Set(cloudData.map(c => c.recipient));
+              const combined = [...cloudData, ...localData.filter(l => !cloudRecipients.has(l.recipient))];
               setRecentLetters(combined.slice(0, 5));
             } else {
               setRecentLetters(localData);
