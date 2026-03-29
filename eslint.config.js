@@ -7,14 +7,18 @@ export default [
   { ignores: ['dist'] },
   js.configs.recommended,
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx,cjs}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
         ...globals.browser,
         ...globals.node,
         React: true,
-        JSX: true
+        JSX: true,
+        __dirname: true,
+        console: true,
+        require: true,
+        module: true
       },
       parserOptions: {
         ecmaFeatures: {

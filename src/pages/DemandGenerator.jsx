@@ -62,8 +62,7 @@ export default function DemandGenerator() {
       setStep(3);
     } catch (err) {
       console.error(err);
-      // Even if cloud fails, we saved locally in Step 2 if we move it up, 
-      // but for now let's just show the error or fallback.
+      setError("Failed to synchronize draft with cloud. Saved locally.");
       localStore.saveLetter(profile.id, letterPayload);
       setStep(3);
     } finally {
@@ -73,6 +72,13 @@ export default function DemandGenerator() {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-20 relative z-10">
+      {error && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 font-mono text-sm flex items-center gap-3 rounded">
+          <SafeIcon icon={LuAlertCircle} className="w-5 h-5 flex-shrink-0" />
+          <p>{error}</p>
+        </div>
+      )}
+
       <div className="mb-12 text-center">
         <span className="section-label">Legal Infrastructure</span>
         <h1 className="text-4xl font-black uppercase mb-4 tracking-tight">Drafting Engine</h1>
@@ -126,11 +132,11 @@ export default function DemandGenerator() {
                 <textarea rows={5} value={formData.details} onChange={(e) => setFormData({ ...formData, details: e.target.value })} placeholder="Describe the breach or unpaid obligation..." className="w-full bg-white/5 border border-white/10 p-5 focus:border-axim-gold outline-none transition-all text-white placeholder:text-zinc-800" />
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={() => setStep(1)} className="flex-1 py-5 border border-white/10 text-white font-bold uppercase text-xs tracking-widest hover:bg-white/5">
+                <button onClick={() => setStep(1)} className="flex-1 py-5 border border-white/10 text-white font-bold uppercase text-xs tracking-widest hover:bg-white/5 disabled:opacity-50" disabled={isSaving}>
                   <SafeIcon icon={LuArrowLeft} className="inline mr-2" /> Back
                 </button>
                 <button onClick={handleFinalize} disabled={!formData.amount || !formData.details || isSaving} className="flex-[2] py-5 bg-axim-gold text-black font-black uppercase text-sm tracking-widest hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2" >
-                  {isSaving ? <SafeIcon icon={LuLoader2} className="animate-spin" /> : 'Synchronize Draft'}
+                  {isSaving ? <><SafeIcon icon={LuLoader2} className="animate-spin" /> SYNCHRONIZING...</> : 'Synchronize Draft'}
                 </button>
               </div>
             </div>
