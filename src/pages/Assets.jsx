@@ -54,6 +54,19 @@ const assets = [
 
 export default function Assets() {
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [sharesAvailable, setSharesAvailable] = useState({});
+  const [isAcquiring, setIsAcquiring] = useState(false);
+
+  const getShares = (assetId) => {
+    return sharesAvailable[assetId] !== undefined ? sharesAvailable[assetId] : 420;
+  };
+
+  const handleAcquireShare = (assetId) => {
+    setSharesAvailable(prev => ({
+      ...prev,
+      [assetId]: getShares(assetId) - 1
+    }));
+  };
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
@@ -174,16 +187,24 @@ export default function Assets() {
                       <div className="text-sm font-bold text-white">100 AXM <span className="text-zinc-500 text-xs font-normal">/ Share</span></div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-mono text-axim-green">Available: 420 Shares</div>
+                      <div className="text-xs font-mono text-axim-green">Available: {getShares(selectedAsset.id)} Shares</div>
                     </div>
                   </div>
                   <button
                     onClick={() => {
-                      alert(`Contract Interaction Initiated:\n\nMock transaction for 1 Share of ${selectedAsset.name} at 100 AXM.\n\n(Smart Contract binding coming soon)`);
+                      if (getShares(selectedAsset.id) <= 0 || isAcquiring) return;
+                      setIsAcquiring(true);
+
+                      setTimeout(() => {
+                        handleAcquireShare(selectedAsset.id);
+                        alert(`Contract Interaction Initiated:\n\nTransaction for 1 Share of ${selectedAsset.name} at 100 AXM successful.\n\nTX Hash: 0x${Math.random().toString(16).slice(2, 42)}`);
+                        setIsAcquiring(false);
+                      }, 1500);
                     }}
-                    className="w-full py-3 bg-axim-gold/20 text-axim-gold border border-axim-gold font-black uppercase text-xs tracking-widest hover:bg-axim-gold hover:text-black transition-colors"
+                    disabled={getShares(selectedAsset.id) <= 0 || isAcquiring}
+                    className={`w-full py-3 bg-axim-gold/20 text-axim-gold border border-axim-gold font-black uppercase text-xs tracking-widest transition-colors ${getShares(selectedAsset.id) <= 0 || isAcquiring ? 'opacity-50 cursor-not-allowed' : 'hover:bg-axim-gold hover:text-black'}`}
                   >
-                    Acquire Fractional Share
+                    {isAcquiring ? 'Awaiting Confirmation...' : (getShares(selectedAsset.id) <= 0 ? 'Fully Allocated' : 'Acquire Fractional Share')}
                   </button>
                 </div>
 
