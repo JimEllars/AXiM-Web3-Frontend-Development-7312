@@ -13,6 +13,46 @@ import { sepolia } from "thirdweb/chains";
 
 const { LuActivity, LuZap, LuShield, LuGlobe, LuCpu, LuLayers, LuClock, LuExternalLink, LuLock, LuDatabase } = LuIcons;
 
+function TelemetryBar({ label, color, initialValue }) {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setValue(prev => {
+        const diff = Math.floor(Math.random() * 5) - 2;
+        const next = prev + diff;
+        return Math.min(100, Math.max(0, next));
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const colorClass = color === 'axim-teal' ? 'text-axim-teal bg-axim-teal shadow-[0_0_10px_#00E5FF]' :
+                     color === 'axim-gold' ? 'text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]' :
+                     'text-axim-green bg-axim-green shadow-[0_0_10px_#00FF88]';
+
+  const textColor = color === 'axim-teal' ? 'text-axim-teal' :
+                    color === 'axim-gold' ? 'text-axim-gold' :
+                    'text-axim-green';
+
+  return (
+    <div>
+      <div className="flex justify-between text-[0.6rem] mb-2 uppercase">
+        <span>{label}</span>
+        <span className={textColor}>{value}%</span>
+      </div>
+      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: `${initialValue}%` }}
+          animate={{ width: `${value}%` }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className={`h-full ${colorClass.split(' ')[1]} ${colorClass.split(' ')[2]}`}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { account, profile, loading } = useAximAuth();
   const [selectedNode, setSelectedNode] = useState(null);
@@ -159,18 +199,9 @@ export default function Dashboard() {
               <SafeIcon icon={LuActivity} className="w-3 h-3 text-axim-teal" /> Global Telemetry
             </h4>
             <div className="space-y-6 relative z-10">
-              <div>
-                <div className="flex justify-between text-[0.6rem] mb-2 uppercase"><span>System Load</span><span className="text-axim-teal">42%</span></div>
-                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div initial={{ width: 0 }} animate={{ width: '42%' }} className="h-full bg-axim-teal shadow-[0_0_10px_#00E5FF]" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[0.6rem] mb-2 uppercase"><span>Grid Efficiency</span><span className="text-axim-gold">94%</span></div>
-                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div initial={{ width: 0 }} animate={{ width: '94%' }} className="h-full bg-axim-gold shadow-[0_0_10px_#FFEA00]" />
-                </div>
-              </div>
+              <TelemetryBar label="System Load" color="axim-teal" initialValue={42} />
+              <TelemetryBar label="Grid Efficiency" color="axim-gold" initialValue={94} />
+              <TelemetryBar label="Active Nodes Sync" color="axim-green" initialValue={88} />
             </div>
           </div>
           <AximTerminal />

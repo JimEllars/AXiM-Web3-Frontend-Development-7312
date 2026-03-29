@@ -177,7 +177,12 @@ export default function Assets() {
                       <div className="text-xs font-mono text-axim-green">Available: 420 Shares</div>
                     </div>
                   </div>
-                  <button className="w-full py-3 bg-axim-gold/20 text-axim-gold border border-axim-gold font-black uppercase text-xs tracking-widest hover:bg-axim-gold hover:text-black transition-colors">
+                  <button
+                    onClick={() => {
+                      alert(`Contract Interaction Initiated:\n\nMock transaction for 1 Share of ${selectedAsset.name} at 100 AXM.\n\n(Smart Contract binding coming soon)`);
+                    }}
+                    className="w-full py-3 bg-axim-gold/20 text-axim-gold border border-axim-gold font-black uppercase text-xs tracking-widest hover:bg-axim-gold hover:text-black transition-colors"
+                  >
                     Acquire Fractional Share
                   </button>
                 </div>
