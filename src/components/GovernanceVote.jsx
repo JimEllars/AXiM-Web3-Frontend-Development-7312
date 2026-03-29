@@ -7,15 +7,28 @@ const { LuVote, LuTrendingUp, LuUsers } = LuIcons;
 
 export default function GovernanceVote({ proposal }) {
   const [voted, setVoted] = useState(false);
+  const [isVotingFor, setIsVotingFor] = useState(false);
+  const [isVotingAgainst, setIsVotingAgainst] = useState(false);
   const [votes, setVotes] = useState({ for: 68, against: 32 });
 
   const handleVote = (type) => {
     if (voted) return;
-    setVoted(true);
-    setVotes(prev => ({
-      ...prev,
-      [type]: prev[type] + 1
-    }));
+
+    if (type === 'for') {
+      setIsVotingFor(true);
+    } else {
+      setIsVotingAgainst(true);
+    }
+
+    setTimeout(() => {
+      setVoted(true);
+      if (type === 'for') setIsVotingFor(false);
+      if (type === 'against') setIsVotingAgainst(false);
+      setVotes(prev => ({
+        ...prev,
+        [type]: prev[type] + 1
+      }));
+    }, 1000);
   };
 
   return (
@@ -63,17 +76,17 @@ export default function GovernanceVote({ proposal }) {
       <div className="flex gap-4">
         <button 
           onClick={() => handleVote('for')}
-          disabled={voted}
-          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted ? 'opacity-50 cursor-not-allowed' : 'border-axim-green text-axim-green hover:bg-axim-green hover:text-black'}`}
+          disabled={voted || isVotingFor || isVotingAgainst}
+          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted || isVotingFor || isVotingAgainst ? 'opacity-50 cursor-not-allowed' : ''} ${voted && !isVotingAgainst ? 'bg-axim-green text-black' : 'border-axim-green text-axim-green hover:bg-axim-green hover:text-black'}`}
         >
-          For
+          {isVotingFor ? 'Voting...' : (voted && !isVotingAgainst ? 'Voted For' : 'For')}
         </button>
         <button 
           onClick={() => handleVote('against')}
-          disabled={voted}
-          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted ? 'opacity-50 cursor-not-allowed' : 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'}`}
+          disabled={voted || isVotingFor || isVotingAgainst}
+          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted || isVotingFor || isVotingAgainst ? 'opacity-50 cursor-not-allowed' : ''} ${voted && isVotingAgainst ? 'bg-red-500 text-black border-red-500' : 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'}`}
         >
-          Against
+          {isVotingAgainst ? 'Voting...' : 'Against'}
         </button>
       </div>
 
