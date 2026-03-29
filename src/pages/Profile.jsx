@@ -12,7 +12,12 @@ const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings } = Lu
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center font-mono text-axim-gold">INITIALIZING_PROFILE...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex flex-col gap-4 items-center justify-center font-mono text-axim-gold">
+      <SafeIcon icon={LuUser} className="w-8 h-8 animate-pulse" />
+      <span>INITIALIZING_PROFILE...</span>
+    </div>
+  );
 
   if (!account) {
     return (
