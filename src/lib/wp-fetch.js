@@ -4,7 +4,8 @@
  */
 
 export async function getWordPressPost(slug) {
-  const url = import.meta.env.VITE_WORDPRESS_URL;
+  // Use import.meta.env in Vite, fallback to process.env for Node.js tests
+  const url = import.meta.env ? import.meta.env.VITE_WORDPRESS_URL : process.env.VITE_WORDPRESS_URL;
   if (!url) return null;
 
   try {
