@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 export default function NetworkTopology() {
@@ -14,6 +14,8 @@ export default function NetworkTopology() {
     [1, 2], [1, 3], [2, 4], [3, 5], [4, 5], [2, 3]
   ];
 
+  const nodeMap = useMemo(() => new Map(nodes.map(n => [n.id, n])), []);
+
   return (
     <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm overflow-hidden">
       <div className="absolute top-4 left-4 font-mono text-[10px] text-axim-gold opacity-50 uppercase">
@@ -23,8 +25,9 @@ export default function NetworkTopology() {
       <svg viewBox="0 0 100 100" className="w-full h-full">
         {/* Connection Lines */}
         {connections.map(([from, to], i) => {
-          const start = nodes.find(n => n.id === from);
-          const end = nodes.find(n => n.id === to);
+          const start = nodeMap.get(from);
+          const end = nodeMap.get(to);
+          if (!start || !end) return null;
           return (
             <motion.line
               key={`line-${i}`}
