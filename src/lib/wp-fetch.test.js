@@ -69,4 +69,27 @@ describe('getWordPressPost', () => {
     assert.strictEqual(result, null);
     assert.strictEqual(errorLogged, true);
   });
+
+  test('should return null and log error if json parsing fails', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+
+    global.fetch = async () => {
+      return {
+        json: async () => {
+          throw new Error('Invalid JSON');
+        }
+      };
+    };
+
+    let errorLogged = false;
+    console.error = (msg, err) => {
+      if (msg === 'WP Fetch Error:' && err.message === 'Invalid JSON') {
+        errorLogged = true;
+      }
+    };
+
+    const result = await getWordPressPost('fail-slug');
+    assert.strictEqual(result, null);
+    assert.strictEqual(errorLogged, true);
+  });
 });
