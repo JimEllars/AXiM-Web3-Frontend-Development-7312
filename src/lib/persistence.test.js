@@ -36,6 +36,11 @@ describe('localStore.getProfile', () => {
     assert.strictEqual(result, null);
   });
 
+  test('should return null when getProfile is called without arguments', () => {
+    const result = localStore.getProfile();
+    assert.strictEqual(result, null);
+  });
+
   test('should return null when address is empty string', () => {
     const result = localStore.getProfile('');
     assert.strictEqual(result, null);
