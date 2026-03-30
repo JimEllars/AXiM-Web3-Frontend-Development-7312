@@ -78,6 +78,15 @@ describe('localStore.getProfile', () => {
     const result = localStore.getProfile(address);
     assert.deepStrictEqual(result, existingProfile);
   });
+
+  test('should throw SyntaxError if localStorage contains invalid JSON', () => {
+    const address = '0x123';
+    localStorage.setItem('axm_local_profiles', 'invalid json data');
+
+    assert.throws(() => {
+      localStore.getProfile(address);
+    }, SyntaxError);
+  });
 });
 
 describe('localStore.saveLetter', () => {
@@ -128,6 +137,34 @@ describe('localStore.saveLetter', () => {
     // The letter added at index 5 should be the last one
     assert.strictEqual(storedLetters[49].title, 'Letter 5');
   });
+
+  test('should throw SyntaxError if localStorage contains invalid JSON for letters', () => {
+    const userId = 'user123';
+    localStorage.setItem('axm_local_letters', '{ invalid json ]');
+
+    assert.throws(() => {
+      localStore.saveLetter(userId, { title: 'Test Letter' });
+    }, SyntaxError);
+  });
+
+  test('should throw error if localStorage.setItem fails (e.g. QuotaExceededError)', () => {
+    const userId = 'user123';
+    const originalSetItem = localStorage.setItem;
+
+    // Mock QuotaExceededError
+    localStorage.setItem = () => {
+      throw new Error('QuotaExceededError');
+    };
+
+    try {
+      assert.throws(() => {
+        localStore.saveLetter(userId, { title: 'Test Letter' });
+      }, /QuotaExceededError/);
+    } finally {
+      // Restore setItem
+      localStorage.setItem = originalSetItem;
+    }
+  });
 });
 
 describe('localStore.getLetters', () => {
@@ -162,5 +199,12 @@ describe('localStore.getLetters', () => {
 
     const user3Letters = localStore.getLetters('user3');
     assert.deepStrictEqual(user3Letters, []);
+  });
+
+  test('should throw SyntaxError if localStorage contains invalid JSON for letters in getLetters', () => {
+    localStorage.setItem('axm_local_letters', 'not a json array');
+    assert.throws(() => {
+      localStore.getLetters('user123');
+    }, SyntaxError);
   });
 });
