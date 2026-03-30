@@ -64,12 +64,15 @@ const QUEST_THEME = {
 };
 
 export default function SDKWrapper() {
+  // Use import.meta.env in Vite, fallback to process.env for Node.js tests
+  const token = import.meta.env ? import.meta.env.VITE_QUEST_TOKEN : process.env.VITE_QUEST_TOKEN;
+
   return (
     <div className="max-w-[600px] mx-auto">
       <GetStarted
         questId="axim-early-access"
         userId="user_123" // In production, pass actual user ID
-        token="your_token"
+        token={token || ''}
         styleConfig={QUEST_THEME}
       />
     </div>
