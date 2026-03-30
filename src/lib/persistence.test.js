@@ -74,3 +74,88 @@ describe('localStore.getProfile', () => {
     assert.deepStrictEqual(result, existingProfile);
   });
 });
+
+describe('localStore.saveLetter', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test('should save a new letter with generated id, date and draft status', () => {
+    const userId = 'user123';
+    const letterData = { title: 'Test Letter', content: 'Hello World' };
+
+    const result = localStore.saveLetter(userId, letterData);
+
+    assert.ok(result);
+    assert.strictEqual(result.user_id, userId);
+    assert.strictEqual(result.title, 'Test Letter');
+    assert.strictEqual(result.content, 'Hello World');
+    assert.ok(result.id.startsWith('AXM-'));
+    assert.strictEqual(result.id, result.id.toUpperCase());
+    assert.strictEqual(result.status, 'draft');
+    assert.ok(result.created_at);
+
+    // Verify it was saved to localStorage
+    const storedLetters = JSON.parse(localStorage.getItem('axm_local_letters'));
+    assert.strictEqual(storedLetters.length, 1);
+    assert.deepStrictEqual(storedLetters[0], result);
+  });
+
+  test('should save a new letter with provided status', () => {
+    const userId = 'user123';
+    const letterData = { title: 'Test Letter', status: 'published' };
+
+    const result = localStore.saveLetter(userId, letterData);
+
+    assert.strictEqual(result.status, 'published');
+  });
+
+  test('should keep only the last 50 letters in localStorage', () => {
+    const userId = 'user123';
+    for (let i = 0; i < 55; i++) {
+      localStore.saveLetter(userId, { title: `Letter ${i}` });
+    }
+
+    const storedLetters = JSON.parse(localStorage.getItem('axm_local_letters'));
+    assert.strictEqual(storedLetters.length, 50);
+    // The most recently added letter (index 54) should be at the beginning of the array
+    assert.strictEqual(storedLetters[0].title, 'Letter 54');
+    // The letter added at index 5 should be the last one
+    assert.strictEqual(storedLetters[49].title, 'Letter 5');
+  });
+});
+
+describe('localStore.getLetters', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test('should return empty array if no letters exist', () => {
+    const result = localStore.getLetters('user123');
+    assert.deepStrictEqual(result, []);
+  });
+
+  test('should return only letters for the specified user', () => {
+    const user1 = 'user1';
+    const user2 = 'user2';
+
+    localStore.saveLetter(user1, { title: 'User 1 Letter A' });
+    localStore.saveLetter(user2, { title: 'User 2 Letter' });
+    localStore.saveLetter(user1, { title: 'User 1 Letter B' });
+
+    const user1Letters = localStore.getLetters(user1);
+    assert.strictEqual(user1Letters.length, 2);
+    assert.strictEqual(user1Letters[0].title, 'User 1 Letter B'); // Assuming unshift order
+    assert.strictEqual(user1Letters[1].title, 'User 1 Letter A');
+    assert.strictEqual(user1Letters[0].user_id, user1);
+    assert.strictEqual(user1Letters[1].user_id, user1);
+
+    const user2Letters = localStore.getLetters(user2);
+    assert.strictEqual(user2Letters.length, 1);
+    assert.strictEqual(user2Letters[0].title, 'User 2 Letter');
+    assert.strictEqual(user2Letters[0].user_id, user2);
+
+    const user3Letters = localStore.getLetters('user3');
+    assert.deepStrictEqual(user3Letters, []);
+  });
+});
