@@ -39,13 +39,25 @@ export async function getWordPressPost(slug) {
  * @param {number} limit - Number of posts to fetch
  * @returns {Promise<Array>} Array of mapped posts
  */
+export const fetchCache = new Map();
+
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = import.meta.env ? import.meta.env.VITE_WORDPRESS_REST_URL : process.env.VITE_WORDPRESS_REST_URL;
   const apiUrl = baseUrl || "https://axim.us.com/wp-json/wp/v2";
 
+  const cacheKey = `${categorySlug}-${limit}`;
+  if (fetchCache.has(cacheKey)) {
+    const cached = fetchCache.get(cacheKey);
+    // basic 5-minute cache
+    if (Date.now() - cached.timestamp < 300000) {
+      console.log(`[wp-fetch] Returning cached posts for '${categorySlug}'`);
+      return cached.data;
+    }
+  }
+
   try {
     // 1. Fetch category ID by slug
-    const catRes = await fetch(`${apiUrl}/categories?slug=${categorySlug}`);
+    const catRes = await fetch(`${apiUrl}/categories?slug=${categorySlug}`, { signal: AbortSignal.timeout(10000) });
     if (!catRes.ok) throw new Error(`Failed to fetch category: ${catRes.statusText}`);
     const categories = await catRes.json();
 
@@ -56,7 +68,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     const categoryId = categories[0].id;
 
     // 2. Fetch posts by category ID, ordered by date descending
-    const postsRes = await fetch(`${apiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed`);
+    const postsRes = await fetch(`${apiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
     if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
     const posts = await postsRes.json();
 
@@ -78,10 +90,18 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       };
     });
 
+    fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
+
     console.log(`[wp-fetch] Fetched ${mappedPosts.length} posts for category '${categorySlug}':`, mappedPosts);
     return mappedPosts;
   } catch (error) {
-    console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error);
+    console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
+
+    // Fallback to cache on error
+    if (fetchCache.has(cacheKey)) {
+      console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
+      return fetchCache.get(cacheKey).data;
+    }
     return [];
   }
 }
