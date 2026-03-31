@@ -90,6 +90,31 @@ describe('getWordPressPost', () => {
     }
   });
 
+  test('should return null and log error if fetch rejects', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+
+    const localOriginalFetch = global.fetch;
+    const localOriginalConsoleError = console.error;
+
+    try {
+      global.fetch = async () => Promise.reject(new Error('Rejected fetch error'));
+
+      let errorLogged = false;
+      console.error = (msg, err) => {
+        if (msg === 'WP Fetch Error:' && err.message === 'Rejected fetch error') {
+          errorLogged = true;
+        }
+      };
+
+      const result = await getWordPressPost('reject-slug');
+      assert.strictEqual(result, null);
+      assert.strictEqual(errorLogged, true);
+    } finally {
+      global.fetch = localOriginalFetch;
+      console.error = localOriginalConsoleError;
+    }
+  });
+
   test('should return null and log error if fetch returns a non-200 response with unparseable body', async () => {
     process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
 
