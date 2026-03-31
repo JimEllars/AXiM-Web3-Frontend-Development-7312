@@ -19,6 +19,14 @@ const localStorageMock = (() => {
   };
 })();
 
+describe('localStorageMock.removeItem', () => {
+  test('should successfully remove an item', () => {
+    localStorageMock.setItem('test_key', 'test_value');
+    localStorageMock.removeItem('test_key');
+    assert.strictEqual(localStorageMock.getItem('test_key'), null);
+  });
+});
+
 global.localStorage = localStorageMock;
 
 describe('localStore.getProfile', () => {
@@ -79,13 +87,38 @@ describe('localStore.getProfile', () => {
     assert.deepStrictEqual(result, existingProfile);
   });
 
-  test('should throw SyntaxError if localStorage contains invalid JSON', () => {
-    const address = '0x123';
+  test('should handle invalid JSON in localStorage gracefully by returning a new profile', () => {
+    const address = '0x1234567890abcdef1234567890abcdef12345678';
     localStorage.setItem('axm_local_profiles', 'invalid json data');
 
-    assert.throws(() => {
-      localStore.getProfile(address);
-    }, SyntaxError);
+    const result = localStore.getProfile(address);
+    assert.ok(result);
+    assert.strictEqual(result.wallet_address, address);
+    assert.strictEqual(result.id, `local-${address.slice(0, 8)}`);
+    assert.strictEqual(result.clearance_level, 1);
+  });
+
+  test('should handle non-object JSON in localStorage gracefully by returning a new profile', () => {
+    const address = '0x1234567890abcdef1234567890abcdef12345678';
+    localStorage.setItem('axm_local_profiles', '"string instead of object"');
+
+    const result = localStore.getProfile(address);
+    assert.ok(result);
+    assert.strictEqual(result.wallet_address, address);
+  });
+
+  test('should gracefully handle localStorage.setItem failure in getProfile', () => {
+    const address = '0x1234567890abcdef1234567890abcdef12345678';
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = () => { throw new Error('QuotaExceededError'); };
+
+    try {
+      const result = localStore.getProfile(address);
+      assert.ok(result);
+      assert.strictEqual(result.wallet_address, address);
+    } finally {
+      localStorage.setItem = originalSetItem;
+    }
   });
 });
 
@@ -138,16 +171,25 @@ describe('localStore.saveLetter', () => {
     assert.strictEqual(storedLetters[49].title, 'Letter 5');
   });
 
-  test('should throw SyntaxError if localStorage contains invalid JSON for letters', () => {
+  test('should gracefully handle invalid JSON for letters in localStorage by returning default empty list', () => {
     const userId = 'user123';
     localStorage.setItem('axm_local_letters', '{ invalid json ]');
 
-    assert.throws(() => {
-      localStore.saveLetter(userId, { title: 'Test Letter' });
-    }, SyntaxError);
+    const result = localStore.saveLetter(userId, { title: 'Test Letter' });
+    assert.ok(result);
+    assert.strictEqual(result.title, 'Test Letter');
   });
 
-  test('should throw error if localStorage.setItem fails (e.g. QuotaExceededError)', () => {
+  test('should gracefully handle non-array JSON for letters in localStorage', () => {
+    const userId = 'user123';
+    localStorage.setItem('axm_local_letters', '"string instead of array"');
+
+    const result = localStore.saveLetter(userId, { title: 'Test Letter' });
+    assert.ok(result);
+    assert.strictEqual(result.title, 'Test Letter');
+  });
+
+  test('should gracefully handle error if localStorage.setItem fails (e.g. QuotaExceededError)', () => {
     const userId = 'user123';
     const originalSetItem = localStorage.setItem;
 
@@ -157,13 +199,26 @@ describe('localStore.saveLetter', () => {
     };
 
     try {
-      assert.throws(() => {
-        localStore.saveLetter(userId, { title: 'Test Letter' });
-      }, /QuotaExceededError/);
+      const result = localStore.saveLetter(userId, { title: 'Test Letter' });
+      assert.ok(result);
+      assert.strictEqual(result.title, 'Test Letter');
     } finally {
       // Restore setItem
       localStorage.setItem = originalSetItem;
     }
+  });
+
+  test('should handle missing or null letterData gracefully by providing default empty object properties', () => {
+    const userId = 'user123';
+
+    // Test with missing status in letterData to verify default draft
+    const result = localStore.saveLetter(userId, { title: 'Another Letter' });
+    assert.strictEqual(result.status, 'draft');
+
+    // Passing null should be gracefully handled
+    const resultWithNull = localStore.saveLetter(userId, null);
+    assert.ok(resultWithNull);
+    assert.strictEqual(resultWithNull.status, 'draft');
   });
 });
 
@@ -201,10 +256,16 @@ describe('localStore.getLetters', () => {
     assert.deepStrictEqual(user3Letters, []);
   });
 
-  test('should throw SyntaxError if localStorage contains invalid JSON for letters in getLetters', () => {
+  test('should gracefully handle invalid JSON for letters in localStorage by returning empty array', () => {
     localStorage.setItem('axm_local_letters', 'not a json array');
-    assert.throws(() => {
-      localStore.getLetters('user123');
-    }, SyntaxError);
+    const result = localStore.getLetters('user123');
+    assert.deepStrictEqual(result, []);
+  });
+
+  test('should gracefully return empty array if the stored letters is not an array (e.g., an object)', () => {
+    const user1 = 'user1';
+    localStorage.setItem('axm_local_letters', JSON.stringify({ 'a': 1 }));
+    const result = localStore.getLetters(user1);
+    assert.deepStrictEqual(result, []);
   });
 });
