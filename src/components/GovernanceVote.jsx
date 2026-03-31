@@ -22,8 +22,6 @@ export default function GovernanceVote({ proposal }) {
 
     setTimeout(() => {
       setVoted(true);
-      if (type === 'for') setIsVotingFor(false);
-      if (type === 'against') setIsVotingAgainst(false);
       setVotes(prev => ({
         ...prev,
         [type]: prev[type] + 1
@@ -77,16 +75,16 @@ export default function GovernanceVote({ proposal }) {
         <button 
           onClick={() => handleVote('for')}
           disabled={voted || isVotingFor || isVotingAgainst}
-          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted || isVotingFor || isVotingAgainst ? 'opacity-50 cursor-not-allowed' : ''} ${voted && !isVotingAgainst ? 'bg-axim-green text-black' : 'border-axim-green text-axim-green hover:bg-axim-green hover:text-black'}`}
+          className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted || isVotingFor || isVotingAgainst ? 'opacity-50 cursor-not-allowed' : ''} ${voted && isVotingFor ? 'bg-axim-green text-black' : 'border-axim-green text-axim-green hover:bg-axim-green hover:text-black'}`}
         >
-          {isVotingFor ? 'Voting...' : (voted && !isVotingAgainst ? 'Voted For' : 'For')}
+          {isVotingFor && !voted ? 'Voting...' : (voted && isVotingFor ? 'Voted For' : 'For')}
         </button>
         <button 
           onClick={() => handleVote('against')}
           disabled={voted || isVotingFor || isVotingAgainst}
           className={`flex-1 py-3 border font-mono text-[0.65rem] uppercase tracking-widest transition-all ${voted || isVotingFor || isVotingAgainst ? 'opacity-50 cursor-not-allowed' : ''} ${voted && isVotingAgainst ? 'bg-red-500 text-black border-red-500' : 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'}`}
         >
-          {isVotingAgainst ? 'Voting...' : 'Against'}
+          {isVotingAgainst && !voted ? 'Voting...' : (voted && isVotingAgainst ? 'Voted Against' : 'Against')}
         </button>
       </div>
 

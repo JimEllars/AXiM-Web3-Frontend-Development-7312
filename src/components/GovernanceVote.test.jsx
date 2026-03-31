@@ -64,7 +64,7 @@ describe('GovernanceVote Component', () => {
     assert.strictEqual(againstButton.disabled, true);
 
     await waitFor(() => {
-      const votedAgainstButton = screen.getByRole('button', { name: /^against$/i });
+      const votedAgainstButton = screen.getByRole('button', { name: /voted against/i });
       assert.ok(votedAgainstButton);
       assert.strictEqual(votedAgainstButton.disabled, true);
       assert.strictEqual(forButton.disabled, true);
@@ -72,6 +72,52 @@ describe('GovernanceVote Component', () => {
       // Check if vote counts updated
       assert.ok(screen.getByText('68%'));
       assert.ok(screen.getByText('33%'));
+    }, { timeout: 1500 });
+  });
+
+  test('Buttons display the correct selected visual states after voting For', async () => {
+    render(<GovernanceVote proposal={mockProposal} />);
+
+    const forButton = screen.getByRole('button', { name: /^For$/i });
+    const againstButton = screen.getByRole('button', { name: /^Against$/i });
+
+    fireEvent.click(forButton);
+
+    await waitFor(() => {
+      // For button should turn solid green with black text
+      assert.ok(forButton.className.includes('bg-axim-green'));
+      assert.ok(forButton.className.includes('text-black'));
+
+      // Against button should become opaque
+      assert.ok(againstButton.className.includes('opacity-50'));
+      assert.ok(againstButton.className.includes('cursor-not-allowed'));
+      // It should NOT have bg-red-500, since it's unselected
+      assert.strictEqual(againstButton.className.includes('bg-red-500 text-black border-red-500'), false);
+    }, { timeout: 1500 });
+  });
+
+  test('Buttons display the correct selected visual states after voting Against', async () => {
+    render(<GovernanceVote proposal={mockProposal} />);
+
+    const againstButton = screen.getByRole('button', { name: /^Against$/i });
+    const forButton = screen.getByRole('button', { name: /^For$/i });
+
+    fireEvent.click(againstButton);
+
+    await waitFor(() => {
+      // Against button should turn solid red with black text
+      assert.ok(againstButton.className.includes('bg-red-500'));
+      assert.ok(againstButton.className.includes('text-black'));
+
+      // For button should become opaque
+      assert.ok(forButton.className.includes('opacity-50'));
+      assert.ok(forButton.className.includes('cursor-not-allowed'));
+      // It should NOT have bg-axim-green, since it's unselected
+      assert.strictEqual(forButton.className.includes('bg-axim-green text-black'), false);
+
+      // Check the button text changes correctly
+      const votedAgainstButton = screen.getByRole('button', { name: /voted against/i });
+      assert.ok(votedAgainstButton);
     }, { timeout: 1500 });
   });
 
