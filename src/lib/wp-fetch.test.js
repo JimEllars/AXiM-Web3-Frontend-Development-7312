@@ -1,6 +1,6 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
-import { getWordPressPost, fetchPostsByCategory } from './wp-fetch.js';
+import { getWordPressPost, fetchPostsByCategory, fetchCache } from './wp-fetch.js';
 
 describe('getWordPressPost', () => {
   let originalFetch;
@@ -212,6 +212,7 @@ describe('fetchPostsByCategory', () => {
     originalConsoleWarn = console.warn;
     originalConsoleLog = console.log;
     console.log = () => {}; // silence logs in tests
+    fetchCache.clear();
   });
 
   afterEach(() => {
