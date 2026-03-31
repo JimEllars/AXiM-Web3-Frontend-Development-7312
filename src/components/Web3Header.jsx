@@ -13,11 +13,10 @@ export default function Web3Header() {
   const account = useActiveAccount();
   
   const navLinks = [
-    { path: '/dashboard', label: 'Command' },
-    { path: '/assets', label: 'Assets' },
-    { path: '/protocols', label: 'Protocols' },
-    { path: '/generator', label: 'Legal' },
-    { path: '/blog', label: 'Intel' },
+    { path: '/articles', label: 'Articles' },
+    { path: '/courses', label: 'Courses' },
+    { path: '/documents', label: 'Documents' },
+    { path: '/more', label: 'More' },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
