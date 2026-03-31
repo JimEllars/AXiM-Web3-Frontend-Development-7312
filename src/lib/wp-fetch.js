@@ -43,7 +43,8 @@ export const fetchCache = new Map();
 
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = import.meta.env ? import.meta.env.VITE_WORDPRESS_REST_URL : process.env.VITE_WORDPRESS_REST_URL;
-  const apiUrl = baseUrl || "https://axim.us.com/wp-json/wp/v2";
+  // Ensure we use the environment variable if available, otherwise default to the new WordPress subdomain
+  const apiUrl = baseUrl || "https://wp.axim.us.com/wp-json/wp/v2";
 
   const cacheKey = `${categorySlug}-${limit}`;
   if (fetchCache.has(cacheKey)) {
