@@ -32,3 +32,56 @@ export async function getWordPressPost(slug) {
     return null;
   }
 }
+
+/**
+ * Fetch latest posts by category slug
+ * @param {string} categorySlug - The slug of the category (e.g., 'apps')
+ * @param {number} limit - Number of posts to fetch
+ * @returns {Promise<Array>} Array of mapped posts
+ */
+export async function fetchPostsByCategory(categorySlug, limit = 5) {
+  const baseUrl = import.meta.env ? import.meta.env.VITE_WORDPRESS_REST_URL : process.env.VITE_WORDPRESS_REST_URL;
+  const apiUrl = baseUrl || "https://axim.us.com/wp-json/wp/v2";
+
+  try {
+    // 1. Fetch category ID by slug
+    const catRes = await fetch(`${apiUrl}/categories?slug=${categorySlug}`);
+    if (!catRes.ok) throw new Error(`Failed to fetch category: ${catRes.statusText}`);
+    const categories = await catRes.json();
+
+    if (!categories || categories.length === 0) {
+      console.warn(`No category found for slug: ${categorySlug}`);
+      return [];
+    }
+    const categoryId = categories[0].id;
+
+    // 2. Fetch posts by category ID, ordered by date descending
+    const postsRes = await fetch(`${apiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed`);
+    if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+    const posts = await postsRes.json();
+
+    // 3. Map the properties and ensure the explicit absolute URL link is included
+    const mappedPosts = posts.map(post => {
+      // Get featured image if available
+      let featuredImage = null;
+      if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
+        featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
+      }
+
+      return {
+        id: post.id,
+        title: post.title?.rendered,
+        excerpt: post.excerpt?.rendered,
+        link: post.link, // CRITICAL: explicit absolute URL mapping
+        date: post.date,
+        featuredImage,
+      };
+    });
+
+    console.log(`[wp-fetch] Fetched ${mappedPosts.length} posts for category '${categorySlug}':`, mappedPosts);
+    return mappedPosts;
+  } catch (error) {
+    console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error);
+    return [];
+  }
+}
