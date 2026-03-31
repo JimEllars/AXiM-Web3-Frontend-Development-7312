@@ -5,11 +5,10 @@ import Web3Header from './components/Web3Header';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import Assets from './pages/Assets';
-import Protocols from './pages/Protocols';
-import DemandGenerator from './pages/DemandGenerator';
-import Blog from './pages/Blog';
+import Articles from './pages/Articles';
+import Courses from './pages/Courses';
+import Documents from './pages/Documents';
+import More from './pages/More';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 
@@ -24,11 +23,10 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-            <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-            <Route path="/assets" element={<PageTransition><Assets /></PageTransition>} />
-            <Route path="/protocols" element={<PageTransition><Protocols /></PageTransition>} />
-            <Route path="/generator" element={<PageTransition><DemandGenerator /></PageTransition>} />
-            <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+            <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
+            <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
+            <Route path="/documents" element={<PageTransition><Documents /></PageTransition>} />
+            <Route path="/more" element={<PageTransition><More /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
           </Routes>
