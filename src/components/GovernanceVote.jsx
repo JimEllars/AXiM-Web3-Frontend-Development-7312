@@ -34,7 +34,7 @@ export default function GovernanceVote({ proposal }) {
       <div className="flex justify-between items-start mb-6">
         <div>
           <span className="text-[0.6rem] font-mono text-axim-purple uppercase tracking-widest">Active Proposal</span>
-          <h4 className="text-lg font-bold uppercase mt-1">{proposal.title}</h4>
+          <h4 className="text-lg font-bold uppercase mt-1">{proposal?.title}</h4>
         </div>
         <div className="text-right">
           <div className="text-[0.6rem] font-mono text-zinc-500 uppercase">Ends In</div>

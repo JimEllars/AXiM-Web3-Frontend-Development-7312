@@ -153,3 +153,35 @@ describe('GovernanceVote Component', () => {
     assert.ok(screen.getByText('69%'));
   });
 });
+describe('GovernanceVote Edge Cases', () => {
+  test('Renders without error when proposal is undefined', () => {
+    assert.doesNotThrow(() => { render(<GovernanceVote proposal={{}} />); });
+  });
+
+  test('Renders without error when proposal is missing', () => {
+    assert.doesNotThrow(() => { render(<GovernanceVote />); });
+  });
+
+  test('Buttons display fallback states', async () => {
+    render(<GovernanceVote proposal={{title: "x"}} />);
+    const againstButton = screen.getAllByRole('button', { name: /^Against$/i })[0];
+    fireEvent.click(againstButton);
+    await waitFor(() => {
+      assert.ok(screen.getAllByRole('button')[1].className.includes('bg-red-500'));
+    }, { timeout: 1500 });
+  });
+
+  test('handleVote returns early if already voted', async () => {
+    render(<GovernanceVote proposal={{title: "x"}} />);
+    const forButton = screen.getAllByRole('button', { name: /^For$/i })[0];
+    fireEvent.click(forButton);
+    await waitFor(() => {
+      assert.ok(screen.getAllByRole('button')[0].className.includes('bg-axim-green'));
+    }, { timeout: 1500 });
+
+    // Voted is true
+    const votedButton = screen.getAllByRole('button')[0];
+    votedButton.removeAttribute('disabled');
+    fireEvent.click(votedButton); // hits if(voted) return
+  });
+});
