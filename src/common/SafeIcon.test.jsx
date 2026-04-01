@@ -48,4 +48,34 @@ describe('SafeIcon Component', () => {
     assert.ok(iconElement);
     assert.strictEqual(iconElement.tagName.toLowerCase(), 'svg');
   });
+
+  test('Renders fallback and warns when icon name access throws an error', () => {
+    const originalWarn = console.warn;
+    let warningCalled = false;
+
+    try {
+      console.warn = (msg) => {
+        warningCalled = true;
+        assert.match(msg, /Icon badName not found/);
+      };
+
+      let throwCount = 0;
+      const badName = {
+        toString: () => {
+          if (throwCount++ === 0) {
+            throw new Error('Cannot convert to string');
+          }
+          return 'badName';
+        }
+      };
+
+      const { container } = render(<SafeIcon name={badName} data-testid="error-fallback-icon" />);
+      const iconElement = screen.getByTestId('error-fallback-icon');
+      assert.ok(iconElement);
+      assert.strictEqual(iconElement.tagName.toLowerCase(), 'svg');
+      assert.ok(warningCalled, 'console.warn should have been called');
+    } finally {
+      console.warn = originalWarn;
+    }
+  });
 });
