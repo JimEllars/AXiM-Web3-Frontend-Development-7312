@@ -42,7 +42,7 @@ export async function getWordPressPost(slug) {
 export const fetchCache = new Map();
 
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
-  const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
+  const envUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
   // Always try the root domain first, as we know the CORS plugin is installed there
   const urlsToTry = [
@@ -50,9 +50,9 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     "https://wp.axim.us.com/wp-json/wp/v2"
   ];
 
-  // If a custom env var is provided, add it to the front of the line
-  if (baseUrl && !urlsToTry.includes(baseUrl)) {
-    urlsToTry.unshift(baseUrl);
+  // Append the env var if it's different from the hardcoded ones
+  if (envUrl && !urlsToTry.includes(envUrl)) {
+    urlsToTry.push(envUrl);
   }
 
   const cacheKey = `${categorySlug}-${limit}`;
@@ -103,22 +103,21 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
     let posts = null;
     let successfulUrl = null;
-    let lastError = null;
 
     for (const url of urlsToTry) {
       try {
         posts = await tryFetch(url);
         successfulUrl = url;
         console.info(`[wp-fetch] Successfully connected to WordPress API at: ${url}`);
-        break; // Stop trying URLs once we get a successful response
+        break; // Break out of the loop on the first successful fetch
       } catch (err) {
         console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
-        lastError = err;
       }
     }
 
     if (!posts) {
-      throw lastError || new Error("All WordPress API endpoints failed or were blocked by CORS.");
+      console.warn(`All WordPress fetch attempts failed. Returning empty array to trigger graceful UI state.`);
+      return [];
     }
 
     // 3. Map the properties and ensure the explicit absolute URL link is included
