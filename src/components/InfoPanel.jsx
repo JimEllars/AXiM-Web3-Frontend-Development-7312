@@ -1,4 +1,3 @@
-import React from 'react';
 import SafeIcon from '../common/SafeIcon';
 
 export default function InfoPanel({ icon, iconColor, title, children }) {
