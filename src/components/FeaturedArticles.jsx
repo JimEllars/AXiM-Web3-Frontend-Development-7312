@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
+import { sanitizeHTML } from '../lib/sanitize';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
@@ -82,10 +83,13 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
+                <h3
+                  className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
+                ></h3>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
                 ></div>
                 <a
                   href={post.link}
