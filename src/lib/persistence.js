@@ -8,18 +8,33 @@ const STORAGE_KEYS = {
   LETTERS: 'axm_local_letters'
 };
 
+const _getStoredData = (key, defaultValue) => {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return defaultValue;
+
+    const parsed = JSON.parse(item);
+
+    if (Array.isArray(defaultValue)) {
+      return Array.isArray(parsed) ? parsed : defaultValue;
+    }
+
+    if (typeof defaultValue === 'object' && defaultValue !== null) {
+      return (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed))
+        ? parsed
+        : defaultValue;
+    }
+
+    return parsed;
+  } catch (e) {
+    return defaultValue;
+  }
+};
+
 export const localStore = {
   getProfile: (address) => {
     if (!address) return null;
-    let profiles = {};
-    try {
-      profiles = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROFILES) || '{}');
-      if (typeof profiles !== 'object' || profiles === null || Array.isArray(profiles)) {
-        profiles = {};
-      }
-    } catch (e) {
-      profiles = {};
-    }
+    const profiles = _getStoredData(STORAGE_KEYS.PROFILES, {});
 
     if (!profiles[address]) {
       profiles[address] = {
@@ -39,15 +54,7 @@ export const localStore = {
   },
 
   saveLetter: (userId, letterData) => {
-    let letters = [];
-    try {
-      letters = JSON.parse(localStorage.getItem(STORAGE_KEYS.LETTERS) || '[]');
-      if (!Array.isArray(letters)) {
-        letters = [];
-      }
-    } catch (e) {
-      letters = [];
-    }
+    const letters = _getStoredData(STORAGE_KEYS.LETTERS, []);
 
     const safeLetterData = letterData || {};
     const newLetter = {
@@ -69,15 +76,7 @@ export const localStore = {
   },
 
   getLetters: (userId) => {
-    let letters = [];
-    try {
-      letters = JSON.parse(localStorage.getItem(STORAGE_KEYS.LETTERS) || '[]');
-      if (!Array.isArray(letters)) {
-        letters = [];
-      }
-    } catch (e) {
-      letters = [];
-    }
+    const letters = _getStoredData(STORAGE_KEYS.LETTERS, []);
     return letters.filter(l => l.user_id === userId);
   }
 };
