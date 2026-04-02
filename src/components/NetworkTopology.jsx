@@ -16,6 +16,14 @@ const CONNECTIONS = [
 
 const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
 
+// Pre-compute coordinates for connection lines to avoid lookups during render
+const PRECOMPUTED_CONNECTIONS = CONNECTIONS.map(([from, to]) => {
+  const start = NODE_MAP.get(from);
+  const end = NODE_MAP.get(to);
+  if (!start || !end) return null;
+  return { start, end };
+}).filter(Boolean);
+
 export default function NetworkTopology() {
   return (
     <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm overflow-hidden">
@@ -25,10 +33,7 @@ export default function NetworkTopology() {
       
       <svg viewBox="0 0 100 100" className="w-full h-full">
         {/* Connection Lines */}
-        {CONNECTIONS.map(([from, to], i) => {
-          const start = NODE_MAP.get(from);
-          const end = NODE_MAP.get(to);
-          if (!start || !end) return null;
+        {PRECOMPUTED_CONNECTIONS.map(({ start, end }, i) => {
           return (
             <motion.line
               key={`line-${i}`}
