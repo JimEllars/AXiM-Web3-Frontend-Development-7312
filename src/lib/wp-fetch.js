@@ -2,7 +2,6 @@
  * Headless WordPress Fetch Utility
  * Adapted for Vite/React SPA fetching. 
  */
-import { mockPosts } from '../data/mockPosts.js';
 
 export async function getWordPressPost(slug) {
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
@@ -47,11 +46,11 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
   // Dual-URL fallback logic
   let apiUrl = baseUrl;
-  let useFallbackUrl = false;
+  let fallbackUrls = [];
 
   if (!apiUrl) {
     apiUrl = "https://axim.us.com/wp-json/wp/v2";
-    useFallbackUrl = true; // Flag to know if we should try the second one
+    fallbackUrls = ["https://wp.axim.us.com/wp-json/wp/v2"];
   }
 
   const cacheKey = `${categorySlug}-${limit}`;
@@ -73,9 +72,11 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       const categories = await catRes.json();
 
       let postsRes;
-      if (!categories || categories.length === 0) {
-        console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
-        // Fallback: Fetch all latest posts instead of returning mockPosts immediately
+      if (!categorySlug || !categories || categories.length === 0) {
+        if (categorySlug) {
+          console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
+        }
+        // Fallback: Fetch all latest posts
         postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
       } else {
         const categoryId = categories[0].id;
@@ -84,21 +85,41 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       }
 
       if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
-      const posts = await postsRes.json();
+      let posts = await postsRes.json();
+
+      // If the category request returned 0 posts, automatically perform a fallback fetch
+      if (posts.length === 0 && categorySlug) {
+         console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
+         postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
+         if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
+         posts = await postsRes.json();
+      }
 
       return posts;
     };
 
     let posts;
+    let successfulUrl = apiUrl;
     try {
       posts = await tryFetch(apiUrl);
+      console.info(`[wp-fetch] Successfully connected to WordPress API at: ${apiUrl}`);
     } catch (err) {
-      // If we used the default axim.us.com and it failed, try the subdomain
-      if (useFallbackUrl) {
-        console.warn(`Failed fetching from ${apiUrl}, trying wp.axim.us.com...`);
-        apiUrl = "https://wp.axim.us.com/wp-json/wp/v2";
-        posts = await tryFetch(apiUrl);
-      } else {
+      // Try fallback URLs
+      let success = false;
+      for (const fbUrl of fallbackUrls) {
+        console.warn(`Failed fetching from ${successfulUrl}, trying fallback ${fbUrl}...`);
+        try {
+          posts = await tryFetch(fbUrl);
+          successfulUrl = fbUrl;
+          success = true;
+          console.info(`[wp-fetch] Successfully connected to WordPress API at fallback: ${fbUrl}`);
+          apiUrl = fbUrl; // Update apiUrl so subsequent error logs show the right URL
+          break;
+        } catch (fbErr) {
+          successfulUrl = fbUrl;
+        }
+      }
+      if (!success) {
         throw err;
       }
     }
@@ -135,8 +156,8 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       return fetchCache.get(cacheKey).data;
     }
 
-    // Enhanced logging for fallback to mock data
-    console.warn(`WordPress fetch failed at [${apiUrl}]. Switching to internal AXiM Intelligence Mock Data.`);
-    return mockPosts.slice(0, limit);
+    // Return empty array instead of mock data
+    console.warn(`WordPress fetch failed at [${apiUrl}]. Returning empty array.`);
+    return [];
   }
 }
