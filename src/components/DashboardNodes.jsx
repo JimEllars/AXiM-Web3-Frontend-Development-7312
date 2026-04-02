@@ -11,6 +11,7 @@ const nodes = [
   { id: 'AX-103', type: 'Neural', status: 'Active', accuracy: '98.2%', icon: LuCpu },
 ];
 
+// Pre-computed set of keys to exclude from rendering, improving performance during render loop
 const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon']);
 
 export default function DashboardNodes({ selectedNode, setSelectedNode }) {
