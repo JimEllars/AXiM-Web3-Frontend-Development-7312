@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useActiveAccount } from "thirdweb/react";
-import { supabase } from '../supabase/supabase';
 import { localStore } from '../lib/persistence';
 
 export function useAximAuth() {
@@ -22,30 +21,8 @@ export function useAximAuth() {
 
       try {
         setLoading(true);
-        
-        // Try Supabase if keys exist
-        const hasKeys = import.meta.env.VITE_SUPABASE_URL && 
-                       import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_url';
 
-        if (hasKeys) {
-          try {
-            const { data, error } = await supabase
-              .from('user_profiles_1774676062318')
-              .select('*')
-              .eq('wallet_address', account.address)
-              .maybeSingle();
-
-            if (data && isMounted) {
-              setProfile({ ...data, is_mock: false });
-              setLoading(false);
-              return;
-            }
-          } catch (e) {
-            console.warn("Supabase unreachable, using local vault.");
-          }
-        }
-
-        // Always fallback to Local Persistence for immediate functionality
+        // Immediately use Local Persistence for immediate functionality
         const localProfile = localStore.getProfile(account.address);
         if (isMounted) {
           setProfile(localProfile);

@@ -308,7 +308,7 @@ describe('fetchPostsByCategory', () => {
     }]);
   });
 
-  test('should return empty array and warn if category not found', async () => {
+  test('should return mock array and warn if category not found', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleWarn = console.warn;
     try {
@@ -326,8 +326,9 @@ describe('fetchPostsByCategory', () => {
         if (msg.includes('No category found')) warnLogged = true;
       };
 
-      const result = await fetchPostsByCategory('unknown');
-      assert.deepStrictEqual(result, []);
+      const result = await fetchPostsByCategory('unknown', 2);
+      assert.strictEqual(result.length, 2);
+      assert.strictEqual(result[0].id, 1);
       assert.strictEqual(warnLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -371,7 +372,7 @@ describe('fetchPostsByCategory', () => {
     }]);
   });
 
-  test('should return empty array and warn if category not found (null response)', async () => {
+  test('should return mock array and warn if category not found (null response)', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleWarn = console.warn;
     try {
@@ -389,8 +390,9 @@ describe('fetchPostsByCategory', () => {
         if (msg.includes('No category found')) warnLogged = true;
       };
 
-      const result = await fetchPostsByCategory('unknown');
-      assert.deepStrictEqual(result, []);
+      const result = await fetchPostsByCategory('unknown', 1);
+      assert.strictEqual(result.length, 1);
+      assert.strictEqual(result[0].id, 1);
       assert.strictEqual(warnLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -398,7 +400,7 @@ describe('fetchPostsByCategory', () => {
     }
   });
 
-  test('should return empty array and log error if fetch throws', async () => {
+  test('should return mock array and log error if fetch throws', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleError = console.error;
     try {
@@ -411,8 +413,9 @@ describe('fetchPostsByCategory', () => {
         if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps');
-      assert.deepStrictEqual(result, []);
+      const result = await fetchPostsByCategory('apps', 3);
+      assert.strictEqual(result.length, 3);
+      assert.strictEqual(result[0].id, 1);
       assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -420,7 +423,7 @@ describe('fetchPostsByCategory', () => {
     }
   });
 
-  test('should return empty array and log error if category fetch is not ok', async () => {
+  test('should return mock array and log error if category fetch is not ok', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleError = console.error;
     try {
@@ -438,8 +441,9 @@ describe('fetchPostsByCategory', () => {
         if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps');
-      assert.deepStrictEqual(result, []);
+      const result = await fetchPostsByCategory('apps', 2);
+      assert.strictEqual(result.length, 2);
+      assert.strictEqual(result[0].id, 1);
       assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -447,7 +451,7 @@ describe('fetchPostsByCategory', () => {
     }
   });
 
-  test('should return empty array and log error if posts fetch is not ok', async () => {
+  test('should return mock array and log error if posts fetch is not ok', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleError = console.error;
     try {
@@ -471,8 +475,9 @@ describe('fetchPostsByCategory', () => {
         if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps');
-      assert.deepStrictEqual(result, []);
+      const result = await fetchPostsByCategory('apps', 1);
+      assert.strictEqual(result.length, 1);
+      assert.strictEqual(result[0].id, 1);
       assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;

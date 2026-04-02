@@ -2,6 +2,7 @@
  * Headless WordPress Fetch Utility
  * Adapted for Vite/React SPA fetching. 
  */
+import { mockPosts } from '../data/mockPosts.js';
 
 export async function getWordPressPost(slug) {
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
@@ -64,7 +65,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
     if (!categories || categories.length === 0) {
       console.warn(`No category found for slug: ${categorySlug}`);
-      return [];
+      return mockPosts.slice(0, limit);
     }
     const categoryId = categories[0].id;
 
@@ -97,12 +98,16 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     return mappedPosts;
   } catch (error) {
     console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
+    console.error(`[wp-fetch] Failed URL: ${apiUrl}/categories?slug=${categorySlug} or ${apiUrl}/posts`);
 
     // Fallback to cache on error
     if (fetchCache.has(cacheKey)) {
       console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
       return fetchCache.get(cacheKey).data;
     }
-    return [];
+
+    // Fallback to mock data on error
+    console.warn(`[wp-fetch] Returning mock posts as fallback for '${categorySlug}'`);
+    return mockPosts.slice(0, limit);
   }
 }
