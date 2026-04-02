@@ -14,13 +14,13 @@ export default function Articles() {
       </div>
 
       {/* 1. Main Featured Section */}
-      <FeaturedArticles categorySlug="featured" limit={2} title="Top Stories" />
+      <FeaturedArticles categorySlug="featured" limit={2} title="Featured Intelligence" />
 
       {/* 2. App Spotlight Section */}
-      <NewsFeed categorySlug="app-spotlight" limit={3} title="APP SPOTLIGHT" />
+      <NewsFeed categorySlug="app-spotlight" limit={6} title="App Spotlight" />
 
       {/* 3. Software Spotlight Section */}
-      <NewsFeed categorySlug="software-spotlight" limit={6} title="SOFTWARE SPOTLIGHT" />
+      <NewsFeed categorySlug="software-spotlight" limit={6} title="Software Spotlight" />
     </div>
   );
 }

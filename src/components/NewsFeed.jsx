@@ -58,7 +58,9 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
     return (
       <section className="py-16 relative z-10">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <p className="text-zinc-500 font-mono">No intelligence available at this time.</p>
+          <p className="text-zinc-500 font-mono">
+            Establishing secure uplink to AXiM Database... If this persists, verify CORS headers on the origin server.
+          </p>
         </div>
       </section>
     );
@@ -74,7 +76,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
           className="mb-12"
         >
           <span className="section-label">Intelligence Hub</span>
-          <h2 className="section-title !mb-0 text-axim-teal">{title}</h2>
+          <h2 className="section-title !mb-0 text-axim-teal">{title || 'Latest Insights & Offerings'}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
