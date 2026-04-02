@@ -44,8 +44,15 @@ export const fetchCache = new Map();
 
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = import.meta.env ? import.meta.env.VITE_WORDPRESS_REST_URL : process.env.VITE_WORDPRESS_REST_URL;
-  // Ensure we use the environment variable if available, otherwise default to the new WordPress subdomain
-  const apiUrl = baseUrl || "https://wp.axim.us.com/wp-json/wp/v2";
+
+  // Dual-URL fallback logic
+  let apiUrl = baseUrl;
+  let useFallbackUrl = false;
+
+  if (!apiUrl) {
+    apiUrl = "https://axim.us.com/wp-json/wp/v2";
+    useFallbackUrl = true; // Flag to know if we should try the second one
+  }
 
   const cacheKey = `${categorySlug}-${limit}`;
   if (fetchCache.has(cacheKey)) {
@@ -58,21 +65,43 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
   }
 
   try {
-    // 1. Fetch category ID by slug
-    const catRes = await fetch(`${apiUrl}/categories?slug=${categorySlug}`, { signal: AbortSignal.timeout(10000) });
-    if (!catRes.ok) throw new Error(`Failed to fetch category: ${catRes.statusText}`);
-    const categories = await catRes.json();
+    // Inner function to attempt fetching
+    const tryFetch = async (currentApiUrl) => {
+      // 1. Fetch category ID by slug
+      const catRes = await fetch(`${currentApiUrl}/categories?slug=${categorySlug}`, { signal: AbortSignal.timeout(10000) });
+      if (!catRes.ok) throw new Error(`Failed to fetch category: ${catRes.statusText}`);
+      const categories = await catRes.json();
 
-    if (!categories || categories.length === 0) {
-      console.warn(`No category found for slug: ${categorySlug}`);
-      return mockPosts.slice(0, limit);
+      let postsRes;
+      if (!categories || categories.length === 0) {
+        console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
+        // Fallback: Fetch all latest posts instead of returning mockPosts immediately
+        postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
+      } else {
+        const categoryId = categories[0].id;
+        // 2. Fetch posts by category ID, ordered by date descending
+        postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
+      }
+
+      if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+      const posts = await postsRes.json();
+
+      return posts;
+    };
+
+    let posts;
+    try {
+      posts = await tryFetch(apiUrl);
+    } catch (err) {
+      // If we used the default axim.us.com and it failed, try the subdomain
+      if (useFallbackUrl) {
+        console.warn(`Failed fetching from ${apiUrl}, trying wp.axim.us.com...`);
+        apiUrl = "https://wp.axim.us.com/wp-json/wp/v2";
+        posts = await tryFetch(apiUrl);
+      } else {
+        throw err;
+      }
     }
-    const categoryId = categories[0].id;
-
-    // 2. Fetch posts by category ID, ordered by date descending
-    const postsRes = await fetch(`${apiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed`, { signal: AbortSignal.timeout(10000) });
-    if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
-    const posts = await postsRes.json();
 
     // 3. Map the properties and ensure the explicit absolute URL link is included
     const mappedPosts = posts.map(post => {
@@ -106,8 +135,8 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       return fetchCache.get(cacheKey).data;
     }
 
-    // Fallback to mock data on error
-    console.warn(`[wp-fetch] Returning mock posts as fallback for '${categorySlug}'`);
+    // Enhanced logging for fallback to mock data
+    console.warn(`WordPress fetch failed at [${apiUrl}]. Switching to internal AXiM Intelligence Mock Data.`);
     return mockPosts.slice(0, limit);
   }
 }
