@@ -44,13 +44,15 @@ export const fetchCache = new Map();
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
-  // Dual-URL fallback logic
-  let apiUrl = baseUrl;
-  let fallbackUrls = [];
+  // Always try the root domain first, as we know the CORS plugin is installed there
+  const urlsToTry = [
+    "https://axim.us.com/wp-json/wp/v2",
+    "https://wp.axim.us.com/wp-json/wp/v2"
+  ];
 
-  if (!apiUrl) {
-    apiUrl = "https://axim.us.com/wp-json/wp/v2";
-    fallbackUrls = ["https://wp.axim.us.com/wp-json/wp/v2"];
+  // If a custom env var is provided, add it to the front of the line
+  if (baseUrl && !urlsToTry.includes(baseUrl)) {
+    urlsToTry.unshift(baseUrl);
   }
 
   const cacheKey = `${categorySlug}-${limit}`;
@@ -99,30 +101,24 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       return posts;
     };
 
-    let posts;
-    let successfulUrl = apiUrl;
-    try {
-      posts = await tryFetch(apiUrl);
-      console.info(`[wp-fetch] Successfully connected to WordPress API at: ${apiUrl}`);
-    } catch (err) {
-      // Try fallback URLs
-      let success = false;
-      for (const fbUrl of fallbackUrls) {
-        console.warn(`Failed fetching from ${successfulUrl}, trying fallback ${fbUrl}...`);
-        try {
-          posts = await tryFetch(fbUrl);
-          successfulUrl = fbUrl;
-          success = true;
-          console.info(`[wp-fetch] Successfully connected to WordPress API at fallback: ${fbUrl}`);
-          apiUrl = fbUrl; // Update apiUrl so subsequent error logs show the right URL
-          break;
-        } catch (fbErr) {
-          successfulUrl = fbUrl;
-        }
+    let posts = null;
+    let successfulUrl = null;
+    let lastError = null;
+
+    for (const url of urlsToTry) {
+      try {
+        posts = await tryFetch(url);
+        successfulUrl = url;
+        console.info(`[wp-fetch] Successfully connected to WordPress API at: ${url}`);
+        break; // Stop trying URLs once we get a successful response
+      } catch (err) {
+        console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
+        lastError = err;
       }
-      if (!success) {
-        throw err;
-      }
+    }
+
+    if (!posts) {
+      throw lastError || new Error("All WordPress API endpoints failed or were blocked by CORS.");
     }
 
     // 3. Map the properties and ensure the explicit absolute URL link is included
@@ -149,7 +145,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     return mappedPosts;
   } catch (error) {
     console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
-    console.error(`[wp-fetch] Failed URL: ${apiUrl}/categories?slug=${categorySlug} or ${apiUrl}/posts`);
+    console.error(`[wp-fetch] Failed URL: ${urlsToTry.join(' or ')}`);
 
     // Fallback to cache on error
     if (fetchCache.has(cacheKey)) {
@@ -158,7 +154,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     }
 
     // Return empty array instead of mock data
-    console.warn(`WordPress fetch failed at [${apiUrl}]. Returning empty array.`);
+    console.warn(`WordPress fetch failed at [${urlsToTry.join(', ')}]. Returning empty array.`);
     return [];
   }
 }
