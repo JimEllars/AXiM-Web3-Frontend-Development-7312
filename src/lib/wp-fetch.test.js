@@ -198,6 +198,54 @@ describe('getWordPressPost', () => {
       console.error = localOriginalConsoleError;
     }
   });
+
+  test('should correctly fetch and return post data (success path)', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-success.com';
+    const mockPostData = { data: { post: { title: 'Success Path', content: 'It works!' } } };
+
+    const localOriginalFetch = global.fetch;
+    try {
+      global.fetch = async (url, options) => {
+        assert.strictEqual(url, 'http://mock-success.com');
+        assert.strictEqual(options.method, 'POST');
+        return {
+          json: async () => mockPostData
+        };
+      };
+
+      const result = await getWordPressPost('success-slug');
+      assert.deepStrictEqual(result, mockPostData);
+    } finally {
+      global.fetch = localOriginalFetch;
+    }
+  });
+
+  test('should handle network failure gracefully (error path)', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-error.com';
+
+    const localOriginalFetch = global.fetch;
+    const localOriginalConsoleError = console.error;
+
+    try {
+      global.fetch = async () => {
+        throw new TypeError('Failed to fetch');
+      };
+
+      let errorLogged = false;
+      console.error = (msg, err) => {
+        if (msg === 'WP Fetch Error:' && err.message === 'Failed to fetch') {
+          errorLogged = true;
+        }
+      };
+
+      const result = await getWordPressPost('error-slug');
+      assert.strictEqual(result, null);
+      assert.strictEqual(errorLogged, true);
+    } finally {
+      global.fetch = localOriginalFetch;
+      console.error = localOriginalConsoleError;
+    }
+  });
 });
 
 describe('fetchPostsByCategory', () => {
