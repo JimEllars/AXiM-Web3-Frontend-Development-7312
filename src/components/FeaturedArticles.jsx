@@ -13,7 +13,11 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
   useEffect(() => {
     async function loadPosts() {
       setLoading(true);
-      const fetched = await fetchPostsByCategory(categorySlug, limit);
+      let fetched = await fetchPostsByCategory(categorySlug, limit);
+      // Fallback: If fetched articles are empty after the first call, trigger a second call to get any recent posts
+      if (!fetched || fetched.length === 0) {
+        fetched = await fetchPostsByCategory('', limit);
+      }
       setPosts(fetched);
       setLoading(false);
     }

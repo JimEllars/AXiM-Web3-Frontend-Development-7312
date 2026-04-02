@@ -15,7 +15,11 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
     async function loadData() {
       setLoading(true);
       // Fetch news posts
-      const posts = await fetchPostsByCategory(categorySlug, limit);
+      let posts = await fetchPostsByCategory(categorySlug, limit);
+      // Fallback: If 'article' category returns nothing, fetch the latest posts from general feed
+      if (!posts || posts.length === 0) {
+        posts = await fetchPostsByCategory('', limit);
+      }
 
       // Interleave Logic
       // Strategy: Inject a Company Offering card every 3rd news item.
