@@ -6,7 +6,7 @@ import SafeIcon from '../common/SafeIcon';
 
 const { LuArrowRight } = LuIcons;
 
-export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 }) {
+export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories' }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,13 +26,22 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
 
   if (loading) {
     return (
-      <div className="py-12 flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin"></div>
+      <div className="py-12 flex flex-col justify-center items-center">
+        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin mb-4"></div>
+        <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
       </div>
     );
   }
 
-  if (posts.length === 0) return null;
+  if (posts.length === 0) {
+    return (
+      <section className="py-16 relative z-10">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <p className="text-zinc-500 font-mono">No intelligence available at this time.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 relative z-10">
@@ -44,7 +53,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
           className="mb-12"
         >
           <span className="section-label">Featured Intelligence</span>
-          <h2 className="section-title !mb-0 text-axim-gold">Top Stories</h2>
+          <h2 className="section-title !mb-0 text-axim-gold">{title}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

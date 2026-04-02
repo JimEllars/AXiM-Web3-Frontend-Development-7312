@@ -13,10 +13,14 @@ export default function Articles() {
         </p>
       </div>
 
-      <FeaturedArticles categorySlug="featured" limit={2} />
+      {/* 1. Main Featured Section */}
+      <FeaturedArticles categorySlug="featured" limit={2} title="Top Stories" />
 
-      {/* We can use a different slug like 'news' or 'article' here depending on WP setup */}
-      <NewsFeed categorySlug="article" limit={24} />
+      {/* 2. App Spotlight Section */}
+      <NewsFeed categorySlug="app-spotlight" limit={3} title="APP SPOTLIGHT" />
+
+      {/* 3. Software Spotlight Section */}
+      <NewsFeed categorySlug="software-spotlight" limit={6} title="SOFTWARE SPOTLIGHT" />
     </div>
   );
 }
