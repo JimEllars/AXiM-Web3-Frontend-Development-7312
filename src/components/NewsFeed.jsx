@@ -7,7 +7,7 @@ import { generators } from '../data/companyOfferings';
 
 const { LuArrowRight } = LuIcons;
 
-export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
+export default function NewsFeed({ categorySlug = 'article', limit = 12, title = 'Latest Insights & Offerings' }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,13 +47,22 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
 
   if (loading) {
     return (
-      <div className="py-24 flex justify-center items-center">
-        <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin"></div>
+      <div className="py-24 flex flex-col justify-center items-center">
+        <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin mb-4"></div>
+        <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
       </div>
     );
   }
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <section className="py-16 relative z-10">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <p className="text-zinc-500 font-mono">No intelligence available at this time.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 relative z-10">
@@ -65,7 +74,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
           className="mb-12"
         >
           <span className="section-label">Intelligence Hub</span>
-          <h2 className="section-title !mb-0 text-axim-teal">Latest Insights & Offerings</h2>
+          <h2 className="section-title !mb-0 text-axim-teal">{title}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
