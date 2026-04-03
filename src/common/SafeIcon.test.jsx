@@ -78,4 +78,9 @@ describe('SafeIcon Component', () => {
       console.warn = originalWarn;
     }
   });
+
+  test('Missing Error Case Test for SafeIcon missing name fallback', () => {
+    const { container } = render(<SafeIcon name="NonExistentIconXYZ2" />);
+    assert.ok(container.innerHTML.includes('line'), 'Should render the FiAlertTriangle lines');
+  });
 });
