@@ -314,4 +314,33 @@ describe('localStore.getLetters', () => {
     const result = localStore.getLetters(user1);
     assert.deepStrictEqual(result, []);
   });
+
+  test('should return empty array if getLetters is called without arguments', () => {
+    const result = localStore.getLetters();
+    assert.deepStrictEqual(result, []);
+  });
+
+  test('should gracefully handle error if localStorage.getItem throws an exception by returning default empty array', () => {
+    const originalGetItem = localStorage.getItem;
+    localStorage.getItem = () => {
+      throw new Error('Access denied');
+    };
+
+    try {
+      const result = localStore.getLetters('user123');
+      assert.deepStrictEqual(result, []);
+    } finally {
+      localStorage.getItem = originalGetItem;
+    }
+  });
+
+  test('should correctly retrieve all letters if user matches', () => {
+    localStore.saveLetter('user_x', { title: 'Test 1' });
+    localStore.saveLetter('user_x', { title: 'Test 2' });
+
+    const result = localStore.getLetters('user_x');
+    assert.strictEqual(result.length, 2);
+    assert.strictEqual(result[0].title, 'Test 2');
+    assert.strictEqual(result[1].title, 'Test 1');
+  });
 });
