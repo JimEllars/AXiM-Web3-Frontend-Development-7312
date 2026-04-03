@@ -26,7 +26,7 @@ const _getStoredData = (key, defaultValue) => {
     }
 
     return parsed;
-  } catch (e) {
+  } catch {
     return defaultValue;
   }
 };
@@ -46,8 +46,8 @@ export const localStore = {
       };
       try {
         localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
-      } catch (e) {
-        console.error('Failed to save profile to localStorage', e);
+      } catch {
+        console.error('Failed to save profile to localStorage');
       }
     }
     return profiles[address];
@@ -68,8 +68,8 @@ export const localStore = {
 
     try {
       localStorage.setItem(STORAGE_KEYS.LETTERS, JSON.stringify(letters.slice(0, 50)));
-    } catch (e) {
-      console.error('Failed to save letter to localStorage', e);
+    } catch {
+      console.error('Failed to save letter to localStorage');
     }
 
     return newLetter;
