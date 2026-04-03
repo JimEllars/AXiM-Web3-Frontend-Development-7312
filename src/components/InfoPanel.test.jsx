@@ -35,4 +35,25 @@ describe('InfoPanel Component', () => {
     assert.ok(iconEl);
     assert.ok(iconEl.classList.contains('text-red-500'));
   });
+
+  test('handles missing props gracefully', () => {
+    // Should render correctly without crashing when optional props are omitted
+    render(
+      <InfoPanel>
+        <p data-testid="only-child">Content</p>
+      </InfoPanel>
+    );
+
+    assert.ok(screen.getByTestId('only-child'));
+  });
+
+  test('renders with empty strings for title and iconColor without crashing', () => {
+    render(
+      <InfoPanel title="" iconColor="">
+        <p data-testid="empty-strings">Content</p>
+      </InfoPanel>
+    );
+
+    assert.ok(screen.getByTestId('empty-strings'));
+  });
 });
