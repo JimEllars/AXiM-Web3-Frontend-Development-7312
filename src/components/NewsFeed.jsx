@@ -107,10 +107,12 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                     <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <h3
-                      className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
-                    ></h3>
+                    <a href={post.link} target="_blank" rel="noopener noreferrer">
+                      <h3
+                        className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors"
+                        dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
+                      ></h3>
+                    </a>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
                       dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
