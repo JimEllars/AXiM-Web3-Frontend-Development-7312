@@ -37,9 +37,6 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
         }
       });
 
-      // If we run out of posts but still have offerings, we can optionally append them
-      // but for a news feed, usually we just interleave what fits.
-
       setItems(mergedItems);
       setLoading(false);
     }
