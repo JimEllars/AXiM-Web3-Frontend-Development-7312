@@ -23,7 +23,7 @@ export function useAximAuth() {
         setLoading(true);
 
         // Immediately use Local Persistence for immediate functionality
-        const localProfile = localStore.getProfile(account.address);
+        const localProfile = await localStore.getProfile(account.address);
         if (isMounted) {
           setProfile(localProfile);
         }
