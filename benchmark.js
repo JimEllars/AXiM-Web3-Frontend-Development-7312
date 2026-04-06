@@ -1,61 +1,42 @@
-import { performance } from 'perf_hooks';
+import { fetchPostsByCategory, fetchCache } from './src/lib/wp-fetch.js';
 
-const nodes = Array.from({ length: 1000 }, (_, i) => ({ id: i + 1, x: Math.random() * 100, y: Math.random() * 100, label: `NODE_${i}` }));
+async function runBenchmark() {
+  const originalFetch = global.fetch;
 
-// Create 5000 random connections
-const connections = Array.from({ length: 5000 }, () => {
-  const from = Math.floor(Math.random() * 1000) + 1;
-  const to = Math.floor(Math.random() * 1000) + 1;
-  return [from, to];
-});
+  process.env.VITE_WORDPRESS_REST_URL = 'https://custom.axim.us.com/wp-json/wp/v2';
 
-function originalMethod() {
-  const results = [];
-  connections.forEach(([from, to]) => {
-    const start = nodes.find(n => n.id === from);
-    const end = nodes.find(n => n.id === to);
-    if (start && end) {
-      results.push({ start, end });
+  global.fetch = async (url) => {
+    if (url.startsWith('https://axim.us.com/wp-json/wp/v2')) {
+      await new Promise(r => setTimeout(r, 500));
+      return { ok: false, statusText: 'Not Found' };
     }
-  });
-  return results;
-}
-
-function optimizedMethod() {
-  const nodeMap = new Map(nodes.map(n => [n.id, n]));
-  const results = [];
-  connections.forEach(([from, to]) => {
-    const start = nodeMap.get(from);
-    const end = nodeMap.get(to);
-    if (start && end) {
-      results.push({ start, end });
+    if (url.startsWith('https://wp.axim.us.com/wp-json/wp/v2')) {
+      await new Promise(r => setTimeout(r, 500));
+      return { ok: false, statusText: 'Not Found' };
     }
-  });
-  return results;
+    if (url.startsWith('https://custom.axim.us.com/wp-json/wp/v2')) {
+      await new Promise(r => setTimeout(r, 200));
+      if (url.includes('/categories')) {
+        return { ok: true, json: async () => [{ id: 1, slug: 'apps' }] };
+      }
+      if (url.includes('/posts')) {
+        return { ok: true, json: async () => [{ id: 1, title: { rendered: 'Post 1' }, _embedded: {} }] };
+      }
+    }
+
+    return { ok: true, json: async () => [] };
+  };
+
+  fetchCache.clear();
+
+  const start = Date.now();
+  await fetchPostsByCategory('apps', 1);
+  const duration = Date.now() - start;
+
+  console.log(`\n================================`);
+  console.log(`Benchmark completed in ${duration}ms`);
+  console.log(`================================\n`);
+  global.fetch = originalFetch;
 }
 
-const iterations = 100;
-
-// Warmup
-for (let i = 0; i < 10; i++) {
-  originalMethod();
-  optimizedMethod();
-}
-
-let originalTotal = 0;
-for (let i = 0; i < iterations; i++) {
-  const start = performance.now();
-  originalMethod();
-  originalTotal += performance.now() - start;
-}
-
-let optimizedTotal = 0;
-for (let i = 0; i < iterations; i++) {
-  const start = performance.now();
-  optimizedMethod();
-  optimizedTotal += performance.now() - start;
-}
-
-console.log(`Original method: ${(originalTotal / iterations).toFixed(4)} ms per run`);
-console.log(`Optimized method: ${(optimizedTotal / iterations).toFixed(4)} ms per run`);
-console.log(`Improvement: ${((originalTotal - optimizedTotal) / originalTotal * 100).toFixed(2)}% faster`);
+runBenchmark();
