@@ -104,18 +104,22 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     let posts = null;
     let successfulUrl = null;
 
-    for (const url of urlsToTry) {
-      try {
-        posts = await tryFetch(url);
-        successfulUrl = url;
-        console.info(`[wp-fetch] Successfully connected to WordPress API at: ${url}`);
-        break; // Break out of the loop on the first successful fetch
-      } catch (err) {
-        console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
-      }
-    }
+    try {
+      const fetchPromises = urlsToTry.map(async (url) => {
+        try {
+          const result = await tryFetch(url);
+          return { posts: result, url };
+        } catch (err) {
+          console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
+          throw err;
+        }
+      });
 
-    if (!posts) {
+      const result = await Promise.any(fetchPromises);
+      posts = result.posts;
+      successfulUrl = result.url;
+      console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
+    } catch (aggregateErr) {
       console.warn(`All WordPress fetch attempts failed. Returning empty array to trigger graceful UI state.`);
       return [];
     }
