@@ -8,7 +8,7 @@
     "build": "vite build --sourcemap false",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vite-node --config vite.config.test.js src/components/InfoPanel.test.jsx && vite-node --config vite.config.test.js src/common/SafeIcon.test.jsx && vite-node --config vite.config.test.js src/components/GovernanceVote.test.jsx && vite-node --config vite.config.test.js src/components/DashboardAccessDenied.test.jsx && vite-node --config vite.config.test.js src/components/TelemetryBar.test.jsx && vite-node --config vite.config.test.js src/hooks/useAximAuth.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js"
+    "test": "vite-node --config vite.config.test.js src/components/InfoPanel.test.jsx && vite-node --config vite.config.test.js src/common/SafeIcon.test.jsx && vite-node --config vite.config.test.js src/components/GovernanceVote.test.jsx && vite-node --config vite.config.test.js src/components/DashboardAccessDenied.test.jsx && vite-node --config vite.config.test.js src/components/TelemetryBar.test.jsx && vite-node --config vite.config.test.js src/hooks/useAximAuth.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/thirdweb-client.test.js"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.10.1",
