@@ -7,6 +7,22 @@ import SafeIcon from '../common/SafeIcon';
 
 const { LuArrowRight } = LuIcons;
 
+function ensureSafeProtocol(url) {
+  if (!url) return '#';
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return url;
+    }
+    return '#';
+  } catch (e) {
+    if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
+      return url;
+    }
+    return '#';
+  }
+}
+
 export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories' }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +99,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <a href={sanitizeURL(post.link)} target="_blank" rel="noopener noreferrer">
+                <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer">
                   <h3
                     className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors"
                     dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
@@ -94,7 +110,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                   dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
                 ></div>
                 <a
-                  href={sanitizeURL(post.link)}
+                  href={ensureSafeProtocol(post.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto"
