@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { coreLinks } from '../data/companyOfferings';
 import * as LuIcons from 'react-icons/lu';

@@ -2,7 +2,6 @@ import 'global-jsdom/register';
 import { test, describe, afterEach, beforeEach, mock } from 'node:test';
 import assert from 'node:assert';
 import { render, screen, cleanup, act } from '@testing-library/react';
-import React from 'react';
 import TelemetryBar from './TelemetryBar.jsx';
 
 describe('TelemetryBar Component', () => {

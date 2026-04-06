@@ -2,7 +2,6 @@ import 'global-jsdom/register';
 import { test, describe, afterEach } from 'node:test';
 import assert from 'node:assert';
 import { render, screen, cleanup } from '@testing-library/react';
-import React from 'react';
 import SafeIcon from './SafeIcon.jsx';
 import { FiAlertTriangle, FiHome } from 'react-icons/fi';
 import { LuActivity } from 'react-icons/lu';

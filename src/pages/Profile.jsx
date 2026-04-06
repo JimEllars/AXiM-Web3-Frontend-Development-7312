@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useAximAuth } from '../hooks/useAximAuth';
 import * as LuIcons from 'react-icons/lu';

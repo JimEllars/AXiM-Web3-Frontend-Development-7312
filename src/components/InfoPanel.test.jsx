@@ -2,7 +2,6 @@ import 'global-jsdom/register';
 import { test, describe, afterEach } from 'node:test';
 import assert from 'node:assert';
 import { render, screen, cleanup } from '@testing-library/react';
-import React from 'react';
 import InfoPanel from './InfoPanel.jsx';
 
 describe('InfoPanel Component', () => {

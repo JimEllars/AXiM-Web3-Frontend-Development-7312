@@ -1,4 +1,3 @@
-import React from 'react';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';
 

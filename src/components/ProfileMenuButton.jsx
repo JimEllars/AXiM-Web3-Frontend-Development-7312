@@ -1,4 +1,3 @@
-import React from 'react';
 import SafeIcon from '../common/SafeIcon';
 
 export default function ProfileMenuButton({ icon, label, danger, onClick, ...props }) {
