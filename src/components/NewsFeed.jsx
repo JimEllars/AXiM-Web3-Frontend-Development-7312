@@ -9,6 +9,22 @@ import { generators } from '../data/companyOfferings';
 
 const { LuArrowRight } = LuIcons;
 
+function ensureSafeProtocol(url) {
+  if (!url) return '#';
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return url;
+    }
+    return '#';
+  } catch (e) {
+    if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
+      return url;
+    }
+    return '#';
+  }
+}
+
 export default function NewsFeed({ categorySlug = 'article', limit = 12, title = 'Latest Insights & Offerings' }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +113,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                     <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <a href={sanitizeURL(post.link)} target="_blank" rel="noopener noreferrer">
+                    <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer">
                       <h3
                         className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors"
                         dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
@@ -108,7 +124,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                       dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
                     ></div>
                     <a
-                      href={sanitizeURL(post.link)}
+                      href={ensureSafeProtocol(post.link)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-teal transition-colors mt-auto"
@@ -141,7 +157,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   </div>
                   <p className="text-zinc-300 text-sm leading-[1.6] flex-grow mb-8 relative z-10">{offering.desc}</p>
                   <a
-                    href={sanitizeURL(offering.url)}
+                    href={ensureSafeProtocol(offering.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-green hover:bg-axim-green/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
