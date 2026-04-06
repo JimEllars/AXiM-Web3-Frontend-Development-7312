@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
+import { sanitizeURL } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -40,7 +41,7 @@ export default function Documents() {
             </p>
 
             <a
-              href={doc.url}
+              href={sanitizeURL(doc.url)}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"

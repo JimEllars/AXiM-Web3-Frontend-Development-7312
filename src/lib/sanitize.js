@@ -94,3 +94,26 @@ export function sanitizeHTML(html) {
     return html.replace(/<[^>]*>?/gm, '');
   }
 }
+
+/**
+ * Sanitizes a URL to prevent XSS via dangerous protocols like 'javascript:'.
+ * @param {string} url - The URL to sanitize.
+ * @returns {string} - The sanitized URL or '#' if dangerous.
+ */
+export function sanitizeURL(url) {
+  if (!url) return '#';
+
+  const trimmedUrl = url.trim().toLowerCase();
+  const DANGEROUS_PROTOCOLS = ['javascript:', 'data:', 'vbscript:'];
+
+  const isDangerous = DANGEROUS_PROTOCOLS.some(protocol =>
+    trimmedUrl.startsWith(protocol)
+  );
+
+  if (isDangerous) {
+    console.warn(`[security] Blocked dangerous protocol in URL: ${url}`);
+    return '#';
+  }
+
+  return url;
+}
