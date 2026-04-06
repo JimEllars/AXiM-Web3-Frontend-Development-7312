@@ -1,42 +1,57 @@
-import { fetchPostsByCategory, fetchCache } from './src/lib/wp-fetch.js';
+import { performance } from 'perf_hooks';
 
-async function runBenchmark() {
-  const originalFetch = global.fetch;
+const MARQUEE_ITEMS = [
+  { icon: 'LuCpu', text: "AXiM Ai" },
+  { icon: 'LuScale', text: "Legal Automation" },
+  { icon: 'LuZap', text: "Smart Grids" },
+  { icon: 'LuDatabase', text: "Core Data" },
+  { icon: 'LuAntenna', text: "Fiber Systems" },
+  { icon: 'LuShieldCheck', text: "Smart Protocols" },
+  { icon: 'LuMic', text: "Neural Transcription" },
+];
 
-  process.env.VITE_WORDPRESS_REST_URL = 'https://custom.axim.us.com/wp-json/wp/v2';
-
-  global.fetch = async (url) => {
-    if (url.startsWith('https://axim.us.com/wp-json/wp/v2')) {
-      await new Promise(r => setTimeout(r, 500));
-      return { ok: false, statusText: 'Not Found' };
-    }
-    if (url.startsWith('https://wp.axim.us.com/wp-json/wp/v2')) {
-      await new Promise(r => setTimeout(r, 500));
-      return { ok: false, statusText: 'Not Found' };
-    }
-    if (url.startsWith('https://custom.axim.us.com/wp-json/wp/v2')) {
-      await new Promise(r => setTimeout(r, 200));
-      if (url.includes('/categories')) {
-        return { ok: true, json: async () => [{ id: 1, slug: 'apps' }] };
-      }
-      if (url.includes('/posts')) {
-        return { ok: true, json: async () => [{ id: 1, title: { rendered: 'Post 1' }, _embedded: {} }] };
-      }
-    }
-
-    return { ok: true, json: async () => [] };
-  };
-
-  fetchCache.clear();
-
-  const start = Date.now();
-  await fetchPostsByCategory('apps', 1);
-  const duration = Date.now() - start;
-
-  console.log(`\n================================`);
-  console.log(`Benchmark completed in ${duration}ms`);
-  console.log(`================================\n`);
-  global.fetch = originalFetch;
+function doWorkBad() {
+  const result = [];
+  const array = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  for (let i = 0; i < array.length; i++) {
+    result.push(array[i]);
+  }
+  return result;
 }
 
-runBenchmark();
+const DISPLAY_ITEMS = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+function doWorkGood() {
+  const result = [];
+  for (let i = 0; i < DISPLAY_ITEMS.length; i++) {
+    result.push(DISPLAY_ITEMS[i]);
+  }
+  return result;
+}
+
+const ITERATIONS = 1000000;
+
+console.log('Warming up...');
+for (let i = 0; i < 1000; i++) {
+  doWorkBad();
+  doWorkGood();
+}
+
+console.log(`Running ${ITERATIONS} iterations...`);
+
+const startBad = performance.now();
+for (let i = 0; i < ITERATIONS; i++) {
+  doWorkBad();
+}
+const endBad = performance.now();
+const timeBad = endBad - startBad;
+
+const startGood = performance.now();
+for (let i = 0; i < ITERATIONS; i++) {
+  doWorkGood();
+}
+const endGood = performance.now();
+const timeGood = endGood - startGood;
+
+console.log(`Bad version (inline array): ${timeBad.toFixed(2)} ms`);
+console.log(`Good version (pre-computed array): ${timeGood.toFixed(2)} ms`);
+console.log(`Improvement: ${((timeBad - timeGood) / timeBad * 100).toFixed(2)}%`);

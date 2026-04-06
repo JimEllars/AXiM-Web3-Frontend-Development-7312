@@ -13,6 +13,9 @@ const MARQUEE_ITEMS = [
   { icon: LuMic, text: "Neural Transcription" },
 ];
 
+// ⚡ Performance Optimization:
+// The DISPLAY_ITEMS array is pre-computed and hoisted outside the component
+// to prevent it from being recreated on every render, which avoids unnecessary allocations.
 const DISPLAY_ITEMS = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
 export default function Marquee() {
