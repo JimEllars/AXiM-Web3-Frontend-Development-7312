@@ -9,39 +9,19 @@ describe('sanitizeHTML', () => {
     assert.strictEqual(sanitizeHTML(undefined), '');
   });
 
-  test('should fallback to regex stripping if DOMParser is unavailable', () => {
-    const originalWindow = global.window;
-    global.window = {}; // No DOMParser on window
+  test('should safely sanitize without DOMParser fallback', () => {
     const input = '<script>alert(1)</script><p>Hello</p>';
     const output = sanitizeHTML(input);
-    assert.strictEqual(output, 'alert(1)Hello');
-    global.window = originalWindow;
+    assert.strictEqual(output, '<p>Hello</p>');
   });
 
-  test('should handle simple tag stripping when DOMParser is unavailable', () => {
-    const originalWindow = global.window;
-    global.window = undefined;
+  test('should handle simple tag stripping without fallback', () => {
     const input = '<div>Test <iframe src="evil.com"></iframe></div>';
     const output = sanitizeHTML(input);
-    assert.strictEqual(output, 'Test ');
-    global.window = originalWindow;
+    assert.strictEqual(output, '<div>Test </div>');
   });
 
-  describe('with DOMParser available', () => {
-    let originalWindow;
-
-    before(() => {
-      originalWindow = global.window;
-      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
-      global.window = dom.window;
-      global.DOMParser = dom.window.DOMParser;
-    });
-
-    after(() => {
-      global.window = originalWindow;
-      delete global.DOMParser;
-    });
-
+  describe('DOMPurify based sanitization', () => {
     test('should preserve safe tags and attributes', () => {
       const input = '<p class="text-white" id="main"><a href="https://axim.us.com" target="_blank" rel="noopener"><strong>AXiM</strong></a></p>';
       const output = sanitizeHTML(input);
