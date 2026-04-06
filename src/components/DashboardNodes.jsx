@@ -1,20 +1,19 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 const { LuZap, LuGlobe, LuCpu } = LuIcons;
 
-// Pre-computed set of keys to exclude from rendering, improving performance during render loop
-const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon', 'displayEntries']);
-
-const initialNodes = [
+const nodes = [
   { id: 'AX-101', type: 'Solar', status: 'Optimal', load: '72%', temp: '42°C', icon: LuZap },
   { id: 'AX-102', type: 'Fiber', status: 'Optimal', throughput: '1.2 Tbps', icon: LuGlobe },
   { id: 'AX-103', type: 'Neural', status: 'Active', accuracy: '98.2%', icon: LuCpu },
 ];
 
-// Pre-compute filtered entries once at module scope to avoid recomputing in the render loop
-const nodes = initialNodes.map(node => ({
+const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon', 'displayEntries']);
+
+const processedNodes = nodes.map(node => ({
   ...node,
   displayEntries: Object.entries(node).filter(([key]) => !EXCLUDED_KEYS.has(key))
 }));
@@ -22,7 +21,7 @@ const nodes = initialNodes.map(node => ({
 export default function DashboardNodes({ selectedNode, setSelectedNode }) {
   return (
     <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {nodes.map((node) => (
+      {processedNodes.map((node) => (
         <motion.div
           key={node.id}
           whileHover={{ y: -5 }}

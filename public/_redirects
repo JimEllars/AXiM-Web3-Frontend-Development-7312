@@ -1,8 +1,1 @@
-# 1. Serve the React app for the root domain
-/  /index.html  200
-
-# 2. Allow the React app to load its CSS/JS assets natively
-/assets/* /assets/:splat  200
-
-# 3. Catch-All: Redirect all old article links, WP-admin, and category links to the WP subdomain
-/* https://wp.axim.us.com/:splat  301
+/* /index.html   200

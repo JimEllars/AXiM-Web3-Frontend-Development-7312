@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ConnectButton } from "thirdweb/react";
 import { client } from "../lib/thirdweb-client";

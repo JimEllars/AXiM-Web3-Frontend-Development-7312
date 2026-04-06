@@ -1,57 +1,61 @@
 import { performance } from 'perf_hooks';
 
-const MARQUEE_ITEMS = [
-  { icon: 'LuCpu', text: "AXiM Ai" },
-  { icon: 'LuScale', text: "Legal Automation" },
-  { icon: 'LuZap', text: "Smart Grids" },
-  { icon: 'LuDatabase', text: "Core Data" },
-  { icon: 'LuAntenna', text: "Fiber Systems" },
-  { icon: 'LuShieldCheck', text: "Smart Protocols" },
-  { icon: 'LuMic', text: "Neural Transcription" },
-];
+const nodes = Array.from({ length: 1000 }, (_, i) => ({ id: i + 1, x: Math.random() * 100, y: Math.random() * 100, label: `NODE_${i}` }));
 
-function doWorkBad() {
-  const result = [];
-  const array = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
-  for (let i = 0; i < array.length; i++) {
-    result.push(array[i]);
-  }
-  return result;
+// Create 5000 random connections
+const connections = Array.from({ length: 5000 }, () => {
+  const from = Math.floor(Math.random() * 1000) + 1;
+  const to = Math.floor(Math.random() * 1000) + 1;
+  return [from, to];
+});
+
+function originalMethod() {
+  const results = [];
+  connections.forEach(([from, to]) => {
+    const start = nodes.find(n => n.id === from);
+    const end = nodes.find(n => n.id === to);
+    if (start && end) {
+      results.push({ start, end });
+    }
+  });
+  return results;
 }
 
-const DISPLAY_ITEMS = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
-function doWorkGood() {
-  const result = [];
-  for (let i = 0; i < DISPLAY_ITEMS.length; i++) {
-    result.push(DISPLAY_ITEMS[i]);
-  }
-  return result;
+function optimizedMethod() {
+  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+  const results = [];
+  connections.forEach(([from, to]) => {
+    const start = nodeMap.get(from);
+    const end = nodeMap.get(to);
+    if (start && end) {
+      results.push({ start, end });
+    }
+  });
+  return results;
 }
 
-const ITERATIONS = 1000000;
+const iterations = 100;
 
-console.log('Warming up...');
-for (let i = 0; i < 1000; i++) {
-  doWorkBad();
-  doWorkGood();
+// Warmup
+for (let i = 0; i < 10; i++) {
+  originalMethod();
+  optimizedMethod();
 }
 
-console.log(`Running ${ITERATIONS} iterations...`);
-
-const startBad = performance.now();
-for (let i = 0; i < ITERATIONS; i++) {
-  doWorkBad();
+let originalTotal = 0;
+for (let i = 0; i < iterations; i++) {
+  const start = performance.now();
+  originalMethod();
+  originalTotal += performance.now() - start;
 }
-const endBad = performance.now();
-const timeBad = endBad - startBad;
 
-const startGood = performance.now();
-for (let i = 0; i < ITERATIONS; i++) {
-  doWorkGood();
+let optimizedTotal = 0;
+for (let i = 0; i < iterations; i++) {
+  const start = performance.now();
+  optimizedMethod();
+  optimizedTotal += performance.now() - start;
 }
-const endGood = performance.now();
-const timeGood = endGood - startGood;
 
-console.log(`Bad version (inline array): ${timeBad.toFixed(2)} ms`);
-console.log(`Good version (pre-computed array): ${timeGood.toFixed(2)} ms`);
-console.log(`Improvement: ${((timeBad - timeGood) / timeBad * 100).toFixed(2)}%`);
+console.log(`Original method: ${(originalTotal / iterations).toFixed(4)} ms per run`);
+console.log(`Optimized method: ${(optimizedTotal / iterations).toFixed(4)} ms per run`);
+console.log(`Improvement: ${((originalTotal - optimizedTotal) / originalTotal * 100).toFixed(2)}% faster`);

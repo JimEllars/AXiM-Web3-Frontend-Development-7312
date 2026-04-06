@@ -2,6 +2,7 @@ import 'global-jsdom/register';
 import { test, describe, afterEach } from 'node:test';
 import assert from 'node:assert';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import React from 'react';
 import GovernanceVote from './GovernanceVote.jsx';
 
 describe('GovernanceVote Component', () => {
