@@ -1,3 +1,4 @@
+import React from 'react';
 import Hero from '../components/Hero';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';

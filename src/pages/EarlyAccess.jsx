@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import SDKWrapper from '../components/SDKWrapper';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
-const { LuLock, LuShieldCheck, LuZap, LuMail } = LuIcons;
+const { LuLock, LuShieldCheck, LuZap } = LuIcons;
 
 export default function EarlyAccess() {
   return (
@@ -67,32 +68,7 @@ export default function EarlyAccess() {
           transition={{ delay: 0.4 }}
           className="w-full"
         >
-          <div className="max-w-[500px] mx-auto p-8 bg-glass border border-subtle">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold uppercase mb-2">Coming Soon</h2>
-              <p className="text-zinc-400 text-sm">Our restricted access onboarding portal is currently undergoing final calibration. Join the waitlist for priority access.</p>
-            </div>
-
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert('Thanks for joining the waitlist!'); }}>
-              <div>
-                <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">Operator Communication Link</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SafeIcon icon={LuMail} className="text-zinc-500 w-4 h-4" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="ENTER_EMAIL_ADDRESS"
-                    className="w-full bg-white/5 border border-white/10 p-3 pl-10 text-white placeholder-zinc-600 focus:outline-none focus:border-axim-gold transition-colors font-mono text-sm"
-                  />
-                </div>
-              </div>
-              <button type="submit" className="w-full p-4 bg-axim-gold text-black font-bold uppercase text-sm tracking-wider hover:bg-white transition-colors">
-                Request Clearance
-              </button>
-            </form>
-          </div>
+          <SDKWrapper />
         </motion.div>
       </div>
     </div>

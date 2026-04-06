@@ -1,3 +1,4 @@
+import React from 'react';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';
 
@@ -12,14 +13,10 @@ export default function Articles() {
         </p>
       </div>
 
-      {/* 1. Main Featured Section */}
-      <FeaturedArticles categorySlug="featured" limit={2} title="Featured Intelligence" />
+      <FeaturedArticles categorySlug="featured" limit={2} />
 
-      {/* 2. App Spotlight Section */}
-      <NewsFeed categorySlug="app-spotlight" limit={6} title="App Spotlight" />
-
-      {/* 3. Software Spotlight Section */}
-      <NewsFeed categorySlug="software-spotlight" limit={6} title="Software Spotlight" />
+      {/* We can use a different slug like 'news' or 'article' here depending on WP setup */}
+      <NewsFeed categorySlug="article" limit={24} />
     </div>
   );
 }

@@ -1,41 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
-import { sanitizeHTML, sanitizeURL } from '../lib/sanitize';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
-import DatabaseUplinkError from '../common/DatabaseUplinkError';
 
 const { LuArrowRight } = LuIcons;
 
-function ensureSafeProtocol(url) {
-  if (!url) return '#';
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-      return url;
-    }
-    return '#';
-  } catch (e) {
-    if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
-      return url;
-    }
-    return '#';
-  }
-}
-
-export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories' }) {
+export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadPosts() {
       setLoading(true);
-      let fetched = await fetchPostsByCategory(categorySlug, limit);
-      // Fallback: If fetched articles are empty after the first call, trigger a second call to get any recent posts
-      if (!fetched || fetched.length === 0) {
-        fetched = await fetchPostsByCategory('', limit);
-      }
+      const fetched = await fetchPostsByCategory(categorySlug, limit);
       setPosts(fetched);
       setLoading(false);
     }
@@ -44,16 +22,13 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
 
   if (loading) {
     return (
-      <div className="py-12 flex flex-col justify-center items-center">
-        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin mb-4"></div>
-        <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
+      <div className="py-12 flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  if (posts.length === 0) {
-    return <DatabaseUplinkError />;
-  }
+  if (posts.length === 0) return null;
 
   return (
     <section className="py-16 relative z-10">
@@ -65,7 +40,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
           className="mb-12"
         >
           <span className="section-label">Featured Intelligence</span>
-          <h2 className="section-title !mb-0 text-axim-gold">{title || 'Top Stories'}</h2>
+          <h2 className="section-title !mb-0 text-axim-gold">Top Stories</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -92,18 +67,13 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer">
-                  <h3
-                    className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}
-                  ></h3>
-                </a>
+                <h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
+                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
                 ></div>
                 <a
-                  href={ensureSafeProtocol(post.link)}
+                  href={post.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto"

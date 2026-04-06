@@ -2,11 +2,10 @@ const ITERATIONS = 1000000;
 
 const node = { id: 'AX-101', type: 'Solar', status: 'Optimal', load: '72%', temp: '42°C', icon: 'LuZap' };
 
-const BASELINE_EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon']);
 function baseline() {
   let count = 0;
   for (let i = 0; i < ITERATIONS; i++) {
-    Object.entries(node).filter(([key]) => !BASELINE_EXCLUDED_KEYS.has(key)).forEach(([key, val]) => {
+    Object.entries(node).filter(([key]) => !['id', 'type', 'status', 'icon'].includes(key)).forEach(([key, val]) => {
       count++;
     });
   }

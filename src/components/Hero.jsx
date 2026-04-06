@@ -46,7 +46,7 @@ export default function Hero() {
       >
         <a href="https://axim.us.com/axim-demand-letter-generator/" 
            className="font-mono text-[0.7rem] text-axim-gold bg-axim-gold/10 px-3.5 py-1.5 rounded border border-axim-gold uppercase font-bold mb-8 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(255,234,0,0.1)] transition hover:bg-axim-gold/20">
-          <SafeIcon icon={LuSparkles} className="w-3.5 h-3.5" /> NEW: $4.00 QUICK DEMAND LETTER GENERATOR
+          <SafeIcon icon={LuSparkles} className="w-3.5 h-3.5" /> NEW: $9.00 QUICK DEMAND LETTER GENERATOR
         </a>
 
         <div className="font-mono text-xs text-axim-green bg-axim-green/10 px-4 py-2 rounded-full border border-axim-green/30 mb-6 inline-flex items-center gap-3 backdrop-blur-md md:flex md:mb-6 mx-auto md:mx-0">
@@ -55,12 +55,12 @@ export default function Hero() {
         </div>
 
         <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] leading-none font-black tracking-[-0.04em] mb-6 uppercase">
-          Smart Business<br className="hidden md:block" />
-          <span className="gradient-text"> Systems.</span>
+          Builders of<br className="hidden md:block" />
+          <span className="gradient-text"> A New Era.</span>
         </h1>
 
         <p className="text-[clamp(1.1rem,2vw,1.25rem)] text-zinc-400 max-w-[700px] mb-12 leading-[1.6] font-light mx-auto md:mx-0">
-          AXiM Systems delivers intelligent, automated solutions to streamline operations, enhance security, and scale the digital infrastructure of modern enterprises.
+          AXiM Systems integrates energy infrastructure, mission-critical connectivity, and autonomous intelligence to power the physical and digital backbone of modern society.
         </p>
 
         <div className="flex gap-5 flex-wrap justify-center md:justify-start">
@@ -68,7 +68,7 @@ export default function Hero() {
             Explore Solutions <SafeIcon icon={LuArrowRight} />
           </a>
           <a href="https://axim.us.com/axim-demand-letter-generator/" className="btn btn-outline">
-            Start $4.00 Draft
+            Start $9.00 Draft
           </a>
         </div>
       </motion.div>

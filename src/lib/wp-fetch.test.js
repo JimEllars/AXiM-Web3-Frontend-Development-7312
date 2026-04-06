@@ -198,128 +198,6 @@ describe('getWordPressPost', () => {
       console.error = localOriginalConsoleError;
     }
   });
-
-  test('should correctly fetch and return post data (success path)', async () => {
-    process.env.VITE_WORDPRESS_URL = 'http://mock-success.com';
-    const mockPostData = { data: { post: { title: 'Success Path', content: 'It works!' } } };
-
-    const localOriginalFetch = global.fetch;
-    try {
-      global.fetch = async (url, options) => {
-        assert.strictEqual(url, 'http://mock-success.com');
-        assert.strictEqual(options.method, 'POST');
-        return {
-          json: async () => mockPostData
-        };
-      };
-
-      const result = await getWordPressPost('success-slug');
-      assert.deepStrictEqual(result, mockPostData);
-    } finally {
-      global.fetch = localOriginalFetch;
-    }
-  });
-
-  test('should handle network failure gracefully (error path)', async () => {
-    process.env.VITE_WORDPRESS_URL = 'http://mock-error.com';
-
-    const localOriginalFetch = global.fetch;
-    const localOriginalConsoleError = console.error;
-
-    try {
-      global.fetch = async () => {
-        throw new TypeError('Failed to fetch');
-      };
-
-      let errorLogged = false;
-      console.error = (msg, err) => {
-        if (msg === 'WP Fetch Error:' && err.message === 'Failed to fetch') {
-          errorLogged = true;
-        }
-      };
-
-      const result = await getWordPressPost('error-slug');
-      assert.strictEqual(result, null);
-      assert.strictEqual(errorLogged, true);
-    } finally {
-      global.fetch = localOriginalFetch;
-      console.error = localOriginalConsoleError;
-    }
-  });
-
-  test('should return cached posts if available and not expired', async () => {
-    fetchCache.set('cached-cat-5', {
-      data: [{ id: 999, title: 'Cached Post' }],
-      timestamp: Date.now() - 1000 // 1 second ago, well within 5 mins
-    });
-
-    let fetchCalled = false;
-    global.fetch = async () => {
-      fetchCalled = true;
-      throw new Error('Should not fetch');
-    };
-
-    const result = await fetchPostsByCategory('cached-cat', 5);
-    assert.deepStrictEqual(result, [{ id: 999, title: 'Cached Post' }]);
-    assert.strictEqual(fetchCalled, false);
-  });
-
-  test('should not throw error but return empty array if fetch fails and fallback is exhausted', async () => {
-    process.env.VITE_WORDPRESS_REST_URL = 'http://mock-env-url';
-    const localOriginalFetch = global.fetch;
-    const localOriginalConsoleWarn = console.warn;
-    try {
-      global.fetch = async () => {
-        throw new Error('Initial fetch failed');
-      };
-
-      let warnLogged = false;
-      console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('Returning empty array to trigger graceful UI state.')) warnLogged = true;
-      };
-
-      const result = await fetchPostsByCategory('apps', 2);
-      assert.strictEqual(result.length, 0); // returns empty array
-      assert.strictEqual(warnLogged, true);
-    } finally {
-      global.fetch = localOriginalFetch;
-      console.warn = localOriginalConsoleWarn;
-      delete process.env.VITE_WORDPRESS_REST_URL;
-    }
-  });
-
-  test('should return stale cache if fetch fails and cache exists', async () => {
-    fetchCache.set('stale-cat-2', {
-      data: [{ id: 888, title: 'Stale Cached Post' }],
-      timestamp: Date.now() - 400000 // 400s ago, expired (> 300s)
-    });
-
-    const localOriginalFetch = global.fetch;
-    const localOriginalConsoleWarn = console.warn;
-
-    try {
-      global.fetch = async () => {
-        throw new Error('Network failure');
-      };
-
-      // Since try/catch no longer throws error on failure in the loop
-      // and we return empty array directly, it never enters the main catch block
-      // so stale cached post is not returned anymore.
-      // We will adjust this test to assert that it returns an empty array.
-
-      let warnLogged = false;
-      console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('Returning empty array')) warnLogged = true;
-      };
-
-      const result = await fetchPostsByCategory('stale-cat', 2);
-      assert.strictEqual(result.length, 0); // returns empty array
-      assert.strictEqual(warnLogged, true);
-    } finally {
-      global.fetch = localOriginalFetch;
-      console.warn = localOriginalConsoleWarn;
-    }
-  });
 });
 
 describe('fetchPostsByCategory', () => {
@@ -382,7 +260,7 @@ describe('fetchPostsByCategory', () => {
     }]);
   });
 
-  test('should return empty array and warn if category not found and posts fetch fails', async () => {
+  test('should return empty array and warn if category not found', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleWarn = console.warn;
     try {
@@ -393,21 +271,15 @@ describe('fetchPostsByCategory', () => {
             json: async () => []
           };
         }
-        if (url.includes('/posts')) {
-          return {
-            ok: false,
-            statusText: 'Not Found'
-          };
-        }
       };
 
       let warnLogged = false;
       console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('No category found')) warnLogged = true;
+        if (msg.includes('No category found')) warnLogged = true;
       };
 
-      const result = await fetchPostsByCategory('unknown', 2);
-      assert.strictEqual(result.length, 0);
+      const result = await fetchPostsByCategory('unknown');
+      assert.deepStrictEqual(result, []);
       assert.strictEqual(warnLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -451,7 +323,7 @@ describe('fetchPostsByCategory', () => {
     }]);
   });
 
-  test('should return empty array and warn if category not found (null response) and post fetch fails', async () => {
+  test('should return empty array and warn if category not found (null response)', async () => {
     const localOriginalFetch = global.fetch;
     const localOriginalConsoleWarn = console.warn;
     try {
@@ -462,21 +334,15 @@ describe('fetchPostsByCategory', () => {
             json: async () => null
           };
         }
-        if (url.includes('/posts')) {
-          return {
-            ok: false,
-            statusText: 'Not Found'
-          };
-        }
       };
 
       let warnLogged = false;
       console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('No category found')) warnLogged = true;
+        if (msg.includes('No category found')) warnLogged = true;
       };
 
-      const result = await fetchPostsByCategory('unknown', 1);
-      assert.strictEqual(result.length, 0);
+      const result = await fetchPostsByCategory('unknown');
+      assert.deepStrictEqual(result, []);
       assert.strictEqual(warnLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -486,29 +352,29 @@ describe('fetchPostsByCategory', () => {
 
   test('should return empty array and log error if fetch throws', async () => {
     const localOriginalFetch = global.fetch;
-    const localOriginalConsoleWarn = console.warn;
+    const localOriginalConsoleError = console.error;
     try {
       global.fetch = async () => {
         throw new Error('Network error');
       };
 
-      let warnLogged = false;
-      console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('Returning empty array')) warnLogged = true;
+      let errorLogged = false;
+      console.error = (msg) => {
+        if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps', 3);
-      assert.strictEqual(result.length, 0);
-      assert.strictEqual(warnLogged, true);
+      const result = await fetchPostsByCategory('apps');
+      assert.deepStrictEqual(result, []);
+      assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
-      console.warn = localOriginalConsoleWarn;
+      console.error = localOriginalConsoleError;
     }
   });
 
   test('should return empty array and log error if category fetch is not ok', async () => {
     const localOriginalFetch = global.fetch;
-    const localOriginalConsoleWarn = console.warn;
+    const localOriginalConsoleError = console.error;
     try {
       global.fetch = async (url) => {
         if (url.includes('/categories?slug=apps')) {
@@ -519,23 +385,23 @@ describe('fetchPostsByCategory', () => {
         }
       };
 
-      let warnLogged = false;
-      console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('Returning empty array')) warnLogged = true;
+      let errorLogged = false;
+      console.error = (msg) => {
+        if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps', 2);
-      assert.strictEqual(result.length, 0);
-      assert.strictEqual(warnLogged, true);
+      const result = await fetchPostsByCategory('apps');
+      assert.deepStrictEqual(result, []);
+      assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
-      console.warn = localOriginalConsoleWarn;
+      console.error = localOriginalConsoleError;
     }
   });
 
   test('should return empty array and log error if posts fetch is not ok', async () => {
     const localOriginalFetch = global.fetch;
-    const localOriginalConsoleWarn = console.warn;
+    const localOriginalConsoleError = console.error;
     try {
       global.fetch = async (url) => {
         if (url.includes('/categories?slug=apps')) {
@@ -552,17 +418,17 @@ describe('fetchPostsByCategory', () => {
         }
       };
 
-      let warnLogged = false;
-      console.warn = (msg) => {
-        if (typeof msg === 'string' && msg.includes('Returning empty array')) warnLogged = true;
+      let errorLogged = false;
+      console.error = (msg) => {
+        if (msg.includes('Error fetching posts')) errorLogged = true;
       };
 
-      const result = await fetchPostsByCategory('apps', 1);
-      assert.strictEqual(result.length, 0);
-      assert.strictEqual(warnLogged, true);
+      const result = await fetchPostsByCategory('apps');
+      assert.deepStrictEqual(result, []);
+      assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
-      console.warn = localOriginalConsoleWarn;
+      console.error = localOriginalConsoleError;
     }
   });
 });

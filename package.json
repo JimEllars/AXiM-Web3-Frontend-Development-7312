@@ -5,20 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --sourcemap false",
+    "build": "node fix-css.cjs && vite build --sourcemap false",
+    "postinstall": "node fix-css.cjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vite-node --config vite.config.test.js src/components/InfoPanel.test.jsx && vite-node --config vite.config.test.js src/common/SafeIcon.test.jsx && vite-node --config vite.config.test.js src/components/GovernanceVote.test.jsx && vite-node --config vite.config.test.js src/components/DashboardAccessDenied.test.jsx && vite-node --config vite.config.test.js src/components/TelemetryBar.test.jsx && vite-node --config vite.config.test.js src/components/ErrorBoundary.test.jsx && vite-node --config vite.config.test.js src/hooks/useAximAuth.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js"
+    "test": "vite-node src/components/GovernanceVote.test.jsx && node --test src/pages/Dashboard.test.js && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.10.1",
     "@emotion/is-prop-valid": "^1.3.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@questlabs/react-sdk": "^2.2.92",
+    "@supabase/supabase-js": "^2.45.0",
     "clsx": "^2.1.1",
     "cookie": "^0.7.2",
     "framer-motion": "^10.18.0",
-    "isomorphic-dompurify": "^3.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
