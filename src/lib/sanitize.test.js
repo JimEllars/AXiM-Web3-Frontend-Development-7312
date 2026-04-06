@@ -1,5 +1,6 @@
-import { test, describe } from 'node:test';
+import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert';
+import { JSDOM } from 'jsdom';
 import { sanitizeHTML, sanitizeURL } from './sanitize.js';
 
 describe('sanitizeHTML', () => {
@@ -24,6 +25,52 @@ describe('sanitizeHTML', () => {
     const output = sanitizeHTML(input);
     assert.strictEqual(output, 'Test ');
     global.window = originalWindow;
+  });
+
+  describe('with DOMParser available', () => {
+    let originalWindow;
+
+    before(() => {
+      originalWindow = global.window;
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+      global.window = dom.window;
+      global.DOMParser = dom.window.DOMParser;
+    });
+
+    after(() => {
+      global.window = originalWindow;
+      delete global.DOMParser;
+    });
+
+    test('should preserve safe tags and attributes', () => {
+      const input = '<p class="text-white" id="main"><a href="https://axim.us.com" target="_blank" rel="noopener"><strong>AXiM</strong></a></p>';
+      const output = sanitizeHTML(input);
+      assert.strictEqual(output, input);
+    });
+
+    test('should strip unsafe tags but keep safe children text', () => {
+      const input = '<script>alert(1)</script><div>Hello <iframe src="evil.com"></iframe>World</div>';
+      const output = sanitizeHTML(input);
+      assert.strictEqual(output, '<div>Hello World</div>');
+    });
+
+    test('should remove dangerous protocols from uri-like attributes', () => {
+      const input = '<a href="javascript:alert(1)">Click me</a>';
+      const output = sanitizeHTML(input);
+      assert.strictEqual(output, '<a>Click me</a>');
+    });
+
+    test('should allow valid protocols in uri-like attributes', () => {
+      const input = '<a href="https://example.com/action">Action</a>';
+      const output = sanitizeHTML(input);
+      assert.strictEqual(output, input);
+    });
+
+    test('should handle nested allowed tags', () => {
+      const input = '<ul><li><em>Item 1</em></li><li><code>Item 2</code></li></ul>';
+      const output = sanitizeHTML(input);
+      assert.strictEqual(output, input);
+    });
   });
 });
 
