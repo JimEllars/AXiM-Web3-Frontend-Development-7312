@@ -1,4 +1,3 @@
-import React from 'react';
 let activeAccountMock = null;
 
 export function setActiveAccountMock(account) {

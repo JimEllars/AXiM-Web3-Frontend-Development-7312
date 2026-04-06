@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';

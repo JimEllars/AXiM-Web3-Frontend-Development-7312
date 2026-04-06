@@ -1,4 +1,3 @@
-import React from 'react';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
