@@ -48,3 +48,42 @@ export function sanitizeURL(url) {
 
   return url;
 }
+
+/**
+ * Ensures a URL uses a safe protocol (http/https) or is a relative path.
+ * Uses the native URL constructor for robust validation.
+ * @param {string} url - The URL to validate.
+ * @returns {string} - The safe URL or '#' if dangerous.
+ */
+export function ensureSafeProtocol(url) {
+  if (!url) return '#';
+  if (typeof url !== 'string') return '#';
+
+  const trimmed = url.trim();
+
+  try {
+    let absoluteParsed;
+    try {
+      absoluteParsed = new URL(trimmed);
+    } catch (e) {
+      // URL is not absolute. Parse it against a dummy HTTP base to ensure
+      // it doesn't contain hidden malicious protocols.
+      const parsedWithBase = new URL(trimmed, 'http://dummy.local');
+      if (parsedWithBase.protocol === 'http:' || parsedWithBase.protocol === 'https:') {
+        return trimmed;
+      }
+      return '#';
+    }
+
+    // It is an absolute URL
+    if (absoluteParsed.protocol === 'http:' || absoluteParsed.protocol === 'https:') {
+      return trimmed;
+    }
+
+    console.warn(`[security] Blocked dangerous protocol in URL: ${trimmed}`);
+    return '#';
+  } catch (e) {
+    console.warn(`[security] Failed to parse URL: ${trimmed}`, e);
+    return '#';
+  }
+}

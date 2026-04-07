@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -73,7 +74,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
                   dangerouslySetInnerHTML={{ __html: post.excerpt }}
                 ></div>
                 <a
-                  href={post.link}
+                  href={ensureSafeProtocol(post.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto"
