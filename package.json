@@ -9,7 +9,7 @@
     "postinstall": "node fix-css.cjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vite-node src/components/GovernanceVote.test.jsx && node --test src/pages/Dashboard.test.js && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js"
+    "test": "vite-node src/components/GovernanceVote.test.jsx && node --test src/pages/Dashboard.test.js && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.10.1",

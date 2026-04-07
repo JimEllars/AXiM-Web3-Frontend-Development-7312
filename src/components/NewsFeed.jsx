@@ -4,6 +4,7 @@ import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
+import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -97,7 +98,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
                       dangerouslySetInnerHTML={{ __html: post.excerpt }}
                     ></div>
                     <a
-                      href={post.link}
+                      href={ensureSafeProtocol(post.link)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-teal transition-colors mt-auto"
