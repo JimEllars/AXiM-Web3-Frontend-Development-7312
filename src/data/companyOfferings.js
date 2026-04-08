@@ -4,7 +4,7 @@ export const generators = [
     title: "Demand Letter",
     desc: "Instant legal demand letter generation ($4.00).",
     iconName: "LuFileText",
-    url: "https://axim.us.com/axim-demand-letter-generator/"
+    url: "https://quickdemandletter.com/demand-letter"
   },
   {
     id: "G_NDA",
