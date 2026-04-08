@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { coreLinks } from '../data/companyOfferings';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import { ensureSafeProtocol } from '../lib/sanitize';
 
 export default function Ecosystem() {
   return (
@@ -40,7 +41,7 @@ export default function Ecosystem() {
                 </div>
               </div>
               <a
-                href={item.url}
+                href={ensureSafeProtocol(item.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline whitespace-nowrap !py-2 !px-5 !text-xs group-hover:border-axim-gold group-hover:text-axim-gold"
