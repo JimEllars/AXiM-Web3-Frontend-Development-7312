@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import LoadingSpinner from '../common/LoadingSpinner';
 import { generators } from '../data/companyOfferings';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
@@ -43,11 +44,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
   }, [categorySlug, limit]);
 
   if (loading) {
-    return (
-      <div className="py-24 flex justify-center items-center">
-        <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingSpinner message="Syncing with AXiM Intelligence..." />;
   }
 
   if (items.length === 0) return null;

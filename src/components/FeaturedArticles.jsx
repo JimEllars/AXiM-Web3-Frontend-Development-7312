@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import LoadingSpinner from '../common/LoadingSpinner';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
@@ -23,9 +24,11 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
 
   if (loading) {
     return (
-      <div className="py-12 flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin"></div>
-      </div>
+      <LoadingSpinner
+        pyClass="py-12"
+        sizeClass="w-8 h-8"
+        colorClass="border-axim-gold/20 border-t-axim-gold"
+      />
     );
   }
 
