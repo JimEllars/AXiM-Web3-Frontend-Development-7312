@@ -5,7 +5,7 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { generators } from '../data/companyOfferings';
-import { ensureSafeProtocol } from '../lib/sanitize';
+import { ensureSafeProtocol, sanitizeHTML } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -90,11 +90,11 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
                       {new Date(post.date).toLocaleDateString()}
                     </span>
                     <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer" className="block">
-                      <h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
+                      <h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3>
                     </a>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
                     ></div>
                     <a
                       href={ensureSafeProtocol(post.link)}
@@ -130,7 +130,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
                   </div>
                   <p className="text-zinc-300 text-sm leading-[1.6] flex-grow mb-8 relative z-10">{offering.desc}</p>
                   <a
-                    href={offering.url}
+                    href={ensureSafeProtocol(offering.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-green hover:bg-axim-green/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
