@@ -44,7 +44,7 @@ export default function Hero() {
         transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
         className="max-w-[1200px] w-full mx-auto px-6 relative z-10 text-center md:text-left"
       >
-        <a href="https://quickdemandletter.com/start"
+        <a href="https://quickdemandletter.com/"
            className="font-mono text-[0.7rem] text-axim-gold bg-axim-gold/10 px-3.5 py-1.5 rounded border border-axim-gold uppercase font-bold mb-8 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(255,234,0,0.1)] transition hover:bg-axim-gold/20">
           <SafeIcon icon={LuSparkles} className="w-3.5 h-3.5" /> NEW: $4.00 QUICK DEMAND LETTER GENERATOR
         </a>
@@ -67,7 +67,7 @@ export default function Hero() {
           <a href="#axim-solutions" className="btn btn-primary">
             Explore Solutions <SafeIcon icon={LuArrowRight} />
           </a>
-          <a href="https://quickdemandletter.com/start" className="btn btn-outline">
+          <a href="https://quickdemandletter.com/" className="btn btn-outline">
             Start $4.00 Draft
           </a>
         </div>
