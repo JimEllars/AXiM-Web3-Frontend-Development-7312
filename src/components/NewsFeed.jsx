@@ -93,28 +93,26 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   className="bg-glass border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
                 >
                   {post.featuredImage && (
-                    <div className="h-48 overflow-hidden relative border-b border-subtle">
+                    <a href={post.link} className="block"><div className="h-48 overflow-hidden relative border-b border-subtle">
                       <div className="absolute inset-0 bg-axim-teal/10 mix-blend-overlay z-10"></div>
                       <img
                         src={post.featuredImage}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
-                    </div>
+                    </div></a>
                   )}
                   <div className="p-6 flex flex-col flex-grow">
                     <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
+                    <a href={post.link} className="block hover:underline"><h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3></a>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
                       dangerouslySetInnerHTML={{ __html: post.excerpt }}
                     ></div>
                     <a
                       href={post.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-teal transition-colors mt-auto"
                     >
                       Read Full Article <SafeIcon icon={LuArrowRight} />
@@ -146,8 +144,6 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   <p className="text-zinc-300 text-sm leading-[1.6] flex-grow mb-8 relative z-10">{offering.desc}</p>
                   <a
                     href={offering.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-green hover:bg-axim-green/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
                   >
                     Access Now <SafeIcon icon={LuArrowRight} />

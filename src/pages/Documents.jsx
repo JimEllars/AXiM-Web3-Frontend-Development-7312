@@ -41,8 +41,8 @@ export default function Documents() {
 
             <a
               href={doc.url}
-              target="_blank"
-              rel="noopener noreferrer"
+
+
               className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
             >
               Generate Document <SafeIcon icon={LuArrowRight} />
