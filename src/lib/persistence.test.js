@@ -35,23 +35,69 @@ describe('localStore.getProfile', () => {
   });
 
   test('should return null when address is null', () => {
-    const result = localStore.getProfile(null);
-    assert.strictEqual(result, null);
+    let getItemCalled = false;
+    const originalGetItem = localStorage.getItem;
+    try {
+      localStorage.getItem = (...args) => {
+        getItemCalled = true;
+        return originalGetItem(...args);
+      };
+      const result = localStore.getProfile(null);
+      assert.strictEqual(result, null);
+      assert.strictEqual(getItemCalled, false, 'localStorage.getItem should not be called when address is null');
+    } finally {
+      localStorage.getItem = originalGetItem;
+    }
   });
 
   test('should return null when address is undefined', () => {
-    const result = localStore.getProfile(undefined);
-    assert.strictEqual(result, null);
+    let getItemCalled = false;
+    const originalGetItem = localStorage.getItem;
+    try {
+      localStorage.getItem = (...args) => {
+        getItemCalled = true;
+        return originalGetItem(...args);
+      };
+      const result = localStore.getProfile(undefined);
+      assert.strictEqual(result, null);
+      assert.strictEqual(getItemCalled, false, 'localStorage.getItem should not be called when address is undefined');
+    } finally {
+      localStorage.getItem = originalGetItem;
+    }
   });
 
   test('should return null when getProfile is called without arguments', () => {
-    const result = localStore.getProfile();
-    assert.strictEqual(result, null);
+    let getItemCalled = false;
+    const originalGetItem = localStorage.getItem;
+
+    try {
+      localStorage.getItem = (...args) => {
+        getItemCalled = true;
+        return originalGetItem(...args);
+      };
+
+      const result = localStore.getProfile();
+      assert.strictEqual(result, null);
+      assert.strictEqual(getItemCalled, false, 'localStorage.getItem should not be called when address is missing');
+    } finally {
+      localStorage.getItem = originalGetItem;
+    }
   });
 
   test('should return null when address is empty string', () => {
-    const result = localStore.getProfile('');
-    assert.strictEqual(result, null);
+    let getItemCalled = false;
+    const originalGetItem = localStorage.getItem;
+    try {
+      localStorage.getItem = (...args) => {
+        getItemCalled = true;
+        return originalGetItem(...args);
+      };
+      const result = localStore.getProfile('');
+      assert.strictEqual(result, null);
+      assert.strictEqual(getItemCalled, false, 'localStorage.getItem should not be called when address is empty string');
+    } finally {
+      localStorage.getItem = originalGetItem;
+    }
   });
 
   test('should create and return a new profile for a valid address', () => {

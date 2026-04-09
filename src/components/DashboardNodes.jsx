@@ -11,17 +11,13 @@ const nodes = [
   { id: 'AX-103', type: 'Neural', status: 'Active', accuracy: '98.2%', icon: LuCpu },
 ];
 
-const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon', 'displayEntries']);
-
-const processedNodes = nodes.map(node => ({
-  ...node,
-  displayEntries: Object.entries(node).filter(([key]) => !EXCLUDED_KEYS.has(key))
-}));
+// Pre-computed set of keys to exclude from rendering, improving performance during render loop
+const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon']);
 
 export default function DashboardNodes({ selectedNode, setSelectedNode }) {
   return (
     <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {processedNodes.map((node) => (
+      {nodes.map((node) => (
         <motion.div
           key={node.id}
           whileHover={{ y: -5 }}
@@ -39,7 +35,7 @@ export default function DashboardNodes({ selectedNode, setSelectedNode }) {
           <h3 className="text-xl font-bold uppercase mb-1">{node.id}</h3>
           <p className="text-zinc-500 text-xs uppercase tracking-widest mb-4">{node.type} Node</p>
           <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-4">
-            {node.displayEntries.map(([key, val]) => (
+            {Object.entries(node).filter(([key]) => !EXCLUDED_KEYS.has(key)).map(([key, val]) => (
               <div key={key}>
                 <div className="text-[0.6rem] text-zinc-600 uppercase mb-1">{key}</div>
                 <div className="text-sm font-bold font-mono text-white">{val}</div>
