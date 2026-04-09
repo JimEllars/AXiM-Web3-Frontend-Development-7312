@@ -44,8 +44,8 @@ export default function More() {
 
             <a
               href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
+
+
               className="w-full py-4 mt-auto bg-white/5 border border-white/10 text-white font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:border-axim-gold transition-colors flex items-center justify-center gap-2 relative z-10"
             >
               Access Branch <SafeIcon icon={LuArrowRight} />
