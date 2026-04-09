@@ -29,7 +29,7 @@ export default function Deployment() {
               
               <div className="p-6 border-l-2 border-subtle hover:border-axim-gold hover:bg-gradient-to-r from-white/5 to-transparent transition-all duration-300">
                 <h4 className="text-[1.1rem] font-extrabold uppercase mb-2">Legal Infrastructure Automation</h4>
-                <p className="text-zinc-400">Generate professional demand letters in 12 minutes for $9.00. High-performance Ai fact-extraction with 97.4% precision.</p>
+                <p className="text-zinc-400">Generate professional demand letters in 12 minutes for $4.00. High-performance Ai fact-extraction with 97.4% precision.</p>
                 <a href="https://axim.us.com/axim-demand-letter-generator/" className="text-[0.75rem] text-axim-gold font-bold uppercase mt-3 inline-flex items-center gap-2 hover:gap-3 transition-all">
                   Access Quick Demand Letter <SafeIcon icon={LuArrowRight} className="w-3 h-3" />
                 </a>
