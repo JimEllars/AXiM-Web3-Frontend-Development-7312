@@ -1,21 +1,22 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
+// Hoisted outside component
+const NODES = [
+  { id: 1, x: 50, y: 20, label: 'CORE_ORACLE' },
+  { id: 2, x: 20, y: 50, label: 'GRID_NORTH' },
+  { id: 3, x: 80, y: 50, label: 'GRID_SOUTH' },
+  { id: 4, x: 35, y: 80, label: 'FIBER_HUB_A' },
+  { id: 5, x: 65, y: 80, label: 'FIBER_HUB_B' },
+];
+
+const CONNECTIONS = [
+  [1, 2], [1, 3], [2, 4], [3, 5], [4, 5], [2, 3]
+];
+
+const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
+
 export default function NetworkTopology() {
-  const nodes = [
-    { id: 1, x: 50, y: 20, label: 'CORE_ORACLE' },
-    { id: 2, x: 20, y: 50, label: 'GRID_NORTH' },
-    { id: 3, x: 80, y: 50, label: 'GRID_SOUTH' },
-    { id: 4, x: 35, y: 80, label: 'FIBER_HUB_A' },
-    { id: 5, x: 65, y: 80, label: 'FIBER_HUB_B' },
-  ];
-
-  const connections = [
-    [1, 2], [1, 3], [2, 4], [3, 5], [4, 5], [2, 3]
-  ];
-
-  const nodeMap = useMemo(() => new Map(nodes.map(n => [n.id, n])), []);
-
   return (
     <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm overflow-hidden">
       <div className="absolute top-4 left-4 font-mono text-[10px] text-axim-gold opacity-50 uppercase">
@@ -24,9 +25,9 @@ export default function NetworkTopology() {
       
       <svg viewBox="0 0 100 100" className="w-full h-full">
         {/* Connection Lines */}
-        {connections.map(([from, to], i) => {
-          const start = nodeMap.get(from);
-          const end = nodeMap.get(to);
+        {CONNECTIONS.map(([from, to], i) => {
+          const start = NODE_MAP.get(from);
+          const end = NODE_MAP.get(to);
           if (!start || !end) return null;
           return (
             <motion.line
@@ -43,7 +44,7 @@ export default function NetworkTopology() {
         })}
 
         {/* Nodes */}
-        {nodes.map((node) => (
+        {NODES.map((node) => (
           <g key={node.id}>
             <motion.circle
               cx={node.x} cy={node.y} r="2"

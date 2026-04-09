@@ -3,19 +3,21 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
-import LoadingSpinner from '../common/LoadingSpinner';
-import { ensureSafeProtocol, sanitizeHTML } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
-export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 }) {
+export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories' }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadPosts() {
       setLoading(true);
-      const fetched = await fetchPostsByCategory(categorySlug, limit);
+      let fetched = await fetchPostsByCategory(categorySlug, limit);
+      // Fallback: If fetched articles are empty after the first call, trigger a second call to get any recent posts
+      if (!fetched || fetched.length === 0) {
+        fetched = await fetchPostsByCategory('', limit);
+      }
       setPosts(fetched);
       setLoading(false);
     }
@@ -24,15 +26,24 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
 
   if (loading) {
     return (
-      <LoadingSpinner
-        pyClass="py-12"
-        sizeClass="w-8 h-8"
-        colorClass="border-axim-gold/20 border-t-axim-gold"
-      />
+      <div className="py-12 flex flex-col justify-center items-center">
+        <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin mb-4"></div>
+        <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
+      </div>
     );
   }
 
-  if (posts.length === 0) return null;
+  if (posts.length === 0) {
+    return (
+      <section className="py-16 relative z-10">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <p className="text-zinc-500 font-mono">
+            Establishing secure uplink to AXiM Database... If this persists, verify CORS headers on the origin server.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 relative z-10">
@@ -44,7 +55,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
           className="mb-12"
         >
           <span className="section-label">Featured Intelligence</span>
-          <h2 className="section-title !mb-0 text-axim-gold">Top Stories</h2>
+          <h2 className="section-title !mb-0 text-axim-gold">{title || 'Top Stories'}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -71,15 +82,13 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2 
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer" className="block">
-                  <h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3>
-                </a>
+                <h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
+                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
                 ></div>
                 <a
-                  href={ensureSafeProtocol(post.link)}
+                  href={post.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto"

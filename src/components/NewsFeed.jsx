@@ -3,13 +3,11 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { generators } from '../data/companyOfferings';
-import { ensureSafeProtocol, sanitizeHTML } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
-export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
+export default function NewsFeed({ categorySlug = 'article', limit = 12, title = 'Latest Insights & Offerings' }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +15,11 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
     async function loadData() {
       setLoading(true);
       // Fetch news posts
-      const posts = await fetchPostsByCategory(categorySlug, limit);
+      let posts = await fetchPostsByCategory(categorySlug, limit);
+      // Fallback: If 'article' category returns nothing, fetch the latest posts from general feed
+      if (!posts || posts.length === 0) {
+        posts = await fetchPostsByCategory('', limit);
+      }
 
       // Interleave Logic
       // Strategy: Inject a Company Offering card every 3rd news item.
@@ -44,10 +46,25 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
   }, [categorySlug, limit]);
 
   if (loading) {
-    return <LoadingSpinner message="Syncing with AXiM Intelligence..." />;
+    return (
+      <div className="py-24 flex flex-col justify-center items-center">
+        <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin mb-4"></div>
+        <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
+      </div>
+    );
   }
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <section className="py-16 relative z-10">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <p className="text-zinc-500 font-mono">
+            Establishing secure uplink to AXiM Database... If this persists, verify CORS headers on the origin server.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 relative z-10">
@@ -59,7 +76,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
           className="mb-12"
         >
           <span className="section-label">Intelligence Hub</span>
-          <h2 className="section-title !mb-0 text-axim-teal">Latest Insights & Offerings</h2>
+          <h2 className="section-title !mb-0 text-axim-teal">{title || 'Latest Insights & Offerings'}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -89,15 +106,13 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
                     <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <a href={ensureSafeProtocol(post.link)} target="_blank" rel="noopener noreferrer" className="block">
-                      <h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3>
-                    </a>
+                    <h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
+                      dangerouslySetInnerHTML={{ __html: post.excerpt }}
                     ></div>
                     <a
-                      href={ensureSafeProtocol(post.link)}
+                      href={post.link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-teal transition-colors mt-auto"
@@ -130,7 +145,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12 }) {
                   </div>
                   <p className="text-zinc-300 text-sm leading-[1.6] flex-grow mb-8 relative z-10">{offering.desc}</p>
                   <a
-                    href={ensureSafeProtocol(offering.url)}
+                    href={offering.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-green hover:bg-axim-green/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
