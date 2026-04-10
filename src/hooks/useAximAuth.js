@@ -4,10 +4,9 @@ import { localStore } from '../lib/persistence';
 
 export function useAximAuth() {
   const account = useActiveAccount();
-  const [profile, setProfile] = useState(() => {
-    return account?.address ? localStore.getProfile(account.address) : null;
-  });
-  const [loading, setLoading] = useState(() => !account?.address);
+  const [profile, setProfile] = useState(null);
+  // Ensure we indicate loading while we are initially fetching the profile
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
