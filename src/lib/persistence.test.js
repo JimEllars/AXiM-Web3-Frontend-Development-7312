@@ -32,6 +32,7 @@ global.localStorage = localStorageMock;
 describe('localStore.getProfile', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStore.clearCache();
   });
 
   test('should return null when address is null', () => {
@@ -171,6 +172,7 @@ describe('localStore.getProfile', () => {
 describe('localStore.saveLetter', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStore.clearCache();
   });
 
   test('should save a new letter with generated id, date and draft status', () => {
@@ -271,6 +273,7 @@ describe('localStore.saveLetter', () => {
 describe('localStore.getLetters', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStore.clearCache();
   });
 
   test('should return empty array if no letters exist', () => {
