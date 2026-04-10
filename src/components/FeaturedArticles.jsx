@@ -4,6 +4,7 @@ import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
+import { sanitizeHTML, ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -62,7 +63,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
               className="bg-glass border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
             >
               {post.featuredImage && (
-                <a href={post.link} className="block"><div className="h-64 overflow-hidden relative border-b border-subtle">
+                <a href={ensureSafeProtocol(post.link)} className="block"><div className="h-64 overflow-hidden relative border-b border-subtle">
                   <div className="absolute inset-0 bg-axim-gold/10 mix-blend-overlay z-10"></div>
                   <img
                     src={post.featuredImage}
@@ -75,13 +76,13 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <a href={post.link} className="block hover:underline"><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: post.title }}></h3></a>
+                <a href={ensureSafeProtocol(post.link)} className="block hover:underline"><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3></a>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
                 ></div>
                 <a
-                  href={post.link}
+                  href={ensureSafeProtocol(post.link)}
                   className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto"
                 >
                   Read Full Article <SafeIcon icon={LuArrowRight} />
