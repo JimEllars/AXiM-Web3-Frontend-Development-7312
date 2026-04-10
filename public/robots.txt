@@ -1,0 +1,29 @@
+# General allowance for all standard search engines
+User-agent: *
+Allow: /
+
+# Explicitly allow OpenAI's crawler
+User-agent: GPTBot
+Allow: /
+
+# Explicitly allow Google Gemini
+User-agent: Google-Extended
+Allow: /
+
+# Explicitly allow ChatGPT-User
+User-agent: ChatGPT-User
+Allow: /
+
+# Explicitly allow Anthropic/Claude
+User-agent: anthropic-ai
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+
+# Explicitly allow Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Explicitly allow CCBot
+User-agent: CCBot
+Allow: /
