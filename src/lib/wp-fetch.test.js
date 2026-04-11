@@ -247,6 +247,81 @@ describe('getWordPressPost', () => {
     }
   });
 
+  test('should return data even if slug is null', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+    const localOriginalFetch = global.fetch;
+    try {
+      global.fetch = async (url, options) => {
+        const body = JSON.parse(options.body);
+        assert.strictEqual(body.variables.slug, null);
+        return { json: async () => ({ data: { post: null } }) };
+      };
+
+      const res = await getWordPressPost(null);
+      assert.deepStrictEqual(res, { data: { post: null } });
+    } finally {
+      global.fetch = localOriginalFetch;
+    }
+  });
+
+  test('should return data with null post if slug does not exist', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+    const mockData = { data: { post: null } };
+    const localOriginalFetch = global.fetch;
+    try {
+      global.fetch = async () => ({
+        json: async () => mockData
+      });
+      const result = await getWordPressPost('non-existent');
+      assert.deepStrictEqual(result, mockData);
+    } finally {
+      global.fetch = localOriginalFetch;
+    }
+  });
+
+  test('should verify the exact GraphQL query structure', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+    const localOriginalFetch = global.fetch;
+    try {
+      global.fetch = async (url, options) => {
+        const body = JSON.parse(options.body);
+        assert.ok(body.query.includes('query GetPost($slug: ID!)'));
+        assert.ok(body.query.includes('post(id: $slug, idType: SLUG)'));
+        assert.ok(body.query.includes('title'));
+        assert.ok(body.query.includes('content'));
+        assert.strictEqual(body.variables.slug, 'verified-slug');
+        return { json: async () => ({ data: { post: { title: 'T', content: 'C' } } }) };
+      };
+      const result = await getWordPressPost('verified-slug');
+      assert.deepStrictEqual(result, { data: { post: { title: 'T', content: 'C' } } });
+    } finally {
+      global.fetch = localOriginalFetch;
+    }
+  });
+});
+
+describe('fetchPostsByCategory', () => {
+  let originalFetch;
+  let originalConsoleError;
+  let originalConsoleWarn;
+  let originalConsoleLog;
+
+  beforeEach(() => {
+    originalFetch = global.fetch;
+    originalConsoleError = console.error;
+    originalConsoleWarn = console.warn;
+    originalConsoleLog = console.log;
+    console.log = () => {}; // silence logs in tests
+    fetchCache.clear();
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+    console.log = originalConsoleLog;
+  });
+
   test('should return cached posts if available and not expired', async () => {
     fetchCache.set('cached-cat-5', {
       data: [{ id: 999, title: 'Cached Post' }],
@@ -317,30 +392,6 @@ describe('getWordPressPost', () => {
       console.warn = localOriginalConsoleWarn;
     }
   });
-});
-
-describe('fetchPostsByCategory', () => {
-  let originalFetch;
-  let originalConsoleError;
-  let originalConsoleWarn;
-  let originalConsoleLog;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    originalConsoleError = console.error;
-    originalConsoleWarn = console.warn;
-    originalConsoleLog = console.log;
-    console.log = () => {}; // silence logs in tests
-    fetchCache.clear();
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-    console.error = originalConsoleError;
-    console.warn = originalConsoleWarn;
-    console.log = originalConsoleLog;
-  });
-
   test('should return mapped posts if fetch is successful', async () => {
     global.fetch = async (url) => {
       if (url.includes('/categories?slug=apps')) {
