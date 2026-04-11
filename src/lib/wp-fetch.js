@@ -8,6 +8,16 @@ export async function getWordPressPost(slug) {
   const url = (import.meta.env && import.meta.env.VITE_WORDPRESS_URL) || process.env.VITE_WORDPRESS_URL;
   if (!url) return null;
 
+  const cacheKey = `gql-post-${slug}`;
+  if (fetchCache.has(cacheKey)) {
+    const cached = fetchCache.get(cacheKey);
+    // basic 5-minute cache
+    if (Date.now() - cached.timestamp < 300000) {
+      console.log(`[wp-fetch] Returning cached GraphQL post for '${slug}'`);
+      return cached.data;
+    }
+  }
+
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -26,9 +36,22 @@ export async function getWordPressPost(slug) {
     });
 
     const data = await res.json();
+
+    // Cache the successful result
+    if (data && !data.errors) {
+      fetchCache.set(cacheKey, { data, timestamp: Date.now() });
+    }
+
     return data;
   } catch (error) {
     console.error("WP Fetch Error:", error);
+
+    // Fallback to cache on error
+    if (fetchCache.has(cacheKey)) {
+      console.warn(`[wp-fetch] Returning stale cached GraphQL post for '${slug}' due to error.`);
+      return fetchCache.get(cacheKey).data;
+    }
+
     return null;
   }
 }

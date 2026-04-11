@@ -247,6 +247,46 @@ describe('getWordPressPost', () => {
     }
   });
 
+  test('should cache GraphQL post fetches', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+    const mockData = { data: { post: { title: 'Cached', content: 'Content' } } };
+    let fetchCount = 0;
+
+    global.fetch = async () => {
+      fetchCount++;
+      return {
+        json: async () => mockData
+      };
+    };
+
+    // First call - should fetch
+    const result1 = await getWordPressPost('cache-test');
+    assert.deepStrictEqual(result1, mockData);
+    assert.strictEqual(fetchCount, 1);
+
+    // Second call - should return from cache
+    const result2 = await getWordPressPost('cache-test');
+    assert.deepStrictEqual(result2, mockData);
+    assert.strictEqual(fetchCount, 1);
+  });
+
+  test('should return stale cache for GraphQL post on error', async () => {
+    process.env.VITE_WORDPRESS_URL = 'http://mock-wp.com/graphql';
+    const mockData = { data: { post: { title: 'Stale', content: 'Content' } } };
+
+    fetchCache.set('gql-post-stale-test', {
+      data: mockData,
+      timestamp: Date.now() - 400000 // Expired
+    });
+
+    global.fetch = async () => {
+      throw new Error('Network error');
+    };
+
+    const result = await getWordPressPost('stale-test');
+    assert.deepStrictEqual(result, mockData);
+  });
+
   test('should return cached posts if available and not expired', async () => {
     fetchCache.set('cached-cat-5', {
       data: [{ id: 999, title: 'Cached Post' }],
