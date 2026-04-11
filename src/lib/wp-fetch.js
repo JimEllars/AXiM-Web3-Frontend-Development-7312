@@ -60,7 +60,6 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     const cached = fetchCache.get(cacheKey);
     // basic 5-minute cache
     if (Date.now() - cached.timestamp < 300000) {
-      console.log(`[wp-fetch] Returning cached posts for '${categorySlug}'`);
       return cached.data;
     }
   }
