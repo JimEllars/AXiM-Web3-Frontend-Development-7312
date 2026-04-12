@@ -11,46 +11,62 @@ export async function getWordPressPost(slug) {
   if (!url) return null;
 
   const cacheKey = `gql-post-${slug}`;
-  if (fetchCache.has(cacheKey)) {
-    const cached = fetchCache.get(cacheKey);
+  const existingCache = fetchCache.get(cacheKey);
+
+  if (existingCache) {
     // 5-minute cache
-    if (Date.now() - cached.timestamp < 300000) {
-      return cached.data;
+    if (Date.now() - existingCache.timestamp < 300000) {
+      if (existingCache.promise) return existingCache.promise;
+      return existingCache.data;
     }
   }
 
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          query GetPost($slug: ID!) {
-            post(id: $slug, idType: SLUG) {
-              title
-              content
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `
+            query GetPost($slug: ID!) {
+              post(id: $slug, idType: SLUG) {
+                title
+                content
+              }
             }
-          }
-        `,
-        variables: { slug }
-      }),
-    });
+          `,
+          variables: { slug }
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    fetchCache.set(cacheKey, { data, timestamp: Date.now() });
+      fetchCache.set(cacheKey, { data, timestamp: Date.now() });
 
-    return data;
-  } catch (error) {
-    console.error("WP Fetch Error:", error);
+      return data;
+    } catch (error) {
+      console.error("WP Fetch Error:", error);
 
-    if (fetchCache.has(cacheKey)) {
-      console.warn(`Returning stale cached post for '${slug}' due to error.`);
-      return fetchCache.get(cacheKey).data;
+      if (existingCache && existingCache.data) {
+        console.warn(`Returning stale cached post for '${slug}' due to error.`);
+        // Revert cache to stale state so future calls can also try to use it if needed, or delete it?
+        // Let's restore the stale cache without the promise
+        fetchCache.set(cacheKey, { data: existingCache.data, timestamp: existingCache.timestamp });
+        return existingCache.data;
+      }
+
+      fetchCache.delete(cacheKey);
+      return null;
     }
+  })();
 
-    return null;
-  }
+  fetchCache.set(cacheKey, {
+    promise: fetchPromise,
+    timestamp: Date.now(),
+    data: existingCache ? existingCache.data : undefined
+  });
+
+  return fetchPromise;
 }
 
 /**
