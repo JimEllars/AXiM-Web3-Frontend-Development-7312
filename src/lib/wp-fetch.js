@@ -3,10 +3,21 @@
  * Adapted for Vite/React SPA fetching. 
  */
 
+export const fetchCache = new Map();
+
 export async function getWordPressPost(slug) {
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
   const url = (import.meta.env && import.meta.env.VITE_WORDPRESS_URL) || process.env.VITE_WORDPRESS_URL;
   if (!url) return null;
+
+  const cacheKey = `gql-post-${slug}`;
+  if (fetchCache.has(cacheKey)) {
+    const cached = fetchCache.get(cacheKey);
+    // 5-minute cache
+    if (Date.now() - cached.timestamp < 300000) {
+      return cached.data;
+    }
+  }
 
   try {
     const res = await fetch(url, {
@@ -26,9 +37,18 @@ export async function getWordPressPost(slug) {
     });
 
     const data = await res.json();
+
+    fetchCache.set(cacheKey, { data, timestamp: Date.now() });
+
     return data;
   } catch (error) {
     console.error("WP Fetch Error:", error);
+
+    if (fetchCache.has(cacheKey)) {
+      console.warn(`Returning stale cached post for '${slug}' due to error.`);
+      return fetchCache.get(cacheKey).data;
+    }
+
     return null;
   }
 }
@@ -39,8 +59,6 @@ export async function getWordPressPost(slug) {
  * @param {number} limit - Number of posts to fetch
  * @returns {Promise<Array>} Array of mapped posts
  */
-export const fetchCache = new Map();
-
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
