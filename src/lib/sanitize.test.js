@@ -38,6 +38,12 @@ test('sanitizeHTML - removes disallowed tags', () => {
   assert.strictEqual(sanitizeHTML(input), expected);
 });
 
+test('sanitizeHTML - handles falsy inputs', () => {
+  assert.strictEqual(sanitizeHTML(null), '');
+  assert.strictEqual(sanitizeHTML(undefined), '');
+  assert.strictEqual(sanitizeHTML(''), '');
+});
+
 test('ensureSafeProtocol - allows http and https', () => {
   assert.strictEqual(ensureSafeProtocol('http://example.com'), 'http://example.com');
   assert.strictEqual(ensureSafeProtocol('https://example.com/path?query=1'), 'https://example.com/path?query=1');
@@ -52,4 +58,10 @@ test('ensureSafeProtocol - blocks dangerous protocols', () => {
   assert.strictEqual(ensureSafeProtocol('javascript:alert(1)'), '#');
   assert.strictEqual(ensureSafeProtocol('data:text/html,xss'), '#');
   assert.strictEqual(ensureSafeProtocol('vbscript:msgbox(1)'), '#');
+});
+
+test('ensureSafeProtocol - handles falsy inputs', () => {
+  assert.strictEqual(ensureSafeProtocol(null), '#');
+  assert.strictEqual(ensureSafeProtocol(undefined), '#');
+  assert.strictEqual(ensureSafeProtocol(''), '#');
 });
