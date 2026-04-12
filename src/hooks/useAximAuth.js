@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useActiveAccount } from "thirdweb/react";
-import { localStore } from '../lib/persistence';
+import { localStore } from '../lib/persistence.js';
 
 export function useAximAuth() {
   const account = useActiveAccount();
