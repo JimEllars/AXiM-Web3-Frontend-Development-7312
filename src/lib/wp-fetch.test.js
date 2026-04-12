@@ -3,6 +3,9 @@ import assert from 'node:assert';
 import { getWordPressPost, fetchPostsByCategory, fetchCache } from './wp-fetch.js';
 
 describe('getWordPressPost', () => {
+  afterEach(() => {
+    fetchCache.clear();
+  });
   let originalFetch;
   let originalConsoleError;
   let originalEnvUrl;
