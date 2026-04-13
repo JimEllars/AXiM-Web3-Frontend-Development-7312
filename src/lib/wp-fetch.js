@@ -94,13 +94,17 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     const cached = fetchCache.get(cacheKey);
     // basic 5-minute cache
     if (Date.now() - cached.timestamp < 300000) {
-      return cached.data;
+      if (cached.promise) return cached.promise;
+      if (cached.data !== undefined) return cached.data;
     }
   }
 
-  try {
-    // Inner function to attempt fetching
-    const tryFetch = async (currentApiUrl) => {
+  const existingCache = fetchCache.get(cacheKey);
+
+  const fetchPromise = (async () => {
+    try {
+      // Inner function to attempt fetching
+      const tryFetch = async (currentApiUrl) => {
       const ts = Date.now();
       // 1. Fetch category ID by slug
       const catRes = await fetch(`${currentApiUrl}/categories?slug=${categorySlug}&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
@@ -176,22 +180,33 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       };
     });
 
-    fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
+      fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
 
-    console.log(`[wp-fetch] Fetched ${mappedPosts.length} posts for category '${categorySlug}':`, mappedPosts);
-    return mappedPosts;
-  } catch (error) {
-    console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
-    console.error(`[wp-fetch] Failed URL: ${urlsToTry.join(' or ')}`);
+      console.log(`[wp-fetch] Fetched ${mappedPosts.length} posts for category '${categorySlug}':`, mappedPosts);
+      return mappedPosts;
+    } catch (error) {
+      console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
+      console.error(`[wp-fetch] Failed URL: ${urlsToTry.join(' or ')}`);
 
-    // Fallback to cache on error
-    if (fetchCache.has(cacheKey)) {
-      console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
-      return fetchCache.get(cacheKey).data;
+      // Fallback to cache on error
+      if (existingCache && existingCache.data !== undefined) {
+        console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
+        fetchCache.set(cacheKey, { data: existingCache.data, timestamp: existingCache.timestamp });
+        return existingCache.data;
+      }
+
+      fetchCache.delete(cacheKey);
+      // Return empty array instead of mock data
+      console.warn(`WordPress fetch failed at [${urlsToTry.join(', ')}]. Returning empty array.`);
+      return [];
     }
+  })();
 
-    // Return empty array instead of mock data
-    console.warn(`WordPress fetch failed at [${urlsToTry.join(', ')}]. Returning empty array.`);
-    return [];
-  }
+  fetchCache.set(cacheKey, {
+    promise: fetchPromise,
+    timestamp: Date.now(),
+    data: existingCache ? existingCache.data : undefined
+  });
+
+  return fetchPromise;
 }
