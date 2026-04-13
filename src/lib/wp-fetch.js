@@ -178,7 +178,6 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
     fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
 
-    console.log(`[wp-fetch] Fetched ${mappedPosts.length} posts for category '${categorySlug}':`, mappedPosts);
     return mappedPosts;
   } catch (error) {
     console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
