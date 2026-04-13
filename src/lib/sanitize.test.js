@@ -32,6 +32,30 @@ test('sanitizeHTML - allows safe tags and attributes', () => {
   assert.strictEqual(sanitizeHTML(input), expected);
 });
 
+test('sanitizeHTML - handles slash separators (bypass fix)', () => {
+  const input = '<p/onclick=alert(1)>Click me</p>';
+  const expected = '<p>Click me</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - blocks obfuscated protocols (bypass fix)', () => {
+  const input = '<a href="java\nscript:alert(1)">Link</a>';
+  const expected = '<a href="#">Link</a>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - recursive tag removal (bypass fix)', () => {
+  const input = '<scr<script>ipt>alert(1)</script>';
+  const expected = '';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - strict attribute allowlist', () => {
+  const input = '<p title="test" style="color:red" data-foo="bar">Content</p>';
+  const expected = '<p title="test">Content</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
 test('sanitizeHTML - removes disallowed tags', () => {
   const input = '<marquee>Not allowed</marquee> <p>Allowed</p> <img src="x">';
   const expected = 'Not allowed <p>Allowed</p> ';
