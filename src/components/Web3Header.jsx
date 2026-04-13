@@ -14,9 +14,8 @@ export default function Web3Header() {
   
   const navLinks = [
     { path: '/articles', label: 'Articles' },
-    { path: '/courses', label: 'Courses' },
-    { path: '/documents', label: 'Documents' },
-    { path: '/more', label: 'More' },
+    { path: '/tools', label: 'Tools' },
+    { path: '/consultation', label: 'Consultation' },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);

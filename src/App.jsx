@@ -6,9 +6,8 @@ import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import Articles from './pages/Articles';
-import Courses from './pages/Courses';
-import Documents from './pages/Documents';
-import More from './pages/More';
+import Tools from './pages/Tools';
+import Consultation from './pages/Consultation';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 
@@ -24,9 +23,8 @@ function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
-            <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
-            <Route path="/documents" element={<PageTransition><Documents /></PageTransition>} />
-            <Route path="/more" element={<PageTransition><More /></PageTransition>} />
+            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
           </Routes>
