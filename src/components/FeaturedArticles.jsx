@@ -56,7 +56,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
           <h2 className="section-title !mb-0 text-axim-gold">{title || 'Top Stories'}</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post, idx) => (
             <motion.div
               key={post.id}
