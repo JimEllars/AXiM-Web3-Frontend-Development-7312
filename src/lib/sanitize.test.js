@@ -8,15 +8,74 @@ test('sanitizeHTML - removes script tags', () => {
   assert.strictEqual(sanitizeHTML(input), expected);
 });
 
+test('sanitizeHTML - removes HTML comments', () => {
+  const input = '<p>Hello <!-- hidden comment -->World</p><!-- \n multi line \n comment -->';
+  const expected = '<p>Hello World</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - removes other dangerous tags', () => {
+  const input = '<div><style>.hidden { display: none; }</style><iframe src="evil.com"></iframe>Text</div>';
+  const expected = '<div>Text</div>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - removes self-closing dangerous tags', () => {
+  const input = '<head><meta charset="utf-8" /><link rel="stylesheet" href="style.css"></head><p>Safe</p>';
+  const expected = '<p>Safe</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - handles multiline dangerous tags', () => {
+  const input = '<p>Start</p>\n<script>\n  alert("xss");\n</script>\n<p>End</p>';
+  // The regex replaces the whole tag with empty string, but preserves newlines around it
+  const expected = '<p>Start</p>\n\n<p>End</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
 test('sanitizeHTML - removes event handlers', () => {
   const input = '<p onmouseover="alert(1)">Hover me</p>';
   const expected = '<p>Hover me</p>';
   assert.strictEqual(sanitizeHTML(input), expected);
 });
 
+test('sanitizeHTML - removes event handlers with unquoted and single quoted values', () => {
+  const input1 = '<p onmouseover=alert(1)>Hover me</p>';
+  const expected1 = '<p>Hover me</p>';
+  assert.strictEqual(sanitizeHTML(input1), expected1);
+
+  const input2 = "<p onclick='alert(1)'>Click me</p>";
+  const expected2 = '<p>Click me</p>';
+  assert.strictEqual(sanitizeHTML(input2), expected2);
+});
+
+test('sanitizeHTML - handles case-insensitivity in event handlers', () => {
+  const input = '<p ONCLICK="alert(1)">Click me</p>';
+  const expected = '<p>Click me</p>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
 test('sanitizeHTML - blocks javascript: in href', () => {
   const input = '<a href="javascript:alert(1)">Click me</a>';
   const expected = '<a href="#">Click me</a>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - blocks dangerous protocols with mixed casing and single quotes', () => {
+  const input = "<a href='JaVaScRiPt:alert(1)'>Click me</a>";
+  const expected = '<a href="#">Click me</a>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - blocks data: protocols', () => {
+  const input = '<a href="data:text/html,<html>">Link</a>';
+  const expected = '<a href="#">Link</a>';
+  assert.strictEqual(sanitizeHTML(input), expected);
+});
+
+test('sanitizeHTML - blocks vbscript: protocols', () => {
+  const input = '<a href="vbscript:msgbox(1)">Link</a>';
+  const expected = '<a href="#">Link</a>';
   assert.strictEqual(sanitizeHTML(input), expected);
 });
 
