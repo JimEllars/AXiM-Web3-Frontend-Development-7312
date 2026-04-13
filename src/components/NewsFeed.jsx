@@ -16,14 +16,12 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
   useEffect(() => {
     async function loadData() {
       setLoading(true);
-      // Fetch news posts concurrently to optimize network latency
-      const primaryPromise = fetchPostsByCategory(categorySlug, limit);
-      const fallbackPromise = fetchPostsByCategory('', limit);
+      // Fetch primary posts first. We avoid eager fallback fetching to save network bandwidth.
+      let posts = await fetchPostsByCategory(categorySlug, limit);
 
-      let posts = await primaryPromise;
-      // Fallback: If 'article' category returns nothing, use the fallback posts
+      // Fallback: If primary category returns nothing, use the fallback posts
       if (!posts || posts.length === 0) {
-        posts = await fallbackPromise;
+        posts = await fetchPostsByCategory('', limit);
       }
 
       // Interleave Logic

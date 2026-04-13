@@ -15,14 +15,12 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
   useEffect(() => {
     async function loadPosts() {
       setLoading(true);
-      // Fetch news posts concurrently to optimize network latency
-      const primaryPromise = fetchPostsByCategory(categorySlug, limit);
-      const fallbackPromise = fetchPostsByCategory('', limit);
+      // Fetch primary posts first. We avoid eager fallback fetching to save network bandwidth.
+      let fetched = await fetchPostsByCategory(categorySlug, limit);
 
-      let fetched = await primaryPromise;
       // Fallback: If fetched articles are empty after the first call, use the fallback posts
       if (!fetched || fetched.length === 0) {
-        fetched = await fallbackPromise;
+        fetched = await fetchPostsByCategory('', limit);
       }
       setPosts(fetched);
       setLoading(false);
