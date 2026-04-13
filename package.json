@@ -8,7 +8,7 @@
     "build": "vite build --sourcemap false",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vite-node src/common/SafeIcon.test.jsx && vite-node src/components/GovernanceVote.test.jsx && vite-node src/components/ErrorBoundary.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js && vite-node src/components/Ecosystem.test.jsx && vite-node src/lib/thirdweb-client.test.js && node --experimental-test-module-mocks --test src/hooks/useAximAuth.test.js"
+    "test": "vite-node src/components/Deployment.test.jsx && vite-node src/common/SafeIcon.test.jsx && vite-node src/components/GovernanceVote.test.jsx && vite-node src/components/ErrorBoundary.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js && vite-node src/components/Ecosystem.test.jsx && vite-node src/lib/thirdweb-client.test.js && node --experimental-test-module-mocks --test src/hooks/useAximAuth.test.js"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.10.1",
