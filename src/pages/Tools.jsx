@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
@@ -138,6 +139,22 @@ export default function Tools() {
           ))}
         </div>
       </div>
+
+      {/* Articles Widget */}
+      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-glass">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <div className="w-16 h-16 bg-axim-teal/10 rounded-full flex items-center justify-center mx-auto mb-6 text-axim-teal border border-axim-teal/30">
+            <SafeIcon icon={LuIcons.LuNewspaper} className="w-8 h-8" />
+          </div>
+          <h2 className="text-3xl font-black uppercase mb-4 text-white">Read AXiM Articles</h2>
+          <p className="text-zinc-400 max-w-2xl mx-auto mb-8">
+            Stay updated with comprehensive insights, updates, and research from the AXiM ecosystem.
+          </p>
+          <Link to="/articles" className="btn btn-outline inline-flex hover:border-axim-teal hover:text-axim-teal">
+            Read Articles <SafeIcon icon={LuIcons.LuArrowRight} />
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

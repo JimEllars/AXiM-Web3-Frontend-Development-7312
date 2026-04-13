@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
@@ -64,12 +65,12 @@ export default function Hero() {
         </p>
 
         <div className="flex gap-5 flex-wrap justify-center md:justify-start">
-          <a href="#axim-solutions" className="btn btn-primary">
-            Explore Solutions <SafeIcon icon={LuArrowRight} />
-          </a>
-          <a href="https://quickdemandletter.com" className="btn btn-outline">
-            Start $4.00 Draft
-          </a>
+          <Link to="/tools" className="btn btn-primary">
+            Explore Tools <SafeIcon icon={LuArrowRight} />
+          </Link>
+          <Link to="/consultation" className="btn btn-outline">
+            Request a Consultation
+          </Link>
         </div>
       </motion.div>
     </section>
