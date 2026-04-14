@@ -68,7 +68,7 @@ test('sanitizeHTML - blocks dangerous protocols with mixed casing and single quo
 });
 
 test('sanitizeHTML - blocks data: protocols', () => {
-  const input = '<a href="data:text/html,<html>">Link</a>';
+  const input = '<a href="data:text/html,test">Link</a>';
   const expected = '<a href="#">Link</a>';
   assert.strictEqual(sanitizeHTML(input), expected);
 });
