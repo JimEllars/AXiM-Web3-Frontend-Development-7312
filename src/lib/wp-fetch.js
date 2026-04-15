@@ -74,7 +74,7 @@ export async function getWordPressPost(slug) {
  * Prevents redundant N+1 requests when fetching posts by category.
  */
 async function getCategoryId(apiUrl, slug) {
-  if (!slug) return null;
+  if (!slug || !apiUrl) return null;
 
   // We use a global cache key for the slug because all AXiM WordPress URLs
   // are expected to share the same database and IDs.
@@ -153,80 +153,78 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
   const fetchPromise = (async () => {
     try {
-    // Inner function to attempt fetching
-    const tryFetch = async (currentApiUrl) => {
-      const ts = Date.now();
+      // Inner function to attempt fetching
+      const tryFetch = async (currentApiUrl) => {
+        const ts = Date.now();
 
-      // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
-      const categoryId = await getCategoryId(currentApiUrl, categorySlug);
+        // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
+        const categoryId = await getCategoryId(currentApiUrl, categorySlug);
 
-      let postsRes;
-      if (!categorySlug || !categoryId) {
-        if (categorySlug && !categoryId) {
-          console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
+        let postsRes;
+        if (!categorySlug || !categoryId) {
+          if (categorySlug && !categoryId) {
+            console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
+          }
+          // Fallback: Fetch all latest posts
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+        } else {
+          // 2. Fetch posts by category ID, ordered by date descending
+          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
         }
-        // Fallback: Fetch all latest posts
-        postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-      } else {
-        // 2. Fetch posts by category ID, ordered by date descending
-        postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-      }
 
-      if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
-      let posts = await postsRes.json();
+        if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+        let posts = await postsRes.json();
 
-      // If the category request returned 0 posts, automatically perform a fallback fetch
-      if (posts.length === 0 && categorySlug) {
-         console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
-         postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-         if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
-         posts = await postsRes.json();
-      }
-
-      return posts;
-    };
-
-    let posts = null;
-    let successfulUrl = null;
-    let lastError = null;
-
-    try {
-      const fetchPromises = urlsToTry.map(async (url) => {
-        try {
-          const result = await tryFetch(url);
-          return { posts: result, url };
-        } catch (err) {
-          console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
-          throw err;
+        // If the category request returned 0 posts, automatically perform a fallback fetch
+        if (posts.length === 0 && categorySlug) {
+          console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
+          posts = await postsRes.json();
         }
-      });
 
-      const result = await Promise.any(fetchPromises);
-      posts = result.posts;
-      successfulUrl = result.url;
-      console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
-    } catch (err) {
-      lastError = err;
-      throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
-    }
-
-    // 3. Map the properties and ensure the explicit absolute URL link is included
-    const mappedPosts = posts.map(post => {
-      // Get featured image if available
-      let featuredImage = null;
-      if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
-        featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
-      }
-
-      return {
-        id: post.id,
-        title: post.title?.rendered,
-        excerpt: post.excerpt?.rendered,
-        link: post.link, // CRITICAL: explicit absolute URL mapping
-        date: post.date,
-        featuredImage,
+        return posts;
       };
-    });
+
+      let posts = null;
+      let successfulUrl = null;
+
+      try {
+        const fetchPromises = urlsToTry.map(async (url) => {
+          try {
+            const result = await tryFetch(url);
+            return { posts: result, url };
+          } catch (err) {
+            console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
+            throw err;
+          }
+        });
+
+        const result = await Promise.any(fetchPromises);
+        posts = result.posts;
+        successfulUrl = result.url;
+        console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
+      } catch (err) {
+        throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
+      }
+
+      // 3. Map the properties and ensure the explicit absolute URL link is included
+      const mappedPosts = posts.map(post => {
+        // Get featured image if available
+        let featuredImage = null;
+        if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
+          featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
+        }
+
+        return {
+          id: post.id,
+          title: post.title?.rendered,
+          excerpt: post.excerpt?.rendered,
+          link: post.link, // CRITICAL: explicit absolute URL mapping
+          date: post.date,
+          featuredImage,
+        };
+      });
 
       fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
 
