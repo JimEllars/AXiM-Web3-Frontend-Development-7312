@@ -70,6 +70,60 @@ export async function getWordPressPost(slug) {
 }
 
 /**
+ * Internal helper to fetch and cache category ID by slug.
+ * Prevents redundant N+1 requests when fetching posts by category.
+ */
+async function getCategoryId(apiUrl, slug) {
+  if (!slug || !apiUrl) return null;
+
+  // We use a global cache key for the slug because all AXiM WordPress URLs
+  // are expected to share the same database and IDs.
+  const cacheKey = `cat-id-${slug}`;
+  const existing = fetchCache.get(cacheKey);
+
+  if (existing && (Date.now() - existing.timestamp < 300000)) {
+    if (existing.promise) return existing.promise;
+    return existing.data;
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const ts = Date.now();
+      // Normalize URL to prevent cache misses due to trailing slashes
+      const normalizedApiUrl = apiUrl.replace(/\/$/, '');
+      const res = await fetch(`${normalizedApiUrl}/categories?slug=${slug}&_ts=${ts}`, {
+        signal: AbortSignal.timeout(10000)
+      });
+
+      if (!res.ok) return null;
+
+      const categories = await res.json();
+      const id = (categories && Array.isArray(categories) && categories.length > 0) ? categories[0].id : null;
+
+      fetchCache.set(cacheKey, { data: id, timestamp: Date.now() });
+      return id;
+    } catch (error) {
+      console.warn(`[wp-fetch] Error fetching category ID for '${slug}' from ${apiUrl}:`, error.message);
+      // Fallback to stale data if available on error
+      if (existing && existing.data !== undefined) {
+        fetchCache.set(cacheKey, { data: existing.data, timestamp: existing.timestamp });
+        return existing.data;
+      }
+      fetchCache.delete(cacheKey);
+      return null;
+    }
+  })();
+
+  fetchCache.set(cacheKey, {
+    promise: fetchPromise,
+    timestamp: Date.now(),
+    data: existing ? existing.data : undefined
+  });
+
+  return fetchPromise;
+}
+
+/**
  * Fetch latest posts by category slug
  * @param {string} categorySlug - The slug of the category (e.g., 'apps')
  * @param {number} limit - Number of posts to fetch
@@ -89,108 +143,115 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     urlsToTry.unshift(baseUrl);
   }
 
-  const cacheKey = `${categorySlug}-${limit}`;
-  if (fetchCache.has(cacheKey)) {
-    const cached = fetchCache.get(cacheKey);
-    // basic 5-minute cache
-    if (Date.now() - cached.timestamp < 300000) {
-      return cached.data;
-    }
+  const cacheKey = `cat-posts-${categorySlug}-${limit}`;
+  const existing = fetchCache.get(cacheKey);
+
+  if (existing && (Date.now() - existing.timestamp < 300000)) {
+    if (existing.promise) return existing.promise;
+    return existing.data;
   }
 
-  try {
-    // Inner function to attempt fetching
-    const tryFetch = async (currentApiUrl) => {
-      const ts = Date.now();
-      // 1. Fetch category ID by slug
-      const catRes = await fetch(`${currentApiUrl}/categories?slug=${categorySlug}&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-      if (!catRes.ok) throw new Error(`Failed to fetch category: ${catRes.statusText}`);
-      const categories = await catRes.json();
-
-      let postsRes;
-      if (!categorySlug || !categories || categories.length === 0) {
-        if (categorySlug) {
-          console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
-        }
-        // Fallback: Fetch all latest posts
-        postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-      } else {
-        const categoryId = categories[0].id;
-        // 2. Fetch posts by category ID, ordered by date descending
-        postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-      }
-
-      if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
-      let posts = await postsRes.json();
-
-      // If the category request returned 0 posts, automatically perform a fallback fetch
-      if (posts.length === 0 && categorySlug) {
-         console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
-         postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-         if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
-         posts = await postsRes.json();
-      }
-
-      return posts;
-    };
-
-    let posts = null;
-    let successfulUrl = null;
-    let lastError = null;
-
+  const fetchPromise = (async () => {
     try {
-      const fetchPromises = urlsToTry.map(async (url) => {
-        try {
-          const result = await tryFetch(url);
-          return { posts: result, url };
-        } catch (err) {
-          console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
-          throw err;
+      // Inner function to attempt fetching
+      const tryFetch = async (currentApiUrl) => {
+        const ts = Date.now();
+
+        // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
+        const categoryId = await getCategoryId(currentApiUrl, categorySlug);
+
+        let postsRes;
+        if (!categorySlug || !categoryId) {
+          if (categorySlug && !categoryId) {
+            console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
+          }
+          // Fallback: Fetch all latest posts
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+        } else {
+          // 2. Fetch posts by category ID, ordered by date descending
+          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
         }
+
+        if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+        let posts = await postsRes.json();
+
+        // If the category request returned 0 posts, automatically perform a fallback fetch
+        if (posts.length === 0 && categorySlug) {
+          console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
+          posts = await postsRes.json();
+        }
+
+        return posts;
+      };
+
+      let posts = null;
+      let successfulUrl = null;
+
+      try {
+        const fetchPromises = urlsToTry.map(async (url) => {
+          try {
+            const result = await tryFetch(url);
+            return { posts: result, url };
+          } catch (err) {
+            console.warn(`[wp-fetch] Failed fetching from ${url}:`, err.message);
+            throw err;
+          }
+        });
+
+        const result = await Promise.any(fetchPromises);
+        posts = result.posts;
+        successfulUrl = result.url;
+        console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
+      } catch (err) {
+        throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
+      }
+
+      // 3. Map the properties and ensure the explicit absolute URL link is included
+      const mappedPosts = posts.map(post => {
+        // Get featured image if available
+        let featuredImage = null;
+        if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
+          featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
+        }
+
+        return {
+          id: post.id,
+          title: post.title?.rendered,
+          excerpt: post.excerpt?.rendered,
+          link: post.link, // CRITICAL: explicit absolute URL mapping
+          date: post.date,
+          featuredImage,
+        };
       });
 
-      const result = await Promise.any(fetchPromises);
-      posts = result.posts;
-      successfulUrl = result.url;
-      console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
-    } catch (err) {
-      lastError = err;
-      throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
-    }
+      fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
 
-    // 3. Map the properties and ensure the explicit absolute URL link is included
-    const mappedPosts = posts.map(post => {
-      // Get featured image if available
-      let featuredImage = null;
-      if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
-        featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
+      return mappedPosts;
+    } catch (error) {
+      console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
+      console.error(`[wp-fetch] Failed URL: ${urlsToTry.join(' or ')}`);
+
+      // Fallback to cache on error
+      if (existing && existing.data) {
+        console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
+        fetchCache.set(cacheKey, { data: existing.data, timestamp: existing.timestamp });
+        return existing.data;
       }
 
-      return {
-        id: post.id,
-        title: post.title?.rendered,
-        excerpt: post.excerpt?.rendered,
-        link: post.link, // CRITICAL: explicit absolute URL mapping
-        date: post.date,
-        featuredImage,
-      };
-    });
-
-    fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
-
-    return mappedPosts;
-  } catch (error) {
-    console.error(`[wp-fetch] Error fetching posts for category '${categorySlug}':`, error.message || error);
-    console.error(`[wp-fetch] Failed URL: ${urlsToTry.join(' or ')}`);
-
-    // Fallback to cache on error
-    if (fetchCache.has(cacheKey)) {
-      console.warn(`[wp-fetch] Returning stale cached posts for '${categorySlug}' due to error.`);
-      return fetchCache.get(cacheKey).data;
+      fetchCache.delete(cacheKey);
+      // Return empty array instead of mock data
+      console.warn(`WordPress fetch failed at [${urlsToTry.join(', ')}]. Returning empty array.`);
+      return [];
     }
+  })();
 
-    // Return empty array instead of mock data
-    console.warn(`WordPress fetch failed at [${urlsToTry.join(', ')}]. Returning empty array.`);
-    return [];
-  }
+  fetchCache.set(cacheKey, {
+    promise: fetchPromise,
+    timestamp: Date.now(),
+    data: existing ? existing.data : undefined
+  });
+
+  return fetchPromise;
 }
