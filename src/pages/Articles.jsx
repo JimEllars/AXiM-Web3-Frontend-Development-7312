@@ -4,10 +4,15 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';
+import SEO from '../components/SEO';
 
 export default function Articles() {
   return (
     <div className="w-full relative z-10">
+      <SEO
+        title="Intelligence Network"
+        description="Comprehensive insights, updates, and research from the AXiM ecosystem."
+      />
       <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-10">
         <span className="section-label">Intelligence Network</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">AXiM Articles</h1>

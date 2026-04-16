@@ -5,6 +5,7 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
 import Paywall from '../components/Paywall';
+import SEO from '../components/SEO';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
 
@@ -46,6 +47,10 @@ const courses = [
 export default function Tools() {
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
+      <SEO
+        title="Tools & Academy"
+        description="Access AXiM's comprehensive suite of document generators and elite training courses."
+      />
       <div className="mb-20">
         <span className="section-label">Academy & Infrastructure</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools</h1>

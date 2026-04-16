@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -10,26 +11,19 @@ import { ensureSafeProtocol } from '../lib/sanitize';
 const { LuArrowRight } = LuIcons;
 
 export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories', fetchPosts = fetchPostsByCategory }) {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadPosts() {
-      setLoading(true);
-      // Fetch primary posts first. We avoid eager fallback fetching to save network bandwidth.
-      let fetched = await fetchPosts(categorySlug, limit);
-
-      // Fallback: If fetched articles are empty after the first call, use the fallback posts
-      if (!fetched || fetched.length === 0) {
-        fetched = await fetchPosts('', limit);
+  const { data: posts = [], isLoading } = useQuery({
+    queryKey: ['wp-posts-featured', categorySlug, limit],
+    queryFn: async () => {
+      let fetchedPosts = await fetchPosts(categorySlug, limit);
+      if (!fetchedPosts || fetchedPosts.length === 0) {
+        fetchedPosts = await fetchPosts('', limit);
       }
-      setPosts(fetched);
-      setLoading(false);
-    }
-    loadPosts();
-  }, [categorySlug, limit, fetchPosts]);
+      return fetchedPosts || [];
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="py-12 flex flex-col justify-center items-center">
         <div className="w-8 h-8 border-4 border-axim-gold/20 border-t-axim-gold rounded-full animate-spin mb-4"></div>
