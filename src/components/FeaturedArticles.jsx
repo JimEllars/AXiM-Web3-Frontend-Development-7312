@@ -9,7 +9,7 @@ import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
-export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories' }) {
+export default function FeaturedArticles({ categorySlug = 'featured', limit = 2, title = 'Top Stories', fetchPosts = fetchPostsByCategory }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,17 +17,17 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
     async function loadPosts() {
       setLoading(true);
       // Fetch primary posts first. We avoid eager fallback fetching to save network bandwidth.
-      let fetched = await fetchPostsByCategory(categorySlug, limit);
+      let fetched = await fetchPosts(categorySlug, limit);
 
       // Fallback: If fetched articles are empty after the first call, use the fallback posts
       if (!fetched || fetched.length === 0) {
-        fetched = await fetchPostsByCategory('', limit);
+        fetched = await fetchPosts('', limit);
       }
       setPosts(fetched);
       setLoading(false);
     }
     loadPosts();
-  }, [categorySlug, limit]);
+  }, [categorySlug, limit, fetchPosts]);
 
   if (loading) {
     return (

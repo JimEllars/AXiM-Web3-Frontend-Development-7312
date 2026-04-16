@@ -4,7 +4,6 @@ import assert from 'node:assert';
 import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import React from 'react';
 import FeaturedArticles from './FeaturedArticles.jsx';
-import { fetchCache } from '../lib/wp-fetch.js';
 
 describe('FeaturedArticles Component', () => {
   beforeEach(() => {
@@ -15,36 +14,25 @@ describe('FeaturedArticles Component', () => {
       unobserve() {}
       disconnect() {}
     };
-
-    // Ensure cache is clear
-    fetchCache.clear();
   });
 
   afterEach(() => {
     cleanup();
     mock.restoreAll();
-    fetchCache.clear();
   });
 
   test('renders loading state initially', async () => {
-    // Mock global fetch to never resolve
-    mock.method(global, 'fetch', () => new Promise(() => {}));
+    const fetchPosts = () => new Promise(() => {}); // Never resolves
 
-    render(<FeaturedArticles />);
+    render(<FeaturedArticles fetchPosts={fetchPosts} />);
 
     assert.ok(screen.getByText('Syncing with AXiM Intelligence...'));
   });
 
   test('renders DatabaseUplinkError when no posts are returned', async () => {
-    // Return empty array for categories, leading to fallback which also returns empty
-    mock.method(global, 'fetch', async (url) => {
-      return {
-        ok: true,
-        json: async () => []
-      };
-    });
+    const fetchPosts = async () => [];
 
-    render(<FeaturedArticles />);
+    render(<FeaturedArticles fetchPosts={fetchPosts} />);
 
     await waitFor(() => {
       assert.ok(screen.getByText(/Establishing secure uplink to AXiM Database/i));
@@ -55,40 +43,28 @@ describe('FeaturedArticles Component', () => {
     const mockPosts = [
       {
         id: 1,
-        title: { rendered: 'Test Article 1' },
-        excerpt: { rendered: 'This is a test article excerpt.' },
+        title: 'Test Article 1',
+        excerpt: 'This is a test article excerpt.',
         link: 'https://axim.us.com/test-article-1',
         date: '2023-10-27T10:00:00Z',
-        _embedded: {
-            'wp:featuredmedia': [{ source_url: 'https://axim.us.com/image1.jpg' }]
-        }
+        featuredImage: 'https://axim.us.com/image1.jpg'
       },
       {
         id: 2,
-        title: { rendered: 'Test Article 2' },
-        excerpt: { rendered: 'This is another test article.' },
+        title: 'Test Article 2',
+        excerpt: 'This is another test article.',
         link: 'https://axim.us.com/test-article-2',
-        date: '2023-10-28T10:00:00Z'
+        date: '2023-10-28T10:00:00Z',
+        featuredImage: null
       }
     ];
 
-    mock.method(global, 'fetch', async (url) => {
-      if (url.includes('/categories?slug=featured')) {
-        return {
-          ok: true,
-          json: async () => [{ id: 42 }]
-        };
-      }
-      if (url.includes('categories=42')) {
-        return {
-          ok: true,
-          json: async () => mockPosts
-        };
-      }
-      return { ok: true, json: async () => [] };
-    });
+    const fetchPosts = async (slug) => {
+      if (slug === 'featured') return mockPosts;
+      return [];
+    };
 
-    render(<FeaturedArticles title="My Custom Title" />);
+    render(<FeaturedArticles title="My Custom Title" fetchPosts={fetchPosts} />);
 
     await waitFor(() => {
       assert.ok(screen.getByText('My Custom Title'));
@@ -106,38 +82,44 @@ describe('FeaturedArticles Component', () => {
   });
 
   test('falls back to fetching latest posts if category fetch is empty', async () => {
-    mock.method(global, 'fetch', async (url) => {
-      if (url.includes('/categories?slug=featured')) {
-        // Mock category fetch returns empty
-        return {
-          ok: true,
-          json: async () => []
-        };
-      }
+    const fetchPosts = async (slug) => {
+      if (slug === 'featured') return [];
+      if (slug === '') return [
+        {
+          id: 3,
+          title: 'Fallback Article',
+          excerpt: 'Fallback excerpt.',
+          link: 'https://axim.us.com/fallback',
+          date: '2023-10-29T10:00:00Z',
+          featuredImage: null
+        }
+      ];
+      return [];
+    };
 
-      // The fallback fetch fetches latest posts without category filter
-      if (url.includes('/posts?orderby=date')) {
-        return {
-          ok: true,
-          json: async () => [
-            {
-              id: 3,
-              title: { rendered: 'Fallback Article' },
-              excerpt: { rendered: 'Fallback excerpt.' },
-              link: 'https://axim.us.com/fallback',
-              date: '2023-10-29T10:00:00Z'
-            }
-          ]
-        };
-      }
-
-      return { ok: true, json: async () => [] };
-    });
-
-    render(<FeaturedArticles categorySlug="featured" />);
+    render(<FeaturedArticles categorySlug="featured" fetchPosts={fetchPosts} />);
 
     await waitFor(() => {
       assert.ok(screen.getByText('Fallback Article'));
+    });
+  });
+
+  test('falls back to default title if title prop is undefined', async () => {
+    const fetchPosts = async () => [
+      {
+        id: 1,
+        title: 'Test',
+        excerpt: 'Test excerpt',
+        link: 'https://axim.us.com/test',
+        date: '2023-10-27T10:00:00Z',
+        featuredImage: null
+      }
+    ];
+
+    render(<FeaturedArticles title={undefined} fetchPosts={fetchPosts} />);
+
+    await waitFor(() => {
+      assert.ok(screen.getByText('Top Stories'));
     });
   });
 });
