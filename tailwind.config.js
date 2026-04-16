@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import { theme as siteTheme } from './src/config/theme.js';
+
 export default {
   content: [
     "./index.html",
@@ -7,11 +9,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'axim-gold': '#FFEA00',
-        'axim-purple': '#8A2BE2',
-        'axim-green': '#3aaa74',
-        'axim-teal': '#00E5FF',
-        'bg-void': '#050505',
+        'axim-gold': siteTheme.colors.primary,
+        'axim-purple': siteTheme.colors.purple,
+        'axim-green': siteTheme.colors.secondary,
+        'axim-teal': siteTheme.colors.accent,
+        'bg-void': siteTheme.colors.background,
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
