@@ -3,10 +3,21 @@ import { test, describe, afterEach, beforeEach, mock } from 'node:test';
 import assert from 'node:assert';
 import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import FeaturedArticles from './FeaturedArticles.jsx';
 
 describe('FeaturedArticles Component', () => {
+  let queryClient;
+
   beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     // Mock IntersectionObserver for framer-motion
     global.IntersectionObserver = class IntersectionObserver {
       constructor() {}
@@ -24,7 +35,11 @@ describe('FeaturedArticles Component', () => {
   test('renders loading state initially', async () => {
     const fetchPosts = () => new Promise(() => {}); // Never resolves
 
-    render(<FeaturedArticles fetchPosts={fetchPosts} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <FeaturedArticles fetchPosts={fetchPosts} />
+      </QueryClientProvider>
+    );
 
     assert.ok(screen.getByText('Syncing with AXiM Intelligence...'));
   });
@@ -32,7 +47,11 @@ describe('FeaturedArticles Component', () => {
   test('renders DatabaseUplinkError when no posts are returned', async () => {
     const fetchPosts = async () => [];
 
-    render(<FeaturedArticles fetchPosts={fetchPosts} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <FeaturedArticles fetchPosts={fetchPosts} />
+      </QueryClientProvider>
+    );
 
     await waitFor(() => {
       assert.ok(screen.getByText(/Establishing secure uplink to AXiM Database/i));
@@ -64,7 +83,11 @@ describe('FeaturedArticles Component', () => {
       return [];
     };
 
-    render(<FeaturedArticles title="My Custom Title" fetchPosts={fetchPosts} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <FeaturedArticles title="My Custom Title" fetchPosts={fetchPosts} />
+      </QueryClientProvider>
+    );
 
     await waitFor(() => {
       assert.ok(screen.getByText('My Custom Title'));
@@ -97,7 +120,11 @@ describe('FeaturedArticles Component', () => {
       return [];
     };
 
-    render(<FeaturedArticles categorySlug="featured" fetchPosts={fetchPosts} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <FeaturedArticles categorySlug="featured" fetchPosts={fetchPosts} />
+      </QueryClientProvider>
+    );
 
     await waitFor(() => {
       assert.ok(screen.getByText('Fallback Article'));
@@ -116,7 +143,11 @@ describe('FeaturedArticles Component', () => {
       }
     ];
 
-    render(<FeaturedArticles title={undefined} fetchPosts={fetchPosts} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <FeaturedArticles title={undefined} fetchPosts={fetchPosts} />
+      </QueryClientProvider>
+    );
 
     await waitFor(() => {
       assert.ok(screen.getByText('Top Stories'));

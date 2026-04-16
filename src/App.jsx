@@ -10,6 +10,7 @@ import Tools from './pages/Tools';
 import Consultation from './pages/Consultation';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
+import Chatbot from './components/Chatbot';
 
 function App() {
   const location = useLocation();
@@ -17,6 +18,7 @@ function App() {
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
       <BackgroundEffects />
+      <Chatbot />
       <Web3Header />
       <main className="flex-grow pt-24 pb-20 relative z-10">
         <AnimatePresence mode="wait">

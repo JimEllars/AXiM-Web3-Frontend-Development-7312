@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -10,46 +11,39 @@ import { generators } from '../data/companyOfferings';
 
 const { LuArrowRight } = LuIcons;
 
-export default function NewsFeed({ categorySlug = 'article', limit = 12, title = 'Latest Insights & Offerings' }) {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      // Fetch primary posts first. We avoid eager fallback fetching to save network bandwidth.
-      let posts = await fetchPostsByCategory(categorySlug, limit);
-
-      // Fallback: If primary category returns nothing, use the fallback posts
-      if (!posts || posts.length === 0) {
-        posts = await fetchPostsByCategory('', limit);
+export default function NewsFeed({ categorySlug = 'article', limit = 12, title = 'Latest Insights & Offerings', fetchPosts = fetchPostsByCategory }) {
+  const { data: posts, isLoading } = useQuery({
+    queryKey: ['wp-posts', categorySlug, limit],
+    queryFn: async () => {
+      let fetchedPosts = await fetchPosts(categorySlug, limit);
+      if (!fetchedPosts || fetchedPosts.length === 0) {
+        fetchedPosts = await fetchPosts('', limit);
       }
+      return fetchedPosts;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-      // Interleave Logic
-      // Strategy: Inject a Company Offering card every 3rd news item.
-      const mergedItems = [];
-      let offeringIndex = 0;
+  const items = useMemo(() => {
+    if (!posts) return [];
 
-      posts.forEach((post, index) => {
-        mergedItems.push({ type: 'news', data: post });
+    const mergedItems = [];
+    let offeringIndex = 0;
 
-        // After every 3rd post (index 2, 5, 8...), if we have an offering available, insert it
-        if ((index + 1) % 3 === 0 && offeringIndex < generators.length) {
-          mergedItems.push({ type: 'offering', data: generators[offeringIndex] });
-          offeringIndex++;
-        }
-      });
+    posts.forEach((post, index) => {
+      mergedItems.push({ type: 'news', data: post });
 
-      // If we run out of posts but still have offerings, we can optionally append them
-      // but for a news feed, usually we just interleave what fits.
+      // After every 3rd post (index 2, 5, 8...), if we have an offering available, insert it
+      if ((index + 1) % 3 === 0 && offeringIndex < generators.length) {
+        mergedItems.push({ type: 'offering', data: generators[offeringIndex] });
+        offeringIndex++;
+      }
+    });
 
-      setItems(mergedItems);
-      setLoading(false);
-    }
-    loadData();
-  }, [categorySlug, limit]);
+    return mergedItems;
+  }, [posts]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="py-24 flex flex-col justify-center items-center">
         <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin mb-4"></div>
