@@ -4,7 +4,8 @@ import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
-import { sanitizeHTML, ensureSafeProtocol } from '../lib/sanitize';
+import DOMPurify from 'isomorphic-dompurify';
+import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuArrowRight } = LuIcons;
 
@@ -78,10 +79,10 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <a href={ensureSafeProtocol(post.link)} className="block hover:underline"><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3></a>
+                <a href={ensureSafeProtocol(post.link)} className="block hover:underline"><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></a>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.excerpt) }}
                 ></div>
                 <a
                   href={ensureSafeProtocol(post.link)}
