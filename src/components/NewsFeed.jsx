@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
-import { sanitizeHTML, ensureSafeProtocol } from '../lib/sanitize';
+import DOMPurify from 'isomorphic-dompurify';
+import { ensureSafeProtocol } from '../lib/sanitize';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import { generators } from '../data/companyOfferings';
 
@@ -101,10 +102,10 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                     <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <a href={ensureSafeProtocol(post.link)} className="block hover:underline"><h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.title) }}></h3></a>
+                    <a href={ensureSafeProtocol(post.link)} className="block hover:underline"><h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></a>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.excerpt) }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.excerpt) }}
                     ></div>
                     <a
                       href={ensureSafeProtocol(post.link)}
