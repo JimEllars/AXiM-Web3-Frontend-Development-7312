@@ -409,9 +409,11 @@ describe('fetchPostsByCategory', () => {
           json: async () => [
             {
               id: 1909,
+          slug: 'test-slug',
               title: { rendered: 'Test Title' },
               excerpt: { rendered: 'Test Excerpt' },
               link: 'https://axim.us.com/test-link',
+          slug: 'test-slug',
               date: '2026-03-25T13:14:48',
               _embedded: {
                 'wp:featuredmedia': [{ source_url: 'https://example.com/image.png' }]
@@ -425,7 +427,8 @@ describe('fetchPostsByCategory', () => {
     const result = await fetchPostsByCategory('apps', 1);
     assert.deepStrictEqual(result, [{
       id: 1909,
-      title: 'Test Title',
+      slug: 'test-slug',
+        title: 'Test Title',
       excerpt: 'Test Excerpt',
       link: 'https://axim.us.com/test-link',
       date: '2026-03-25T13:14:48',
@@ -480,9 +483,11 @@ describe('fetchPostsByCategory', () => {
           json: async () => [
             {
               id: 1910,
+          slug: 'test-slug',
               title: { rendered: 'No Image Title' },
               excerpt: { rendered: 'No Image Excerpt' },
               link: 'https://axim.us.com/no-image-link',
+          slug: 'test-slug',
               date: '2026-03-26T10:00:00'
             }
           ]
@@ -494,7 +499,8 @@ describe('fetchPostsByCategory', () => {
     const result = await fetchPostsByCategory('apps');
     assert.deepStrictEqual(result, [{
       id: 1910,
-      title: 'No Image Title',
+      slug: 'test-slug',
+        title: 'No Image Title',
       excerpt: 'No Image Excerpt',
       link: 'https://axim.us.com/no-image-link',
       date: '2026-03-26T10:00:00',

@@ -223,6 +223,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
         return {
           id: post.id,
+          slug: post.slug,
           title: post.title?.rendered,
           excerpt: post.excerpt?.rendered,
           link: post.link, // CRITICAL: explicit absolute URL mapping

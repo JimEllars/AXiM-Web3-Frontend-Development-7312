@@ -38,7 +38,7 @@ describe('Ecosystem Component', () => {
 
       const elements = screen.getAllByRole('link', { name: /Open Catalog/i });
       const hrefs = elements.map(e => e.getAttribute('href'));
-      assert.ok(hrefs.includes(link.url));
+      assert.ok(hrefs.includes(link.externalUrl));
     }
   });
 });

@@ -4,35 +4,35 @@ export const generators = [
     title: "Demand Letter",
     desc: "Instant legal demand letter generation ($4.00).",
     iconName: "LuFileText",
-    url: "https://quickdemandletter.com"
+    externalUrl: "https://quickdemandletter.com"
   },
   {
     id: "G_NDA",
     title: "NDA Generator",
     desc: "Standard Non-Disclosure Agreements for B2B ops.",
     iconName: "LuShieldCheck",
-    url: "#"
+    externalUrl: "#"
   },
   {
     id: "G_PRIVACY",
     title: "Right to Privacy",
     desc: "Generate Cease and Desist or Privacy notices.",
     iconName: "LuBriefcase",
-    url: "#"
+    externalUrl: "#"
   },
   {
     id: "G_DISPUTE",
     title: "Credit Dispute",
     desc: "Automated Credit Error Dispute Letters.",
     iconName: "LuCreditCard",
-    url: "#"
+    externalUrl: "#"
   },
   {
     id: "G_PAYSTUB",
     title: "Pay Stub",
     desc: "Verifiable Pay Stub Generation Tool.",
     iconName: "LuDatabase",
-    url: "#"
+    externalUrl: "#"
   }
 ];
 
@@ -42,13 +42,13 @@ export const coreLinks = [
     title: "Articles Archive",
     desc: "Access the full library of AXiM Intelligence.",
     iconName: "LuLibrary",
-    url: "https://axim.us.com/category/article/"
+    externalUrl: "https://axim.us.com/category/article/"
   },
   {
     id: "C_COURSES",
     title: "AXiM Courses",
     desc: "Technical training and certification catalog.",
     iconName: "LuGraduationCap",
-    url: "https://axim.us.com/courses/"
+    externalUrl: "https://axim.us.com/courses/"
   }
 ];
