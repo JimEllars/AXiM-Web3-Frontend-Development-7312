@@ -60,7 +60,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.6 }}
-              className="bg-glass border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
+              className="bg-glass backdrop-blur-xl saturate-150 border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
             >
               {post.featuredImage && (
                 <Link to={`/article/${post.slug}`} className="block" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}><div className="h-64 overflow-hidden relative border-b border-subtle">

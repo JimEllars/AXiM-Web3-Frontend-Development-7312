@@ -89,7 +89,7 @@ export default function Profile() {
         <div className="w-full md:w-80 space-y-6">
           <ProfileCard address={account.address} clearanceLevel={profile?.clearance_level} />
 
-          <div className="bg-glass border border-subtle p-6 space-y-4">
+          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
             <ProfileMenuButton icon={LuSettings} label="System Settings" />
             <ProfileMenuButton icon={LuKey} label="API Keys" />
             <ProfileMenuButton icon={LuShieldAlert} label="Terminate Session" danger={true} />

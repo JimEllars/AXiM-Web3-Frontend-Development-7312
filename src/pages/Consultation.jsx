@@ -53,7 +53,7 @@ export default function Consultation() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="bg-glass border border-subtle p-8 relative overflow-hidden">
+          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 pointer-events-none" />
 
             <h3 className="text-2xl font-black uppercase mb-8">Direct Access</h3>
@@ -98,7 +98,7 @@ export default function Consultation() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="bg-glass border border-subtle p-8">
+          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8">
             <h3 className="text-2xl font-black uppercase mb-8">Initiate Request</h3>
 
             {isSuccess ? (

@@ -6,7 +6,7 @@ const { LuClock, LuExternalLink, LuLock } = LuIcons;
 
 export default function VaultedRecords({ fetching, recentLetters }) {
   return (
-    <div className="bg-glass border border-subtle p-8 overflow-hidden relative font-mono">
+    <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 overflow-hidden relative font-mono">
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-xl font-black uppercase flex items-center gap-3">
           Vaulted Records

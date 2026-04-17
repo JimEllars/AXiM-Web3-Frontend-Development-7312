@@ -30,7 +30,7 @@ export default function Pillars() {
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {/* AXiM Built */}
-          <motion.div variants={item} className="bg-glass border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
+          <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
             <SafeIcon icon={LuBuilding2} size={40} className="text-axim-gold" />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Built</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">Physical infrastructure for a connected world. From next-gen 3D printed smart-structures to utility solar arrays and nationwide fiber networks.</p>
@@ -40,7 +40,7 @@ export default function Pillars() {
           </motion.div>
 
           {/* AXiM Digital */}
-          <motion.div variants={item} className="bg-glass border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
+          <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
             <SafeIcon icon={LuDatabase} size={40} className="text-axim-purple" />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Digital</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">The unified data backbone. Centralizing telemetry, proprietary APIs, and legal automation into a secure, single source of operational truth.</p>
@@ -50,7 +50,7 @@ export default function Pillars() {
           </motion.div>
 
           {/* AXiM Intelligence */}
-          <motion.div variants={item} className="bg-glass border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
+          <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
             <SafeIcon icon={LuBrainCircuit} size={40} className="text-axim-teal" />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Intelligence</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">The orchestrator. We plan and manage strategic growth via AXiM Ai, smart protocols, and high-performance document extraction logic.</p>

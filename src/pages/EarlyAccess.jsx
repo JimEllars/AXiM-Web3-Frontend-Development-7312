@@ -36,7 +36,7 @@ export default function EarlyAccess() {
           transition={{ delay: 0.2 }}
           className="space-y-8 hidden lg:block"
         >
-          <div className="p-8 bg-glass border border-subtle">
+          <div className="p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
             <div className="flex gap-6 items-start">
               <div className="p-4 bg-axim-gold/10 text-axim-gold border border-axim-gold/20">
                 <SafeIcon icon={LuShieldCheck} className="w-8 h-8" />
@@ -48,7 +48,7 @@ export default function EarlyAccess() {
             </div>
           </div>
           
-          <div className="p-8 bg-glass border border-subtle">
+          <div className="p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
             <div className="flex gap-6 items-start">
               <div className="p-4 bg-axim-purple/10 text-axim-purple border border-axim-purple/20">
                 <SafeIcon icon={LuZap} className="w-8 h-8" />
@@ -67,7 +67,7 @@ export default function EarlyAccess() {
           transition={{ delay: 0.4 }}
           className="w-full"
         >
-          <div className="max-w-[500px] mx-auto p-8 bg-glass border border-subtle">
+          <div className="max-w-[500px] mx-auto p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold uppercase mb-2">Coming Soon</h2>
               <p className="text-zinc-400 text-sm">Our restricted access onboarding portal is currently undergoing final calibration. Join the waitlist for priority access.</p>

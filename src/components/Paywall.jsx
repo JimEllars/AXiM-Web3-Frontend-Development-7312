@@ -45,6 +45,15 @@ export default function Paywall({
   const isLocked = isWeb3Enabled && web3Gate && !hasAccess;
 
   const handleIntercept = (e) => {
+    if (!isWeb3Enabled) {
+      if (externalUrl) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = `${externalUrl}?source=axim_hub`;
+      }
+      return;
+    }
+
     if (isLocked) {
       e.preventDefault();
       e.stopPropagation();
@@ -59,6 +68,17 @@ export default function Paywall({
   const handleFiatCheckout = () => {
     window.location.href = `/api/create-checkout-session?productId=${productId}`;
   };
+
+  if (!isWeb3Enabled) {
+    return (
+      <div
+        className="w-full h-full cursor-pointer"
+        onClickCapture={handleIntercept}
+      >
+        {children}
+      </div>
+    );
+  }
 
   return (
     <>
