@@ -63,7 +63,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
               className="bg-glass border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
             >
               {post.featuredImage && (
-                <Link to={`/article/${post.slug}`} className="block" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug) })}><div className="h-64 overflow-hidden relative border-b border-subtle">
+                <Link to={`/article/${post.slug}`} className="block" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}><div className="h-64 overflow-hidden relative border-b border-subtle">
                   <div className="absolute inset-0 bg-axim-gold/10 mix-blend-overlay z-10"></div>
                   <img
                     src={post.featuredImage}
@@ -76,12 +76,12 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <Link to={`/article/${post.slug}`} className="block hover:underline" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug) })}><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></Link>
+                <Link to={`/article/${post.slug}`} className="block hover:underline" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></Link>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.excerpt) }}
                 ></div>
-                <Link to={`/article/${post.slug}`} className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug) })}>
+                <Link to={`/article/${post.slug}`} className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}>
                   Read Full Article <SafeIcon icon={LuArrowRight} />
                 </Link>
               </div>

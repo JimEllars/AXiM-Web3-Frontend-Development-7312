@@ -11,6 +11,7 @@ const { LuUser } = LuIcons;
 export default function Web3Header() {
   const location = useLocation();
   const account = useActiveAccount();
+  const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   
   const navLinks = [
     { path: '/articles', label: 'Articles' },
@@ -50,7 +51,7 @@ export default function Web3Header() {
             Waitlist
           </Link>
 
-          {account && (
+          {isWeb3Enabled && account && (
             <Link
               to="/profile"
               className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-gold border-axim-gold text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
@@ -59,13 +60,15 @@ export default function Web3Header() {
             </Link>
           )}
 
-          <div className="scale-90 md:scale-100 origin-right">
-            <ConnectButton
-              client={client}
-              accountAbstraction={{ chain: sepolia, sponsorGas: true }}
-              theme="dark"
-            />
-          </div>
+          {isWeb3Enabled && (
+            <div className="scale-90 md:scale-100 origin-right">
+              <ConnectButton
+                client={client}
+                accountAbstraction={{ chain: sepolia, sponsorGas: true }}
+                theme="dark"
+              />
+            </div>
+          )}
 
           <button
             className="lg:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm"

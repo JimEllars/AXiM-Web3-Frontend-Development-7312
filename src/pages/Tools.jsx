@@ -44,13 +44,36 @@ const courses = [
   }
 ];
 
+import { Helmet } from 'react-helmet-async';
+
 export default function Tools() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": generators.map((doc, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": doc.title,
+        "description": doc.desc,
+        "applicationCategory": "BusinessApplication",
+        "url": doc.externalUrl
+      }
+    }))
+  };
+
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
       <SEO
-        title="Tools & Academy"
+        title="Enterprise Legal Document Generators & Business Automation"
         description="Access AXiM's comprehensive suite of document generators and elite training courses."
       />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      </Helmet>
       <div className="mb-20">
         <span className="section-label">Academy & Infrastructure</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools</h1>
