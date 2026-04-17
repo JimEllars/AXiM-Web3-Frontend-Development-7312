@@ -5,13 +5,33 @@ import SafeIcon from '../common/SafeIcon';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';
 import SEO from '../components/SEO';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPostsByCategory } from '../lib/wp-fetch';
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function Articles() {
+  const { data: featuredPosts } = useQuery({
+    queryKey: ['wp-posts-featured', 'featured', 1],
+    queryFn: () => fetchPostsByCategory('featured', 1),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const firstFeatured = featuredPosts && featuredPosts.length > 0 ? featuredPosts[0] : null;
+
+  // We only dynamically inject title/desc/image if we actually have data,
+  // otherwise fallback to the defaults.
+  const seoTitle = firstFeatured ? DOMPurify.sanitize(firstFeatured.title, { ALLOWED_TAGS: [] }) : "Intelligence Network";
+  const seoDesc = firstFeatured
+    ? DOMPurify.sanitize(firstFeatured.excerpt, { ALLOWED_TAGS: [] }).substring(0, 160)
+    : "Comprehensive insights, updates, and research from the AXiM ecosystem.";
+  const seoImage = firstFeatured ? firstFeatured.featuredImage : undefined;
+
   return (
     <div className="w-full relative z-10">
       <SEO
-        title="Intelligence Network"
-        description="Comprehensive insights, updates, and research from the AXiM ecosystem."
+        title={seoTitle}
+        description={seoDesc}
+        image={seoImage}
       />
       <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-10">
         <span className="section-label">Intelligence Network</span>

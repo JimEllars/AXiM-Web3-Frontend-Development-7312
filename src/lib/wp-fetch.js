@@ -32,6 +32,11 @@ export async function getWordPressPost(slug) {
               post(id: $slug, idType: SLUG) {
                 title
                 content
+                featuredImage {
+                  node {
+                    sourceUrl
+                  }
+                }
               }
             }
           `,
