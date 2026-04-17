@@ -26,15 +26,28 @@ const contract = getContract({
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
   const activeChain = useActiveWalletChain();
+  const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
 
   const { data: balanceData, isLoading: balanceLoading } = useReadContract({
     contract,
     method: "function balanceOf(address owner) view returns (uint256)",
     params: account ? [account.address] : ["0x0000000000000000000000000000000000000000"],
-    queryOptions: { enabled: !!account },
+    queryOptions: { enabled: isWeb3Enabled && !!account },
   });
 
   const hasAccess = account && balanceData && balanceData > 0n;
+
+  if (!isWeb3Enabled) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
+        <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <SafeIcon icon={LuShieldAlert} className="w-10 h-10 text-axim-gold opacity-50" />
+        </div>
+        <h2 className="text-2xl font-black uppercase mb-4">Web3 Features Dormant</h2>
+        <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">The Web3 ecosystem is currently offline for this production release.</p>
+      </div>
+    );
+  }
 
   if (loading) return (
     <div className="min-h-screen flex flex-col gap-4 items-center justify-center font-mono text-axim-gold">

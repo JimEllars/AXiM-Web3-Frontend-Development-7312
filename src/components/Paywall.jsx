@@ -29,6 +29,7 @@ export default function Paywall({
   useReadContract = thirdwebUseReadContract,
   ConnectButton = ThirdwebConnectButton
 }) {
+  const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   const account = useActiveAccount();
   const [showModal, setShowModal] = useState(false);
 
@@ -37,11 +38,11 @@ export default function Paywall({
     contract,
     method: "function balanceOf(address owner) view returns (uint256)",
     params: account ? [account.address] : ["0x0000000000000000000000000000000000000000"],
-    queryOptions: { enabled: !!account && web3Gate },
+    queryOptions: { enabled: isWeb3Enabled && !!account && web3Gate },
   });
 
   const hasAccess = account && balanceData && balanceData > 0n;
-  const isLocked = web3Gate && !hasAccess;
+  const isLocked = isWeb3Enabled && web3Gate && !hasAccess;
 
   const handleIntercept = (e) => {
     if (isLocked) {
