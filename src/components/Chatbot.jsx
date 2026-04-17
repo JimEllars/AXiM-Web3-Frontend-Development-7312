@@ -17,12 +17,12 @@ export default function Chatbot() {
     script.domain = "www.chatbase.co";
     script.defer = true;
 
-    document.head.appendChild(script);
+    document.body.appendChild(script);
 
     return () => {
       // Cleanup if the component unmounts
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
       }
       delete window.chatbaseConfig;
     };

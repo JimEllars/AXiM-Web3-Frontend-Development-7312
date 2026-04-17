@@ -6,6 +6,7 @@ import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import Articles from './pages/Articles';
+import Article from './pages/Article';
 import Tools from './pages/Tools';
 import Consultation from './pages/Consultation';
 import EarlyAccess from './pages/EarlyAccess';
@@ -38,6 +39,7 @@ function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
+            <Route path="/article/:slug" element={<PageTransition><Article /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
