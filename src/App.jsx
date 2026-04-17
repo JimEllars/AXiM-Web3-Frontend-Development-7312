@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Web3Header from './components/Web3Header';
@@ -14,6 +14,19 @@ import Chatbot from './components/Chatbot';
 
 function App() {
   const location = useLocation();
+
+  useEffect(() => {
+    const clickRankAi = document.createElement("script");
+    clickRankAi.src = "https://js.clickrank.ai/seo/a53a59e0-cc42-4ec5-995e-d44d7177f1b3/script?" + new Date().getTime();
+    clickRankAi.async = true;
+    document.head.appendChild(clickRankAi);
+
+    return () => {
+      if (document.head.contains(clickRankAi)) {
+        document.head.removeChild(clickRankAi);
+      }
+    };
+  }, [location.pathname]);
 
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
