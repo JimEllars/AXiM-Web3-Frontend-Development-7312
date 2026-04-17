@@ -40,7 +40,7 @@ export default function Ecosystem() {
                 </div>
               </div>
               <a
-                href={item.url}
+                href={item.externalUrl}
 
 
                 className="btn btn-outline whitespace-nowrap !py-2 !px-5 !text-xs group-hover:border-axim-gold group-hover:text-axim-gold"

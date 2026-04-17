@@ -76,7 +76,7 @@ export default function Tools() {
               transition={{ delay: idx * 0.1, duration: 0.5 }}
               className="group bg-glass border border-subtle hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full"
             >
-              <Paywall price={doc.price || "4.00"} productId={doc.id} web3Gate={true}>
+              <Paywall price={doc.price || "4.00"} productId={doc.id} web3Gate={true} externalUrl={doc.externalUrl}>
                 <div className="p-8 flex flex-col h-full cursor-pointer">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
@@ -92,7 +92,7 @@ export default function Tools() {
                   </p>
 
                   <a
-                    href={doc.url}
+                    href={doc.externalUrl ? `${doc.externalUrl}?source=axim_hub` : "#"}
                     className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
                   >
                     Generate Document <SafeIcon icon={LuArrowRight} />

@@ -22,6 +22,7 @@ export default function Paywall({
   price,
   productId,
   web3Gate,
+  externalUrl,
   children,
   // DI for testing
   useActiveAccount = thirdwebUseActiveAccount,
@@ -47,6 +48,10 @@ export default function Paywall({
       e.preventDefault();
       e.stopPropagation();
       setShowModal(true);
+    } else if (externalUrl) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = `${externalUrl}?source=axim_hub`;
     }
   };
 
