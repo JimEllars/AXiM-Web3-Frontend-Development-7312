@@ -11,6 +11,7 @@ import Tools from './pages/Tools';
 import Consultation from './pages/Consultation';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
+import PartnerPortal from './pages/PartnerPortal';
 import Chatbot from './components/Chatbot';
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
+            <Route path="/partners" element={<PageTransition><PartnerPortal /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
