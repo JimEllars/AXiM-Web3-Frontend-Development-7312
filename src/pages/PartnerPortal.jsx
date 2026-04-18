@@ -5,11 +5,13 @@ import FleetMap from '../components/FleetMap';
 import B2BRegistrationModal from '../components/B2BRegistrationModal';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import OnyxIntegrationAssistant from '../components/OnyxIntegrationAssistant';
 
 const { LuTerminal, LuShieldCheck, LuZap, LuCode, LuServer, LuNetwork } = LuIcons;
 
 export default function PartnerPortal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [volume, setVolume] = useState(1000);
 
   const schemaOrgJSONLD = {
     "@context": "https://schema.org",
@@ -94,6 +96,64 @@ export default function PartnerPortal() {
         </div>
       </div>
 
+      <div className="mb-20 bg-white/5 border border-white/10 p-8 rounded-sm">
+        <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3 mb-8">
+          <SafeIcon icon={LuZap} className="text-axim-teal" />
+          ROI Calculator
+        </h2>
+
+        <div className="space-y-8">
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <label className="text-sm font-bold uppercase tracking-widest text-zinc-300">Monthly Document Volume</label>
+              <span className="text-xl font-mono text-axim-teal">{volume.toLocaleString()}</span>
+            </div>
+            <div className="relative w-full h-2 bg-white/10 rounded-lg cursor-pointer"
+                 onPointerDown={(e) => {
+                   const rect = e.currentTarget.getBoundingClientRect();
+                   const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                   const pct = x / rect.width;
+                   setVolume(Math.round((pct * 9900 + 100) / 100) * 100);
+                 }}
+                 onPointerMove={(e) => {
+                   if (e.buttons === 1) {
+                     const rect = e.currentTarget.getBoundingClientRect();
+                     const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                     const pct = x / rect.width;
+                     setVolume(Math.round((pct * 9900 + 100) / 100) * 100);
+                   }
+                 }}
+            >
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-axim-teal rounded-lg"
+                animate={{ width: `${((volume - 100) / 9900) * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+              <motion.div
+                className="absolute top-1/2 -mt-2.5 -ml-2.5 w-5 h-5 bg-white rounded-full shadow border-2 border-axim-teal"
+                animate={{ left: `${((volume - 100) / 9900) * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-white/10">
+            <div>
+              <div className="text-[0.65rem] font-mono text-zinc-500 uppercase mb-2">Traditional Cost ($150/doc)</div>
+              <div className="text-2xl font-mono text-zinc-400">${(volume * 150).toLocaleString()}</div>
+            </div>
+            <div>
+              <div className="text-[0.65rem] font-mono text-zinc-500 uppercase mb-2">AXiM API Cost ($10/doc)</div>
+              <div className="text-2xl font-mono text-white">${(volume * 10).toLocaleString()}</div>
+            </div>
+            <div>
+              <div className="text-[0.65rem] font-mono text-axim-teal uppercase mb-2">Monthly Savings</div>
+              <div className="text-3xl font-mono font-bold text-axim-teal">${(volume * 140).toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 border border-white/5 bg-white/5 group hover:border-axim-teal/30 transition-colors">
           <SafeIcon icon={LuCode} className="w-6 h-6 text-axim-teal mb-4" />
@@ -119,6 +179,7 @@ export default function PartnerPortal() {
       </div>
 
       <B2BRegistrationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <OnyxIntegrationAssistant />
     </div>
   );
 }

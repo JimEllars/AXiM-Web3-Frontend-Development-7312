@@ -194,15 +194,21 @@ export default function Profile() {
                </div>
             ) : (
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                 {generators.map((doc) => (
-                    <a key={doc.id} href={ensureSafeProtocol(doc.externalUrl ? `${doc.externalUrl}?source=axim_hub` : "#")} target="_blank" rel="noopener noreferrer" className="p-4 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-axim-teal/50 transition-colors group flex flex-col gap-2 rounded-sm cursor-pointer block">
+                 {generators.map((doc) => {
+                    let destUrl = doc.externalUrl ? `${doc.externalUrl}?source=axim_hub` : "#";
+                    if (doc.externalUrl && userSession && userSession.session_token) {
+                      destUrl += `&auth_handoff=${userSession.session_token}`;
+                    }
+                    return (
+                    <a key={doc.id} href={ensureSafeProtocol(destUrl)}  className="p-4 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-axim-teal/50 transition-colors group flex flex-col gap-2 rounded-sm cursor-pointer block">
                        <div className="flex items-center gap-3">
                          <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="text-axim-teal w-5 h-5" />
                          <span className="font-bold text-sm text-white group-hover:text-axim-teal transition-colors uppercase tracking-wider">{doc.title}</span>
                        </div>
                        <p className="text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">{doc.desc}</p>
                     </a>
-                 ))}
+                    );
+                 })}
                </div>
             )}
           </InfoPanel>
