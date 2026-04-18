@@ -14,7 +14,7 @@ import { getContract } from "thirdweb";
 import { generators } from '../data/companyOfferings';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
-const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText } = LuIcons;
+const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText, LuRefreshCw } = LuIcons;
 
 const ACCESS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -27,6 +27,37 @@ const contract = getContract({
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
   const { userSession, loading: passportLoading } = usePassport();
+  const [isRollingKey, setIsRollingKey] = React.useState(false);
+  const [apiRollMessage, setApiRollMessage] = React.useState(null);
+  const [apiKeyPrefix, setApiKeyPrefix] = React.useState('sk_live_***');
+  const [creditsRemaining, setCreditsRemaining] = React.useState('10,000');
+
+  const handleRollApiKey = async () => {
+    setIsRollingKey(true);
+    setApiRollMessage(null);
+    try {
+      const response = await fetch('https://api.axim.us.com/v1/functions/api-gateway', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'roll_key' }),
+        credentials: 'include'
+      });
+      if (response.ok) {
+        // In a real scenario we might get the new prefix back
+        setApiRollMessage({ type: 'success', text: 'API Key successfully rolled. New key sent to registered email.' });
+        // Mock updating the prefix
+        setApiKeyPrefix('sk_live_' + Math.random().toString(36).substring(2, 6));
+      } else {
+        setApiRollMessage({ type: 'error', text: 'Failed to roll API key. Please try again.' });
+      }
+    } catch (err) {
+      setApiRollMessage({ type: 'error', text: 'Network error. Could not reach API Gateway.' });
+    } finally {
+      setIsRollingKey(false);
+    }
+  };
   const activeChain = useActiveWalletChain();
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
 
@@ -175,6 +206,41 @@ export default function Profile() {
                </div>
             )}
           </InfoPanel>
+
+
+          {userSession?.is_partner && (
+            <InfoPanel icon={LuKey} iconColor="text-axim-purple" title="API Credentials (B2B)">
+              <div className="space-y-6">
+                <div className="p-6 border border-axim-purple/20 bg-axim-purple/5 text-left flex flex-col gap-4">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                     <div>
+                       <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Active Key Prefix</div>
+                       <div className="font-mono text-lg text-white">{apiKeyPrefix}</div>
+                     </div>
+                     <div className="text-left sm:text-right">
+                       <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Credits Remaining</div>
+                       <div className="font-bold text-xl text-axim-purple">{creditsRemaining}</div>
+                     </div>
+                  </div>
+
+                  {apiRollMessage && (
+                    <div className={`p-3 text-xs font-mono ${apiRollMessage.type === 'success' ? 'text-axim-green border border-axim-green/30 bg-axim-green/10' : 'text-red-400 border border-red-400/30 bg-red-400/10'}`}>
+                      {apiRollMessage.text}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleRollApiKey}
+                    disabled={isRollingKey}
+                    className="w-full sm:w-auto py-2 px-4 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <SafeIcon icon={LuRefreshCw} className={`w-3 h-3 ${isRollingKey ? 'animate-spin' : ''}`} />
+                    {isRollingKey ? 'Rolling Key...' : 'Roll API Key'}
+                  </button>
+                </div>
+              </div>
+            </InfoPanel>
+          )}
         </div>
       </div>
     </div>

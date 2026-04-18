@@ -6,6 +6,25 @@ export default function SEO({ title, description, image, type = "website", url }
   const siteTitle = title ? `${title} | ${theme.siteName}` : theme.siteName;
   const metaDescription = description || "AXiM Systems - Builders of A New Era.";
 
+  const breadcrumbSchema = url ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://axim.us.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": title || "Page",
+        "item": url
+      }
+    ]
+  } : null;
+
   return (
     <Helmet>
       {/* Standard metadata */}
@@ -24,6 +43,12 @@ export default function SEO({ title, description, image, type = "website", url }
       <meta name="twitter:title" content={siteTitle} />
       <meta name="twitter:description" content={metaDescription} />
       {image && <meta name="twitter:image" content={image} />}
+
+      {breadcrumbSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
+      )}
     </Helmet>
   );
 }
