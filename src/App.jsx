@@ -12,6 +12,7 @@ import Consultation from './pages/Consultation';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 import PartnerPortal from './pages/PartnerPortal';
+import Status from './pages/Status';
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
 
@@ -48,6 +49,7 @@ function App() {
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><PartnerPortal /></PageTransition>} />
+            <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
