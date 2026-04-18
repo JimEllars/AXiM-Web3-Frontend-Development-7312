@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
@@ -9,6 +10,7 @@ export default function OnyxSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
+  const [localResults, setLocalResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
@@ -32,22 +34,32 @@ export default function OnyxSearch() {
 
     setIsSearching(true);
     setResults(null);
+    setLocalResults(null);
 
     try {
-      const response = await fetch('https://api.axim.us.com/v1/functions/match_ai_interactions', {
+      // 1. Fetch AI Match
+      const aiPromise = fetch('https://api.axim.us.com/v1/functions/match_ai_interactions', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Assuming API returns { summary: "..." } or similar
+      // 2. Fetch WP Articles (Basic search on standard REST API)
+      const wpBaseUrl = import.meta.env.VITE_WORDPRESS_REST_URL || 'https://wp.axim.us.com/wp-json/wp/v2';
+      const wpPromise = fetch(`${wpBaseUrl}/posts?search=${encodeURIComponent(query)}&per_page=3&_fields=id,title,slug`);
+
+      const [aiResponse, wpResponse] = await Promise.allSettled([aiPromise, wpPromise]);
+
+      if (aiResponse.status === 'fulfilled' && aiResponse.value.ok) {
+        const data = await aiResponse.value.json();
         setResults(data.summary || data.answer || "No relevant intel found for this query.");
       } else {
         setResults("Error processing query via Onyx Intelligence Network.");
+      }
+
+      if (wpResponse.status === 'fulfilled' && wpResponse.value.ok) {
+        const wpData = await wpResponse.value.json();
+        setLocalResults(wpData);
       }
     } catch (err) {
       setResults("Connection failed. Onyx uplink is offline.");
@@ -60,6 +72,7 @@ export default function OnyxSearch() {
     setIsOpen(false);
     setQuery('');
     setResults(null);
+    setLocalResults(null);
   };
 
   return (
@@ -129,18 +142,45 @@ export default function OnyxSearch() {
                     </div>
                     <span className="text-xs font-mono uppercase tracking-widest">Querying Vector Network...</span>
                   </div>
-                ) : results ? (
+                ) : (results || localResults) ? (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="prose prose-invert prose-p:text-sm prose-p:leading-relaxed prose-a:text-axim-gold max-w-none"
+                    className="prose prose-invert prose-p:text-sm prose-p:leading-relaxed prose-a:text-axim-gold max-w-none space-y-4"
                   >
-                    <div className="flex items-start gap-3 bg-axim-gold/5 border border-axim-gold/10 p-4 rounded-sm">
-                       <SafeIcon icon={LuSparkles} className="w-5 h-5 text-axim-gold mt-0.5 flex-shrink-0" />
-                       <div className="text-sm font-mono text-zinc-300 whitespace-pre-wrap leading-relaxed">
-                         {results}
-                       </div>
-                    </div>
+                    {results && (
+                      <div className="flex items-start gap-3 bg-axim-gold/5 border border-axim-gold/10 p-4 rounded-sm">
+                         <SafeIcon icon={LuSparkles} className="w-5 h-5 text-axim-gold mt-0.5 flex-shrink-0" />
+                         <div className="text-sm font-mono text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                           {results}
+                         </div>
+                      </div>
+                    )}
+
+                    {localResults && localResults.length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Related Intel</h4>
+                        <div className="space-y-2">
+                          {localResults.map(post => (
+                            <Link
+                              key={post.id}
+                              to={`/article/${post.slug}`}
+                              onClick={closeModal}
+                              className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline"
+                              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {query.toLowerCase().includes('nda') && (
+                      <div className="mt-4">
+                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Quick Tools</h4>
+                        <Link to="/tools" onClick={closeModal} className="block p-3 bg-white/5 border border-white/10 hover:border-axim-gold/50 hover:bg-white/10 transition-colors text-sm text-axim-gold font-bold no-underline flex items-center gap-2">
+                          <SafeIcon icon={LuBrainCircuit} className="w-4 h-4" /> NDA Generator
+                        </Link>
+                      </div>
+                    )}
                   </motion.div>
                 ) : (
                   <div className="text-center text-zinc-600 font-mono text-xs uppercase flex flex-col items-center justify-center h-full gap-2">
