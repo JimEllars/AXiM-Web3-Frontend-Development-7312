@@ -18,9 +18,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
     queryKey: ['wp-posts-featured', categorySlug, limit],
     queryFn: async () => {
       let fetchedPosts = await fetchPosts(categorySlug, limit);
-      if (!fetchedPosts || fetchedPosts.length === 0) {
-        fetchedPosts = await fetchPosts('', limit);
-      }
+
       return fetchedPosts || [];
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
