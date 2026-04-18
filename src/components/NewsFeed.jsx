@@ -19,9 +19,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
     queryKey: ['wp-posts', categorySlug, limit],
     queryFn: async () => {
       let fetchedPosts = await fetchPosts(categorySlug, limit);
-      if (!fetchedPosts || fetchedPosts.length === 0) {
-        fetchedPosts = await fetchPosts('', limit);
-      }
+
       return fetchedPosts;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes

@@ -42,7 +42,7 @@ export default function Articles() {
       </div>
 
       {/* 1. Main Featured Section */}
-      <FeaturedArticles categorySlug="featured" limit={2} title="Featured Intelligence" />
+      <FeaturedArticles categorySlug="featured" limit={3} title="Featured Intelligence" />
 
       {/* 2. App Spotlight Section */}
       <NewsFeed categorySlug="app-spotlight" limit={6} title="App Spotlight" />

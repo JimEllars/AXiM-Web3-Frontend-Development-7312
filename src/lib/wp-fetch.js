@@ -166,12 +166,11 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
         const categoryId = await getCategoryId(currentApiUrl, categorySlug);
 
         let postsRes;
-        if (!categorySlug || !categoryId) {
-          if (categorySlug && !categoryId) {
-            console.warn(`No category found for slug: ${categorySlug}. Fetching latest posts as fallback.`);
-          }
-          // Fallback: Fetch all latest posts
+        if (!categorySlug) {
           postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+        } else if (!categoryId) {
+          // No category found, do not fallback
+          return [];
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
           postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
@@ -180,13 +179,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
         if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
         let posts = await postsRes.json();
 
-        // If the category request returned 0 posts, automatically perform a fallback fetch
-        if (posts.length === 0 && categorySlug) {
-          console.warn(`Category '${categorySlug}' returned 0 posts. Fetching latest posts as fallback.`);
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
-          if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
-          posts = await postsRes.json();
-        }
+
 
         return posts;
       };
