@@ -58,10 +58,8 @@ describe('FeaturedArticles Component', () => {
     });
   });
 
-  test('renders fetched posts correctly', async (t) => {
-    t.skip();
-    return;
-    const mockPosts = [
+  test.skip('renders fetched posts correctly', async () => {
+const mockPosts = [
       {
         id: 1,
         title: 'Test Article 1',
@@ -106,10 +104,8 @@ describe('FeaturedArticles Component', () => {
     });
   });
 
-  test('falls back to fetching latest posts if category fetch is empty', async (t) => {
-    t.skip();
-    return;
-    const fetchPosts = async (slug) => {
+  test.skip('falls back to fetching latest posts if category fetch is empty', async () => {
+const fetchPosts = async (slug) => {
       if (slug === 'featured') return [];
       if (slug === '') return [
         {
@@ -135,10 +131,8 @@ describe('FeaturedArticles Component', () => {
     });
   });
 
-  test('falls back to default title if title prop is undefined', async (t) => {
-    t.skip();
-    return;
-    const fetchPosts = async () => [
+  test.skip('falls back to default title if title prop is undefined', async () => {
+const fetchPosts = async () => [
       {
         id: 1,
         title: 'Test',

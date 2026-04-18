@@ -363,7 +363,6 @@ test('should return mapped posts if fetch is successful', async () => {
               title: { rendered: 'Test Title' },
               excerpt: { rendered: 'Test Excerpt' },
               link: 'https://axim.us.com/test-link',
-          slug: 'test-slug',
               date: '2026-03-25T13:14:48',
               _embedded: {
                 'wp:featuredmedia': [{ source_url: 'https://example.com/image.png' }]
@@ -406,7 +405,6 @@ test('should return mapped posts if fetch is successful', async () => {
               title: { rendered: 'No Image Title' },
               excerpt: { rendered: 'No Image Excerpt' },
               link: 'https://axim.us.com/no-image-link',
-          slug: 'test-slug',
               date: '2026-03-26T10:00:00'
             }
           ]
