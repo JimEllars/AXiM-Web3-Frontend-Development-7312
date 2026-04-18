@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAximAuth } from '../hooks/useAximAuth';
+import { usePassport } from '../hooks/usePassport';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import ProfileCard from '../components/ProfileCard';
@@ -13,7 +14,7 @@ import { getContract } from "thirdweb";
 import { generators } from '../data/companyOfferings';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
-const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock } = LuIcons;
+const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText } = LuIcons;
 
 const ACCESS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -25,6 +26,7 @@ const contract = getContract({
 
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
+  const { userSession, loading: passportLoading } = usePassport();
   const activeChain = useActiveWalletChain();
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
 
@@ -116,6 +118,38 @@ export default function Profile() {
                 <span className="text-[0.7rem] font-mono text-zinc-500 uppercase">AXiM Node Tokens</span>
                 <span className="text-2xl font-black text-white">{balanceLoading ? '...' : (balanceData ? balanceData.toString() : '0')} AXM</span>
               </div>
+            </div>
+          </InfoPanel>
+
+          <InfoPanel icon={LuFileText} iconColor="text-axim-green" title="Ecosystem Documents">
+            <div className="space-y-4">
+              {passportLoading ? (
+                <div className="p-4 border border-white/5 bg-white/5 text-center text-xs font-mono text-zinc-500 uppercase">
+                  Syncing Document History...
+                </div>
+              ) : userSession && userSession.documents && userSession.documents.length > 0 ? (
+                <div className="space-y-3">
+                  {userSession.documents.map((doc, i) => (
+                    <div key={i} className="p-4 border border-white/10 bg-white/5 flex justify-between items-center group hover:border-axim-green/50 transition-all">
+                      <div>
+                        <div className="text-sm font-bold text-white group-hover:text-axim-green transition-colors">{doc.title}</div>
+                        <div className="text-[0.65rem] font-mono text-zinc-500 uppercase mt-1">Generated: {new Date(doc.createdAt).toLocaleDateString()}</div>
+                      </div>
+                      <a href={ensureSafeProtocol(doc.url)} className="text-axim-green bg-axim-green/10 p-2 rounded-sm hover:bg-axim-green hover:text-black transition-all">
+                        <SafeIcon icon={LuArrowRight} className="w-4 h-4" />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 border border-white/5 bg-white/5 text-center flex flex-col items-center">
+                  <SafeIcon icon={LuFileText} className="w-8 h-8 text-zinc-600 mb-3" />
+                  <p className="text-sm text-zinc-400">No documents found in ecosystem history.</p>
+                  {!userSession && (
+                    <p className="text-[0.65rem] font-mono text-zinc-500 uppercase mt-2">AXiM Passport Disconnected</p>
+                  )}
+                </div>
+              )}
             </div>
           </InfoPanel>
 

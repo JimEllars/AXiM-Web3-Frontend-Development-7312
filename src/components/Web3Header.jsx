@@ -5,11 +5,13 @@ import { client } from "../lib/thirdweb-client";
 import { sepolia } from "thirdweb/chains";
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import { usePassport } from '../hooks/usePassport';
 
 const { LuUser } = LuIcons;
 
 export default function Web3Header() {
   const location = useLocation();
+  const { userSession } = usePassport();
   const account = useActiveAccount();
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   
@@ -52,12 +54,20 @@ export default function Web3Header() {
           </Link>
 
           {isWeb3Enabled && account && (
-            <Link
-              to="/profile"
-              className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-gold border-axim-gold text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
-            >
-              <SafeIcon icon={LuUser} className="w-4 h-4" />
-            </Link>
+            <div className="flex items-center gap-2">
+              {userSession && (
+                <div className="hidden md:flex items-center gap-1.5 px-2 py-1 bg-axim-green/10 border border-axim-green/20 rounded-sm">
+                  <div className="w-1.5 h-1.5 bg-axim-green rounded-full animate-pulse"></div>
+                  <span className="text-[0.55rem] font-mono text-axim-green uppercase tracking-widest">Passport Active</span>
+                </div>
+              )}
+              <Link
+                to="/profile"
+                className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-gold border-axim-gold text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
+              >
+                <SafeIcon icon={LuUser} className="w-4 h-4" />
+              </Link>
+            </div>
           )}
 
           {isWeb3Enabled && (
