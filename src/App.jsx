@@ -13,6 +13,7 @@ import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 import PartnerPortal from './pages/PartnerPortal';
 import Chatbot from './components/Chatbot';
+import ProactiveBanner from './components/ProactiveBanner';
 
 function App() {
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
       <BackgroundEffects />
+      <ProactiveBanner />
       <Chatbot />
       <Web3Header />
       <main className="flex-grow pt-24 pb-20 relative z-10">
