@@ -97,7 +97,7 @@ export default function Tools() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="group bg-glass border border-subtle hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full"
+              className="group bg-glass backdrop-blur-xl saturate-150 border border-subtle hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full"
             >
               <Paywall price={doc.price || "4.00"} productId={doc.id} web3Gate={true} externalUrl={doc.externalUrl}>
                 <div className="p-8 flex flex-col h-full cursor-pointer">
@@ -142,7 +142,7 @@ export default function Tools() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="group bg-glass border border-subtle p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full"
+              className="group bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
@@ -174,7 +174,7 @@ export default function Tools() {
       </div>
 
       {/* Articles Widget */}
-      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-glass">
+      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-glass backdrop-blur-xl saturate-150">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <div className="w-16 h-16 bg-axim-teal/10 rounded-full flex items-center justify-center mx-auto mb-6 text-axim-teal border border-axim-teal/30">
             <SafeIcon icon={LuIcons.LuNewspaper} className="w-8 h-8" />

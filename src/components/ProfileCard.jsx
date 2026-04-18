@@ -6,7 +6,7 @@ const { LuUser } = LuIcons;
 
 export default function ProfileCard({ address, clearanceLevel }) {
   return (
-    <div className="bg-glass border border-subtle p-8 text-center">
+    <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 text-center">
       <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
         <SafeIcon icon={LuUser} className="w-10 h-10 text-axim-gold" />
       </div>
