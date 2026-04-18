@@ -6,6 +6,7 @@ import { sepolia } from "thirdweb/chains";
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { usePassport } from '../hooks/usePassport';
+import OnyxSearch from './OnyxSearch';
 
 const { LuUser } = LuIcons;
 
@@ -52,6 +53,8 @@ export default function Web3Header() {
           >
             Waitlist
           </Link>
+
+          <OnyxSearch />
 
           {isWeb3Enabled && account && (
             <div className="flex items-center gap-2">
