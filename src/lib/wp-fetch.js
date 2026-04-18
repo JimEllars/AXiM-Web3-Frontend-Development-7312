@@ -166,20 +166,31 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
         const categoryId = await getCategoryId(currentApiUrl, categorySlug);
 
         let postsRes;
+        let posts = [];
+
         if (!categorySlug) {
           postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+          posts = await postsRes.json();
         } else if (!categoryId) {
-          // No category found, do not fallback
-          return [];
+          // No category found, fallback to fetching recent posts
+          console.warn(`[wp-fetch] Category '${categorySlug}' not found. Falling back to recent posts.`);
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
+          posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
           postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
+          posts = await postsRes.json();
+
+          if (!posts || posts.length === 0) {
+            console.warn(`[wp-fetch] No posts found for category '${categorySlug}'. Falling back to recent posts.`);
+            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+            if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
+            posts = await postsRes.json();
+          }
         }
-
-        if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
-        let posts = await postsRes.json();
-
-
 
         return posts;
       };

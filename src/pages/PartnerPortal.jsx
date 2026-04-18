@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import FleetMap from '../components/FleetMap';
+import B2BRegistrationModal from '../components/B2BRegistrationModal';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
 const { LuTerminal, LuShieldCheck, LuZap, LuCode, LuServer, LuNetwork } = LuIcons;
 
 export default function PartnerPortal() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const schemaOrgJSONLD = {
     "@context": "https://schema.org",
     "@type": "WebAPI",
@@ -73,9 +76,9 @@ export default function PartnerPortal() {
             </div>
           </div>
           <div className="flex gap-4">
-             <a href="mailto:partners@axim.us.com" className="flex-1 py-3 px-6 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-gray-200 transition-colors text-center border border-white">
+             <button onClick={() => setIsModalOpen(true)} className="flex-1 py-3 px-6 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-gray-200 transition-colors text-center border border-white">
                Request Access
-             </a>
+             </button>
              <a href="#" className="flex-1 py-3 px-6 bg-transparent text-white font-bold uppercase text-xs tracking-widest hover:bg-white/5 transition-colors text-center border border-white/20">
                View Docs
              </a>
@@ -114,6 +117,8 @@ export default function PartnerPortal() {
           </p>
         </div>
       </div>
+
+      <B2BRegistrationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

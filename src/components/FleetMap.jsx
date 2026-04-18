@@ -1,26 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useFleetTelemetry } from '../hooks/useFleetTelemetry';
 
 export default function FleetMap() {
   const canvasRef = useRef(null);
-  const [nodeStatuses, setNodeStatuses] = useState({
-    nda: 'ok',
-    demand: 'error',
-    stub: 'ok',
-    core: 'ok'
-  });
-
-  // Simulate telemetry
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNodeStatuses(prev => ({
-        ...prev,
-        demand: Math.random() > 0.8 ? 'error' : 'ok',
-        nda: Math.random() > 0.9 ? 'error' : 'ok',
-        stub: Math.random() > 0.95 ? 'error' : 'ok',
-      }));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  const { nodeStatuses } = useFleetTelemetry();
 
   const nodeStatusesRef = useRef(nodeStatuses);
   useEffect(() => {
@@ -61,8 +44,14 @@ export default function FleetMap() {
         ctx.stroke();
 
         // Draw pulses
-        const status = nodeStatusesRef.current[node.id];
-        const pulseColor = status === 'ok' ? 'rgba(0, 229, 255, 0.8)' : 'rgba(255, 50, 50, 0.8)'; // Teal or Red
+        const status = nodeStatusesRef.current[node.id] || 'offline';
+        let pulseColor = 'rgba(0, 229, 255, 0.8)'; // default operational
+
+        if (status === 'degraded') {
+          pulseColor = 'rgba(255, 165, 0, 0.8)'; // Orange
+        } else if (status === 'offline') {
+          pulseColor = 'rgba(255, 50, 50, 0.4)'; // Red, reduced opacity
+        }
 
         const pulsePos = (Math.sin(time + node.x) + 1) / 2; // 0 to 1
         const px = cx + (node.x - cx) * pulsePos;
@@ -86,15 +75,30 @@ export default function FleetMap() {
         if (node.id === 'core') {
           ctx.fillStyle = '#FFEA00'; // Gold
           ctx.shadowColor = '#FFEA00';
+          ctx.globalAlpha = 1;
         } else {
-          const status = nodeStatusesRef.current[node.id];
-          ctx.fillStyle = status === 'ok' ? '#00E5FF' : '#FF3232';
-          ctx.shadowColor = status === 'ok' ? '#00E5FF' : '#FF3232';
+          const status = nodeStatusesRef.current[node.id] || 'offline';
+          if (status === 'operational') {
+            ctx.fillStyle = '#00E5FF';
+            ctx.shadowColor = '#00E5FF';
+            ctx.globalAlpha = 1;
+          } else if (status === 'degraded') {
+            ctx.fillStyle = '#FFA500'; // Orange
+            ctx.shadowColor = '#FFA500';
+            ctx.globalAlpha = 1;
+          } else {
+            // offline
+            ctx.fillStyle = '#FF3232';
+            ctx.shadowColor = '#FF3232';
+            // Node is offline, pulse Red with reduced opacity
+            ctx.globalAlpha = 0.5 + (Math.sin(time * 2) * 0.2);
+          }
         }
 
         ctx.shadowBlur = 15;
         ctx.fill();
         ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1; // reset alpha for labels
 
         // Draw Labels
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
