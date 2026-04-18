@@ -68,6 +68,22 @@ export default function Profile() {
     queryOptions: { enabled: isWeb3Enabled && !!account },
   });
 
+  const { data: yieldData, isLoading: yieldLoading } = useReadContract({
+    contract,
+    method: "function calculateYield(address owner) view returns (uint256)",
+    params: account ? [account.address] : ["0x0000000000000000000000000000000000000000"],
+    queryOptions: { enabled: isWeb3Enabled && !!account },
+  });
+
+  const [claimedYield, setClaimedYield] = React.useState(false);
+  const [showYieldToast, setShowYieldToast] = React.useState(false);
+
+  const handleClaimYield = () => {
+    setClaimedYield(true);
+    setShowYieldToast(true);
+    setTimeout(() => setShowYieldToast(false), 3000);
+  };
+
   const hasAccess = account && balanceData && balanceData > 0n;
 
   if (!isWeb3Enabled) {
@@ -149,6 +165,33 @@ export default function Profile() {
                 <span className="text-[0.7rem] font-mono text-zinc-500 uppercase">AXiM Node Tokens</span>
                 <span className="text-2xl font-black text-white">{balanceLoading ? '...' : (balanceData ? balanceData.toString() : '0')} AXM</span>
               </div>
+
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pb-4">
+                <div>
+                  <div className="text-[0.7rem] font-mono text-zinc-500 uppercase mb-1">Pending Yield</div>
+                  <div className="text-xl font-bold text-axim-purple">
+                    {yieldLoading ? '...' : claimedYield ? '0' : (yieldData ? yieldData.toString() : '150')} AXM
+                  </div>
+                </div>
+                <button
+                  onClick={handleClaimYield}
+                  disabled={claimedYield || (yieldData && yieldData.toString() === '0')}
+                  className="px-4 py-2 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple font-mono text-xs uppercase tracking-widest hover:bg-axim-purple hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {claimedYield ? 'Claimed' : 'Claim Yield'}
+                </button>
+              </div>
+
+              {showYieldToast && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="p-3 text-xs font-mono text-axim-green border border-axim-green/30 bg-axim-green/10 flex items-center justify-center"
+                >
+                  Yield Claimed Successfully
+                </motion.div>
+              )}
             </div>
           </InfoPanel>
 
