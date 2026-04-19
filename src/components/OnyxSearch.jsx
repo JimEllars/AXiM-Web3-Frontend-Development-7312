@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import DOMPurify from 'isomorphic-dompurify';
 
 const { LuSearch, LuX, LuSparkles, LuBrainCircuit } = LuIcons;
 
@@ -167,7 +168,7 @@ export default function OnyxSearch() {
                               to={`/article/${post.slug}`}
                               onClick={closeModal}
                               className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline"
-                              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
                             />
                           ))}
                         </div>
