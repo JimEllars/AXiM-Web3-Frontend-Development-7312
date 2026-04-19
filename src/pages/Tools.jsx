@@ -95,10 +95,9 @@ export default function Tools() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {generators.map((doc, idx) => {
-            let destUrl = doc.externalUrl ? `${doc.externalUrl}?source=axim_hub` : "#";
-            if (doc.externalUrl && userSession && userSession.session_token) {
-              destUrl += `&auth_handoff=${userSession.session_token}`;
-            }
+            const destUrl = doc.externalUrl
+              ? `${doc.externalUrl}?source=axim_hub${userSession?.session_token ? `&auth_handoff=${userSession.session_token}` : ''}`
+              : "#";
 
             return (
               <motion.div
