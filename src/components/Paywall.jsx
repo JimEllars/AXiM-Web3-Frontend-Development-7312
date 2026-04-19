@@ -10,7 +10,7 @@ import SafeIcon from '../common/SafeIcon';
 const { LuLock, LuWallet, LuCreditCard, LuX } = LuIcons;
 
 // Placeholder token contract address
-const ACCESS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
+const ACCESS_TOKEN_ADDRESS = import.meta.env.VITE_AXIM_ACCESS_TOKEN_ADDRESS || "0x0000000000000000000000000000000000000000";
 
 const contract = getContract({
   client,
@@ -65,8 +65,18 @@ export default function Paywall({
     }
   };
 
-  const handleFiatCheckout = () => {
-    window.location.href = `/api/create-checkout-session?productId=${productId}`;
+  const handleFiatCheckout = async () => {
+    try {
+      const res = await fetch(`https://api.axim.us.com/v1/functions/stripe-webhooks?productId=${productId}`);
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("No checkout URL returned", data);
+      }
+    } catch (err) {
+      console.error("Error initiating checkout", err);
+    }
   };
 
   if (!isWeb3Enabled) {
