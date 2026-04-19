@@ -1,3 +1,4 @@
+import { useAximStore } from '../store/useAximStore.js';
 import 'global-jsdom/register';
 import { test, describe, afterEach, mock } from 'node:test';
 import assert from 'node:assert';
@@ -8,6 +9,7 @@ describe('usePassport Hook', () => {
   const originalFetch = global.fetch;
 
   afterEach(() => {
+    useAximStore.setState({ userSession: null, isSessionLoading: true });
     global.fetch = originalFetch;
     mock.restoreAll();
   });

@@ -12,6 +12,9 @@ import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 import PartnerPortal from './pages/PartnerPortal';
 import Status from './pages/Status';
+import Dashboard from './pages/Dashboard';
+import Generator from './pages/Generator';
+
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
 
@@ -48,6 +51,9 @@ function App() {
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><PartnerPortal /></PageTransition>} />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
+            <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
+            <Route path="/generator" element={<PageTransition><Generator /></PageTransition>} />
+
           </Routes>
         </AnimatePresence>
       </main>

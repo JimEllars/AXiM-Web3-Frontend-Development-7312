@@ -1,46 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAximStore } from '../store/useAximStore';
 
 export function usePassport() {
-  const [userSession, setUserSession] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const userSession = useAximStore((state) => state.userSession);
+  const loading = useAximStore((state) => state.isSessionLoading);
+  const verifyPassport = useAximStore((state) => state.verifyPassport);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function verifyPassport() {
-      try {
-        const response = await fetch('https://api.axim.us.com/v1/functions/passport-verify', {
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (isMounted) {
-            setUserSession(data);
-          }
-        } else {
-          if (isMounted) {
-            setUserSession(null);
-          }
-        }
-      } catch (error) {
-        console.error("Passport Verification Error:", error);
-        if (isMounted) {
-          setUserSession(null);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+    // Only verify if we haven't loaded yet or if we need to refresh
+    if (loading && userSession === null) {
+      verifyPassport();
     }
-
-    verifyPassport();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  }, [loading, userSession, verifyPassport]);
 
   return { userSession, loading };
 }

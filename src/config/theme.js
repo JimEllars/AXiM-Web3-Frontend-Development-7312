@@ -8,5 +8,5 @@ export const theme = {
     background: '#050505', // bg-void
   },
   wpRestEndpoint: "https://axim.us.com/wp-json/wp/v2",
-  chatbaseBotId: "placeholder-bot-id",
+  chatbaseBotId: (typeof import.meta !== "undefined" && import.meta.env ? import.meta.env.VITE_CHATBASE_BOT_ID : process.env.VITE_CHATBASE_BOT_ID) || "",
 };

@@ -5,14 +5,14 @@ def run_cuj(page):
     page.wait_for_timeout(2000)
 
     # Click on the Dashboard link (it requires account auth, so it will redirect or show access denied)
-    page.goto("http://localhost:4173/#/dashboard")
+    page.goto("http://localhost:4173/dashboard")
     page.wait_for_timeout(2000)
 
     # Take screenshot of Dashboard access denied page with the newly added Connect Button
     page.screenshot(path="/home/jules/verification/screenshots/dashboard_access_denied.png")
 
     # Navigate to Legal Infrastructure / Generator
-    page.goto("http://localhost:4173/#/generator")
+    page.goto("http://localhost:4173/generator")
     page.wait_for_timeout(2000)
     page.get_by_placeholder("Full Legal Identity").fill("John Doe")
     page.get_by_placeholder("Entity or Individual").fill("Acme Corp")

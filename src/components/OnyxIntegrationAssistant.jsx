@@ -31,9 +31,12 @@ export default function OnyxIntegrationAssistant() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/v1/chat', {
+      const response = await fetch('https://api.axim.us.com/v1/functions/llm-proxy', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_CHATBASE_BOT_ID || ''}`
+        },
         body: JSON.stringify({
           messages: [
             {
