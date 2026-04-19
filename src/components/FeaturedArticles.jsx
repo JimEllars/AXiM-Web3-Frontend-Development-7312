@@ -1,8 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import { getWordPressPost } from '../lib/wp-fetch';
 import { fetchPostsByCategory } from '../lib/wp-fetch';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -61,27 +59,27 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
               className="bg-glass backdrop-blur-xl saturate-150 border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
             >
               {post.featuredImage && (
-                <Link to={`/article/${post.slug}`} className="block" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}><div className="h-64 overflow-hidden relative border-b border-subtle">
+                <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="h-64 overflow-hidden relative border-b border-subtle">
                   <div className="absolute inset-0 bg-axim-gold/10 mix-blend-overlay z-10"></div>
                   <img
                     src={post.featuredImage}
                     alt={post.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                </div></Link>
+                </div></a>
               )}
               <div className="p-8 flex flex-col flex-grow">
                 <span className="font-mono text-[0.7rem] opacity-50 text-axim-gold mb-4 block">
                   {new Date(post.date).toLocaleDateString()}
                 </span>
-                <Link to={`/article/${post.slug}`} className="block hover:underline" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></Link>
+                <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block hover:underline"><h3 className="text-[1.5rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-gold transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></a>
                 <div
                   className="text-zinc-400 leading-[1.7] flex-grow mb-8 line-clamp-3"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.excerpt) }}
                 ></div>
-                <Link to={`/article/${post.slug}`} className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto" onMouseEnter={() => queryClient.prefetchQuery({ queryKey: ['wp-post', post.slug], queryFn: () => getWordPressPost(post.slug), staleTime: 1000 * 60 * 5 })}>
+                <a href={`https://wp.axim.us.com/article/${post.slug}`} className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors mt-auto">
                   Read Full Article <SafeIcon icon={LuArrowRight} />
-                </Link>
+                </a>
               </div>
             </motion.div>
           ))}

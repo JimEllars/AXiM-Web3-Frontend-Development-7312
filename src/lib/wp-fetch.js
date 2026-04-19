@@ -137,10 +137,10 @@ async function getCategoryId(apiUrl, slug) {
 export async function fetchPostsByCategory(categorySlug, limit = 5) {
   const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
-  // Always try the root domain first, as we know the CORS plugin is installed there
+  // Always try the wp domain first
   const urlsToTry = [
-    "https://axim.us.com/wp-json/wp/v2",
-    "https://wp.axim.us.com/wp-json/wp/v2"
+    "https://wp.axim.us.com/wp-json/wp/v2",
+    "https://axim.us.com/wp-json/wp/v2"
   ];
 
   // If a custom env var is provided, add it to the front of the line
