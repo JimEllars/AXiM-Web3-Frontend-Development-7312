@@ -26,18 +26,27 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
   const items = useMemo(() => {
     if (!posts) return [];
 
-    const mergedItems = [];
+    const postsLen = posts.length;
+    const genLen = generators.length;
+
+    // Calculate exact number of offerings that will be inserted
+    // (one offering every 3 posts, up to the max number of available offerings)
+    const numOfferingsToInsert = Math.min(Math.floor(postsLen / 3), genLen);
+
+    // Pre-allocate array to exact size needed to avoid dynamic reallocations
+    const mergedItems = new Array(postsLen + numOfferingsToInsert);
+
+    let destIndex = 0;
     let offeringIndex = 0;
 
-    posts.forEach((post, index) => {
-      mergedItems.push({ type: 'news', data: post });
+    for (let i = 0; i < postsLen; i++) {
+      mergedItems[destIndex++] = { type: 'news', data: posts[i] };
 
       // After every 3rd post (index 2, 5, 8...), if we have an offering available, insert it
-      if ((index + 1) % 3 === 0 && offeringIndex < generators.length) {
-        mergedItems.push({ type: 'offering', data: generators[offeringIndex] });
-        offeringIndex++;
+      if ((i + 1) % 3 === 0 && offeringIndex < numOfferingsToInsert) {
+        mergedItems[destIndex++] = { type: 'offering', data: generators[offeringIndex++] };
       }
-    });
+    }
 
     return mergedItems;
   }, [posts]);
