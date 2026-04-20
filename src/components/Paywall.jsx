@@ -42,18 +42,11 @@ export default function Paywall({
   });
 
   const hasAccess = account && balanceData && balanceData > 0n;
-  const isLocked = isWeb3Enabled && web3Gate && !hasAccess;
+
+  // If Web3 is disabled, we only lock if web3Gate is true (i.e. if it requires access)
+  const isLocked = web3Gate && (!isWeb3Enabled || !hasAccess);
 
   const handleIntercept = (e) => {
-    if (!isWeb3Enabled) {
-      if (externalUrl) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.location.href = `${externalUrl}?source=axim_hub`;
-      }
-      return;
-    }
-
     if (isLocked) {
       e.preventDefault();
       e.stopPropagation();
@@ -78,17 +71,6 @@ export default function Paywall({
       console.error("Error initiating checkout", err);
     }
   };
-
-  if (!isWeb3Enabled) {
-    return (
-      <div
-        className="w-full h-full cursor-pointer"
-        onClickCapture={handleIntercept}
-      >
-        {children}
-      </div>
-    );
-  }
 
   return (
     <>
@@ -128,25 +110,31 @@ export default function Paywall({
                 </div>
                 <h3 className="text-2xl font-black uppercase mb-2">Protocol Locked</h3>
                 <p className="text-zinc-400 text-sm">
-                  This tool requires an active AXiM Protocol Pass or a one-time fiat purchase.
+                  {isWeb3Enabled
+                    ? "This tool requires an active AXiM Protocol Pass or a one-time fiat purchase."
+                    : "This tool requires a one-time fiat purchase."}
                 </p>
               </div>
 
               <div className="space-y-4 relative z-10">
-                <div className="p-4 border border-white/10 bg-white/5 flex flex-col gap-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <SafeIcon icon={LuWallet} className="text-axim-teal" />
-                    <span className="font-bold uppercase text-sm tracking-wider">Web3 Access</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 mb-2">Connect wallet holding AXiM Protocol Pass.</p>
-                  <ConnectButton client={client} theme="dark" className="!w-full" />
-                </div>
+                {isWeb3Enabled && (
+                  <>
+                    <div className="p-4 border border-white/10 bg-white/5 flex flex-col gap-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <SafeIcon icon={LuWallet} className="text-axim-teal" />
+                        <span className="font-bold uppercase text-sm tracking-wider">Web3 Access</span>
+                      </div>
+                      <p className="text-xs text-zinc-500 mb-2">Connect wallet holding AXiM Protocol Pass.</p>
+                      <ConnectButton client={client} theme="dark" className="!w-full" />
+                    </div>
 
-                <div className="flex items-center justify-center gap-4 py-2">
-                  <div className="h-px bg-white/10 flex-grow"></div>
-                  <span className="font-mono text-[0.6rem] uppercase tracking-widest text-zinc-600">OR</span>
-                  <div className="h-px bg-white/10 flex-grow"></div>
-                </div>
+                    <div className="flex items-center justify-center gap-4 py-2">
+                      <div className="h-px bg-white/10 flex-grow"></div>
+                      <span className="font-mono text-[0.6rem] uppercase tracking-widest text-zinc-600">OR</span>
+                      <div className="h-px bg-white/10 flex-grow"></div>
+                    </div>
+                  </>
+                )}
 
                 <div className="p-4 border border-axim-gold/20 bg-axim-gold/5 flex flex-col gap-4">
                   <div className="flex items-center gap-3 mb-2">

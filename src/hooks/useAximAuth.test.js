@@ -1,3 +1,4 @@
+global.import = { meta: { env: { VITE_ENABLE_WEB3: 'true' } } };
 import 'global-jsdom/register';
 import { test, describe, afterEach, mock } from 'node:test';
 import assert from 'node:assert';

@@ -1,14 +1,19 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAximStore } from '../store/useAximStore';
+import { useShallow } from 'zustand/react/shallow';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
 const { LuAlertTriangle, LuArrowRight } = LuIcons;
 
 export default function ProactiveBanner() {
-  const userSession = useAximStore((state) => state.userSession);
-  const isSessionLoading = useAximStore((state) => state.isSessionLoading);
+  const { userSession, isSessionLoading } = useAximStore(
+    useShallow((state) => ({
+      userSession: state.userSession,
+      isSessionLoading: state.isSessionLoading,
+    }))
+  );
 
   // Show nothing if loading or if user is not authenticated
   if (isSessionLoading || !userSession) return null;

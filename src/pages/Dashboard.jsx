@@ -9,6 +9,7 @@ const { LuLayoutDashboard, LuLock, LuActivity, LuTrendingUp, LuUsers } = LuIcons
 
 export default function Dashboard() {
   const userSession = useAximStore((state) => state.userSession);
+  const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   const { account } = useAximAuth();
 
   return (
@@ -30,11 +31,15 @@ export default function Dashboard() {
           </div>
           <h3 className="text-2xl font-black uppercase mb-2">Access Restricted</h3>
           <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8">
-            This dashboard requires an active AXiM Protocol Pass or active B2B Enterprise Session.
+            {isWeb3Enabled
+              ? "This dashboard requires an active AXiM Protocol Pass or active B2B Enterprise Session."
+              : "This dashboard requires an active B2B Enterprise Session."}
           </p>
-          <button className="px-8 py-3 bg-axim-gold text-black font-bold uppercase tracking-widest text-sm hover:bg-yellow-400 transition-colors">
-            Connect Identity
-          </button>
+          {isWeb3Enabled && (
+            <button className="px-8 py-3 bg-axim-gold text-black font-bold uppercase tracking-widest text-sm hover:bg-yellow-400 transition-colors">
+              Connect Identity
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
