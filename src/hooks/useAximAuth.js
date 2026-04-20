@@ -41,7 +41,8 @@ export function useAximAuth() {
         }
 
         // SIWE Foundation Draft
-        if (!siweSignature && isMounted && account.signMessage) {
+        const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
+        if (isWeb3Enabled && !siweSignature && isMounted && account.signMessage) {
             try {
                 const message = `Sign-in to AXiM Ecosystem\n\nAddress: ${account.address}\nNonce: ${Math.floor(Math.random() * 1000000)}`;
                 // Prompt user to sign
@@ -49,7 +50,30 @@ export function useAximAuth() {
                 if (isMounted) {
                     setSiweSignature(signature);
                     console.log("SIWE Signature:", signature);
-                    // TODO: Send signature to /v1/functions/auth-verify to receive JWT
+
+                    try {
+                        const response = await fetch('https://api.axim.us.com/v1/functions/auth-verify', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                address: account.address,
+                                message: message,
+                                signature: signature,
+                            })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log("SIWE JWT received successfully", data);
+                            // We can set it in Zustand store or handle it later
+                        } else {
+                            console.error("SIWE verification failed with status:", response.status);
+                        }
+                    } catch (verifyErr) {
+                        console.error("SIWE backend verification error:", verifyErr);
+                    }
                 }
             } catch (signErr) {
                 console.error("SIWE Signature Error:", signErr);

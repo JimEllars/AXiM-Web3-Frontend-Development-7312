@@ -6,13 +6,14 @@ import { sepolia } from "thirdweb/chains";
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { useAximStore } from '../store/useAximStore';
+import { useShallow } from 'zustand/react/shallow';
 import OnyxSearch from './OnyxSearch';
 
 const { LuUser } = LuIcons;
 
 export default function Web3Header() {
   const location = useLocation();
-  const userSession = useAximStore((state) => state.userSession);
+  const userSession = useAximStore(useShallow((state) => state.userSession));
   const account = useActiveAccount();
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   
