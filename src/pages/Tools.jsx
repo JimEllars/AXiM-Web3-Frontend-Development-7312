@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
-import Paywall from '../components/Paywall';
 import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
 
@@ -107,29 +106,35 @@ export default function Tools() {
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
                 className="group bg-glass backdrop-blur-xl saturate-150 border border-subtle hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full"
               >
-                <Paywall price={doc.price || "4.00"} productId={doc.id} web3Gate={true} externalUrl={doc.externalUrl}>
-                  <div className="p-8 flex flex-col h-full cursor-pointer">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
+                <div className="p-8 flex flex-col h-full cursor-pointer">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
-                    <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <div className="w-14 h-14 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(255,234,0,0.1)]">
-                        <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="w-7 h-7" />
-                      </div>
+                  <div className="flex items-center gap-4 mb-6 relative z-10">
+                    <div className="w-14 h-14 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(255,234,0,0.1)]">
+                      <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="w-7 h-7" />
                     </div>
-
-                    <h3 className="text-2xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{doc.title}</h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
-                      {doc.desc}
-                    </p>
-
-                    <a
-                      href={destUrl}
-                      className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
-                    >
-                      {userSession ? 'Launch Secure Session' : 'Generate Document'} <SafeIcon icon={LuArrowRight} />
-                    </a>
                   </div>
-                </Paywall>
+
+                  <h3 className="text-2xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{doc.title}</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
+                    {doc.desc}
+                  </p>
+
+                  <div className="mb-4">
+                    <span className="text-axim-gold font-mono text-sm border border-axim-gold/30 px-3 py-1 rounded bg-axim-gold/5">
+                      {doc.price ? `$${doc.price} One-Time` : "$4.00 One-Time"}
+                    </span>
+                  </div>
+
+                  <a
+                    href={destUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
+                  >
+                    Go to App <SafeIcon icon={LuArrowRight} />
+                  </a>
+                </div>
               </motion.div>
             );
           })}
