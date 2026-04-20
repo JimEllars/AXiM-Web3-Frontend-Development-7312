@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAximAuth } from '../hooks/useAximAuth';
-import { usePassport } from '../hooks/usePassport';
+import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import ProfileCard from '../components/ProfileCard';
@@ -26,7 +26,8 @@ const contract = getContract({
 
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
-  const { userSession, loading: passportLoading } = usePassport();
+  const userSession = useAximStore((state) => state.userSession);
+  const passportLoading = useAximStore((state) => state.isSessionLoading);
   const [isRollingKey, setIsRollingKey] = React.useState(false);
   const [apiRollMessage, setApiRollMessage] = React.useState(null);
   const [apiKeyPrefix, setApiKeyPrefix] = React.useState('sk_live_***');

@@ -1,16 +1,17 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePassport } from '../hooks/usePassport';
+import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
 const { LuAlertTriangle, LuArrowRight } = LuIcons;
 
 export default function ProactiveBanner() {
-  const { userSession, loading } = usePassport();
+  const userSession = useAximStore((state) => state.userSession);
+  const isSessionLoading = useAximStore((state) => state.isSessionLoading);
 
   // Show nothing if loading or if user is not authenticated
-  if (loading || !userSession) return null;
+  if (isSessionLoading || !userSession) return null;
 
   // We only care if health_index is present and below 40
   const isHealthy = typeof userSession.health_index !== 'number' || userSession.health_index >= 40;

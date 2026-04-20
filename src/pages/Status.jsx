@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import FleetMap from '../components/FleetMap';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
+import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 
 const { LuActivity, LuClock, LuServer, LuNetwork } = LuIcons;
 
 export default function Status() {
+  const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
+
+  useEffect(() => {
+    startTelemetryPolling();
+  }, [startTelemetryPolling]);
+
   const [metrics, setMetrics] = useState({
     uptime: '99.99%',
     latency: '42ms',

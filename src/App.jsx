@@ -14,12 +14,19 @@ import PartnerPortal from './pages/PartnerPortal';
 import Status from './pages/Status';
 import Dashboard from './pages/Dashboard';
 import Generator from './pages/Generator';
+import Assets from './pages/Assets';
 
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
+import { useAximStore } from './store/useAximStore';
 
 function App() {
   const location = useLocation();
+  const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
+
+  useEffect(() => {
+    startTelemetryPolling();
+  }, [startTelemetryPolling]);
 
   useEffect(() => {
     const clickRankAi = document.createElement("script");
@@ -53,6 +60,7 @@ function App() {
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
             <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
             <Route path="/generator" element={<PageTransition><Generator /></PageTransition>} />
+            <Route path="/assets" element={<PageTransition><Assets /></PageTransition>} />
 
           </Routes>
         </AnimatePresence>
