@@ -6,7 +6,7 @@ import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
 import Paywall from '../components/Paywall';
 import SEO from '../components/SEO';
-import { usePassport } from '../hooks/usePassport';
+import { useAximStore } from '../store/useAximStore';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
 
@@ -48,7 +48,7 @@ const courses = [
 import { Helmet } from 'react-helmet-async';
 
 export default function Tools() {
-  const { userSession } = usePassport();
+  const userSession = useAximStore((state) => state.userSession);
 
   const jsonLd = {
     "@context": "https://schema.org",

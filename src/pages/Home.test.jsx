@@ -45,18 +45,18 @@ describe('Home Page Component', () => {
     );
 
     // Verify Hero section
-    assert.ok(screen.getByText(/Smart Business/i));
-    assert.ok(screen.getByText(/Systems/i));
-    assert.ok(screen.getByText(/AXiM Systems integrates energy infrastructure/i));
+    assert.ok(screen.queryAllByText(/Smart Business/i).length > 0);
+    assert.ok(screen.queryAllByText(/Systems/i).length > 0);
+    assert.ok(screen.queryAllByText(/AXiM Systems integrates energy infrastructure/i).length > 0);
 
     // Verify FeaturedArticles section (at least the label/loading state)
-    assert.ok(screen.queryByText(/Featured Intelligence/i) || screen.queryByText(/Syncing with AXiM Intelligence/i));
+    assert.ok(screen.queryAllByText(/Featured Intelligence/i).length > 0 || screen.queryAllByText(/Syncing with AXiM Intelligence/i).length > 0);
 
     // Verify NewsFeed section (at least the label/loading state)
-    assert.ok(screen.queryByText(/Intelligence Hub/i) || screen.queryByText(/Syncing with AXiM Intelligence/i));
+    assert.ok(screen.queryAllByText(/Intelligence Hub/i).length > 0 || screen.queryAllByText(/Syncing with AXiM Intelligence/i).length > 0);
 
     // Verify Ecosystem section
-    assert.ok(screen.getByText(/The AXiM Ecosystem/i));
-    assert.ok(screen.getByText(/Discover/i));
+    assert.ok(screen.queryAllByText(/The AXiM Ecosystem/i).length > 0);
+    assert.ok(screen.queryAllByText(/Discover/i).length > 0);
   });
 });

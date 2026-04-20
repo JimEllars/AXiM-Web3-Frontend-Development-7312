@@ -1,6 +1,7 @@
 import React from 'react';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
+import Paywall from '../components/Paywall';
 import * as LuIcons from 'react-icons/lu';
 
 const { LuFileSignature, LuArrowRight } = LuIcons;
@@ -18,6 +19,7 @@ export default function Generator() {
         <p className="text-zinc-500 text-sm">Automated protocol for legal document synthesis.</p>
       </div>
 
+      <Paywall price="4.00" productId="DOC_DEMAND" web3Gate={true} externalUrl="/generator">
       <div className="space-y-6">
         <div className="p-6 border border-white/10 bg-white/5 space-y-4">
           <h2 className="text-xl font-bold uppercase tracking-wider text-white border-b border-white/10 pb-2 mb-4">Step 1: Entity Identification</h2>
@@ -69,6 +71,7 @@ export default function Generator() {
           </div>
         </div>
       </div>
+      </Paywall>
     </div>
   );
 }

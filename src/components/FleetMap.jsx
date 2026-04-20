@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { useFleetTelemetry } from '../hooks/useFleetTelemetry';
+import { useAximStore } from '../store/useAximStore';
 
 export default function FleetMap() {
   const canvasRef = useRef(null);
-  const { nodeStatuses } = useFleetTelemetry();
+  const nodeStatuses = useAximStore((state) => state.nodeStatuses);
 
   const nodeStatusesRef = useRef(nodeStatuses);
   useEffect(() => {
