@@ -13,7 +13,6 @@ import Profile from './pages/Profile';
 import PartnerPortal from './pages/PartnerPortal';
 import Status from './pages/Status';
 import Dashboard from './pages/Dashboard';
-import Generator from './pages/Generator';
 import Assets from './pages/Assets';
 
 import Chatbot from './components/Chatbot';
@@ -59,7 +58,6 @@ function App() {
             <Route path="/partners" element={<PageTransition><PartnerPortal /></PageTransition>} />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
             <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-            <Route path="/generator" element={<PageTransition><Generator /></PageTransition>} />
             <Route path="/assets" element={<PageTransition><Assets /></PageTransition>} />
 
           </Routes>
