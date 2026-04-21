@@ -142,7 +142,7 @@ export default function Profile() {
 
       <div className="flex flex-col md:flex-row gap-12 items-start">
         <div className="w-full md:w-80 space-y-6">
-          <ProfileCard address={account.address} clearanceLevel={profile?.clearance_level} />
+          <ProfileCard address={isWeb3Enabled && account ? account.address : userSession?.email || 'Guest User'} clearanceLevel={profile?.clearance_level || 'Standard'} />
 
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
             <ProfileMenuButton icon={LuSettings} label="System Settings" />
@@ -152,7 +152,7 @@ export default function Profile() {
         </div>
 
         <div className="flex-grow space-y-8">
-          <InfoPanel icon={LuDatabase} iconColor="text-axim-gold" title="Network Connection">
+          {isWeb3Enabled && <InfoPanel icon={LuDatabase} iconColor="text-axim-gold" title="Network Connection">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="p-6 border border-white/5 bg-white/5 rounded-sm">
                 <div className="text-[0.6rem] font-mono text-zinc-600 uppercase mb-2">Active Network</div>
@@ -163,9 +163,9 @@ export default function Profile() {
                 <div className="font-bold text-axim-green tracking-widest uppercase">Connected</div>
               </div>
             </div>
-          </InfoPanel>
+          </InfoPanel>}
 
-          <InfoPanel icon={LuHardDrive} iconColor="text-axim-purple" title="Node Holdings & Yield">
+          {isWeb3Enabled && <InfoPanel icon={LuHardDrive} iconColor="text-axim-purple" title="Node Holdings & Yield">
             <div className="space-y-6">
               <div className="flex justify-between items-end border-b border-white/5 pb-4">
                 <span className="text-[0.7rem] font-mono text-zinc-500 uppercase">AXiM Node Tokens</span>
@@ -199,7 +199,7 @@ export default function Profile() {
                 </motion.div>
               )}
             </div>
-          </InfoPanel>
+          </InfoPanel>}
 
           <InfoPanel icon={LuFileText} iconColor="text-axim-green" title="Ecosystem Documents">
             <div className="space-y-4">
@@ -236,10 +236,10 @@ export default function Profile() {
           <InfoPanel icon={LuUnlock} iconColor="text-axim-teal" title="Unlocked Infrastructure">
             {!hasAccess ? (
                <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 text-center flex flex-col items-center">
-                 <p className="text-sm text-zinc-400 mb-4">You do not hold an AXiM Node NFT. Mint one to unlock access to all micro-apps.</p>
-                 <a href="/early-access" className="w-full sm:w-auto py-3 px-6 bg-axim-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2">
+                 <p className="text-sm text-zinc-400 mb-4">{isWeb3Enabled ? 'You do not hold an AXiM Node NFT. Mint one to unlock access to all micro-apps.' : 'You do not currently have access to these tools. Please upgrade your account.'}</p>
+                 {isWeb3Enabled && <a href="/early-access" className="w-full sm:w-auto py-3 px-6 bg-axim-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2">
                    Mint AXiM Node <SafeIcon icon={LuArrowRight} />
-                 </a>
+                 </a>}
                </div>
             ) : (
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">

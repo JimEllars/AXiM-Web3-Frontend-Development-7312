@@ -4,11 +4,13 @@ import SafeIcon from '../common/SafeIcon';
 import { useAximStore } from '../store/useAximStore';
 import { useAximAuth } from '../hooks/useAximAuth';
 import * as LuIcons from 'react-icons/lu';
+import DashboardNodes from '../components/DashboardNodes';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuTrendingUp, LuUsers } = LuIcons;
 
 export default function Dashboard() {
   const userSession = useAximStore((state) => state.userSession);
+  const nodeStatuses = useAximStore((state) => state.nodeStatuses);
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
   const { account } = useAximAuth();
 
@@ -42,38 +44,8 @@ export default function Dashboard() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 border border-white/10 bg-white/5 space-y-4">
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuActivity} className="text-axim-teal" />
-              <h2 className="text-xl font-bold uppercase tracking-wider text-white">Node Association</h2>
-            </div>
-            <div className="text-sm text-zinc-400 font-mono">
-              <p className="mb-2"><span className="text-white uppercase">Active Node:</span> {account ? account.address.slice(0, 8) + '...' + account.address.slice(-4) : 'Pending'}</p>
-              <p><span className="text-white uppercase">Status:</span> Connected</p>
-            </div>
-          </div>
-          <div className="p-6 border border-white/10 bg-white/5 space-y-4">
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuTrendingUp} className="text-axim-gold" />
-              <h2 className="text-xl font-bold uppercase tracking-wider text-white">Participation Yield</h2>
-            </div>
-            <div className="text-sm text-zinc-400 font-mono">
-              <p className="mb-2"><span className="text-white uppercase">Total Yield:</span> 1,250 AXM</p>
-              <p><span className="text-white uppercase">Pending:</span> 150 AXM</p>
-            </div>
-          </div>
-          <div className="p-6 border border-white/10 bg-white/5 space-y-4">
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuUsers} className="text-axim-purple" />
-              <h2 className="text-xl font-bold uppercase tracking-wider text-white">Governance</h2>
-            </div>
-            <div className="text-sm text-zinc-400 font-mono">
-              <p className="mb-2"><span className="text-white uppercase">Voting Power:</span> 450</p>
-              <p><span className="text-white uppercase">Active Proposals:</span> 2</p>
-            </div>
-          </div>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <DashboardNodes nodeStatuses={nodeStatuses} setSelectedNode={() => {}} /></div>
       )}
     </div>
   );
