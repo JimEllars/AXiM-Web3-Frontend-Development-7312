@@ -8,6 +8,7 @@ import SafeIcon from '../common/SafeIcon';
 import { useAximStore } from '../store/useAximStore';
 import { useShallow } from 'zustand/react/shallow';
 import OnyxSearch from './OnyxSearch';
+import { useAximAuth } from '../hooks/useAximAuth';
 
 const { LuUser } = LuIcons;
 
@@ -16,6 +17,7 @@ export default function Web3Header() {
   const userSession = useAximStore(useShallow((state) => state.userSession));
   const account = useActiveAccount();
   const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
+  const { profile, session } = useAximAuth();
   
   const navLinks = [
     { path: '/articles', label: 'Articles' },
@@ -58,17 +60,28 @@ export default function Web3Header() {
           <OnyxSearch />
 
           {!isWeb3Enabled ? (
-            <Link
-              to="/dashboard"
-              className="px-4 py-2 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold font-mono text-[0.6rem] uppercase tracking-widest hover:bg-axim-gold hover:text-black transition-all"
-            >
-              Dashboard
-            </Link>
+            <div className="flex items-center gap-2">
+                {session ? (
+                    <Link
+                        to="/profile"
+                        className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-gold border-axim-gold text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
+                    >
+                        <SafeIcon icon={LuUser} className="w-4 h-4" />
+                    </Link>
+                ) : (
+                    <Link
+                    to="/dashboard"
+                    className="px-4 py-2 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold font-mono text-[0.6rem] uppercase tracking-widest hover:bg-axim-gold hover:text-black transition-all"
+                    >
+                    Login
+                    </Link>
+                )}
+            </div>
           ) : (
             <>
-              {account && (
+              {(account || session) && (
                 <div className="flex items-center gap-2">
-                  {userSession && (
+                  {(userSession || session) && (
                     <div className="hidden md:flex items-center gap-1.5 px-2 py-1 bg-axim-green/10 border border-axim-green/20 rounded-sm">
                       <div className="w-1.5 h-1.5 bg-axim-green rounded-full animate-pulse"></div>
                       <span className="text-[0.55rem] font-mono text-axim-green uppercase tracking-widest">Passport Active</span>

@@ -6,6 +6,8 @@ import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
 import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
+import { Helmet } from 'react-helmet-async';
+import { useAximAuth } from '../hooks/useAximAuth';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
 
@@ -44,10 +46,15 @@ const courses = [
   }
 ];
 
-import { Helmet } from 'react-helmet-async';
 
 export default function Tools() {
   const userSession = useAximStore((state) => state.userSession);
+  const { profile } = useAximAuth();
+
+  // Simulate premium access via profile clearance_level or a specific flag.
+  // We'll treat clearance_level >= 2 as premium for the simulation,
+  // or userSession.is_premium
+  const isPremium = profile?.clearance_level >= 2 || userSession?.is_premium;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -104,9 +111,9 @@ export default function Tools() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
-                className="group bg-glass backdrop-blur-xl saturate-150 border border-subtle hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full"
+                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full rounded-md"
               >
-                <div className="p-8 flex flex-col h-full cursor-pointer">
+                <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
                   <div className="flex items-center gap-4 mb-6 relative z-10">
@@ -115,6 +122,12 @@ export default function Tools() {
                     </div>
                   </div>
 
+                  {isPremium && (
+                      <div className="absolute top-4 right-4 bg-axim-gold text-black text-[0.6rem] font-bold px-2 py-1 uppercase tracking-widest rounded-sm shadow-sm">
+                          Premium Unlocked
+                      </div>
+                  )}
+
                   <h3 className="text-2xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{doc.title}</h3>
                   <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
                     {doc.desc}
@@ -122,7 +135,7 @@ export default function Tools() {
 
                   <div className="mb-4">
                     <span className="text-axim-gold font-mono text-sm border border-axim-gold/30 px-3 py-1 rounded bg-axim-gold/5">
-                      {doc.price ? `$${doc.price} One-Time` : "$4.00 One-Time"}
+                      {isPremium ? "Unlocked" : (doc.price ? `$${doc.price} One-Time` : "$4.00 One-Time")}
                     </span>
                   </div>
 
@@ -132,7 +145,7 @@ export default function Tools() {
                     rel="noopener noreferrer"
                     className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
                   >
-                    Go to App <SafeIcon icon={LuArrowRight} />
+                    Launch App <SafeIcon icon={LuArrowRight} />
                   </a>
                 </div>
               </motion.div>
@@ -156,7 +169,7 @@ export default function Tools() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="group bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full"
+              className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full rounded-md"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
@@ -188,7 +201,7 @@ export default function Tools() {
       </div>
 
       {/* Articles Widget */}
-      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-glass backdrop-blur-xl saturate-150">
+      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-white/5 backdrop-blur-xl saturate-150">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <div className="w-16 h-16 bg-axim-teal/10 rounded-full flex items-center justify-center mx-auto mb-6 text-axim-teal border border-axim-teal/30">
             <SafeIcon icon={LuIcons.LuNewspaper} className="w-8 h-8" />

@@ -8,6 +8,7 @@ import SafeIcon from '../common/SafeIcon';
 import ProfileCard from '../components/ProfileCard';
 import ProfileMenuButton from '../components/ProfileMenuButton';
 import InfoPanel from '../components/InfoPanel';
+import VaultedRecords from '../components/VaultedRecords';
 import { ConnectButton, useReadContract, useActiveWalletChain } from "thirdweb/react";
 import { client } from "../lib/thirdweb-client";
 import { sepolia } from "thirdweb/chains";
@@ -201,37 +202,7 @@ export default function Profile() {
             </div>
           </InfoPanel>}
 
-          <InfoPanel icon={LuFileText} iconColor="text-axim-green" title="Ecosystem Documents">
-            <div className="space-y-4">
-              {passportLoading ? (
-                <div className="p-4 border border-white/5 bg-white/5 text-center text-xs font-mono text-zinc-500 uppercase">
-                  Syncing Document History...
-                </div>
-              ) : userSession && userSession.documents && userSession.documents.length > 0 ? (
-                <div className="space-y-3">
-                  {userSession.documents.map((doc, i) => (
-                    <div key={i} className="p-4 border border-white/10 bg-white/5 flex justify-between items-center group hover:border-axim-green/50 transition-all">
-                      <div>
-                        <div className="text-sm font-bold text-white group-hover:text-axim-green transition-colors">{doc.title}</div>
-                        <div className="text-[0.65rem] font-mono text-zinc-500 uppercase mt-1">Generated: {new Date(doc.createdAt).toLocaleDateString()}</div>
-                      </div>
-                      <a href={ensureSafeProtocol(doc.url)} className="text-axim-green bg-axim-green/10 p-2 rounded-sm hover:bg-axim-green hover:text-black transition-all">
-                        <SafeIcon icon={LuArrowRight} className="w-4 h-4" />
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-6 border border-white/5 bg-white/5 text-center flex flex-col items-center">
-                  <SafeIcon icon={LuFileText} className="w-8 h-8 text-zinc-600 mb-3" />
-                  <p className="text-sm text-zinc-400">No documents found in ecosystem history.</p>
-                  {!userSession && (
-                    <p className="text-[0.65rem] font-mono text-zinc-500 uppercase mt-2">AXiM Passport Disconnected</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </InfoPanel>
+          <VaultedRecords />
 
           <InfoPanel icon={LuUnlock} iconColor="text-axim-teal" title="Unlocked Infrastructure">
             {!hasAccess ? (
