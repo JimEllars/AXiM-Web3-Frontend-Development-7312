@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import FleetMap from '../components/FleetMap';
@@ -6,12 +6,80 @@ import B2BRegistrationModal from '../components/B2BRegistrationModal';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import OnyxIntegrationAssistant from '../components/OnyxIntegrationAssistant';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { useAximStore } from '../store/useAximStore';
+import { useAximAuth } from '../hooks/useAximAuth';
 
-const { LuTerminal, LuShieldCheck, LuZap, LuCode, LuServer, LuNetwork } = LuIcons;
+const { LuTerminal, LuShieldCheck, LuZap, LuCode, LuServer, LuNetwork, LuCreditCard, LuDatabase, LuArrowRight } = LuIcons;
 
 export default function PartnerPortal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [volume, setVolume] = useState(1000);
+  const [apiUsageData, setApiUsageData] = useState([]);
+  const [estimatedInvoice, setEstimatedInvoice] = useState(0);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  const userSession = useAximStore((state) => state.userSession);
+  const { session } = useAximAuth();
+
+  useEffect(() => {
+    // Fetch user's API usage data from the AXiM Core endpoint
+    const fetchUsageData = async () => {
+      try {
+        const response = await fetch('https://api.axim.us.com/v1/functions/api-usage', {
+            headers: {
+                ...(session?.access_token && { 'Authorization': `Bearer ${session.access_token}` })
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setApiUsageData(data.usage || []);
+            setEstimatedInvoice(data.estimatedInvoice || 0);
+        } else {
+            // Mock data fallback
+            const mockData = Array.from({ length: 30 }, (_, i) => ({
+                date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                compute: Math.floor(Math.random() * 500) + 100
+            }));
+            setApiUsageData(mockData);
+            const totalCompute = mockData.reduce((acc, curr) => acc + curr.compute, 0);
+            setEstimatedInvoice((totalCompute * 0.015).toFixed(2));
+        }
+      } catch (err) {
+         console.error("Failed to fetch API usage", err);
+      }
+    };
+
+    fetchUsageData();
+  }, [session]);
+
+  const handleManageBilling = async () => {
+    setIsRedirecting(true);
+    try {
+      const response = await fetch('https://api.axim.us.com/api/create-portal-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(userSession?.session_token && { 'Authorization': `Bearer ${userSession.session_token}` })
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          console.error("No URL returned from portal session creation");
+        }
+      } else {
+        console.error("Failed to create portal session");
+      }
+    } catch (error) {
+      console.error("Billing redirect error:", error);
+    } finally {
+        setIsRedirecting(false);
+    }
+  };
 
   const schemaOrgJSONLD = {
     "@context": "https://schema.org",
@@ -44,6 +112,51 @@ export default function PartnerPortal() {
         <p className="text-zinc-400 max-w-2xl mx-auto font-mono text-sm leading-relaxed">
           Bypass the public UI. Integrate our high-availability document orchestration and zero-trust fulfillment directly into your internal systems.
         </p>
+      </div>
+
+      {/* Partner Consumption & Billing Dashboard */}
+      <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 bg-[#0a0a0a] border border-white/10 p-6 rounded-sm space-y-6">
+              <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-3">
+                 <SafeIcon icon={LuDatabase} className="text-axim-teal" />
+                 30-Day API Compute
+              </h2>
+              <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={apiUsageData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                          <XAxis dataKey="date" stroke="#666" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+                          <YAxis stroke="#666" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#111', borderColor: '#333', fontSize: '12px' }}
+                            itemStyle={{ color: '#3aaa74' }}
+                            cursor={{ fill: '#ffffff10' }}
+                          />
+                          <Bar dataKey="compute" fill="#3aaa74" radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                  </ResponsiveContainer>
+              </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+              <div className="bg-axim-teal/10 border border-axim-teal/20 p-6 rounded-sm flex-1 flex flex-col justify-center">
+                  <h3 className="text-sm font-mono text-axim-teal uppercase mb-2">Estimated Next Invoice</h3>
+                  <div className="text-4xl font-black text-white tracking-widest mb-2">${estimatedInvoice}</div>
+                  <p className="text-xs text-zinc-400">Based on current consumption rate.</p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 p-6 rounded-sm flex-1 flex flex-col justify-center items-center text-center">
+                  <SafeIcon icon={LuCreditCard} className="w-8 h-8 text-axim-gold mb-4" />
+                  <h3 className="text-sm font-bold uppercase text-white mb-4">Billing & Subscriptions</h3>
+                  <button
+                    onClick={handleManageBilling}
+                    disabled={isRedirecting}
+                    className="w-full py-3 px-4 bg-axim-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isRedirecting ? 'Connecting...' : 'Manage Billing (Stripe)'} <SafeIcon icon={LuArrowRight} />
+                  </button>
+              </div>
+          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">

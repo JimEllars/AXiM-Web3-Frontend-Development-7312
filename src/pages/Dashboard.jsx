@@ -17,7 +17,7 @@ export default function Dashboard() {
   let isWeb3Enabled = false;
   try {
      isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
-  } catch(e) {}
+  } catch(e) { /* empty */ }
 
   const { account, session } = useAximAuth();
   const [liveEvents, setLiveEvents] = useState([]);

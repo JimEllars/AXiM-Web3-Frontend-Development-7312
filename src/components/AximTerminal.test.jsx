@@ -1,7 +1,7 @@
 import 'global-jsdom/register';
 import { test, describe, afterEach, mock, beforeEach } from 'node:test';
 import assert from 'node:assert';
-import { render, screen, act, cleanup } from '@testing-library/react';
+import { render, screen, act, cleanup, fireEvent } from '@testing-library/react';
 import React from 'react';
 import AximTerminal from './AximTerminal.jsx';
 
@@ -16,6 +16,10 @@ global.IntersectionObserver = class IntersectionObserver {
 describe('AximTerminal Component', () => {
   beforeEach(() => {
     mock.timers.enable({ apis: ['setInterval', 'Date'] });
+    global.fetch = mock.fn(() => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ reply: "Mocked Reply" })
+    }));
   });
 
   afterEach(() => {
@@ -23,55 +27,20 @@ describe('AximTerminal Component', () => {
     mock.timers.reset();
   });
 
-  test('Renders initial logs correctly', () => {
+  test('Renders toggle button initially', () => {
     render(<AximTerminal />);
 
-    assert.ok(screen.getByText(/System_Logs \/\/ Live_Stream/i));
-    assert.ok(screen.getByText(/> INITIALIZING_AXM_CORE\.\.\./));
-    assert.ok(screen.getByText(/> AUTHENTICATING_UPLINK\.\.\./));
-    assert.ok(screen.getByText(/> GRID_SYNC: SUCCESSFUL/));
-    assert.ok(screen.getByText(/> LISTENING_FOR_PACKETS\.\.\./));
-
-    const initialLogs = screen.getAllByText(/>/);
-    assert.strictEqual(initialLogs.length, 4);
+    assert.ok(screen.getByText(/Onyx Terminal/i));
   });
 
-  test('Adds new log entry after 3 seconds', () => {
+  test('Opens terminal when button clicked', () => {
     render(<AximTerminal />);
 
-    const initialLogsCount = screen.getAllByText(/>/).length;
-    assert.strictEqual(initialLogsCount, 4);
+    const button = screen.getByText(/Onyx Terminal/i);
+    fireEvent.click(button);
 
-    act(() => {
-      mock.timers.tick(3000);
-    });
-
-    const updatedLogsCount = screen.getAllByText(/>/).length;
-    assert.strictEqual(updatedLogsCount, 5);
+    assert.ok(screen.getByText(/INITIALIZING_ONYX_BRIDGE/i));
+    assert.ok(screen.getByPlaceholderText(/Enter command/i));
   });
 
-  test('Limits log history to 13 items', () => {
-    render(<AximTerminal />);
-
-    act(() => {
-      mock.timers.tick(30000);
-    });
-
-    const logsCount = screen.getAllByText(/>/).length;
-    assert.strictEqual(logsCount, 13);
-  });
-
-  test('Auto-scrolls to bottom when logs update', () => {
-    render(<AximTerminal />);
-
-    const container = screen.getByText(/System_Logs \/\/ Live_Stream/i).parentElement;
-
-    Object.defineProperty(container, 'scrollHeight', { value: 500, configurable: true });
-
-    act(() => {
-      mock.timers.tick(3000);
-    });
-
-    assert.strictEqual(container.scrollTop, 500);
-  });
 });

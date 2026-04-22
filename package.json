@@ -26,6 +26,7 @@
     "react-helmet-async": "^3.0.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.1.0",
+    "recharts": "^3.8.1",
     "tailwind-merge": "^2.5.2",
     "thirdweb": "5.50.0",
     "vitest": "^4.1.5",
