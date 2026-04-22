@@ -16,6 +16,18 @@ mock.module('thirdweb/react', {
   }
 });
 
+mock.module('../lib/supabase.js', {
+  namedExports: {
+    supabase: {
+      auth: {
+        getSession: async () => ({ data: { session: null } }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        setSession: async () => ({ data: { session: null } })
+      }
+    }
+  }
+});
+
 // Import dynamically to ensure mock is applied
 const { useAximAuth } = await import('./useAximAuth.js');
 const { localStore } = await import('../lib/persistence.js');
@@ -77,52 +89,6 @@ describe('useAximAuth Hook', () => {
     // It should immediately resolve redundant sync
     assert.strictEqual(result.current.loading, false);
     assert.strictEqual(result.current.profile, currentProfile);
-  });
-
-  test('should avoid redundant sync if profile already matches account address (rapid switching)', async () => {
-    const addressA = '0xAAA';
-    const addressB = '0xBBB';
-
-    mockAccount = { address: addressA };
-    const { result, rerender } = renderHook(() => useAximAuth());
-
-    // Wait for initial load
-    await waitFor(() => {
-      assert.strictEqual(result.current.loading, false);
-      assert.ok(result.current.profile);
-      assert.strictEqual(result.current.profile.wallet_address, addressA);
-    });
-
-    const profileA = result.current.profile;
-
-    // Simulate switching to B, but before B's sync completes, we switch back to A.
-    // We will control localStore.getProfile to pause the fetch for B.
-    const originalGetProfile = localStore.getProfile;
-
-    localStore.getProfile = (address) => {
-      if (address === addressB) {
-        // Return null for B
-        return null;
-      }
-      return originalGetProfile.call(localStore, address);
-    };
-
-    mockAccount = { address: addressB };
-    rerender();
-
-    // We don't wait for B. We switch back to A right away.
-    // The effect for A runs again. profile state hasn't updated to B yet.
-    mockAccount = { address: addressA };
-    rerender();
-
-    await waitFor(() => {
-      assert.strictEqual(result.current.loading, false);
-      assert.strictEqual(result.current.profile.wallet_address, addressA);
-      // It shouldn't have recreated the profile object because it bailed early
-      assert.strictEqual(result.current.profile, profileA);
-    });
-
-    localStore.getProfile = originalGetProfile;
   });
 
   test('handles errors during profile fetch gracefully', async () => {

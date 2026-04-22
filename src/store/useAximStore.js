@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { supabase } from '../lib/supabase.js';
 
 export const useAximStore = create((set, get) => ({
   // Telemetry state
@@ -52,15 +53,22 @@ export const useAximStore = create((set, get) => ({
   verifyPassport: async () => {
     set({ isSessionLoading: true });
     try {
-      const response = await fetch('https://api.axim.us.com/v1/functions/passport-verify', {
-        credentials: 'include',
-      });
+      const { data: { session }, error } = await supabase.auth.getSession();
 
-      if (response.ok) {
-        const data = await response.json();
-        set({ userSession: data, isSessionLoading: false });
+      if (session) {
+        set({ userSession: session, isSessionLoading: false });
       } else {
-        set({ userSession: null, isSessionLoading: false });
+        // Fallback or old method
+        const response = await fetch('https://api.axim.us.com/v1/functions/passport-verify', {
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          set({ userSession: data, isSessionLoading: false });
+        } else {
+          set({ userSession: null, isSessionLoading: false });
+        }
       }
     } catch (error) {
       console.error("Passport Verification Error:", error);
