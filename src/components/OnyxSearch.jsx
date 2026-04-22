@@ -163,9 +163,9 @@ export default function OnyxSearch() {
                         <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Related Intel</h4>
                         <div className="space-y-2">
                           {localResults.map(post => (
-                            <Link
+                            <a
                               key={post.id}
-                              to={`/article/${post.slug}`}
+                              href={`https://wp.axim.us.com/article/${post.slug}`}
                               onClick={closeModal}
                               className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline"
                               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
