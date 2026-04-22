@@ -14,6 +14,21 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("ErrorBoundary caught an error", error, errorInfo);
+
+    // Non-blocking telemetry fetch
+    fetch("https://api.axim.us.com/v1/telemetry/errors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        error: error.toString(),
+        stack: errorInfo.componentStack,
+        // Since we don't have easy hook access in class component, we'd normally pass user info via props or global store
+        // but we can make a best-effort using localStorage if they have a session
+        userId: localStorage.getItem('supabase-auth-token') ? 'authenticated-user' : 'anonymous',
+        timestamp: new Date().toISOString()
+      })
+    }).catch(e => console.error("Telemetry report failed", e));
+    console.error("ErrorBoundary caught an error", error, errorInfo);
   }
 
   render() {
@@ -31,10 +46,10 @@ export default class ErrorBoundary extends React.Component {
             </div>
           )}
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => { window.location.href = "/dashboard"; }}
             className="px-8 py-4 bg-axim-gold text-black font-black uppercase text-xs tracking-widest hover:bg-white transition-colors"
           >
-            Reboot Interface
+            Return to Dashboard
           </button>
         </div>
       );

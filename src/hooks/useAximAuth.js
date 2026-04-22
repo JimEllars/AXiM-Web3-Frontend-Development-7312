@@ -66,7 +66,7 @@ export function useAximAuth() {
           let isWeb3Enabled = false;
           try {
              isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
-          } catch(e) {}
+          } catch (e) { /* ignore */ }
 
           if (isWeb3Enabled && !siweSignature && isMounted && account.signMessage) {
               try {
@@ -124,7 +124,30 @@ export function useAximAuth() {
     }
 
     syncIdentity();
-    return () => { isMounted = false; };
+
+    // Session Heartbeat
+    const heartbeatInterval = setInterval(async () => {
+      if (!isMounted) return;
+
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+
+      if (currentSession) {
+        try {
+          const { data, error } = await supabase.auth.refreshSession();
+          if (error || !data.session) {
+            console.error("Session heartbeat failed, revoking access", error);
+            await supabase.auth.signOut();
+            setSession(null);
+            setProfile(null);
+            alert("Your session has expired. Please log in again."); // Using alert/toast fallback
+            window.location.href = "/profile";
+          }
+        } catch (e) {
+          console.error("Heartbeat error", e);
+        }
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+    return () => { isMounted = false; clearInterval(heartbeatInterval); };
   }, [account?.address, account?.signMessage, siweSignature, profile?.wallet_address, session]);
 
   return { account, profile, loading, siweSignature, session };
