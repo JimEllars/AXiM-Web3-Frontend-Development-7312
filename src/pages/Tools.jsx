@@ -8,6 +8,8 @@ import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
 import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
+import UpsellModal from '../components/UpsellModal';
+import { useState } from 'react';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
 
@@ -48,6 +50,8 @@ const courses = [
 
 
 export default function Tools() {
+  const [upsellModalOpen, setUpsellModalOpen] = useState(false);
+  const [selectedFeature, setSelectedFeature] = useState(null);
   const userSession = useAximStore((state) => state.userSession);
   const { profile } = useAximAuth();
 
@@ -139,9 +143,19 @@ export default function Tools() {
                     </span>
                   </div>
 
-                  <a
-                    href={destUrl}
-                    target="_blank"
+
+<a
+  href={destUrl}
+  onClick={(e) => {
+    // If it's an enterprise generator and they aren't premium, block routing
+    if (!isPremium && doc.price === undefined) {
+      e.preventDefault();
+      setSelectedFeature(doc.title);
+      setUpsellModalOpen(true);
+    }
+  }}
+  target="_blank"
+
                     rel="noopener noreferrer"
                     className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
                   >
@@ -215,6 +229,7 @@ export default function Tools() {
           </Link>
         </div>
       </section>
+      <UpsellModal isOpen={upsellModalOpen} onClose={() => setUpsellModalOpen(false)} featureName={selectedFeature} />
     </div>
   );
 }

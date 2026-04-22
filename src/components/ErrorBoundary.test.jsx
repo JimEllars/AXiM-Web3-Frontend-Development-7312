@@ -35,7 +35,7 @@ describe('ErrorBoundary Component', () => {
 
     assert.ok(getByText('System Malfunction'));
     assert.ok(getByText('Error: Test Error from Child'));
-    assert.ok(getByText('Reboot Interface'));
+    assert.ok(getByText('Return to Dashboard'));
 
     // React's error boundary might call console.error multiple times during dev
     assert.ok(console.error.mock.calls.length > 0);
@@ -57,7 +57,7 @@ describe('ErrorBoundary Component', () => {
       </ErrorBoundary>
     );
 
-    const rebootButton = getByText('Reboot Interface');
+    const rebootButton = getByText('Return to Dashboard');
     assert.ok(rebootButton);
 
     // Instead of mocking window.location.reload directly (which is forbidden in jsdom),
