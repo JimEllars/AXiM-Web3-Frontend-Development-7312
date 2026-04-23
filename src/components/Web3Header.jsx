@@ -7,7 +7,7 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { useAximStore } from '../store/useAximStore';
 import { useShallow } from 'zustand/react/shallow';
-import OnyxSearch from './OnyxSearch';
+import GlobalSearch from "./GlobalSearch";
 import { useAximAuth } from '../hooks/useAximAuth';
 import { supabase } from '../lib/supabase.js';
 
@@ -27,61 +27,8 @@ export default function Web3Header() {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isHitlOpen, setIsHitlOpen] = useState(false);
-  const [hitlNotifications, setHitlNotifications] = useState([]);
 
-  useEffect(() => {
-      if (!session) return;
 
-      const fetchExisting = async () => {
-          try {
-              const { data, error } = await supabase
-                .from('hitl_audit_logs')
-                .select('*')
-                .eq('status', 'pending_approval')
-                .order('created_at', { ascending: false });
-
-              if (!error && data) {
-                  setHitlNotifications(data);
-              }
-          } catch (e) {
-              // ignore table not found if it doesn't exist
-          }
-      };
-
-      fetchExisting();
-
-      const subscription = supabase
-          .channel('hitl_audit_logs_changes')
-          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'hitl_audit_logs', filter: "status=eq.pending_approval" }, payload => {
-              setHitlNotifications(prev => [payload.new, ...prev]);
-          })
-          .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'hitl_audit_logs' }, payload => {
-              if (payload.new.status !== 'pending_approval') {
-                  setHitlNotifications(prev => prev.filter(n => n.id !== payload.new.id));
-              }
-          })
-          .subscribe();
-
-      return () => {
-          supabase.removeChannel(subscription);
-      };
-  }, [session]);
-
-  const handleHitlAction = async (id, action) => {
-      try {
-          const { error } = await supabase
-            .from('hitl_audit_logs')
-            .update({ status: action === 'approve' ? 'approved' : 'rejected', resolved_at: new Date().toISOString() })
-            .eq('id', id);
-
-          if (!error) {
-              setHitlNotifications(prev => prev.filter(n => n.id !== id));
-          }
-      } catch (e) {
-          console.error("Failed to action HITL notification", e);
-      }
-  };
 
   return (
     <header className="fixed top-0 w-full p-4 px-6 md:px-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/10 z-50">
@@ -113,65 +60,7 @@ export default function Web3Header() {
             Waitlist
           </Link>
 
-          <OnyxSearch />
-
-          {/* HITL Notification Bell */}
-          {(session || account) && (
-              <div className="relative">
-                  <button
-                    onClick={() => setIsHitlOpen(!isHitlOpen)}
-                    className={`p-2.5 rounded-sm border transition-all relative ${isHitlOpen ? 'bg-axim-teal/20 border-axim-teal text-axim-teal' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
-                  >
-                      <SafeIcon icon={LuBell} className={`w-4 h-4 ${hitlNotifications.length > 0 ? 'animate-pulse text-axim-gold' : ''}`} />
-                      {hitlNotifications.length > 0 && (
-                          <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-black text-[8px] flex items-center justify-center font-bold text-white">
-                              {hitlNotifications.length}
-                          </span>
-                      )}
-                  </button>
-
-                  {isHitlOpen && (
-                      <div className="absolute top-full right-0 mt-2 w-80 bg-black border border-white/10 rounded-sm shadow-xl z-50 font-mono text-xs overflow-hidden">
-                          <div className="p-3 border-b border-white/10 bg-white/5 font-bold uppercase tracking-widest text-axim-teal flex justify-between items-center">
-                              HITL Approvals
-                              <span className="text-zinc-500 text-[10px]">{hitlNotifications.length} Pending</span>
-                          </div>
-                          <div className="max-h-96 overflow-y-auto scrollbar-hide">
-                              {hitlNotifications.length === 0 ? (
-                                  <div className="p-6 text-center text-zinc-500 uppercase tracking-widest text-[10px]">
-                                      No pending approvals.
-                                  </div>
-                              ) : (
-                                  hitlNotifications.map(notification => (
-                                      <div key={notification.id} className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors">
-                                          <div className="font-bold text-white mb-1 uppercase text-[10px] tracking-wider truncate">
-                                              {notification.task_name || 'System Playbook'}
-                                          </div>
-                                          <div className="text-zinc-400 text-[10px] mb-3 leading-relaxed">
-                                              {notification.details || 'Onyx has paused execution and requests human verification.'}
-                                          </div>
-                                          <div className="flex gap-2">
-                                              <button
-                                                onClick={() => handleHitlAction(notification.id, 'approve')}
-                                                className="flex-1 py-1.5 bg-axim-green/10 border border-axim-green/30 text-axim-green hover:bg-axim-green hover:text-black transition-colors flex justify-center items-center gap-1 uppercase tracking-widest text-[9px]"
-                                              >
-                                                  <SafeIcon icon={LuCheck} className="w-3 h-3" /> Approve
-                                              </button>
-                                              <button
-                                                onClick={() => handleHitlAction(notification.id, 'reject')}
-                                                className="flex-1 py-1.5 bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white transition-colors flex justify-center items-center gap-1 uppercase tracking-widest text-[9px]"
-                                              >
-                                                  <SafeIcon icon={LuX} className="w-3 h-3" /> Reject
-                                              </button>
-                                          </div>
-                                      </div>
-                                  ))
-                              )}
-                          </div>
-                      </div>
-                  )}
-              </div>
-          )}
+          <GlobalSearch />
 
           {!isWeb3Enabled ? (
             <div className="flex items-center gap-2">
