@@ -10,26 +10,46 @@ export function useAximAuth() {
   const [siweSignature, setSiweSignature] = useState(null);
   const [session, setSession] = useState(null);
 
+    const checkDomain = async (currentSession) => {
+      if (currentSession && currentSession.user && currentSession.user.email) {
+        if (!currentSession.user.email.endsWith('@axim.us.com')) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setProfile(null);
+          alert("Forbidden: Internal Access Only");
+          return false;
+        }
+      }
+      return true;
+    };
+
+
   useEffect(() => {
     let isMounted = true;
 
     // Supabase Session Tracking
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
       if (isMounted) {
-        setSession(currentSession);
-        if (currentSession && !account?.address) {
-           setProfile({ email: currentSession.user.email, clearance_level: 1 });
+        const isValid = await checkDomain(currentSession);
+        if (isValid) {
+          setSession(currentSession);
+          if (currentSession && !account?.address) {
+             setProfile({ email: currentSession.user.email, clearance_level: 1 });
+          }
         }
       }
     });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
       if (isMounted) {
-        setSession(currentSession);
-        if (currentSession && !account?.address) {
-            setProfile({ email: currentSession.user.email, clearance_level: 1 });
-        } else if (!currentSession && !account?.address) {
-            setProfile(null);
+        const isValid = await checkDomain(currentSession);
+        if (isValid) {
+          setSession(currentSession);
+          if (currentSession && !account?.address) {
+              setProfile({ email: currentSession.user.email, clearance_level: 1 });
+          } else if (!currentSession && !account?.address) {
+              setProfile(null);
+          }
         }
       }
     });
