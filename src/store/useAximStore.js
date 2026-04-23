@@ -50,12 +50,10 @@ export const useAximStore = create((set, get) => ({
   isSessionLoading: true,
   lastVerified: null,
   profileData: null,
-  subscriptionTier: null,
   availableTools: null,
 
   setUserSession: (session) => set({ userSession: session, isSessionLoading: false, lastVerified: Date.now() }),
   setProfileData: (data) => set({ profileData: data }),
-  setSubscriptionTier: (tier) => set({ subscriptionTier: tier }),
   setAvailableTools: (tools) => set({ availableTools: tools }),
 
   verifyPassport: async (forceRefresh = false) => {

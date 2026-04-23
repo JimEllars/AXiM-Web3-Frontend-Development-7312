@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
+import DashboardAccessDenied from '../components/DashboardAccessDenied';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu } = LuIcons;
 
@@ -107,15 +108,7 @@ export default function Dashboard() {
       </div>
 
       {!hasAccess ? (
-        <div className="p-12 border border-white/10 bg-[#0a0a0a] flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.1)] mb-6">
-            <SafeIcon icon={LuLock} className="w-8 h-8" />
-          </div>
-          <h3 className="text-2xl font-black uppercase mb-2 text-red-500">Access Denied</h3>
-          <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8 font-mono">
-            Authorization failure. Incident logged.
-          </p>
-        </div>
+        <DashboardAccessDenied />
       ) : (
         <div className="space-y-8">
           {/* Top Row: Revenue & Health */}
