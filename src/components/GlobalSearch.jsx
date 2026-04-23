@@ -15,7 +15,6 @@ const STATIC_ROUTES = [
   { title: "Partner Portal", path: "/partners" },
   { title: "System Status", path: "/status" },
   { title: "Dashboard", path: "/dashboard" },
-  { title: "Billing", path: "/billing" },
   { title: "Profile", path: "/profile" },
   { title: "Demand Letter Generator", path: "/tools" },
   { title: "NDA Generator", path: "/tools" },

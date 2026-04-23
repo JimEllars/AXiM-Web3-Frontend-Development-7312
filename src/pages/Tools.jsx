@@ -8,7 +8,6 @@ import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
 import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
-import UpsellModal from '../components/UpsellModal';
 import { useState } from 'react';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
@@ -50,9 +49,7 @@ const courses = [
 
 
 export default function Tools() {
-  const [upsellModalOpen, setUpsellModalOpen] = useState(false);
-  const [selectedFeature, setSelectedFeature] = useState(null);
-  const userSession = useAximStore((state) => state.userSession);
+      const userSession = useAximStore((state) => state.userSession);
   const { profile } = useAximAuth();
 
   // Simulate premium access via profile clearance_level or a specific flag.
@@ -126,11 +123,7 @@ export default function Tools() {
                     </div>
                   </div>
 
-                  {isPremium && (
-                      <div className="absolute top-4 right-4 bg-axim-gold text-black text-[0.6rem] font-bold px-2 py-1 uppercase tracking-widest rounded-sm shadow-sm">
-                          Premium Unlocked
-                      </div>
-                  )}
+
 
                   <h3 className="text-2xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{doc.title}</h3>
                   <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
@@ -139,21 +132,14 @@ export default function Tools() {
 
                   <div className="mb-4">
                     <span className="text-axim-gold font-mono text-sm border border-axim-gold/30 px-3 py-1 rounded bg-axim-gold/5">
-                      {isPremium ? "Unlocked" : (doc.price ? `$${doc.price} One-Time` : "$4.00 One-Time")}
+                      {doc.price ? `${doc.price} One-Time` : "$4.00 One-Time"}
                     </span>
                   </div>
 
 
 <a
   href={destUrl}
-  onClick={(e) => {
-    // If it's an enterprise generator and they aren't premium, block routing
-    if (!isPremium && doc.price === undefined) {
-      e.preventDefault();
-      setSelectedFeature(doc.title);
-      setUpsellModalOpen(true);
-    }
-  }}
+
   target="_blank"
 
                     rel="noopener noreferrer"
@@ -229,7 +215,7 @@ export default function Tools() {
           </Link>
         </div>
       </section>
-      <UpsellModal isOpen={upsellModalOpen} onClose={() => setUpsellModalOpen(false)} featureName={selectedFeature} />
+
     </div>
   );
 }

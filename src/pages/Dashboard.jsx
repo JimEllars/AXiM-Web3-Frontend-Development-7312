@@ -4,11 +4,37 @@ import SafeIcon from '../common/SafeIcon';
 import { useAximStore } from '../store/useAximStore';
 import { useAximAuth } from '../hooks/useAximAuth';
 import * as LuIcons from 'react-icons/lu';
-import DashboardNodes from '../components/DashboardNodes';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import OnyxTerminal from '../components/admin/OnyxTerminal';
 
-const { LuLayoutDashboard, LuLock, LuActivity, LuInfo } = LuIcons;
+const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu } = LuIcons;
+
+const mockRevenueData = [
+  { name: 'Mon', revenue: 400 },
+  { name: 'Tue', revenue: 300 },
+  { name: 'Wed', revenue: 550 },
+  { name: 'Thu', revenue: 700 },
+  { name: 'Fri', revenue: 650 },
+  { name: 'Sat', revenue: 800 },
+  { name: 'Sun', revenue: 950 },
+];
+
+const mockHealthData = [
+  { time: '10:00', latency: 45 },
+  { time: '10:05', latency: 50 },
+  { time: '10:10', latency: 40 },
+  { time: '10:15', latency: 120 }, // spike
+  { time: '10:20', latency: 48 },
+  { time: '10:25', latency: 42 },
+];
+
+const activePlaybooks = [
+  { id: 'PB-001', name: 'SEO Audit', status: 'Running', progress: 75 },
+  { id: 'PB-002', name: 'Lead Enrichment', status: 'Pending', progress: 0 },
+  { id: 'PB-003', name: 'Traffic Analysis', status: 'Running', progress: 40 },
+];
 
 export default function Dashboard() {
   const userSession = useAximStore((state) => state.userSession);
@@ -64,82 +90,208 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
-      <SEO title="Dashboard" description="AXiM Ecosystem Dashboard." />
+      <SEO title="Executive Dashboard" description="AXiM Internal Command Center." />
 
-      <div className="mb-12">
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 flex items-center gap-3">
-          <SafeIcon icon={LuLayoutDashboard} className="text-axim-teal" />
-          Command Center
-        </h1>
-        <p className="text-zinc-500 text-sm">Centralized node management and ecosystem routing.</p>
+      <div className="mb-12 border-b border-white/10 pb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 flex items-center gap-3 text-white">
+            <SafeIcon icon={LuLayoutDashboard} className="text-axim-teal" />
+            Executive Hub
+          </h1>
+          <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">Internal Access Only // Authorized Personnel</p>
+        </div>
+        <div className="px-4 py-2 bg-axim-teal/10 border border-axim-teal/30 text-axim-teal font-mono text-xs uppercase tracking-widest flex items-center gap-2 rounded-sm shadow-[0_0_15px_rgba(45,212,191,0.1)]">
+          <div className="w-2 h-2 bg-axim-teal rounded-full animate-pulse"></div>
+          Secure Connection Established
+        </div>
       </div>
 
       {!hasAccess ? (
         <div className="p-12 border border-white/10 bg-[#0a0a0a] flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(255,234,0,0.1)] mb-6">
+          <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.1)] mb-6">
             <SafeIcon icon={LuLock} className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-black uppercase mb-2">Access Restricted</h3>
-          <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8">
-            {isWeb3Enabled
-              ? "This dashboard requires an active AXiM Protocol Pass or active B2B Enterprise Session."
-              : "This dashboard requires an active B2B Enterprise Session."}
+          <h3 className="text-2xl font-black uppercase mb-2 text-red-500">Access Denied</h3>
+          <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8 font-mono">
+            Authorization failure. Incident logged.
           </p>
-          {isWeb3Enabled && (
-            <button className="px-8 py-3 bg-axim-gold text-black font-bold uppercase tracking-widest text-sm hover:bg-yellow-400 transition-colors">
-              Connect Identity
-            </button>
-          )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3">
-             <DashboardNodes nodeStatuses={nodeStatuses} setSelectedNode={() => {}} />
+        <div className="space-y-8">
+          {/* Top Row: Revenue & Health */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Revenue Chart Widget */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-axim-gold/10 border border-axim-gold/30 flex items-center justify-center rounded-sm text-axim-gold">
+                  <SafeIcon icon={LuDollarSign} className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-black uppercase text-white tracking-widest">Micro-App Revenue</h3>
+              </div>
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={mockRevenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ffea00" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#ffea00" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                    <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
+                    <YAxis stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} tickFormatter={(val) => `$${val}`} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,234,0,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
+                      itemStyle={{ color: '#ffea00' }}
+                    />
+                    <Area type="monotone" dataKey="revenue" stroke="#ffea00" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            {/* Infrastructure Health Widget */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-axim-green/10 border border-axim-green/30 flex items-center justify-center rounded-sm text-axim-green">
+                  <SafeIcon icon={LuServer} className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-black uppercase text-white tracking-widest">Infrastructure Health</h3>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Error Rate</div>
+                  <div className="font-bold text-xl text-axim-green font-mono">0.02%</div>
+                </div>
+                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Avg Latency</div>
+                  <div className="font-bold text-xl text-white font-mono">45ms</div>
+                </div>
+                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Active DB Conn</div>
+                  <div className="font-bold text-xl text-white font-mono">12/100</div>
+                </div>
+              </div>
+
+              <div className="flex-grow h-[120px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={mockHealthData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                    <XAxis dataKey="time" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
+                    <YAxis stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(45,212,191,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
+                      itemStyle={{ color: '#2dd4bf' }}
+                    />
+                    <Line type="monotone" dataKey="latency" stroke="#2dd4bf" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Live Events Sidebar */}
-          <div className="lg:col-span-1 bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-6 flex flex-col">
-            <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-              <SafeIcon icon={LuActivity} className="text-axim-teal animate-pulse" />
-              <h3 className="text-sm font-black uppercase text-white tracking-widest">Live Feed</h3>
-            </div>
+          {/* Bottom Row: Active Playbooks & Live Events */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Active Playbooks */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="lg:col-span-2 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-axim-purple/10 border border-axim-purple/30 flex items-center justify-center rounded-sm text-axim-purple">
+                  <SafeIcon icon={LuCpu} className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-black uppercase text-white tracking-widest">Active Onyx Playbooks</h3>
+              </div>
 
-            <div className="flex-grow space-y-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
-               <AnimatePresence>
-                 {liveEvents.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest"
-                    >
-                      Awaiting telemetry...
-                    </motion.div>
-                 ) : (
-                   liveEvents.map((ev, i) => (
-                     <motion.div
-                       key={ev.id || i}
-                       initial={{ opacity: 0, x: 20 }}
-                       animate={{ opacity: 1, x: 0 }}
-                       exit={{ opacity: 0, scale: 0.95 }}
-                       className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-green/30 bg-axim-green/10 text-axim-green' : 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal'}`}
-                     >
-                       <div className="flex gap-2 items-start">
-                         <SafeIcon icon={LuInfo} className="w-3 h-3 mt-0.5 shrink-0" />
-                         <div>
-                            <p>{ev.message}</p>
-                            <span className="text-[0.6rem] opacity-50 mt-1 block">
-                               {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
-                            </span>
+              <div className="space-y-4">
+                {activePlaybooks.map(pb => (
+                  <div key={pb.id} className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs text-zinc-500 uppercase">{pb.id}</span>
+                        <span className="font-bold text-white uppercase tracking-wider">{pb.name}</span>
+                      </div>
+                      <span className={`text-xs font-mono uppercase px-2 py-1 border rounded-sm ${pb.status === 'Running' ? 'text-axim-green border-axim-green/30 bg-axim-green/10' : 'text-zinc-400 border-zinc-600 bg-zinc-800'}`}>
+                        {pb.status}
+                      </span>
+                    </div>
+                    <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pb.progress}%` }}
+                        transition={{ duration: 1 }}
+                        className={`h-full ${pb.status === 'Running' ? 'bg-axim-purple' : 'bg-zinc-500'}`}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Live Events Sidebar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
+            >
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
+                <SafeIcon icon={LuActivity} className="text-axim-teal animate-pulse" />
+                <h3 className="text-sm font-black uppercase text-white tracking-widest">Live Event Feed</h3>
+              </div>
+
+              <div className="flex-grow space-y-3 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                 <AnimatePresence>
+                   {liveEvents.length === 0 ? (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest"
+                      >
+                        Awaiting telemetry...
+                      </motion.div>
+                   ) : (
+                     liveEvents.map((ev, i) => (
+                       <motion.div
+                         key={ev.id || i}
+                         initial={{ opacity: 0, x: 20 }}
+                         animate={{ opacity: 1, x: 0 }}
+                         exit={{ opacity: 0, scale: 0.95 }}
+                         className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-green/30 bg-axim-green/10 text-axim-green' : 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal'}`}
+                       >
+                         <div className="flex gap-2 items-start">
+                           <SafeIcon icon={LuInfo} className="w-3 h-3 mt-0.5 shrink-0" />
+                           <div>
+                              <p>{ev.message}</p>
+                              <span className="text-[0.6rem] opacity-50 mt-1 block">
+                                 {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                              </span>
+                           </div>
                          </div>
-                       </div>
-                     </motion.div>
-                   ))
-                 )}
-               </AnimatePresence>
-            </div>
+                       </motion.div>
+                     ))
+                   )}
+                 </AnimatePresence>
+              </div>
+            </motion.div>
           </div>
         </div>
       )}
+
+      {hasAccess && <OnyxTerminal />}
     </div>
   );
 }
