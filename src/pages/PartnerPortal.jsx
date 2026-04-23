@@ -5,7 +5,6 @@ import FleetMap from '../components/FleetMap';
 import B2BRegistrationModal from '../components/B2BRegistrationModal';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
-import OnyxIntegrationAssistant from '../components/OnyxIntegrationAssistant';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAximStore } from '../store/useAximStore';
 import { useAximAuth } from '../hooks/useAximAuth';
@@ -292,7 +291,6 @@ export default function PartnerPortal() {
       </div>
 
       <B2BRegistrationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <OnyxIntegrationAssistant />
     </div>
   );
 }
