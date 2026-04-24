@@ -148,7 +148,7 @@ export default function OnyxTerminal() {
                   whitespace-pre-wrap break-words
                 `}
               >
-                {line.text}
+                <div dangerouslySetInnerHTML={{ __html: line.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
               </div>
             ))}
             {isConnecting && (
@@ -161,6 +161,32 @@ export default function OnyxTerminal() {
           </div>
 
           {/* Input Area */}
+
+          {/* Quick Actions */}
+          <div className="px-3 pb-2 pt-1 border-t border-white/10 bg-black flex gap-2 overflow-x-auto custom-scrollbar">
+            <button
+              onClick={() => setInput('Analyze Infrastructure')}
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              disabled={isConnecting}
+            >
+              Analyze Infrastructure
+            </button>
+            <button
+              onClick={() => setInput('Run Security Audit')}
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              disabled={isConnecting}
+            >
+              Run Security Audit
+            </button>
+            <button
+              onClick={() => setInput('Check PDF Generation Queue')}
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              disabled={isConnecting}
+            >
+              Check PDF Queue
+            </button>
+          </div>
+
           <div className="p-3 border-t border-white/10 bg-black">
             <form onSubmit={handleSubmit} className="flex items-center gap-2">
               <span className="text-axim-teal font-mono font-[Fira_Code,JetBrains_Mono,monospace] font-bold">{'>'}</span>

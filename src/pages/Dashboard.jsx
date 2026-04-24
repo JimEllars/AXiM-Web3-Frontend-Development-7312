@@ -48,10 +48,31 @@ export default function Dashboard() {
 
   const { account, session } = useAximAuth();
   const [liveEvents, setLiveEvents] = useState([]);
+  const [metrics, setMetrics] = useState({ conversions: 0, funnel_starts: 0, error_count: 0 });
+  const [criticalAlert, setCriticalAlert] = useState(null);
 
   useEffect(() => {
     // Only subscribe if authenticated
     if (!session && !account && !userSession) return;
+
+    const fetchMetrics = async () => {
+      try {
+        const { data, error } = await supabase.rpc('get_executive_metrics');
+        if (!error && data) {
+          setMetrics({
+            conversions: data.conversions || 0,
+            funnel_starts: data.funnel_starts || 0,
+            error_count: data.error_count || 0
+          });
+        }
+      } catch (e) {
+        console.error('Failed to fetch executive metrics:', e);
+      }
+    };
+
+    fetchMetrics();
+
+    const interval = setInterval(fetchMetrics, 30000); // Poll every 30s as backup
 
     const channel = supabase
       .channel('system_events')
@@ -63,6 +84,15 @@ export default function Dashboard() {
             const newEvents = [payload.payload, ...prev].slice(0, 5); // Keep last 5 events
             return newEvents;
           });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'telemetry_logs' },
+        (payload) => {
+           if (payload.new && payload.new.severity === 'CRITICAL') {
+              setCriticalAlert(payload.new.trace_id || 'UNKNOWN_TRACE');
+           }
         }
       )
       .on(
@@ -83,6 +113,7 @@ export default function Dashboard() {
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
   }, [session, account, userSession]);
@@ -91,6 +122,28 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
+
+      <AnimatePresence>
+        {criticalAlert && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-0 left-0 right-0 z-50 bg-red-600/90 text-white p-4 flex justify-between items-center shadow-lg border-b border-red-500 backdrop-blur-md"
+          >
+            <div className="font-bold uppercase tracking-wider text-sm flex items-center gap-2">
+              ⚠️ AUTOMATED QA ALERT: PDF Generation formatting failed for Trace ID [{criticalAlert}].
+            </div>
+            <button
+              onClick={() => setCriticalAlert(null)}
+              className="text-white hover:text-red-200 transition-colors uppercase text-xs font-mono border border-white/20 px-3 py-1 rounded"
+            >
+              Dismiss
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <SEO title="Executive Dashboard" description="AXiM Internal Command Center." />
 
       <div className="mb-12 border-b border-white/10 pb-6 flex items-center justify-between">
@@ -163,16 +216,16 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
-                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Error Rate</div>
-                  <div className="font-bold text-xl text-axim-green font-mono">0.02%</div>
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">System Errors</div>
+                  <div className="font-bold text-xl text-axim-green font-mono">{metrics.error_count}</div>
                 </div>
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
-                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Avg Latency</div>
-                  <div className="font-bold text-xl text-white font-mono">45ms</div>
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Funnel Starts</div>
+                  <div className="font-bold text-xl text-white font-mono">{metrics.funnel_starts}</div>
                 </div>
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
-                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Active DB Conn</div>
-                  <div className="font-bold text-xl text-white font-mono">12/100</div>
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Conversions</div>
+                  <div className="font-bold text-xl text-white font-mono">{metrics.conversions}</div>
                 </div>
               </div>
 
