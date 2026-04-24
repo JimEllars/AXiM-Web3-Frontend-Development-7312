@@ -115,7 +115,7 @@ export default function OnyxTerminal() {
       <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5 cursor-pointer" onClick={() => setIsMinimized(!isMinimized)}>
         <div className="flex items-center gap-2">
           <SafeIcon icon={LuTerminal} className="w-4 h-4 text-axim-teal" />
-          <span className="font-mono text-xs uppercase text-white tracking-widest font-bold">Onyx Command Terminal</span>
+          <span className="font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs uppercase text-white tracking-widest font-bold">Onyx Command Terminal</span>
         </div>
         <div className="flex items-center gap-2">
           <button className="text-zinc-500 hover:text-white transition-colors">
@@ -136,12 +136,12 @@ export default function OnyxTerminal() {
       {/* Terminal Body */}
       {!isMinimized && (
         <>
-          <div className="flex-grow p-4 overflow-y-auto font-mono text-xs custom-scrollbar space-y-2">
+          <div className="flex-grow p-4 overflow-y-auto font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs custom-scrollbar space-y-2">
             {history.map((line, i) => (
               <div
                 key={i}
                 className={`
-                  ${line.type === 'system' ? 'text-axim-gold opacity-80' : ''}
+                  ${line.type === 'system' ? 'text-axim-teal opacity-80' : ''}
                   ${line.type === 'user' ? 'text-white font-bold' : ''}
                   ${line.type === 'ai' ? 'text-axim-teal' : ''}
                   ${line.type === 'error' ? 'text-red-500' : ''}
@@ -163,12 +163,12 @@ export default function OnyxTerminal() {
           {/* Input Area */}
           <div className="p-3 border-t border-white/10 bg-black">
             <form onSubmit={handleSubmit} className="flex items-center gap-2">
-              <span className="text-axim-teal font-mono font-bold">{'>'}</span>
+              <span className="text-axim-teal font-mono font-[Fira_Code,JetBrains_Mono,monospace] font-bold">{'>'}</span>
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-grow bg-transparent border-none outline-none font-mono text-xs text-white placeholder:text-zinc-600"
+                className="flex-grow bg-transparent border-none outline-none font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs text-white placeholder:text-zinc-600"
                 placeholder="Enter command..."
                 disabled={isConnecting}
               />

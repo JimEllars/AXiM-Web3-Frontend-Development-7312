@@ -55,7 +55,6 @@ export default function Tools() {
   // Simulate premium access via profile clearance_level or a specific flag.
   // We'll treat clearance_level >= 2 as premium for the simulation,
   // or userSession.is_premium
-  const isPremium = profile?.clearance_level >= 2 || userSession?.is_premium;
 
   const jsonLd = {
     "@context": "https://schema.org",
