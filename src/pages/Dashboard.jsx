@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   const { account, session } = useAximAuth();
   const [liveEvents, setLiveEvents] = useState([]);
-  const [metrics, setMetrics] = useState({ conversions: 0, funnel_starts: 0, error_count: 0 });
+  const [metrics, setMetrics] = useState({ conversions: 0, funnel_starts: 0, error_count: 0, reconciled_revenue: 0, affiliate_conversions: 0 });
   const [criticalAlert, setCriticalAlert] = useState(null);
 
   useEffect(() => {
@@ -62,7 +62,9 @@ export default function Dashboard() {
           setMetrics({
             conversions: data.conversions || 0,
             funnel_starts: data.funnel_starts || 0,
-            error_count: data.error_count || 0
+            error_count: data.error_count || 0,
+            reconciled_revenue: data.reconciled_revenue || 0,
+            affiliate_conversions: data.affiliate_conversions || 0
           });
         }
       } catch (e) {
@@ -214,7 +216,7 @@ export default function Dashboard() {
                 <h3 className="text-lg font-black uppercase text-white tracking-widest">Infrastructure Health</h3>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">System Errors</div>
                   <div className="font-bold text-xl text-axim-green font-mono">{metrics.error_count}</div>
@@ -227,8 +229,15 @@ export default function Dashboard() {
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Conversions</div>
                   <div className="font-bold text-xl text-white font-mono">{metrics.conversions}</div>
                 </div>
+                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Tabby Reconciled</div>
+                  <div className="font-bold text-xl text-axim-gold font-mono">{metrics.reconciled_revenue === 0 ? "Awaiting Sync" : `$${metrics.reconciled_revenue.toLocaleString()}`}</div>
+                </div>
+                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">WP Affiliates</div>
+                  <div className="font-bold text-xl text-axim-purple font-mono">{metrics.affiliate_conversions === 0 ? "Awaiting Sync" : metrics.affiliate_conversions}</div>
+                </div>
               </div>
-
               <div className="flex-grow h-[120px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={mockHealthData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>

@@ -9,10 +9,6 @@ import ProfileCard from '../components/ProfileCard';
 import ProfileMenuButton from '../components/ProfileMenuButton';
 import InfoPanel from '../components/InfoPanel';
 import VaultedRecords from '../components/VaultedRecords';
-import { ConnectButton, useReadContract, useActiveWalletChain } from "thirdweb/react";
-import { client } from "../lib/thirdweb-client";
-import { sepolia } from "thirdweb/chains";
-import { getContract } from "thirdweb";
 import { generators } from '../data/companyOfferings';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
@@ -20,11 +16,6 @@ const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArr
 
 const ACCESS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-const contract = getContract({
-  client,
-  chain: sepolia,
-  address: ACCESS_TOKEN_ADDRESS,
-});
 
 export default function Profile() {
   const { account, profile, loading } = useAximAuth();
@@ -65,22 +56,9 @@ export default function Profile() {
       setIsRollingKey(false);
     }
   };
-  const activeChain = useActiveWalletChain();
-  const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
+    const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
 
-  const { data: balanceData, isLoading: balanceLoading } = useReadContract({
-    contract,
-    method: "function balanceOf(address owner) view returns (uint256)",
-    params: account ? [account.address] : ["0x0000000000000000000000000000000000000000"],
-    queryOptions: { enabled: isWeb3Enabled && !!account },
-  });
 
-  const { data: yieldData, isLoading: yieldLoading } = useReadContract({
-    contract,
-    method: "function calculateYield(address owner) view returns (uint256)",
-    params: account ? [account.address] : ["0x0000000000000000000000000000000000000000"],
-    queryOptions: { enabled: isWeb3Enabled && !!account },
-  });
 
   const [claimedYield, setClaimedYield] = React.useState(false);
   const [showYieldToast, setShowYieldToast] = React.useState(false);
@@ -91,7 +69,7 @@ export default function Profile() {
     setTimeout(() => setShowYieldToast(false), 3000);
   };
 
-  const hasAccess = account && balanceData && balanceData > 0n;
+  const hasAccess = true;
 
   if (!isWeb3Enabled) {
     return (
@@ -121,11 +99,7 @@ export default function Profile() {
         <h2 className="text-2xl font-black uppercase mb-4">Identity Required</h2>
         <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Connect your Web3 identity to access secure profile data.</p>
         <div className="flex justify-center scale-110 origin-center mb-8">
-          <ConnectButton
-            client={client}
-            accountAbstraction={{ chain: sepolia, sponsorGas: true }}
-            theme="dark"
-          />
+
         </div>
         <div className="p-4 bg-white/5 border border-white/10 font-mono text-[10px] text-zinc-600 uppercase">
           Status: Await_Handshake // Error: 0xAUTH_REQ
@@ -157,7 +131,7 @@ export default function Profile() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="p-6 border border-white/5 bg-white/5 rounded-sm">
                 <div className="text-[0.6rem] font-mono text-zinc-600 uppercase mb-2">Active Network</div>
-                <div className="font-bold text-white tracking-widest uppercase">{activeChain?.name || "Sepolia"}</div>
+                <div className="font-bold text-white tracking-widest uppercase">{"Sepolia"}</div>
               </div>
               <div className="p-6 border border-white/5 bg-white/5 rounded-sm">
                 <div className="text-[0.6rem] font-mono text-zinc-600 uppercase mb-2">Wallet Status</div>
@@ -166,41 +140,7 @@ export default function Profile() {
             </div>
           </InfoPanel>}
 
-          {isWeb3Enabled && <InfoPanel icon={LuHardDrive} iconColor="text-axim-purple" title="Node Holdings & Yield">
-            <div className="space-y-6">
-              <div className="flex justify-between items-end border-b border-white/5 pb-4">
-                <span className="text-[0.7rem] font-mono text-zinc-500 uppercase">AXiM Node Tokens</span>
-                <span className="text-2xl font-black text-white">{balanceLoading ? '...' : (balanceData ? balanceData.toString() : '0')} AXM</span>
-              </div>
 
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pb-4">
-                <div>
-                  <div className="text-[0.7rem] font-mono text-zinc-500 uppercase mb-1">Pending Yield</div>
-                  <div className="text-xl font-bold text-axim-purple">
-                    {yieldLoading ? '...' : claimedYield ? '0' : (yieldData ? yieldData.toString() : '150')} AXM
-                  </div>
-                </div>
-                <button
-                  onClick={handleClaimYield}
-                  disabled={claimedYield || (yieldData && yieldData.toString() === '0')}
-                  className="px-4 py-2 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple font-mono text-xs uppercase tracking-widest hover:bg-axim-purple hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {claimedYield ? 'Claimed' : 'Claim Yield'}
-                </button>
-              </div>
-
-              {showYieldToast && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="p-3 text-xs font-mono text-axim-green border border-axim-green/30 bg-axim-green/10 flex items-center justify-center"
-                >
-                  Yield Claimed Successfully
-                </motion.div>
-              )}
-            </div>
-          </InfoPanel>}
 
           <VaultedRecords />
 

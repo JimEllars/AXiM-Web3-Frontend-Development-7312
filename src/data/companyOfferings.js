@@ -30,7 +30,7 @@ export const generators = [
   {
     id: "G_PAYSTUB",
     title: "Pay Stub",
-    desc: "Verifiable Pay Stub Generation Tool.",
+    desc: "Verifiable Pay Stub Generation Tool ($4.00).",
     iconName: "LuDatabase",
     externalUrl: "#"
   }

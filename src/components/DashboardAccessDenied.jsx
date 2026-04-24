@@ -1,8 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ConnectButton } from "thirdweb/react";
-import { client } from "../lib/thirdweb-client";
-import { sepolia } from "thirdweb/chains";
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
@@ -21,11 +18,7 @@ export default function DashboardAccessDenied() {
       <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs uppercase tracking-[0.2em]">Admin Access Only. Valid @axim.us.com identity required.</p>
 
       <div className="flex justify-center scale-110 origin-center mb-8">
-        <ConnectButton
-          client={client}
-          accountAbstraction={{ chain: sepolia, sponsorGas: true }}
-          theme="dark"
-        />
+
       </div>
 
       <div className="p-4 bg-white/5 border border-white/10 font-mono text-[10px] text-zinc-600 uppercase mt-4">

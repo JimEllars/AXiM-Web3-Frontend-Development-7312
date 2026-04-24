@@ -111,7 +111,8 @@ export default function Tools() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
-                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 hover:border-axim-gold/50 transition-all relative overflow-hidden flex flex-col h-full rounded-md"
+                whileHover={{ scale: 1.02 }}
+                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md"
               >
                 <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
@@ -142,7 +143,7 @@ export default function Tools() {
   target="_blank"
 
                     rel="noopener noreferrer"
-                    className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10"
+                    className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
                   >
                     Launch App <SafeIcon icon={LuArrowRight} />
                   </a>
@@ -168,7 +169,8 @@ export default function Tools() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full rounded-md"
+                whileHover={{ scale: 1.02 }}
+                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full rounded-md"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
@@ -191,7 +193,7 @@ export default function Tools() {
                 {course.desc}
               </p>
 
-              <button className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black transition-colors flex items-center justify-center gap-2 relative z-10">
+              <button className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10">
                 Enroll Protocol <SafeIcon icon={LuArrowRight} />
               </button>
             </motion.div>
