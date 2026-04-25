@@ -2,7 +2,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Web3Header from './components/Web3Header';
+import Header from './components/Header';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -44,7 +44,7 @@ function App() {
       <BackgroundEffects />
       <ProactiveBanner />
       <Chatbot />
-      <Web3Header />
+      <Header />
       <main className="flex-grow pt-24 pb-20 relative z-10">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
