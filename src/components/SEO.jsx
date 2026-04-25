@@ -6,6 +6,29 @@ export default function SEO({ title, description, image, type = "website", url }
   const siteTitle = title ? `${title} | ${theme.siteName}` : theme.siteName;
   const metaDescription = description || "AXiM Systems - Builders of A New Era.";
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "AXiM Systems",
+    "url": "https://axim.us.com",
+    "logo": "https://axim.us.com/logo.png",
+    "description": "Smart protocol integrations, web3 interfaces, and intelligent business ecosystems.",
+    "sameAs": [
+      "https://twitter.com/aximsystems",
+      "https://linkedin.com/company/axim-systems"
+    ],
+    "makesOffer": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "SoftwareApplication",
+          "name": "AXiM Core",
+          "applicationCategory": "BusinessApplication"
+        }
+      }
+    ]
+  };
+
   const breadcrumbSchema = url ? {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -44,7 +67,10 @@ export default function SEO({ title, description, image, type = "website", url }
       <meta name="twitter:description" content={metaDescription} />
       {image && <meta name="twitter:image" content={image} />}
 
-      {breadcrumbSchema && (
+      <script type="application/ld+json">
+          {JSON.stringify(organizationSchema)}
+        </script>
+        {breadcrumbSchema && (
         <script type="application/ld+json">
           {JSON.stringify(breadcrumbSchema)}
         </script>

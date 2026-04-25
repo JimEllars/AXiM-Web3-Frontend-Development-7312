@@ -1,5 +1,6 @@
 import React from 'react';
 import Hero from '../components/Hero';
+import Reviews from '../components/Reviews';
 import FeaturedArticles from '../components/FeaturedArticles';
 import NewsFeed from '../components/NewsFeed';
 import Ecosystem from '../components/Ecosystem';
@@ -13,6 +14,7 @@ export default function Home() {
         description="AXiM Systems delivers smart protocol integrations, web3 interfaces, and intelligent business ecosystems."
       />
       <Hero />
+      <Reviews />
       <FeaturedArticles categorySlug="featured" limit={3} />
       <NewsFeed categorySlug="article" limit={12} />
       <Ecosystem />
