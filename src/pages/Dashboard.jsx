@@ -147,7 +147,7 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      <SEO title="Executive Dashboard" description="AXiM Internal Command Center." />
+      <SEO title="Executive Dashboard" description="AXiM Internal Command Center."  url="https://axim.us.com/dashboard"/>
 
       <div className="mb-12 border-b border-white/10 pb-6 flex items-center justify-between">
         <div>

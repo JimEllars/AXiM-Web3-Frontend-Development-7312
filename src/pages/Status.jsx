@@ -47,7 +47,7 @@ export default function Status() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-6 py-20 relative z-10">
-      <SEO title="System Status" description="AXiM Ecosystem public status and telemetry." />
+      <SEO title="System Status" description="AXiM Ecosystem public status and telemetry."  url="https://axim.us.com/status"/>
 
       <div className="mb-16 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-axim-gold/10 border border-axim-gold/20 text-axim-gold text-[0.65rem] font-mono uppercase tracking-widest mb-6">

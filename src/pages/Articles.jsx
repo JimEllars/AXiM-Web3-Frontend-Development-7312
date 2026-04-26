@@ -28,11 +28,10 @@ export default function Articles() {
 
   return (
     <div className="w-full relative z-10">
-      <SEO
-        title={seoTitle}
+      <SEO title={seoTitle}
         description={seoDesc}
         image={seoImage}
-      />
+       url="https://axim.us.com/articles"/>
       <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-10">
         <span className="section-label">Intelligence Network</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">AXiM Articles</h1>
