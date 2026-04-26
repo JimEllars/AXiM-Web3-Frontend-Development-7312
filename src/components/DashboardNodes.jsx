@@ -3,55 +3,54 @@ import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
-const { LuZap, LuGlobe, LuCpu } = LuIcons;
-
-// Pre-computed set of keys to exclude from rendering, improving performance during render loop
-const EXCLUDED_KEYS = new Set(['id', 'type', 'status', 'icon']);
-
+const { LuZap, LuGlobe, LuCpu, LuFileText } = LuIcons;
 
 export default function DashboardNodes({ nodeStatuses, selectedNode, setSelectedNode }) {
   const nodes = [
     {
-      id: 'Demand Generator',
+      id: 'Demand Letter',
       type: 'Micro-App',
-      status: nodeStatuses?.demand === 'operational' ? 'Optimal' : 'Degraded',
+      status: nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '42ms'], ['Uptime', '99.9%']],
       icon: LuGlobe,
-      color: nodeStatuses?.demand === 'operational' ? 'axim-green' : 'red-500'
+      color: nodeStatuses?.demand === 'operational' ? 'axim-green' : 'red-500',
+      pulse: nodeStatuses?.demand !== 'operational'
     },
     {
       id: 'NDA Generator',
       type: 'Micro-App',
-      status: nodeStatuses?.nda === 'operational' ? 'Optimal' : 'Degraded',
+      status: nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '38ms'], ['Uptime', '99.9%']],
       icon: LuZap,
-      color: nodeStatuses?.nda === 'operational' ? 'axim-green' : 'red-500'
+      color: nodeStatuses?.nda === 'operational' ? 'axim-green' : 'red-500',
+      pulse: nodeStatuses?.nda !== 'operational'
     },
     {
-      id: 'AXiM Core API',
-      type: 'Infrastructure',
-      status: nodeStatuses?.core === 'operational' ? 'Optimal' : 'Degraded',
-      metrics: [['Throughput', '1.2 Tbps'], ['Uptime', '99.99%']],
-      icon: LuCpu,
-      color: nodeStatuses?.core === 'operational' ? 'axim-teal' : 'red-500'
+      id: 'Pay Stub',
+      type: 'Micro-App',
+      status: nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '35ms'], ['Uptime', '99.9%']],
+      icon: LuFileText,
+      color: nodeStatuses?.stub === 'operational' ? 'axim-green' : 'red-500',
+      pulse: nodeStatuses?.stub !== 'operational'
     }
   ];
 
   return (
-    <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-4">
       {nodes.map((node) => (
         <motion.div
           key={node.id}
           whileHover={{ y: -5 }}
           onClick={() => setSelectedNode && setSelectedNode(node)}
-          className={`cursor-pointer p-8 border transition-all duration-300 ${selectedNode?.id === node.id ? 'bg-axim-gold/10 border-axim-gold shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'bg-glass backdrop-blur-xl saturate-150 border-subtle hover:border-white/30'}`}
+          className={`cursor-pointer p-4 border transition-all duration-300 ${selectedNode?.id === node.id ? 'bg-axim-gold/10 border-axim-gold shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'bg-glass backdrop-blur-xl saturate-150 border-subtle hover:border-white/30'}`}
         >
           <div className="flex justify-between items-start mb-6">
             <div className={`p-3 rounded-sm ${selectedNode?.id === node.id ? 'bg-axim-gold text-black' : 'bg-white/5 text-white'}`}>
               <SafeIcon icon={node.icon} className="w-6 h-6" />
             </div>
             <span className={`font-mono text-[0.6rem] flex items-center gap-2 text-${node.color}`}>
-              <div className={`w-1.5 h-1.5 rounded-full animate-pulse bg-${node.color}`} /> {node.status.toUpperCase()}
+              <div className={`w-1.5 h-1.5 rounded-full bg-${node.color} ${node.pulse ? 'animate-pulse' : 'shadow-[0_0_8px_currentColor]'}`} /> {node.status.toUpperCase()}
             </span>
           </div>
           <h3 className="text-xl font-bold uppercase mb-1">{node.id}</h3>

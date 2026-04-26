@@ -10,9 +10,10 @@ export const useAximStore = create((set, get) => ({
     core: 'operational'
   },
   activeTelemetry: [
-    { id: 1, type: 'heartbeat', message: 'Onyx: Healthy - 10s ago', timestamp: Date.now() - 10000 },
-    { id: 2, type: 'revenue', message: 'Pay Stub Generated (USD 4.00) - 2m ago', timestamp: Date.now() - 120000 },
-    { id: 3, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
+    { id: 1, type: 'marketing_loop', message: 'Roundups AI: Campaign Dispatched successfully - Just now', timestamp: Date.now() - 5000 },
+    { id: 2, type: 'heartbeat', message: 'Onyx: Healthy - 10s ago', timestamp: Date.now() - 10000 },
+    { id: 3, type: 'revenue', message: 'Pay Stub Generated (USD 4.00) - 2m ago', timestamp: Date.now() - 120000 },
+    { id: 4, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
   ],
   isPollingTelemetry: false,
   setNodeStatuses: (statuses) => set({ nodeStatuses: statuses }),
@@ -31,10 +32,22 @@ export const useAximStore = create((set, get) => ({
           if (data && typeof data === 'object') {
             set({ nodeStatuses: data });
 
+            const rand = Math.random();
+            let type = 'heartbeat';
+            let message = 'Onyx: Healthy - Just now';
+
+            if (rand > 0.85) {
+              type = 'revenue';
+              message = 'Demand Letter Generated (USD 4.00) - Just now';
+            } else if (rand > 0.7) {
+              type = 'marketing_loop';
+              message = 'Roundups AI: Campaign Dispatched successfully - Just now';
+            }
+
             const newEvent = {
               id: Date.now(),
-              type: Math.random() > 0.8 ? 'revenue' : 'heartbeat',
-              message: Math.random() > 0.8 ? 'Demand Letter Generated (USD 4.00) - Just now' : 'Onyx: Healthy - Just now',
+              type,
+              message,
               timestamp: Date.now()
             };
 

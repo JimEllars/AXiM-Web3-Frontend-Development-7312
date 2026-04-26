@@ -163,7 +163,26 @@ export default function OnyxTerminal() {
           {/* Input Area */}
 
           {/* Quick Actions */}
-          <div className="px-3 pb-2 pt-1 border-t border-white/10 bg-black flex gap-2 overflow-x-auto custom-scrollbar">
+
+          {/* Emergency Actions */}
+          <div className="px-3 py-1 bg-black flex gap-2 border-t border-white/10">
+            <span className="text-[0.6rem] text-red-500 font-mono font-bold uppercase tracking-widest my-auto mr-2">Emergency Actions:</span>
+            <button
+              onClick={(e) => {
+                const cmd = '[SYSTEM OVERRIDE] Initiate edge cache purge and verify node routing.';
+                setInput(cmd);
+                // We use setTimeout to allow state update before trigger submit
+                setTimeout(() => {
+                  handleSubmit({ preventDefault: () => {} });
+                }, 0);
+              }}
+              className="whitespace-nowrap px-2 py-1 bg-red-500/10 border border-red-500/50 text-red-400 hover:text-axim-gold hover:border-axim-gold text-[0.6rem] font-mono uppercase transition-colors rounded-sm shadow-[0_0_10px_rgba(239,68,68,0.2)]"
+              disabled={isConnecting}
+            >
+              Purge Edge Cache
+            </button>
+          </div>
+<div className="px-3 pb-2 pt-1 border-t border-white/10 bg-black flex gap-2 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => setInput('Analyze Infrastructure')}
               className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"

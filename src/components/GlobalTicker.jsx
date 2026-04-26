@@ -4,7 +4,7 @@ import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
-const { LuActivity, LuAlertTriangle, LuCheckCircle, LuDollarSign } = LuIcons;
+const { LuActivity, LuAlertTriangle, LuCheckCircle, LuDollarSign, LuMegaphone } = LuIcons;
 
 export default function GlobalTicker() {
   const activeTelemetry = useAximStore(state => state.activeTelemetry) || [];
@@ -39,6 +39,9 @@ export default function GlobalTicker() {
             } else if (item.type === 'error') {
               colorClass = 'text-red-500 animate-pulse';
               Icon = LuAlertTriangle;
+            } else if (item.type === 'marketing_loop') {
+              colorClass = 'text-axim-purple';
+              Icon = LuMegaphone;
             }
 
             return (
@@ -64,6 +67,9 @@ export default function GlobalTicker() {
             } else if (item.type === 'error') {
               colorClass = 'text-red-500 animate-pulse';
               Icon = LuAlertTriangle;
+            } else if (item.type === 'marketing_loop') {
+              colorClass = 'text-axim-purple';
+              Icon = LuMegaphone;
             }
 
             return (
