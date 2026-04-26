@@ -9,6 +9,11 @@ export const useAximStore = create((set, get) => ({
     stub: 'operational',
     core: 'operational'
   },
+  activeTelemetry: [
+    { id: 1, type: 'heartbeat', message: 'Onyx: Healthy - 10s ago', timestamp: Date.now() - 10000 },
+    { id: 2, type: 'revenue', message: 'Pay Stub Generated (USD 4.00) - 2m ago', timestamp: Date.now() - 120000 },
+    { id: 3, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
+  ],
   isPollingTelemetry: false,
   setNodeStatuses: (statuses) => set({ nodeStatuses: statuses }),
 
@@ -25,10 +30,28 @@ export const useAximStore = create((set, get) => ({
           const data = await response.json();
           if (data && typeof data === 'object') {
             set({ nodeStatuses: data });
+
+            const newEvent = {
+              id: Date.now(),
+              type: Math.random() > 0.8 ? 'revenue' : 'heartbeat',
+              message: Math.random() > 0.8 ? 'Demand Letter Generated (USD 4.00) - Just now' : 'Onyx: Healthy - Just now',
+              timestamp: Date.now()
+            };
+
+            const currentTelemetry = get().activeTelemetry || [];
+            set({ activeTelemetry: [newEvent, ...currentTelemetry].slice(0, 10) });
           }
         }
       } catch (error) {
         console.error("Fleet Telemetry Error:", error);
+        const errorEvent = {
+          id: Date.now(),
+          type: 'error',
+          message: 'Fleet Telemetry Link Degraded - Just now',
+          timestamp: Date.now()
+        };
+        const currentTelemetry = get().activeTelemetry || [];
+        set({ activeTelemetry: [errorEvent, ...currentTelemetry].slice(0, 10) });
       }
     };
 

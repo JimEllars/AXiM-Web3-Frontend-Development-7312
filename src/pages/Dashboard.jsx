@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
+import EcosystemRegistry from '../components/admin/EcosystemRegistry';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu } = LuIcons;
 

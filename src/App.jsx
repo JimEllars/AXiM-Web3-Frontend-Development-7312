@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Footer from './components/Footer';
+import GlobalTicker from './components/GlobalTicker';
 import Header from './components/Header';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
