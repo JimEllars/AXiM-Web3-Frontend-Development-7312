@@ -1,6 +1,7 @@
 # General allowance for all standard search engines
 User-agent: *
 Allow: /
+Disallow: /dashboard
 
 # Explicitly allow OpenAI's crawler
 User-agent: GPTBot

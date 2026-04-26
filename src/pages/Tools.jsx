@@ -74,10 +74,9 @@ export default function Tools() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
-      <SEO
-        title="Premium Legal & Financial Tools | AXiM Systems"
+      <SEO title="Premium Legal & Financial Tools | AXiM Systems"
         description="Access AXiM's comprehensive suite of document generators and elite training courses."
-      />
+       url="https://axim.us.com/tools"/>
       <Helmet>
         <script type="application/ld+json">
           {JSON.stringify(jsonLd)}

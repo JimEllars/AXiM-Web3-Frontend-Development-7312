@@ -6,21 +6,21 @@ const testimonials = [
     id: 1,
     quote: "AXiM Systems seamlessly integrated decentralized identity protocols into our enterprise infrastructure, enhancing both security and operational transparency.",
     author: "Elena Rodriguez",
-    role: "CTO, Vanguard Logistics",
+    role: "Chief Technology Officer",
     initials: "ER"
   },
   {
     id: 2,
     quote: "The automated document generation capabilities reduced our legal overhead by 40%. The UI is clean, intuitive, and built for modern demands.",
     author: "Marcus Chen",
-    role: "Director of Operations, Nexus Corp",
+    role: "Director of Operations",
     initials: "MC"
   },
   {
     id: 3,
     quote: "Deploying the AXiM Micro-SaaS hubs within our ecosystem allowed us to monetize our existing user base without custom development.",
     author: "Sarah Jenkins",
-    role: "Founder, Zenith Web3",
+    role: "Founder",
     initials: "SJ"
   }
 ];

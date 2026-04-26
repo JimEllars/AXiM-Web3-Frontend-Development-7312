@@ -49,7 +49,9 @@ async function generateSitemap() {
   const staticRoutes = [
     '/',
     '/tools',
-    '/articles'
+    '/articles',
+    '/documentation',
+    '/tool-guides'
   ];
 
   const posts = await fetchAllPosts();

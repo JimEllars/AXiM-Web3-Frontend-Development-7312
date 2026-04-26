@@ -17,7 +17,7 @@ export default function SEO({ title, description, image, type = "website", url }
       "https://twitter.com/aximsystems",
       "https://linkedin.com/company/axim-systems"
     ],
-    "makesOffer": [
+        "makesOffer": [
       {
         "@type": "Offer",
         "itemOffered": {
@@ -26,6 +26,11 @@ export default function SEO({ title, description, image, type = "website", url }
           "applicationCategory": "BusinessApplication"
         }
       }
+    ],
+    "knowsAbout": [
+      "Decentralized Systems",
+      "Smart Business Automation",
+      "AI Infrastructure"
     ]
   };
 
