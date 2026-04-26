@@ -14,11 +14,8 @@ import { ensureSafeProtocol } from '../lib/sanitize';
 
 const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText, LuRefreshCw } = LuIcons;
 
-const ACCESS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-
 export default function Profile() {
-  const { account, profile, loading } = useAximAuth();
+  const { session, profile, loading } = useAximAuth();
   const { userSession, isSessionLoading: passportLoading } = useAximStore(
     useShallow((state) => ({
       userSession: state.userSession,
@@ -43,9 +40,7 @@ export default function Profile() {
         credentials: 'include'
       });
       if (response.ok) {
-        // In a real scenario we might get the new prefix back
         setApiRollMessage({ type: 'success', text: 'API Key successfully rolled. New key sent to registered email.' });
-        // Mock updating the prefix
         setApiKeyPrefix('sk_live_' + Math.random().toString(36).substring(2, 6));
       } else {
         setApiRollMessage({ type: 'error', text: 'Failed to roll API key. Please try again.' });
@@ -56,32 +51,8 @@ export default function Profile() {
       setIsRollingKey(false);
     }
   };
-    const isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
-
-
-
-  const [claimedYield, setClaimedYield] = React.useState(false);
-  const [showYieldToast, setShowYieldToast] = React.useState(false);
-
-  const handleClaimYield = () => {
-    setClaimedYield(true);
-    setShowYieldToast(true);
-    setTimeout(() => setShowYieldToast(false), 3000);
-  };
 
   const hasAccess = true;
-
-  if (!isWeb3Enabled) {
-    return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
-        <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <SafeIcon icon={LuShieldAlert} className="w-10 h-10 text-axim-gold opacity-50" />
-        </div>
-        <h2 className="text-2xl font-black uppercase mb-4">Web3 Features Dormant</h2>
-        <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">The Web3 ecosystem is currently offline for this production release.</p>
-      </div>
-    );
-  }
 
   if (loading) return (
     <div className="min-h-screen flex flex-col gap-4 items-center justify-center font-mono text-axim-gold">
@@ -90,14 +61,14 @@ export default function Profile() {
     </div>
   );
 
-  if (!account) {
+  if (!session) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
         <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
           <SafeIcon icon={LuUser} className="w-10 h-10 text-axim-gold opacity-50" />
         </div>
         <h2 className="text-2xl font-black uppercase mb-4">Identity Required</h2>
-        <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Connect your Web3 identity to access secure profile data.</p>
+        <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Sign in to access secure profile data.</p>
         <div className="flex justify-center scale-110 origin-center mb-8">
 
         </div>
@@ -117,7 +88,7 @@ export default function Profile() {
 
       <div className="flex flex-col md:flex-row gap-12 items-start">
         <div className="w-full md:w-80 space-y-6">
-          <ProfileCard address={isWeb3Enabled && account ? account.address : userSession?.email || 'Guest User'} clearanceLevel={profile?.clearance_level || 'Standard'} />
+          <ProfileCard address={userSession?.email || session?.user?.email || 'Guest User'} clearanceLevel={profile?.clearance_level || 'Standard'} />
 
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
             <ProfileMenuButton icon={LuSettings} label="System Settings" />
@@ -127,30 +98,12 @@ export default function Profile() {
         </div>
 
         <div className="flex-grow space-y-8">
-          {isWeb3Enabled && <InfoPanel icon={LuDatabase} iconColor="text-axim-gold" title="Network Connection">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="p-6 border border-white/5 bg-white/5 rounded-sm">
-                <div className="text-[0.6rem] font-mono text-zinc-600 uppercase mb-2">Active Network</div>
-                <div className="font-bold text-white tracking-widest uppercase">{"Sepolia"}</div>
-              </div>
-              <div className="p-6 border border-white/5 bg-white/5 rounded-sm">
-                <div className="text-[0.6rem] font-mono text-zinc-600 uppercase mb-2">Wallet Status</div>
-                <div className="font-bold text-axim-green tracking-widest uppercase">Connected</div>
-              </div>
-            </div>
-          </InfoPanel>}
-
-
-
           <VaultedRecords />
 
           <InfoPanel icon={LuUnlock} iconColor="text-axim-teal" title="Unlocked Infrastructure">
             {!hasAccess ? (
                <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 text-center flex flex-col items-center">
-                 <p className="text-sm text-zinc-400 mb-4">{isWeb3Enabled ? 'You do not hold an AXiM Node NFT. Mint one to unlock access to all micro-apps.' : 'You do not currently have access to these tools. Please upgrade your account.'}</p>
-                 {isWeb3Enabled && <a href="/early-access" className="w-full sm:w-auto py-3 px-6 bg-axim-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2">
-                   Mint AXiM Node <SafeIcon icon={LuArrowRight} />
-                 </a>}
+                 <p className="text-sm text-zinc-400 mb-4">You do not currently have access to these tools. Please upgrade your account.</p>
                </div>
             ) : (
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -172,7 +125,6 @@ export default function Profile() {
                </div>
             )}
           </InfoPanel>
-
 
           {userSession?.is_partner && (
             <InfoPanel icon={LuKey} iconColor="text-axim-purple" title="API Credentials (B2B)">

@@ -79,5 +79,5 @@ export function useAximAuth() {
     return () => { isMounted = false; clearInterval(heartbeatInterval); };
   }, []);
 
-  return { account: null, profile, loading, siweSignature: null, session };
+  return { profile, loading, session };
 }

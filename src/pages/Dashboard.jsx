@@ -7,6 +7,7 @@ import * as LuIcons from 'react-icons/lu';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import DashboardNodes from '../components/DashboardNodes';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import EcosystemRegistry from '../components/admin/EcosystemRegistry';
@@ -41,20 +42,18 @@ const activePlaybooks = [
 export default function Dashboard() {
   const userSession = useAximStore((state) => state.userSession);
   const nodeStatuses = useAximStore((state) => state.nodeStatuses);
+  const [selectedNode, setSelectedNode] = useState(null);
 
-  let isWeb3Enabled = false;
-  try {
-     isWeb3Enabled = import.meta.env.VITE_ENABLE_WEB3 === 'true';
-  } catch(e) { /* empty */ }
 
-  const { account, session } = useAximAuth();
+
+  const { session } = useAximAuth();
   const [liveEvents, setLiveEvents] = useState([]);
   const [metrics, setMetrics] = useState({ conversions: 0, funnel_starts: 0, error_count: 0, reconciled_revenue: 0, affiliate_conversions: 0 });
   const [criticalAlert, setCriticalAlert] = useState(null);
 
   useEffect(() => {
     // Only subscribe if authenticated
-    if (!session && !account && !userSession) return;
+    if (!session && !session && !userSession) return;
 
     const fetchMetrics = async () => {
       try {
@@ -119,9 +118,9 @@ export default function Dashboard() {
       clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [session, account, userSession]);
+  }, [session, userSession]);
 
-  const hasAccess = userSession || session || account;
+  const hasAccess = userSession || session ;
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
@@ -168,7 +167,7 @@ export default function Dashboard() {
       ) : (
         <div className="space-y-8">
           {/* Top Row: Revenue & Health */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Revenue Chart Widget */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -254,6 +253,25 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
             </motion.div>
+
+            {/* Fleet Health Widget */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-axim-teal/10 border border-axim-teal/30 flex items-center justify-center rounded-sm text-axim-teal">
+                  <SafeIcon icon={LuServer} className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-black uppercase text-white tracking-widest">Fleet Health</h3>
+              </div>
+              <div className="flex-grow">
+                <DashboardNodes nodeStatuses={nodeStatuses} selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
+              </div>
+            </motion.div>
+
           </div>
 
           {/* Bottom Row: Active Playbooks & Live Events */}
