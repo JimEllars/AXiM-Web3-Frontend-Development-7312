@@ -395,7 +395,15 @@ export default function Dashboard() {
                             </span>
                           )}
                         </div>
-                        <div className="text-xs font-mono text-zinc-500 mt-1">{lead.serviceAddress}</div>
+                        <div className="text-xs font-mono text-zinc-500 mt-1">{lead.serviceAddress || lead.serviceLocation || lead.facilityAddress}</div>
+                        <div className="text-[0.65rem] font-mono text-zinc-400 mt-1 flex gap-2">
+                          {lead.primaryContact && <span>Contact: {lead.primaryContact}</span>}
+                          {lead.emailAddress && <span>| {lead.emailAddress}</span>}
+                          {lead.requiredBandwidth && <span className="text-axim-teal">| {lead.requiredBandwidth}</span>}
+                          {lead.currentISP && <span>| ISP: {lead.currentISP}</span>}
+                          {lead.facilitySquareFootage && <span>| {lead.facilitySquareFootage} sqft</span>}
+                          {lead.estimatedEnergySpend && <span className="text-axim-gold">| Spend: {lead.estimatedEnergySpend}</span>}
+                        </div>
                       </div>
                       <div className="text-right">
                         <span className="text-[0.6rem] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold">

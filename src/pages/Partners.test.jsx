@@ -33,17 +33,19 @@ describe('Partners Page Component', () => {
 
     // Assert text elements
     expect(screen.getByText('Enterprise-Grade Fiber Connectivity')).toBeTruthy();
-    expect(screen.getByText('Request Site Survey')).toBeTruthy();
+
+    // There are now two forms. Let's test the Fiber form.
+    expect(screen.getByText('Submit Connectivity Request')).toBeTruthy();
 
     // Fill form
-    fireEvent.change(screen.getByPlaceholderText('Acme Corp'), { target: { value: 'Test Corp' } });
-    fireEvent.change(screen.getByPlaceholderText('Jane Doe'), { target: { value: 'Test User' } });
-    fireEvent.change(screen.getByPlaceholderText('jane@acmecorp.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getAllByPlaceholderText('Acme Corp')[0], { target: { value: 'Test Corp' } });
+    fireEvent.change(screen.getAllByPlaceholderText('Jane Doe')[0], { target: { value: 'Test User' } });
+    fireEvent.change(screen.getAllByPlaceholderText('jane@acmecorp.com')[0], { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('123 Tech Blvd, San Francisco, CA'), { target: { value: '123 Test St' } });
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Solar Infrastructure' } });
+    fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: '10 Gbps' } });
 
     // Submit form
-    const submitBtn = screen.getByText('Request Site Survey');
+    const submitBtn = screen.getByText('Submit Connectivity Request');
     fireEvent.click(submitBtn);
 
     // Assert UI changes
@@ -55,6 +57,7 @@ describe('Partners Page Component', () => {
     const leads = useAximStore.getState().partnerLeads;
     expect(leads.length).toBe(1);
     expect(leads[0].companyName).toBe('Test Corp');
+    expect(leads[0].serviceInterest).toBe('Fiber Connectivity');
     expect(leads[0].status).toBe('Pending Review');
   });
 });

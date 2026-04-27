@@ -53,7 +53,8 @@ async function generateSitemap() {
     '/documentation',
     '/tool-guides',
     '/partners',
-    '/status'
+    '/status',
+    '/early-access'
   ];
 
   const posts = await fetchAllPosts();
