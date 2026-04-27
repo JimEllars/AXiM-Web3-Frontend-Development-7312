@@ -24,6 +24,8 @@ export default function EcosystemRegistry() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const userSession = useAximStore((state) => state.userSession);
+  const activeIntegrations = useAximStore((state) => state.activeIntegrations) || [];
+
   const { session } = useAximAuth();
 
   const token = userSession?.session_token || session?.access_token;
@@ -92,12 +94,24 @@ export default function EcosystemRegistry() {
               <h4 className="text-white font-bold tracking-wider">{partner.name}</h4>
             </div>
             <p className="text-xs text-zinc-500 mb-6 flex-grow">{partner.desc}</p>
-            <button
-              onClick={() => handleActivateClick(partner)}
-              className="w-full py-2 bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-axim-teal hover:bg-axim-teal hover:text-black hover:border-axim-teal transition-all group-hover:bg-white/10"
-            >
-              Activate Hub
-            </button>
+
+            {activeIntegrations.includes(partner.id) ? (
+              <button
+                disabled
+                className="w-full py-2 bg-axim-green/10 border border-axim-green text-xs font-mono uppercase tracking-widest text-axim-green transition-all flex items-center justify-center gap-2"
+              >
+                <div className="w-2 h-2 rounded-full bg-axim-green animate-pulse"></div>
+                ACTIVE_CONNECTION
+              </button>
+            ) : (
+              <button
+                onClick={() => handleActivateClick(partner)}
+                className="w-full py-2 bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-axim-teal hover:bg-axim-teal hover:text-black hover:border-axim-teal transition-all group-hover:bg-white/10"
+              >
+                Activate Hub
+              </button>
+            )}
+
           </div>
         ))}
       </div>

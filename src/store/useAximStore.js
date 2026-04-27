@@ -16,6 +16,36 @@ export const useAximStore = create((set, get) => ({
     { id: 4, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
   ],
   isPollingTelemetry: false,
+  historicalRevenue: [],
+  historicalHealth: [],
+  activeIntegrations: ['zapier', 'chatbase'], // simulating some active connections
+  fetchDashboardHistoricalData: () => {
+    // Generate simulated 7-day revenue
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const todayIndex = new Date().getDay(); // 0 is Sunday, 1 is Monday...
+    const revenueData = [];
+    for (let i = 6; i >= 0; i--) {
+      const dayIndex = (todayIndex - i + 6) % 7;
+      revenueData.push({
+        name: days[dayIndex],
+        revenue: Math.floor(Math.random() * 500) + 300,
+      });
+    }
+
+    // Generate simulated 15-minute trailing latency
+    const healthData = [];
+    const now = new Date();
+    for (let i = 15; i >= 0; i -= 3) {
+      const time = new Date(now.getTime() - i * 60000);
+      healthData.push({
+        time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        latency: Math.floor(Math.random() * 60) + 30, // 30-90ms latency
+      });
+    }
+
+    set({ historicalRevenue: revenueData, historicalHealth: healthData });
+  },
+
   setNodeStatuses: (statuses) => set({ nodeStatuses: statuses }),
 
   startTelemetryPolling: () => {
