@@ -11,27 +11,13 @@ import DashboardNodes from '../components/DashboardNodes';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import EcosystemRegistry from '../components/admin/EcosystemRegistry';
+import ContentAnalytics from '../components/admin/ContentAnalytics';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu } = LuIcons;
 
-const mockRevenueData = [
-  { name: 'Mon', revenue: 400 },
-  { name: 'Tue', revenue: 300 },
-  { name: 'Wed', revenue: 550 },
-  { name: 'Thu', revenue: 700 },
-  { name: 'Fri', revenue: 650 },
-  { name: 'Sat', revenue: 800 },
-  { name: 'Sun', revenue: 950 },
-];
 
-const mockHealthData = [
-  { time: '10:00', latency: 45 },
-  { time: '10:05', latency: 50 },
-  { time: '10:10', latency: 40 },
-  { time: '10:15', latency: 120 }, // spike
-  { time: '10:20', latency: 48 },
-  { time: '10:25', latency: 42 },
-];
+
+
 
 const activePlaybooks = [
   { id: 'PB-001', name: 'SEO Audit', status: 'Running', progress: 75 },
@@ -42,6 +28,14 @@ const activePlaybooks = [
 export default function Dashboard() {
   const userSession = useAximStore((state) => state.userSession);
   const nodeStatuses = useAximStore((state) => state.nodeStatuses);
+  const historicalRevenue = useAximStore((state) => state.historicalRevenue);
+  const historicalHealth = useAximStore((state) => state.historicalHealth);
+  const fetchDashboardHistoricalData = useAximStore((state) => state.fetchDashboardHistoricalData);
+
+  useEffect(() => {
+    fetchDashboardHistoricalData();
+  }, [fetchDashboardHistoricalData]);
+
   const [selectedNode, setSelectedNode] = useState(null);
 
 
@@ -182,7 +176,7 @@ export default function Dashboard() {
               </div>
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={mockRevenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart data={historicalRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#ffea00" stopOpacity={0.3}/>
@@ -240,7 +234,7 @@ export default function Dashboard() {
               </div>
               <div className="flex-grow h-[120px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockHealthData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                  <LineChart data={historicalHealth} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                     <XAxis dataKey="time" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
                     <YAxis stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
@@ -274,7 +268,14 @@ export default function Dashboard() {
 
           </div>
 
+
+          {/* Content Analytics Row */}
+          <div className="grid grid-cols-1 mb-8">
+            <ContentAnalytics />
+          </div>
+
           {/* Bottom Row: Active Playbooks & Live Events */}
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Active Playbooks */}
             <motion.div
