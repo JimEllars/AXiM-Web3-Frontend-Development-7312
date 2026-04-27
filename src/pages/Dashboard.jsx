@@ -30,6 +30,7 @@ export default function Dashboard() {
   const nodeStatuses = useAximStore((state) => state.nodeStatuses);
   const historicalRevenue = useAximStore((state) => state.historicalRevenue);
   const historicalHealth = useAximStore((state) => state.historicalHealth);
+  const partnerLeads = useAximStore((state) => state.partnerLeads);
   const fetchDashboardHistoricalData = useAximStore((state) => state.fetchDashboardHistoricalData);
 
   useEffect(() => {
@@ -362,8 +363,49 @@ export default function Dashboard() {
                  </AnimatePresence>
               </div>
             </motion.div>
+
+            {/* Recent Partner Inquiries */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="lg:col-span-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm mt-8"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-axim-gold/10 border border-axim-gold/30 flex items-center justify-center rounded-sm text-axim-gold">
+                  <SafeIcon icon={LuActivity} className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-black uppercase text-white tracking-widest">Recent Partner Inquiries</h3>
+              </div>
+
+              <div className="space-y-4">
+                {partnerLeads && partnerLeads.length > 0 ? (
+                  partnerLeads.map((lead) => (
+                    <div key={lead.id} className="p-4 bg-black/40 border border-white/5 rounded-sm flex justify-between items-center">
+                      <div>
+                        <div className="font-bold text-white uppercase tracking-wider">{lead.companyName}</div>
+                        <div className="text-xs font-mono text-zinc-500 mt-1">{lead.serviceAddress}</div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[0.6rem] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold">
+                          {lead.status}
+                        </span>
+                        <div className="text-xs font-mono text-zinc-500 mt-2">
+                          {new Date(lead.timestamp).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest">
+                    No partner inquiries yet.
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </div>
         </div>
+
       )}
 
       {hasAccess && <OnyxTerminal />}

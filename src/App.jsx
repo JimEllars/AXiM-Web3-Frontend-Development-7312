@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Articles from './pages/Articles';
 import Tools from './pages/Tools';
 import Consultation from './pages/Consultation';
+import Partners from './pages/Partners';
 import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 import Status from './pages/Status';
@@ -53,6 +54,7 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
