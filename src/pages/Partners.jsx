@@ -7,30 +7,104 @@ import { useAximStore } from '../store/useAximStore';
 
 const { LuActivity, LuShieldCheck, LuZap, LuBuilding, LuUser, LuMail, LuMapPin, LuCheckCircle2, LuNetwork, LuSun, LuBattery } = LuIcons;
 
+
+  const partnerSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Enterprise Telecommunications",
+      "name": "AXiM Enterprise Fiber Connectivity",
+      "description": "High-performance symmetrical gigabit fiber networks featuring 99.99% Uptime SLAs and future-proof infrastructure for enterprise ecosystems.",
+      "provider": {
+        "@type": "Organization",
+        "name": "AXiM Systems",
+        "url": "https://axim.us.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United States"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Fiber Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Business Gigabit Internet"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Enterprise 10G Data Links"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Renewable Energy Infrastructure",
+      "name": "AXiM Solar & Smart Grids",
+      "description": "Utility-scale solar arrays and commercial smart grid integrations managed via real-time AXiM Core telemetry for optimal sustainable yield.",
+      "provider": {
+        "@type": "Organization",
+        "name": "AXiM Systems",
+        "url": "https://axim.us.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United States"
+      }
+    }
+  ];
+
 export default function Partners() {
   const submitPartnerLead = useAximStore((state) => state.submitPartnerLead);
 
-  const [formData, setFormData] = useState({
+    // Fiber Form State
+  const [fiberData, setFiberData] = useState({
     companyName: '',
     primaryContact: '',
     emailAddress: '',
-    serviceAddress: '',
-    serviceInterest: 'Select Interest'
+    serviceLocation: '',
+    requiredBandwidth: 'Select Bandwidth',
+    currentISP: ''
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isFiberSubmitted, setIsFiberSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Solar Form State
+  const [solarData, setSolarData] = useState({
+    companyName: '',
+    primaryContact: '',
+    emailAddress: '',
+    facilityAddress: '',
+    facilitySquareFootage: '',
+    estimatedEnergySpend: ''
+  });
+  const [isSolarSubmitted, setIsSolarSubmitted] = useState(false);
+
+  const handleFiberChange = (e) => setFiberData({ ...fiberData, [e.target.name]: e.target.value });
+  const handleSolarChange = (e) => setSolarData({ ...solarData, [e.target.name]: e.target.value });
+
+  const handleFiberSubmit = (e) => {
+    e.preventDefault();
+    submitPartnerLead({ ...fiberData, serviceInterest: 'Fiber Connectivity' });
+    setIsFiberSubmitted(true);
+    setTimeout(() => setIsFiberSubmitted(false), 5000);
+    setFiberData({ companyName: '', primaryContact: '', emailAddress: '', serviceLocation: '', requiredBandwidth: 'Select Bandwidth', currentISP: '' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSolarSubmit = (e) => {
     e.preventDefault();
-    if (formData.companyName && formData.primaryContact && formData.emailAddress && formData.serviceAddress && formData.serviceInterest !== 'Select Interest') {
-      submitPartnerLead(formData);
-      setIsSubmitted(true);
-      setTimeout(() => setIsSubmitted(false), 5000);
-      setFormData({ companyName: '', primaryContact: '', emailAddress: '', serviceAddress: '', serviceInterest: 'Select Interest' });
-    }
+    submitPartnerLead({ ...solarData, serviceInterest: 'Solar Infrastructure' });
+    setIsSolarSubmitted(true);
+    setTimeout(() => setIsSolarSubmitted(false), 5000);
+    setSolarData({ companyName: '', primaryContact: '', emailAddress: '', facilityAddress: '', facilitySquareFootage: '', estimatedEnergySpend: '' });
   };
 
   const benefits = [
@@ -53,7 +127,7 @@ export default function Partners() {
 
   return (
     <div className="w-full relative z-10 flex flex-col items-center">
-      <SEO title="Enterprise Connectivity & Fiber Partners | AXiM Systems" />
+      <SEO title="Enterprise Connectivity & Fiber Partners | AXiM Systems" customSchema={partnerSchemas} url="https://axim.us.com/partners" />
 
       {/* Hero Section */}
       <motion.section
@@ -178,6 +252,54 @@ export default function Partners() {
         </div>
       </motion.section>
 
+      {/* Solar Lead Capture Form */}
+      <motion.section
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        className="w-full max-w-3xl mx-auto px-6 md:px-12 py-10"
+      >
+        <div className={`p-8 md:p-12 bg-white/5 backdrop-blur-xl border transition-all duration-500 rounded-sm ${isSolarSubmitted ? 'border-axim-gold/50 shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'border-white/10'}`}>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-black uppercase text-white tracking-widest mb-2">Request Solar Integration</h2>
+            <p className="text-zinc-400 font-mono text-xs">Evaluate physical infrastructure for smart grid and solar deployment.</p>
+          </div>
+          <form id="solar-form" onSubmit={handleSolarSubmit} className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuBuilding} className="w-3 h-3" /> Company Name</label>
+                <input type="text" name="companyName" value={solarData.companyName} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="Acme Corp" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuUser} className="w-3 h-3" /> Primary Contact</label>
+                <input type="text" name="primaryContact" value={solarData.primaryContact} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="Jane Doe" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuMail} className="w-3 h-3" /> Email Address</label>
+              <input type="email" name="emailAddress" value={solarData.emailAddress} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="jane@acmecorp.com" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuMapPin} className="w-3 h-3" /> Facility Address</label>
+              <input type="text" name="facilityAddress" value={solarData.facilityAddress} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="123 Industrial Pkwy, Austin, TX" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuBuilding} className="w-3 h-3" /> Facility Square Footage</label>
+                <input type="text" name="facilitySquareFootage" value={solarData.facilitySquareFootage} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="e.g. 50,000" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2"><SafeIcon icon={LuBattery} className="w-3 h-3" /> Est. Monthly Energy Spend</label>
+                <input type="text" name="estimatedEnergySpend" value={solarData.estimatedEnergySpend} onChange={handleSolarChange} required className="bg-black/50 border border-white/20 p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-gold/50 transition-colors" placeholder="$5,000+" />
+              </div>
+            </div>
+            <button type="submit" className={`mt-4 py-4 px-6 rounded-sm font-mono text-xs uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2 ${isSolarSubmitted ? 'bg-axim-gold/10 text-axim-gold border border-axim-gold/30' : 'bg-axim-gold text-black hover:bg-white hover:text-black border border-transparent'}`}>
+              {isSolarSubmitted ? <><SafeIcon icon={LuCheckCircle2} className="w-4 h-4" /> Request Received</> : 'Submit Infrastructure Request'}
+            </button>
+          </form>
+        </div>
+      </motion.section>
+
 
       {/* Ecosystem Integration */}
       <motion.section
@@ -202,121 +324,7 @@ export default function Partners() {
         </div>
       </motion.section>
 
-      {/* Lead Capture Form */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="w-full max-w-3xl mx-auto px-6 md:px-12 py-20"
-      >
-        <div className={`p-8 md:p-12 bg-white/5 backdrop-blur-xl border transition-all duration-500 rounded-sm ${isSubmitted ? 'border-axim-green/50 shadow-[0_0_30px_rgba(45,212,191,0.1)]' : 'border-white/10'}`}>
 
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-black uppercase text-white tracking-widest mb-2">Partner With Us</h2>
-            <p className="text-zinc-400 font-mono text-xs">Request a site survey for enterprise fiber deployment.</p>
-          </div>
-
-          <form id="partner-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col gap-2">
-                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                  <SafeIcon icon={LuBuilding} className="w-3 h-3" /> Company Name
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  required
-                  className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
-                  placeholder="Acme Corp"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                  <SafeIcon icon={LuUser} className="w-3 h-3" /> Primary Contact
-                </label>
-                <input
-                  type="text"
-                  name="primaryContact"
-                  value={formData.primaryContact}
-                  onChange={handleChange}
-                  required
-                  className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
-                  placeholder="Jane Doe"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                <SafeIcon icon={LuMail} className="w-3 h-3" /> Email Address
-              </label>
-              <input
-                type="email"
-                name="emailAddress"
-                value={formData.emailAddress}
-                onChange={handleChange}
-                required
-                className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
-                placeholder="jane@acmecorp.com"
-              />
-            </div>
-
-                        <div className="flex flex-col gap-2">
-              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                <SafeIcon icon={LuActivity} className="w-3 h-3" /> Service Interest
-              </label>
-              <select
-                name="serviceInterest"
-                value={formData.serviceInterest}
-                onChange={handleChange}
-                required
-                className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
-              >
-                <option value="Select Interest" disabled>Select Interest...</option>
-                <option value="Fiber Connectivity">Fiber Connectivity</option>
-                <option value="Solar Infrastructure">Solar Infrastructure</option>
-                <option value="Comprehensive Ecosystem">Comprehensive Ecosystem</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                <SafeIcon icon={LuMapPin} className="w-3 h-3" /> Service Address / Location
-              </label>
-              <input
-                type="text"
-                name="serviceAddress"
-                value={formData.serviceAddress}
-                onChange={handleChange}
-                required
-                className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
-                placeholder="123 Tech Blvd, San Francisco, CA"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className={`mt-4 py-4 px-6 rounded-sm font-mono text-xs uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2 ${
-                isSubmitted
-                  ? 'bg-axim-green/10 text-axim-green border border-axim-green/30'
-                  : 'bg-white text-black hover:bg-axim-teal hover:text-black border border-transparent'
-              }`}
-            >
-              {isSubmitted ? (
-                <>
-                  <SafeIcon icon={LuCheckCircle2} className="w-4 h-4" /> Request Received
-                </>
-              ) : (
-                'Request Site Survey'
-              )}
-            </button>
-          </form>
-
-        </div>
-      </motion.section>
     </div>
   );
 }
