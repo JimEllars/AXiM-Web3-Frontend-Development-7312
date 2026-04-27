@@ -40,6 +40,7 @@ describe('Partners Page Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Jane Doe'), { target: { value: 'Test User' } });
     fireEvent.change(screen.getByPlaceholderText('jane@acmecorp.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('123 Tech Blvd, San Francisco, CA'), { target: { value: '123 Test St' } });
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Solar Infrastructure' } });
 
     // Submit form
     const submitBtn = screen.getByText('Request Site Survey');
