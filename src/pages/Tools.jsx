@@ -137,10 +137,8 @@ export default function Tools() {
 
 
 <a
-  href={destUrl}
-
-  target="_blank"
-
+                    href={destUrl}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
                   >
@@ -192,9 +190,9 @@ export default function Tools() {
                 {course.desc}
               </p>
 
-              <button className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10">
                 Enroll Protocol <SafeIcon icon={LuArrowRight} />
-              </button>
+              </a>
             </motion.div>
           ))}
         </div>
