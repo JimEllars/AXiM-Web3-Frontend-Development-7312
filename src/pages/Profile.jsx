@@ -88,7 +88,7 @@ export default function Profile() {
 
       <div className="flex flex-col md:flex-row gap-12 items-start">
         <div className="w-full md:w-80 space-y-6">
-          <ProfileCard address={userSession?.email || session?.user?.email || 'Guest User'} clearanceLevel={profile?.clearance_level || 'Standard'} />
+          <ProfileCard address={session?.user?.email || userSession?.email || 'Guest Operator'} clearanceLevel={profile?.clearance_level || 'Standard'} />
 
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
             <ProfileMenuButton icon={LuSettings} label="System Settings" />

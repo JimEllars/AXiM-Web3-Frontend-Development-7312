@@ -9,6 +9,7 @@ const { LuActivity, LuClock, LuServer, LuNetwork } = LuIcons;
 
 export default function Status() {
   const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
+  const nodeStatuses = useAximStore((state) => state.nodeStatuses);
 
   useEffect(() => {
     startTelemetryPolling();
@@ -96,6 +97,34 @@ export default function Status() {
           </div>
         </div>
       </div>
+      <div className="max-w-4xl mx-auto mt-16">
+        <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3 mb-6">
+          <SafeIcon icon={LuServer} className="text-axim-purple" />
+          Live Sub-routines
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { id: 'core', name: 'AXiM Core' },
+            { id: 'demand', name: 'Demand Letter' },
+            { id: 'nda', name: 'NDA Generator' },
+            { id: 'stub', name: 'Pay Stub' }
+          ].map(node => {
+            const isOperational = nodeStatuses?.[node.id] === 'operational';
+            return (
+              <div key={node.id} className="p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col items-center justify-center text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className={`w-2 h-2 rounded-full ${isOperational ? 'bg-axim-green shadow-[0_0_8px_rgba(45,212,191,0.5)]' : 'bg-red-500 animate-pulse'}`} />
+                  <span className={`text-[0.65rem] font-mono uppercase tracking-widest ${isOperational ? 'text-axim-green' : 'text-red-500'}`}>
+                    {isOperational ? 'Operational' : 'Degraded'}
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-white uppercase tracking-wider">{node.name}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
     </div>
   );
 }
