@@ -10,7 +10,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import DashboardNodes from '../components/DashboardNodes';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
-import EcosystemRegistry from '../components/admin/EcosystemRegistry';
 import ContentAnalytics from '../components/admin/ContentAnalytics';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu, LuMail } = LuIcons;
