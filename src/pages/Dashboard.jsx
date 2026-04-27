@@ -383,7 +383,18 @@ export default function Dashboard() {
                   partnerLeads.map((lead) => (
                     <div key={lead.id} className="p-4 bg-black/40 border border-white/5 rounded-sm flex justify-between items-center">
                       <div>
-                        <div className="font-bold text-white uppercase tracking-wider">{lead.companyName}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="font-bold text-white uppercase tracking-wider">{lead.companyName}</div>
+                          {lead.serviceInterest && (
+                            <span className={`text-[0.55rem] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${
+                              lead.serviceInterest === 'Fiber Connectivity' ? 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal' :
+                              lead.serviceInterest === 'Solar Infrastructure' ? 'border-axim-gold/30 bg-axim-gold/10 text-axim-gold' :
+                              'border-zinc-500/30 bg-zinc-500/10 text-zinc-400'
+                            }`}>
+                              {lead.serviceInterest}
+                            </span>
+                          )}
+                        </div>
                         <div className="text-xs font-mono text-zinc-500 mt-1">{lead.serviceAddress}</div>
                       </div>
                       <div className="text-right">

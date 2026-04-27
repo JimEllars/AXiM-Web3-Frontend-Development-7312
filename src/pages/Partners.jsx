@@ -5,7 +5,7 @@ import SafeIcon from '../common/SafeIcon';
 import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
 
-const { LuActivity, LuShieldCheck, LuZap, LuBuilding, LuUser, LuMail, LuMapPin, LuCheckCircle2, LuNetwork } = LuIcons;
+const { LuActivity, LuShieldCheck, LuZap, LuBuilding, LuUser, LuMail, LuMapPin, LuCheckCircle2, LuNetwork, LuSun, LuBattery } = LuIcons;
 
 export default function Partners() {
   const submitPartnerLead = useAximStore((state) => state.submitPartnerLead);
@@ -14,7 +14,8 @@ export default function Partners() {
     companyName: '',
     primaryContact: '',
     emailAddress: '',
-    serviceAddress: ''
+    serviceAddress: '',
+    serviceInterest: 'Select Interest'
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -24,11 +25,11 @@ export default function Partners() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.companyName && formData.primaryContact && formData.emailAddress && formData.serviceAddress) {
+    if (formData.companyName && formData.primaryContact && formData.emailAddress && formData.serviceAddress && formData.serviceInterest !== 'Select Interest') {
       submitPartnerLead(formData);
       setIsSubmitted(true);
       setTimeout(() => setIsSubmitted(false), 5000);
-      setFormData({ companyName: '', primaryContact: '', emailAddress: '', serviceAddress: '' });
+      setFormData({ companyName: '', primaryContact: '', emailAddress: '', serviceAddress: '', serviceInterest: 'Select Interest' });
     }
   };
 
@@ -128,18 +129,55 @@ export default function Partners() {
           </div>
 
           {/* Tier 3 */}
-          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-white/30 transition-all flex flex-col items-center text-center">
-            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Custom Dark Fiber</h3>
-            <div className="text-axim-gold font-mono text-xl mb-4">Unlimited</div>
-            <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Dedicated physical strands for maximum security and virtually unlimited scale.</p>
-            <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-400">
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> Physical Isolation</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> User-Managed Optics</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> Sub-Millisecond Latency</li>
-            </ul>
+          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/30 transition-all flex flex-col items-center justify-center text-center h-full">
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Inquire for more speeds</h3>
+            <div className="text-axim-teal font-mono text-sm mb-4">Custom SLAs & Infrastructure</div>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Reach out to our engineering team for specialized multi-gigabit setups.</p>
+            <button onClick={() => { document.getElementById('partner-form').scrollIntoView({ behavior: 'smooth' }); }} className="mt-auto px-4 py-2 border border-white/10 hover:border-axim-teal/50 hover:bg-axim-teal/10 hover:text-axim-teal text-white rounded-sm transition-all font-mono text-xs uppercase tracking-widest">
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </motion.section>      {/* Solar Infrastructure Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="w-full max-w-7xl mx-auto px-6 md:px-12 py-16"
+      >
+        <div className="text-center mb-12">
+          <div className="section-label text-axim-gold mb-4 border-axim-gold/30">AXiM Energy Networks</div>
+          <h2 className="text-2xl font-black uppercase text-white tracking-widest mb-2">Energy Infrastructure & Solar Partnerships</h2>
+          <p className="text-zinc-400 font-mono text-xs max-w-2xl mx-auto">Physical assets powering the next generation of compute.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 border-t-2 border-t-axim-gold/50 rounded-sm flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-black/50 border border-axim-gold/30 flex items-center justify-center mb-6 text-axim-gold shadow-[0_0_15px_rgba(255,234,0,0.1)]">
+              <SafeIcon icon={LuSun} className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-4">Utility-Scale Arrays</h3>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed">Large-scale solar installations designed to provide consistent, robust power yields to our digital infrastructure ecosystem.</p>
+          </div>
+
+          <div className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 border-t-2 border-t-axim-gold/50 rounded-sm flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-black/50 border border-axim-gold/30 flex items-center justify-center mb-6 text-axim-gold shadow-[0_0_15px_rgba(255,234,0,0.1)]">
+              <SafeIcon icon={LuNetwork} className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-4">Smart Grid Telemetry</h3>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed">Integrated real-time reporting metrics injected directly into AXiM Core for automated load balancing and yield predictions.</p>
+          </div>
+
+          <div className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 border-t-2 border-t-axim-gold/50 rounded-sm flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-black/50 border border-axim-gold/30 flex items-center justify-center mb-6 text-axim-gold shadow-[0_0_15px_rgba(255,234,0,0.1)]">
+              <SafeIcon icon={LuBattery} className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-4">Sustainable Yield</h3>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed">Align physical resources with on-chain accountability via Web3 smart contracts to ensure completely transparent energy consumption.</p>
           </div>
         </div>
       </motion.section>
+
 
       {/* Ecosystem Integration */}
       <motion.section
@@ -178,7 +216,7 @@ export default function Partners() {
             <p className="text-zinc-400 font-mono text-xs">Request a site survey for enterprise fiber deployment.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <form id="partner-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
@@ -224,6 +262,24 @@ export default function Partners() {
                 className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
                 placeholder="jane@acmecorp.com"
               />
+            </div>
+
+                        <div className="flex flex-col gap-2">
+              <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                <SafeIcon icon={LuActivity} className="w-3 h-3" /> Service Interest
+              </label>
+              <select
+                name="serviceInterest"
+                value={formData.serviceInterest}
+                onChange={handleChange}
+                required
+                className="bg-black/50 border border-white/10 rounded-sm p-3 font-mono text-sm text-white focus:outline-none focus:border-axim-teal/50 transition-colors"
+              >
+                <option value="Select Interest" disabled>Select Interest...</option>
+                <option value="Fiber Connectivity">Fiber Connectivity</option>
+                <option value="Solar Infrastructure">Solar Infrastructure</option>
+                <option value="Comprehensive Ecosystem">Comprehensive Ecosystem</option>
+              </select>
             </div>
 
             <div className="flex flex-col gap-2">
