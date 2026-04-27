@@ -13,7 +13,7 @@ import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import EcosystemRegistry from '../components/admin/EcosystemRegistry';
 import ContentAnalytics from '../components/admin/ContentAnalytics';
 
-const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu } = LuIcons;
+const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu, LuMail } = LuIcons;
 
 
 
@@ -409,7 +409,7 @@ export default function Dashboard() {
                   ))
                 ) : (
                   <div className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest">
-                    No partner inquiries yet.
+                    <div className="flex flex-col items-center gap-2"><SafeIcon icon={LuMail} className="w-8 h-8 text-white/20" /><span>No pending partner inquiries.</span></div>
                   </div>
                 )}
               </div>
