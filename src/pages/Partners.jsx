@@ -5,7 +5,7 @@ import SafeIcon from '../common/SafeIcon';
 import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
 
-const { LuActivity, LuShieldCheck, LuZap, LuBuilding, LuUser, LuMail, LuMapPin, LuCheckCircle2 } = LuIcons;
+const { LuActivity, LuShieldCheck, LuZap, LuBuilding, LuUser, LuMail, LuMapPin, LuCheckCircle2, LuNetwork } = LuIcons;
 
 export default function Partners() {
   const submitPartnerLead = useAximStore((state) => state.submitPartnerLead);
@@ -84,6 +84,83 @@ export default function Partners() {
               <p className="text-zinc-500 font-mono text-xs leading-relaxed">{benefit.description}</p>
             </div>
           ))}
+        </div>
+      </motion.section>
+
+
+      {/* Infrastructure Specs */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12"
+      >
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-black uppercase text-white tracking-widest mb-2">Connectivity Tiers</h2>
+          <p className="text-zinc-400 font-mono text-xs">Select the infrastructure appropriate for your deployment.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Tier 1 */}
+          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-white/30 transition-all flex flex-col items-center text-center">
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Business Gigabit</h3>
+            <div className="text-axim-teal font-mono text-xl mb-4">1 Gbps</div>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Standard symmetrical connection for branch offices and mid-sized deployments.</p>
+            <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-400">
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Symmetrical Bandwidth</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> 99.9% Uptime SLA</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Standard Support</li>
+            </ul>
+          </div>
+
+          {/* Tier 2 (Highlighted) */}
+          <div className="p-8 bg-white/5 backdrop-blur-xl border border-axim-teal shadow-[0_0_30px_rgba(0,229,255,0.1)] rounded-sm relative flex flex-col items-center text-center transform md:-translate-y-4">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-axim-teal text-black text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Recommended</div>
+            <h3 className="text-xl font-black uppercase text-white tracking-widest mb-2 mt-4">Enterprise 10G</h3>
+            <div className="text-axim-teal font-mono text-2xl mb-4">10 Gbps</div>
+            <p className="text-zinc-400 font-mono text-xs leading-relaxed mb-6">High-capacity interconnects for data centers, trading floors, and heavy AI processing.</p>
+            <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-300">
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Symmetrical Bandwidth</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> 99.99% Uptime SLA</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Dedicated NOC Support</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> AXiM Core Integration</li>
+            </ul>
+          </div>
+
+          {/* Tier 3 */}
+          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-white/30 transition-all flex flex-col items-center text-center">
+            <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Custom Dark Fiber</h3>
+            <div className="text-axim-gold font-mono text-xl mb-4">Unlimited</div>
+            <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Dedicated physical strands for maximum security and virtually unlimited scale.</p>
+            <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-400">
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> Physical Isolation</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> User-Managed Optics</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-gold" /> Sub-Millisecond Latency</li>
+            </ul>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Ecosystem Integration */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="w-full max-w-5xl mx-auto px-6 md:px-12 py-16"
+      >
+        <div className="p-8 md:p-12 bg-white/5 backdrop-blur-xl border border-white/10 border-l-2 border-l-axim-gold rounded-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          <div className="w-24 h-24 shrink-0 rounded-full bg-black/50 border border-axim-gold/30 flex items-center justify-center text-axim-gold shadow-[0_0_20px_rgba(255,234,0,0.1)]">
+            <SafeIcon icon={LuNetwork} className="w-10 h-10" />
+          </div>
+          <div className="flex-grow text-center md:text-left">
+            <h3 className="text-xl font-black uppercase text-white tracking-widest mb-3">AXiM Core Synergy</h3>
+            <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-4">
+              Enterprise 10G and Dark Fiber tiers natively integrate with AXiM Core telemetry. Leverage automated failover routing, proactive AI-driven network optimization, and real-time dashboard analytics directly from your existing AXiM hub interface.
+            </p>
+            <div className="inline-block px-4 py-1.5 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">
+              Requires Onyx mk3 Orchestration
+            </div>
+          </div>
         </div>
       </motion.section>
 

@@ -69,14 +69,7 @@ export default function Header() {
                   <SafeIcon icon={LuLogOut} className="w-4 h-4" />
                 </button>
               </div>
-            ) : (
-              <Link
-                to="/dashboard"
-                className="px-4 py-2 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold font-mono text-[0.6rem] uppercase tracking-widest hover:bg-axim-gold hover:text-black transition-all"
-              >
-                Admin Login
-              </Link>
-            )}
+            ) : null}
           </div>
 
           <button

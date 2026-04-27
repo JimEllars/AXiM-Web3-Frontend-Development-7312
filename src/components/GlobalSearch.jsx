@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import DOMPurify from 'isomorphic-dompurify';
+
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
@@ -28,6 +30,10 @@ export default function GlobalSearch() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
 
+  const [articleResults, setArticleResults] = useState([]);
+  const [isSearchingArticles, setIsSearchingArticles] = useState(false);
+
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -43,9 +49,11 @@ export default function GlobalSearch() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
+
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setArticleResults([]);
       return;
     }
 
@@ -54,12 +62,36 @@ export default function GlobalSearch() {
       route.title.toLowerCase().includes(lowerQuery) || route.path.toLowerCase().includes(lowerQuery)
     );
     setResults(matches);
+
+    if (query.trim().length > 2) {
+      setIsSearchingArticles(true);
+      const timer = setTimeout(async () => {
+        try {
+          const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?search=${encodeURIComponent(query)}&per_page=5`);
+          if (res.ok) {
+            const data = await res.json();
+            setArticleResults(data);
+          } else {
+            setArticleResults([]);
+          }
+        } catch (error) {
+          setArticleResults([]);
+        } finally {
+          setIsSearchingArticles(false);
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setArticleResults([]);
+    }
   }, [query]);
 
-  const closeModal = () => {
+
+    const closeModal = () => {
     setIsOpen(false);
     setQuery('');
     setResults([]);
+    setArticleResults([]);
   };
 
   return (
@@ -119,24 +151,53 @@ export default function GlobalSearch() {
                 </button>
               </form>
 
+
               <div className="p-6 min-h-[150px] max-h-[60vh] overflow-y-auto">
-                {query.trim() && results.length > 0 ? (
+                {query.trim() && (results.length > 0 || articleResults.length > 0) ? (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="space-y-2"
+                    className="space-y-4"
                   >
-                    <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Pages & Tools</h4>
-                    {results.map((route, i) => (
-                      <Link
-                        key={i}
-                        to={route.path}
-                        onClick={closeModal}
-                        className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2"
-                      >
-                        {route.title}
-                      </Link>
-                    ))}
+                    {results.length > 0 && (
+                      <div>
+                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Pages & Tools</h4>
+                        <div className="space-y-2">
+                          {results.map((route, i) => (
+                            <Link
+                              key={i}
+                              to={route.path}
+                              onClick={closeModal}
+                              className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2"
+                            >
+                              {route.title}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {(articleResults.length > 0 || isSearchingArticles) && (
+                      <div>
+                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
+                          <span>Intelligence & Articles</span>
+                          {isSearchingArticles && <span className="text-axim-teal text-[0.55rem] animate-pulse">Searching...</span>}
+                        </h4>
+                        <div className="space-y-2">
+                          {articleResults.map((post) => (
+                            <a
+                              key={post.id}
+                              href={`https://wp.axim.us.com/article/${post.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={closeModal}
+                              className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline"
+                              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 ) : query.trim() ? (
                   <div className="text-center text-zinc-600 font-mono text-xs uppercase flex flex-col items-center justify-center h-full gap-2 py-8">
@@ -149,6 +210,7 @@ export default function GlobalSearch() {
                   </div>
                 )}
               </div>
+
             </motion.div>
           </>
         )}

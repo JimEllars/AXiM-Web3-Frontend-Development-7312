@@ -1,11 +1,21 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, beforeAll } from 'vitest';
 import Partners from './Partners';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAximStore } from '../store/useAximStore';
 
 describe('Partners Page Component', () => {
+  beforeAll(() => {
+    const mockIntersectionObserver = class {
+      constructor() {}
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+    global.IntersectionObserver = mockIntersectionObserver;
+  });
+
   beforeEach(() => {
     useAximStore.setState({ partnerLeads: [] });
   });
