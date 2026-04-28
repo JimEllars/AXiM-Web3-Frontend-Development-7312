@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import Status from './pages/Status';
 import Dashboard from './pages/Dashboard';
 import NdaGeneratorLanding from './pages/tools/NdaGeneratorLanding';
+import NotFound from './pages/NotFound';
 import PayStubLanding from './pages/tools/PayStubLanding';
 
 import Chatbot from './components/Chatbot';
@@ -64,6 +65,7 @@ function App() {
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
             <Route path="/dashboard" element={<ProtectedRoute><PageTransition><Dashboard /></PageTransition></ProtectedRoute>} />
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
 
           </Routes>
         </AnimatePresence>

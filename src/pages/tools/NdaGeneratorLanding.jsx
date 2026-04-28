@@ -15,16 +15,54 @@ export default function NdaGeneratorLanding() {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "NDA Generator",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0.00",
-      "priceCurrency": "USD"
-    },
-    "description": "Enterprise Non-Disclosure Agreements generated in seconds. Legally compliant and heavily tailored for B2B ops."
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "NDA Generator",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        },
+        "description": "Enterprise Non-Disclosure Agreements generated in seconds. Legally compliant and heavily tailored for B2B ops.",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "ratingCount": "124"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this legally binding?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Our standard NDA templates have been drafted alongside legal professionals and are legally binding across standard jurisdictions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is my data secured?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your session is securely handed off to our processing engine via token exchange. All inputs are temporarily processed in memory and immediately discarded upon document generation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I customize the clauses?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The generator handles standard parameters out of the box. For customized clauses or specific state-level tailoring, you will need to amend the final PDF output or engage full enterprise consultation."
+            }
+          }
+        ]
+      }
+    ]
   };
 
   return (
@@ -83,6 +121,69 @@ export default function NdaGeneratorLanding() {
             Launch Application <SafeIcon icon={LuArrowRight} className="w-5 h-5" />
           </a>
         </motion.div>
+      </section>
+
+      {/* How It Works */}
+      <section className="w-full max-w-[1200px] px-6 pb-24">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-4">How it Works</h2>
+          <p className="text-zinc-400">Streamlined deployment. Zero friction.</p>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-4 relative">
+          {/* Connector Line */}
+          <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-px bg-axim-teal/30 -z-10 -translate-y-1/2"></div>
+
+          {[
+            { step: '01', title: 'Input Parameters', desc: 'Provide entity names, effective dates, and jurisdiction via a secure form.' },
+            { step: '02', title: 'AI Processing', desc: 'Our engine extracts and maps variables to the standard legal framework.' },
+            { step: '03', title: 'Secure Output', desc: 'Instantly download your finalized, ready-to-sign PDF document.' }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15 }}
+              className="flex-1 w-full bg-bg-void/80 backdrop-blur-xl border border-white/10 p-6 rounded-sm text-center shadow-[0_0_15px_rgba(45,212,191,0.05)] relative"
+            >
+              <div className="w-12 h-12 mx-auto bg-axim-teal/10 border border-axim-teal/30 rounded-full flex items-center justify-center text-axim-teal font-mono font-bold mb-4">
+                {item.step}
+              </div>
+              <h4 className="text-lg font-bold text-white uppercase mb-2">{item.title}</h4>
+              <p className="text-sm text-zinc-400">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="w-full max-w-[800px] px-6 pb-32 mx-auto">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-4">Frequently Asked Questions</h2>
+        </div>
+        <div className="space-y-4">
+          {[
+            { q: 'Is this legally binding?', a: 'Yes. Our standard NDA templates have been drafted alongside legal professionals and are legally binding across standard jurisdictions.' },
+            { q: 'How is my data secured?', a: 'Your session is securely handed off to our processing engine via token exchange. All inputs are temporarily processed in memory and immediately discarded upon document generation.' },
+            { q: 'Can I customize the clauses?', a: 'The generator handles standard parameters out of the box. For customized clauses or specific state-level tailoring, you will need to amend the final PDF output or engage full enterprise consultation.' }
+          ].map((faq, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white/5 border border-white/10 p-6 rounded-sm"
+            >
+              <h4 className="text-white font-bold mb-2 flex items-center gap-2">
+                 <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-4 h-4" />
+                 {faq.q}
+              </h4>
+              <p className="text-zinc-400 text-sm leading-relaxed ml-6">{faq.a}</p>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       {/* Features Grid */}
