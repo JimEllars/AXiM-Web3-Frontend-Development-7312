@@ -20,7 +20,8 @@ export const useAximStore = create((set, get) => ({
   historicalHealth: [],
   activeIntegrations: ['zapier', 'chatbase'], // simulating some active connections
   partnerLeads: [],
-  submitPartnerLead: (leadData) => set((state) => ({ partnerLeads: [{ ...leadData, id: Date.now(), timestamp: Date.now(), status: 'Pending Review' }, ...state.partnerLeads] })),
+  submitPartnerLead: (leadData) => set((state) => ({ partnerLeads: [{ ...leadData, id: Date.now(), timestamp: Date.now(), status: "Pending" }, ...state.partnerLeads] })),
+  updateLeadStatus: (id, newStatus) => set((state) => ({ partnerLeads: state.partnerLeads.map((lead) => lead.id === id ? { ...lead, status: newStatus } : lead) })),
   fetchDashboardHistoricalData: () => {
     // Generate simulated 7-day revenue
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
