@@ -16,6 +16,8 @@ import EarlyAccess from './pages/EarlyAccess';
 import Profile from './pages/Profile';
 import Status from './pages/Status';
 import Dashboard from './pages/Dashboard';
+import NdaGeneratorLanding from './pages/tools/NdaGeneratorLanding';
+import PayStubLanding from './pages/tools/PayStubLanding';
 
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
@@ -54,6 +56,8 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/tools/nda" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
+            <Route path="/tools/paystub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />

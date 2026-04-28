@@ -1,0 +1,130 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
+import * as LuIcons from 'react-icons/lu';
+import SafeIcon from '../../common/SafeIcon';
+import SEO from '../../components/SEO';
+import { useAximStore } from '../../store/useAximStore';
+import { generateWorkerLaunchUrl } from '../../lib/auth-handoff';
+
+const { LuDatabase, LuZap, LuFileText, LuShieldCheck, LuArrowRight } = LuIcons;
+
+export default function PayStubLanding() {
+  const userSession = useAximStore((state) => state.userSession);
+  const launchUrl = generateWorkerLaunchUrl('https://paystub.axim.us.com', userSession);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Pay Stub Generator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "4.00",
+      "priceCurrency": "USD"
+    },
+    "description": "Verifiable Pay Stub Generation Tool for independent contractors and small businesses."
+  };
+
+  return (
+    <div className="w-full relative z-10 flex flex-col items-center">
+      <SEO
+        title="Verifiable Pay Stub Generator | AXiM Hub"
+        description="Generate professional, verifiable pay stubs instantly for just $4.00."
+        url="https://axim.us.com/tools/paystub"
+      />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      </Helmet>
+
+      {/* Hero Section */}
+      <section className="w-full max-w-[1200px] px-6 py-24 md:py-32 flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8"
+        >
+          <SafeIcon icon={LuDatabase} className="text-axim-teal w-4 h-4" />
+          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Financial Tool</span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6 text-white"
+        >
+          Verifiable Pay Stubs <span className="text-axim-teal">in Seconds</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-xl text-zinc-400 max-w-2xl mb-12"
+        >
+          Generate accurate, professional pay stubs with automatic tax calculations and verifiable data structures.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <a
+            href={launchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-teal text-black font-black uppercase tracking-widest hover:bg-axim-teal/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+          >
+            Launch Application <SafeIcon icon={LuArrowRight} className="w-5 h-5" />
+          </a>
+          <p className="mt-4 text-sm text-zinc-500 font-mono tracking-widest">$4.00 Per Document</p>
+        </motion.div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="w-full max-w-[1200px] px-6 pb-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+          >
+            <SafeIcon icon={LuZap} className="text-axim-teal w-8 h-8 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">Instant Calculations</h3>
+            <p className="text-zinc-400">Automatic computation of federal, state, and local taxes based on your inputs. No manual math required.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+          >
+            <SafeIcon icon={LuFileText} className="text-axim-teal w-8 h-8 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">Professional Format</h3>
+            <p className="text-zinc-400">Outputs clean, standardized PDF documents accepted by landlords, financial institutions, and agencies.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+          >
+            <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-8 h-8 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">Secure Handoff</h3>
+            <p className="text-zinc-400">Your session is securely handed off to our processing engine, ensuring your financial data remains private.</p>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -99,10 +99,16 @@ export default function Tools() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
           {generators.map((doc, idx) => {
-            const destUrl = doc.externalUrl
-              ? `${doc.externalUrl}?source=axim_hub${userSession?.session_token ? `&auth_handoff=${userSession.session_token}` : ''}`
-              : "#";
+            const isInternal = doc.externalUrl && doc.externalUrl.startsWith('/tools');
+
+            // For internal tools, we don't apply auth handoff here, that happens on the landing page
+            const destUrl = isInternal
+              ? doc.externalUrl
+              : doc.externalUrl && doc.externalUrl !== "#"
+                ? `${doc.externalUrl}?source=axim_hub${userSession?.session_token ? `&auth_handoff=${userSession.session_token}` : ''}`
+                : "#";
 
             return (
               <motion.div
@@ -136,14 +142,25 @@ export default function Tools() {
                   </div>
 
 
-<a
-                    href={destUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
-                  >
-                    Launch App <SafeIcon icon={LuArrowRight} />
-                  </a>
+
+                  {isInternal ? (
+                    <Link
+                      to={destUrl}
+                      className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
+                    >
+                      View Details <SafeIcon icon={LuArrowRight} />
+                    </Link>
+                  ) : (
+                    <a
+                      href={destUrl}
+                      target={destUrl !== "#" ? "_blank" : undefined}
+                      rel={destUrl !== "#" ? "noopener noreferrer" : undefined}
+                      className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
+                    >
+                      Launch App <SafeIcon icon={LuArrowRight} />
+                    </a>
+                  )}
+
                 </div>
               </motion.div>
             );
