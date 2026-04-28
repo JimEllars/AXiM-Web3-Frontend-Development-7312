@@ -122,6 +122,13 @@ export default function Tools() {
                 <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
+                  {/* Badges for specific generators */}
+                  {(doc.id === 'G_DEMAND' || doc.id === 'G_NDA') && (
+                    <div className="absolute top-6 right-6 z-20 px-3 py-1 bg-axim-teal text-black text-[0.65rem] font-bold uppercase tracking-widest rounded-full animate-pulse shadow-[0_0_10px_rgba(45,212,191,0.5)]">
+                      {doc.id === 'G_DEMAND' ? 'Trending' : 'Popular'}
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-4 mb-6 relative z-10">
                     <div className="w-14 h-14 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(255,234,0,0.1)]">
                       <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="w-7 h-7" />
