@@ -11,6 +11,7 @@ import DashboardNodes from '../components/DashboardNodes';
 import OnyxTerminal from '../components/admin/OnyxTerminal';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import ContentAnalytics from '../components/admin/ContentAnalytics';
+import LeadManager from '../components/admin/LeadManager';
 
 const { LuLayoutDashboard, LuLock, LuActivity, LuInfo, LuDollarSign, LuServer, LuCpu, LuMail } = LuIcons;
 
@@ -363,64 +364,7 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-            {/* Recent Partner Inquiries */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="lg:col-span-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm mt-8"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-axim-gold/10 border border-axim-gold/30 flex items-center justify-center rounded-sm text-axim-gold">
-                  <SafeIcon icon={LuActivity} className="w-4 h-4" />
-                </div>
-                <h3 className="text-lg font-black uppercase text-white tracking-widest">Recent Partner Inquiries</h3>
-              </div>
-
-              <div className="space-y-4">
-                {partnerLeads && partnerLeads.length > 0 ? (
-                  partnerLeads.map((lead) => (
-                    <div key={lead.id} className="p-4 bg-black/40 border border-white/5 rounded-sm flex justify-between items-center">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <div className="font-bold text-white uppercase tracking-wider">{lead.companyName}</div>
-                          {lead.serviceInterest && (
-                            <span className={`text-[0.55rem] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${
-                              lead.serviceInterest === 'Fiber Connectivity' ? 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal' :
-                              lead.serviceInterest === 'Solar Infrastructure' ? 'border-axim-gold/30 bg-axim-gold/10 text-axim-gold' :
-                              'border-zinc-500/30 bg-zinc-500/10 text-zinc-400'
-                            }`}>
-                              {lead.serviceInterest}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs font-mono text-zinc-500 mt-1">{lead.serviceAddress || lead.serviceLocation || lead.facilityAddress}</div>
-                        <div className="text-[0.65rem] font-mono text-zinc-400 mt-1 flex gap-2">
-                          {lead.primaryContact && <span>Contact: {lead.primaryContact}</span>}
-                          {lead.emailAddress && <span>| {lead.emailAddress}</span>}
-                          {lead.requiredBandwidth && <span className="text-axim-teal">| {lead.requiredBandwidth}</span>}
-                          {lead.currentISP && <span>| ISP: {lead.currentISP}</span>}
-                          {lead.facilitySquareFootage && <span>| {lead.facilitySquareFootage} sqft</span>}
-                          {lead.estimatedEnergySpend && <span className="text-axim-gold">| Spend: {lead.estimatedEnergySpend}</span>}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[0.6rem] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold">
-                          {lead.status}
-                        </span>
-                        <div className="text-xs font-mono text-zinc-500 mt-2">
-                          {new Date(lead.timestamp).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest">
-                    <div className="flex flex-col items-center gap-2"><SafeIcon icon={LuMail} className="w-8 h-8 text-white/20" /><span>No pending partner inquiries.</span></div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+            <LeadManager />
           </div>
         </div>
 

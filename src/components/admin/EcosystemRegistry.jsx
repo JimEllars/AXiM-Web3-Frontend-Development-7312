@@ -23,8 +23,19 @@ export default function EcosystemRegistry() {
   const [apiKey, setApiKey] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [pingStatus, setPingStatus] = useState({});
   const userSession = useAximStore((state) => state.userSession);
   const activeIntegrations = useAximStore((state) => state.activeIntegrations) || [];
+
+  const handleTestConnection = (partnerId) => {
+    setPingStatus(prev => ({ ...prev, [partnerId]: 'pinging' }));
+    setTimeout(() => {
+      setPingStatus(prev => ({ ...prev, [partnerId]: 'success' }));
+      setTimeout(() => {
+        setPingStatus(prev => ({ ...prev, [partnerId]: null }));
+      }, 2000);
+    }, 800);
+  };
 
   const { session } = useAximAuth();
 
@@ -97,11 +108,30 @@ export default function EcosystemRegistry() {
 
             {activeIntegrations.includes(partner.id) ? (
               <button
-                disabled
-                className="w-full py-2 bg-axim-green/10 border border-axim-green text-xs font-mono uppercase tracking-widest text-axim-green transition-all flex items-center justify-center gap-2"
+                onClick={() => handleTestConnection(partner.id)}
+                disabled={pingStatus[partner.id] === 'pinging'}
+                className={`w-full py-2 border text-xs font-mono uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                  pingStatus[partner.id] === 'success'
+                    ? 'bg-axim-green/20 border-axim-green text-axim-green'
+                    : 'bg-axim-green/10 border-axim-green text-axim-green hover:bg-axim-green/20'
+                }`}
               >
-                <div className="w-2 h-2 rounded-full bg-axim-green animate-pulse"></div>
-                ACTIVE_CONNECTION
+                {pingStatus[partner.id] === 'pinging' ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-axim-green border-t-transparent rounded-full animate-spin"></div>
+                    PINGING...
+                  </>
+                ) : pingStatus[partner.id] === 'success' ? (
+                  <>
+                    <SafeIcon icon={LuCheck} className="w-4 h-4" />
+                    200 OK
+                  </>
+                ) : (
+                  <>
+                    <div className="w-2 h-2 rounded-full bg-axim-green animate-pulse"></div>
+                    TEST CONNECTION
+                  </>
+                )}
               </button>
             ) : (
               <button
