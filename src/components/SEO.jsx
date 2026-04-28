@@ -4,12 +4,12 @@ import { theme } from '../config/theme';
 
 export default function SEO({ title, description, image, type = "website", url, customSchema }) {
   const siteTitle = title ? `${title} | ${theme.siteName}` : theme.siteName;
-  const metaDescription = description || "AXiM Systems - Builders of A New Era.";
+  const metaDescription = description || "AXiM SYSTEMS - Builders of A New Era.";
 
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "AXiM Systems",
+    "name": "AXiM SYSTEMS",
     "url": "https://axim.us.com",
     "logo": "https://axim.us.com/logo.png",
     "description": "Smart protocol integrations, web3 interfaces, and intelligent business ecosystems.",
@@ -53,6 +53,16 @@ export default function SEO({ title, description, image, type = "website", url, 
     ]
   } : null;
 
+  const defaultWebPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": siteTitle,
+    "description": metaDescription,
+    "url": url || "https://axim.us.com"
+  };
+
+  const schemasToRender = customSchema || [defaultWebPageSchema];
+
   return (
     <Helmet>
       {/* Standard metadata */}
@@ -84,7 +94,7 @@ export default function SEO({ title, description, image, type = "website", url, 
       {url && <link rel="canonical" href={url} />}
       {!url && <link rel="canonical" href="https://axim.us.com" />}
 
-      {customSchema && customSchema.map((schema, index) => (
+      {schemasToRender.map((schema, index) => (
         <script key={index} type="application/ld+json">
           {JSON.stringify(schema)}
         </script>

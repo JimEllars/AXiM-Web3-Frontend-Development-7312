@@ -111,10 +111,10 @@ export default function LeadManager() {
             </tbody>
           </table>
         ) : (
-          <div className="text-center py-12 text-zinc-600 text-xs font-mono uppercase tracking-widest">
+          <div className="text-center py-12 text-zinc-600 text-xs font-mono uppercase tracking-widest border border-dashed border-white/10 bg-black/20 rounded-sm">
             <div className="flex flex-col items-center gap-3">
-              <SafeIcon icon={LuMail} className="w-8 h-8 text-white/10" />
-              <span>No pending partner inquiries.</span>
+              <SafeIcon icon={LuMail} className="w-8 h-8 text-white/5" />
+              <span className="opacity-50">No active leads</span>
             </div>
           </div>
         )}

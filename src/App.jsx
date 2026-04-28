@@ -23,6 +23,7 @@ import PayStubLanding from './pages/tools/PayStubLanding';
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
 import { useAximStore } from './store/useAximStore';
+import { logTelemetry } from './lib/telemetry';
 
 function App() {
   const location = useLocation();
@@ -36,6 +37,8 @@ function App() {
     const clickRankAi = document.createElement("script");
     clickRankAi.src = "https://js.clickrank.ai/seo/a53a59e0-cc42-4ec5-995e-d44d7177f1b3/script?" + new Date().getTime();
     clickRankAi.async = true;
+    logTelemetry("PAGE_VIEW", { path: location.pathname });
+
     document.head.appendChild(clickRankAi);
 
     return () => {
