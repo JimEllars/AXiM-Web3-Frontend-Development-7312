@@ -28,3 +28,4 @@ Allow: /
 # Explicitly allow CCBot
 User-agent: CCBot
 Allow: /
+Sitemap: https://axim.us.com/sitemap.xml
