@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Only subscribe if authenticated
-    if (!session && !userSession) return;
+    if (!userSession) return;
 
     const fetchMetrics = async () => {
       try {

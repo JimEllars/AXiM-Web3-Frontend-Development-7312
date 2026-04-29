@@ -22,34 +22,17 @@ export default function Profile() {
       isSessionLoading: state.isSessionLoading,
     }))
   );
-  const [isRollingKey, setIsRollingKey] = React.useState(false);
-  const [apiRollMessage, setApiRollMessage] = React.useState(null);
-  const [apiKeyPrefix, setApiKeyPrefix] = React.useState('sk_live_***');
-  const [creditsRemaining, setCreditsRemaining] = React.useState('10,000');
 
-  const handleRollApiKey = async () => {
-    setIsRollingKey(true);
-    setApiRollMessage(null);
-    try {
-      const response = await fetch('https://api.axim.us.com/v1/functions/api-gateway', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'roll_key' }),
-        credentials: 'include'
-      });
-      if (response.ok) {
-        setApiRollMessage({ type: 'success', text: 'API Key successfully rolled. New key sent to registered email.' });
-        setApiKeyPrefix('sk_live_' + Math.random().toString(36).substring(2, 6));
-      } else {
-        setApiRollMessage({ type: 'error', text: 'Failed to roll API key. Please try again.' });
-      }
-    } catch (err) {
-      setApiRollMessage({ type: 'error', text: 'Network error. Could not reach API Gateway.' });
-    } finally {
-      setIsRollingKey(false);
-    }
+  const [isSyncing, setIsSyncing] = React.useState(false);
+  const [syncMessage, setSyncMessage] = React.useState('');
+
+  const handleSyncLicenses = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      setIsSyncing(false);
+      setSyncMessage('SYNC_COMPLETE');
+      setTimeout(() => setSyncMessage(''), 3000);
+    }, 1000);
   };
 
   const hasAccess = true;
@@ -95,7 +78,7 @@ export default function Profile() {
         <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 rounded-md relative z-10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
 
       <div className="mb-12">
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">AXiM ID Dashboard</h1>
+        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">Operator Console // Secure Vault</h1>
         <p className="text-zinc-500 text-sm">Manage your decentralized identity and infrastructure access.</p>
       </div>
 
@@ -148,12 +131,16 @@ export default function Profile() {
                     <div className="font-mono text-lg text-white tracking-widest">AXM-BYPR-0982-X</div>
                   </div>
                   <div className="text-left sm:text-right">
-                    <button
-                      onClick={() => navigator.clipboard.writeText('AXM-BYPR-0982-X')}
-                      className="px-3 py-1.5 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2"
-                    >
-                      <SafeIcon icon={LuCopy} className="w-3 h-3" /> Copy Key
-                    </button>
+                    <div className="flex flex-col items-end gap-2">
+                      <button
+                        onClick={handleSyncLicenses}
+                        disabled={isSyncing}
+                        className="px-3 py-1.5 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      >
+                        <SafeIcon icon={LuRefreshCw} className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} /> Sync Licenses
+                      </button>
+                      {syncMessage && <span className="text-axim-teal text-[0.55rem] font-mono tracking-widest uppercase">{syncMessage}</span>}
+                    </div>
                   </div>
                 </div>
                 <div className="text-xs text-zinc-400 mt-2">

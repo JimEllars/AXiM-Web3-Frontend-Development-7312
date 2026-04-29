@@ -10,29 +10,29 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
     {
       id: 'Demand Letter',
       type: 'Micro-App',
-      status: nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '42ms'], ['Uptime', '99.9%']],
       icon: LuGlobe,
-      color: nodeStatuses?.demand === 'operational' ? 'axim-green' : 'red-500',
-      pulse: nodeStatuses?.demand !== 'operational'
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.demand === 'operational' ? 'axim-green' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.demand !== 'operational'
     },
     {
       id: 'NDA Generator',
       type: 'Micro-App',
-      status: nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '38ms'], ['Uptime', '99.9%']],
       icon: LuZap,
-      color: nodeStatuses?.nda === 'operational' ? 'axim-green' : 'red-500',
-      pulse: nodeStatuses?.nda !== 'operational'
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.nda === 'operational' ? 'axim-green' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.nda !== 'operational'
     },
     {
       id: 'Pay Stub',
       type: 'Micro-App',
-      status: nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '35ms'], ['Uptime', '99.9%']],
       icon: LuFileText,
-      color: nodeStatuses?.stub === 'operational' ? 'axim-green' : 'red-500',
-      pulse: nodeStatuses?.stub !== 'operational'
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.stub === 'operational' ? 'axim-green' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.stub !== 'operational'
     }
   ];
 
