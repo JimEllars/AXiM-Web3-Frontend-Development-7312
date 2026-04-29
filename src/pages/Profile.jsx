@@ -81,6 +81,19 @@ export default function Profile() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-6 py-20 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50 z-[-1] pointer-events-none" />
+        <motion.div
+          animate={{ backgroundPosition: ['0% 0%', '0% 100%'] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0 bg-gradient-to-b from-transparent via-axim-teal/5 to-transparent h-[200%] w-full z-[-1] pointer-events-none opacity-50 mix-blend-screen"
+        />
+        <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 rounded-md relative z-10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+
       <div className="mb-12">
         <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">AXiM ID Dashboard</h1>
         <p className="text-zinc-500 text-sm">Manage your decentralized identity and infrastructure access.</p>
@@ -132,11 +145,11 @@ export default function Profile() {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                   <div>
                     <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuShieldCheck} className="w-3 h-3 text-axim-teal"/> Active License</div>
-                    <div className="font-mono text-lg text-white tracking-widest">AXIM-SHIELD-0982-X</div>
+                    <div className="font-mono text-lg text-white tracking-widest">AXM-BYPR-0982-X</div>
                   </div>
                   <div className="text-left sm:text-right">
                     <button
-                      onClick={() => navigator.clipboard.writeText('AXIM-SHIELD-0982-X')}
+                      onClick={() => navigator.clipboard.writeText('AXM-BYPR-0982-X')}
                       className="px-3 py-1.5 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuCopy} className="w-3 h-3" /> Copy Key
@@ -151,6 +164,8 @@ export default function Profile() {
           </InfoPanel>
         </div>
       </div>
+      </div>
+      </motion.div>
     </div>
   );
 }
