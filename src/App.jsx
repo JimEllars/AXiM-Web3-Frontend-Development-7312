@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import Footer from './components/Footer';
 import GlobalTicker from './components/GlobalTicker';
 import Header from './components/Header';
+import SystemBreadcrumb from './components/SystemBreadcrumb';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 
@@ -68,7 +69,8 @@ function App() {
       <ProactiveBanner />
       <Chatbot />
       <Header />
-      <main className="flex-grow pt-24 pb-20 relative z-10">
+      <SystemBreadcrumb />
+      <main className="flex-grow pt-8 pb-20 relative z-10">
         <AnimatePresence mode="wait">
           <Suspense fallback={<GlobalLoader />}>
           <Routes location={location} key={location.pathname}>

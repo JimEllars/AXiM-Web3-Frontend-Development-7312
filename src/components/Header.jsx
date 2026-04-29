@@ -40,9 +40,9 @@ export default function Header() {
           <nav className="hidden lg:flex items-center gap-6 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-zinc-500">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
-              const isTools = link.path === '/tools';
+              const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
               const activeClass = isActive
-                ? (isTools ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                ? (isGlowTarget ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
                 : '';
 
               return (
@@ -99,10 +99,10 @@ export default function Header() {
         <div className="lg:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-4 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-zinc-400">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
-            const isTools = link.path === '/tools';
-            const activeClass = isActive
-              ? (isTools ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
-              : '';
+            const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
+              const activeClass = isActive
+                ? (isGlowTarget ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                : '';
 
             return (
               <Link

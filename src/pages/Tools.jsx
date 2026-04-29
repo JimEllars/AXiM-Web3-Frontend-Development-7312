@@ -10,7 +10,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useState } from 'react';
 
-const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText } = LuIcons;
+const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText, LuLock } = LuIcons;
 
 const courses = [
   {
@@ -95,7 +95,7 @@ export default function Tools() {
           <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-axim-gold border border-white/10">
             <SafeIcon icon={LuFileText} className="w-5 h-5" />
           </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Document Generators</h2>
+          <h2 className="text-3xl font-black uppercase tracking-tighter">Autonomous Production Units</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -111,7 +111,7 @@ export default function Tools() {
                 : "#";
 
             const isLicensed = userSession?.clearance_level >= 2 || userSession?.is_premium;
-            const statusLabel = isLicensed ? 'Licensed' : 'Available';
+            const statusLabel = isLicensed ? 'PRODUCING_BYPRODUCT' : 'UNIT_AVAILABLE';
 
             return (
               <motion.div
@@ -142,7 +142,7 @@ export default function Tools() {
 
                   <h3 className="text-2xl font-black uppercase mb-2 relative z-10 group-hover:text-axim-teal transition-colors">{doc.title}</h3>
                   <div className="mb-4 relative z-10">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border ${isLicensed ? 'bg-axim-teal/10 text-axim-teal border-axim-teal/30' : 'bg-zinc-900 text-zinc-400 border-zinc-700'}`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border ${isLicensed ? 'bg-axim-teal/10 text-axim-teal border-axim-teal/30 shadow-[0_0_8px_rgba(45,212,191,0.5)] animate-pulse' : 'bg-zinc-900 text-zinc-500 border-zinc-700'}`}>
                       {isLicensed && <SafeIcon icon={LuLock} className="w-3 h-3" />}
                       {statusLabel}
                     </span>
@@ -154,18 +154,18 @@ export default function Tools() {
                   {isInternal ? (
                     <Link
                       to={destUrl}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal/50 text-axim-teal hover:bg-axim-teal hover:text-black hover:animate-pulse' : 'border-zinc-700 text-zinc-400 hover:border-axim-teal hover:text-axim-teal'}`}
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
                     >
-                      {isLicensed ? 'Launch Tool' : 'Request Access'} <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? 'Launch Tool' : 'Request Authorization'} <SafeIcon icon={LuArrowRight} />
                     </Link>
                   ) : (
                     <a
                       href={destUrl}
                       target={destUrl !== "#" ? "_blank" : undefined}
                       rel={destUrl !== "#" ? "noopener noreferrer" : undefined}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal/50 text-axim-teal hover:bg-axim-teal hover:text-black hover:animate-pulse' : 'border-zinc-700 text-zinc-400 hover:border-axim-teal hover:text-axim-teal'}`}
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
                     >
-                      {isLicensed ? 'Launch Tool' : 'Request Access'} <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? 'Launch Tool' : 'Request Authorization'} <SafeIcon icon={LuArrowRight} />
                     </a>
                   )}
 

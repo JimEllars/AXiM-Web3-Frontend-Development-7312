@@ -9,19 +9,18 @@ import SafeIcon from '../common/SafeIcon';
 const { LuSearch, LuX } = LuIcons;
 
 const STATIC_ROUTES = [
-  { title: "Dashboard", path: "/dashboard", category: "Direct Access" },
-  { title: "Tools (The Machine Shop)", path: "/tools", category: "Direct Access" },
-  { title: "Intelligence Hub", path: "/articles", category: "Direct Access" },
-  { title: "Profile", path: "/profile", category: "Direct Access" },
-  { title: "Consultation", path: "/consultation", category: "Direct Access" },
-  { title: "System Status", path: "/status", category: "Direct Access" },
+  { title: "Dashboard", path: "/dashboard", category: "Command Center" },
+  { title: "System Status", path: "/status", category: "Command Center" },
+  { title: "Intelligence Hub", path: "/articles", category: "Command Center" },
 
-  { title: "Open Market Analyzer", path: "/tools", category: "Product Quick-Launch" },
-  { title: "Launch NDA Generator", path: "/tools/nda", category: "Product Quick-Launch" },
-  { title: "Demand Letter Generator", path: "/tools", category: "Product Quick-Launch" },
-  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Product Quick-Launch" },
-  { title: "Right to Privacy Letter", path: "/tools", category: "Product Quick-Launch" },
-  { title: "Credit Error Dispute", path: "/tools", category: "Product Quick-Launch" }
+  { title: "Tools (The Machine Shop)", path: "/tools", category: "Machine Shop" },
+  { title: "Launch NDA Generator", path: "/tools/nda", category: "Machine Shop" },
+  { title: "Demand Letter Generator", path: "/tools", category: "Machine Shop" },
+  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Machine Shop" },
+
+  { title: "Operator Vault", path: "/profile", category: "Operator Vault" },
+  { title: "Asset Licenses", path: "/profile", category: "Operator Vault" },
+  { title: "Security Settings", path: "/profile", category: "Operator Vault" }
 ];
 
 export default function GlobalSearch() {
@@ -31,10 +30,40 @@ export default function GlobalSearch() {
 
   const [articleResults, setArticleResults] = useState([]);
   const [isSearchingArticles, setIsSearchingArticles] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (isOpen) {
+        const totalResults = results.length + articleResults.length;
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev + 1) % (totalResults || 1));
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev - 1 + (totalResults || 1)) % (totalResults || 1));
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (totalResults > 0) {
+            let selectedItem;
+            if (selectedIndex < results.length) {
+              selectedItem = results[selectedIndex];
+              if (selectedItem && selectedItem.path) {
+                // If it's a standard link, we can simulate click or use window.location
+                window.location.href = selectedItem.path;
+                closeModal();
+              }
+            } else {
+              selectedItem = articleResults[selectedIndex - results.length];
+              if (selectedItem && selectedItem.slug) {
+                window.open(`https://wp.axim.us.com/article/${selectedItem.slug}`, '_blank');
+                closeModal();
+              }
+            }
+          }
+        }
+      }
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setIsOpen((prev) => !prev);
@@ -60,7 +89,7 @@ export default function GlobalSearch() {
     const matches = STATIC_ROUTES.filter(route =>
       route.title.toLowerCase().includes(lowerQuery) || route.path.toLowerCase().includes(lowerQuery)
     );
-    setResults(matches);
+    setResults(matches); setSelectedIndex(0);
 
     if (query.trim().length > 2) {
       setIsSearchingArticles(true);
@@ -69,7 +98,7 @@ export default function GlobalSearch() {
           const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?search=${encodeURIComponent(query)}&per_page=5`);
           if (res.ok) {
             const data = await res.json();
-            setArticleResults(data);
+            setArticleResults(data); setSelectedIndex(0);
           } else {
             setArticleResults([]);
           }
@@ -141,7 +170,7 @@ export default function GlobalSearch() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search AXiM Omnibar..."
-                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono"
+                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(45,212,191,0.2)] rounded-sm px-2 transition-shadow"
                 />
                 <button type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
@@ -157,23 +186,27 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Direct Access', 'Product Quick-Launch'].map(category => {
+                        {['Command Center', 'Machine Shop', 'Operator Vault'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (
                             <div key={category} className="mb-4">
                               <h4 className="text-[0.65rem] font-mono text-axim-teal uppercase tracking-widest mb-2 border-b border-white/10 pb-1">{category}</h4>
                               <div className="space-y-2">
-                                {categoryResults.map((route, i) => (
-                                  <Link
-                                    key={i}
-                                    to={route.path}
-                                    onClick={closeModal}
-                                    className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2"
-                                  >
-                                    {route.title}
-                                  </Link>
-                                ))}
+                                {categoryResults.map((route) => {
+                                  const globalIndex = results.indexOf(route);
+                                  const isSelected = selectedIndex === globalIndex;
+                                  return (
+                                    <Link
+                                      key={globalIndex}
+                                      to={route.path}
+                                      onClick={closeModal}
+                                      className={`block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
+                                    >
+                                      {route.title}
+                                    </Link>
+                                  );
+                                })}
                               </div>
                             </div>
                           );
@@ -188,17 +221,21 @@ export default function GlobalSearch() {
                           {isSearchingArticles && <span className="text-axim-teal text-[0.55rem] animate-pulse">Searching...</span>}
                         </h4>
                         <div className="space-y-2">
-                          {articleResults.map((post) => (
-                            <a
-                              key={post.id}
-                              href={`https://wp.axim.us.com/article/${post.slug}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={closeModal}
-                              className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline"
-                              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
-                            />
-                          ))}
+                          {articleResults.map((post, idx) => {
+                            const globalIndex = results.length + idx;
+                            const isSelected = selectedIndex === globalIndex;
+                            return (
+                              <a
+                                key={post.id}
+                                href={`https://wp.axim.us.com/article/${post.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={closeModal}
+                                className={`block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
+                              />
+                            );
+                          })}
                         </div>
                       </div>
                     )}

@@ -5,9 +5,8 @@ export const useAximStore = create((set, get) => ({
   // Telemetry state
 
   vaultedArtifacts: [
-    { id: 1, name: "Mutual NDA - TechFlow Inc.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
-    { id: 2, name: "Q3 Revenue Report.csv", type: "csv", size: "2.1 MB", date: new Date(Date.now() - 86400000).toISOString(), status: "Verified" },
-    { id: 3, name: "System Access Keys.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
+    { id: 1, name: "Generated_NDA_v1.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
+    { id: 2, name: "Market_Intelligence_Byproduct.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
   ],
   wpDiagnosticError: null,
 
@@ -101,7 +100,7 @@ export const useAximStore = create((set, get) => ({
         const errorEvent = {
           id: Date.now(),
           type: 'error',
-          message: 'Fleet Telemetry Link Degraded - Just now',
+          message: 'RE-ROUTING_ENCRYPTED_UPLINK',
           timestamp: Date.now()
         };
         const currentTelemetry = get().activeTelemetry || [];
