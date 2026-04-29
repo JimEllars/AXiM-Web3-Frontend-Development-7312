@@ -1,12 +1,51 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAximStore } from '../store/useAximStore';
+import { useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { useAximAuth } from '../hooks/useAximAuth';
 
 export default function ProtectedRoute({ children, allowedRoles = [], minimumTier = 0 }) {
   const userSession = useAximStore((state) => state.userSession);
   const { account, session, profile, loading } = useAximAuth();
   const location = useLocation();
+
+
+  useEffect(() => {
+    let timeoutId;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      // 15 minutes = 15 * 60 * 1000 = 900000ms
+      timeoutId = setTimeout(async () => {
+        await supabase.auth.signOut();
+        useAximStore.setState({ userSession: null, profileData: null });
+        alert("Session expired due to inactivity.");
+        window.location.href = "/";
+      }, 900000);
+    };
+
+    // Debounce listener to reduce excessive calls
+    let debounceTimer;
+    const handleActivity = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(resetTimer, 300);
+    };
+
+    window.addEventListener('mousemove', handleActivity);
+    window.addEventListener('keydown', handleActivity);
+    window.addEventListener('scroll', handleActivity);
+
+    resetTimer(); // Initialize
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(debounceTimer);
+      window.removeEventListener('mousemove', handleActivity);
+      window.removeEventListener('keydown', handleActivity);
+      window.removeEventListener('scroll', handleActivity);
+    };
+  }, []);
 
   if (loading) {
     return (

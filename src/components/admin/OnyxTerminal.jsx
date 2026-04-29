@@ -4,6 +4,7 @@ import { LuTerminal, LuX, LuChevronUp, LuChevronDown, LuSend } from 'react-icons
 import SafeIcon from '../../common/SafeIcon';
 import { useAximStore } from '../../store/useAximStore';
 import { useAximAuth } from '../../hooks/useAximAuth';
+import { useOnyxStream } from '../../hooks/useOnyxStream';
 
 export default function OnyxTerminal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,12 +13,10 @@ export default function OnyxTerminal() {
   const [history, setHistory] = useState([
     { type: 'system', text: 'ONYX SWARM TERMINAL v3.0 // AWAITING COMMAND...' }
   ]);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const terminalEndRef = useRef(null);
-  const userSession = useAximStore((state) => state.userSession);
-  const { session } = useAximAuth();
 
-  const token = userSession?.session_token || session?.access_token;
+  const terminalEndRef = useRef(null);
+  const { executeOnyxCommand, isStreaming } = useOnyxStream();
+
 
   useEffect(() => {
     if (terminalEndRef.current) {
@@ -27,70 +26,30 @@ export default function OnyxTerminal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isConnecting) return;
+    if (!input.trim() || isStreaming) return;
 
     const command = input.trim();
     setInput('');
     setHistory(prev => [...prev, { type: 'user', text: `> ${command}` }]);
-    setIsConnecting(true);
 
-    try {
-      const response = await fetch('https://api.axim.us.com/api/onyx-bridge', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ command }),
+    // Add an empty AI message that we will update
+    setHistory(prev => [...prev, { type: 'ai', text: '' }]);
+
+    const response = await executeOnyxCommand(command);
+
+    if (response) {
+      setHistory(prev => {
+        const newHistory = [...prev];
+        newHistory[newHistory.length - 1].text = response;
+        return newHistory;
       });
-
-      if (!response.ok) {
-        throw new Error(`Network error: ${response.status}`);
-      }
-
-      // Check if it's an SSE stream
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('text/event-stream')) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        let aiResponse = '';
-        setHistory(prev => [...prev, { type: 'ai', text: '' }]);
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.slice(6));
-                if (data.token) {
-                  aiResponse += data.token;
-                  setHistory(prev => {
-                    const newHistory = [...prev];
-                    newHistory[newHistory.length - 1].text = aiResponse;
-                    return newHistory;
-                  });
-                }
-              } catch (e) {
-                // Ignore parse errors on partial streams
-              }
-            }
-          }
-        }
-      } else {
-        // Fallback for normal JSON response
-        const data = await response.json();
-        setHistory(prev => [...prev, { type: 'ai', text: data.reply || 'Command executed.' }]);
-      }
-    } catch (err) {
-      setHistory(prev => [...prev, { type: 'error', text: `[SYSTEM ERROR]: ${err.message}` }]);
-    } finally {
-      setIsConnecting(false);
+    } else {
+      setHistory(prev => {
+        const newHistory = [...prev];
+        // Replace empty AI message with error
+        newHistory[newHistory.length - 1] = { type: 'error', text: `[SYSTEM ERROR]: Command failed` };
+        return newHistory;
+      });
     }
   };
 
@@ -151,7 +110,7 @@ export default function OnyxTerminal() {
                 <div dangerouslySetInnerHTML={{ __html: line.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
               </div>
             ))}
-            {isConnecting && (
+            {isStreaming && (
               <div className="flex items-center gap-2 text-axim-teal/50">
                 <div className="w-2 h-2 bg-axim-teal rounded-full animate-ping"></div>
                 Processing...
@@ -177,7 +136,7 @@ export default function OnyxTerminal() {
                 }, 0);
               }}
               className="whitespace-nowrap px-2 py-1 bg-red-500/10 border border-red-500/50 text-red-400 hover:text-axim-gold hover:border-axim-gold text-[0.6rem] font-mono uppercase transition-colors rounded-sm shadow-[0_0_10px_rgba(239,68,68,0.2)]"
-              disabled={isConnecting}
+              disabled={isStreaming}
             >
               Purge Edge Cache
             </button>
@@ -186,21 +145,21 @@ export default function OnyxTerminal() {
             <button
               onClick={() => setInput('Analyze Infrastructure')}
               className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
-              disabled={isConnecting}
+              disabled={isStreaming}
             >
               Analyze Infrastructure
             </button>
             <button
               onClick={() => setInput('Run Security Audit')}
               className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
-              disabled={isConnecting}
+              disabled={isStreaming}
             >
               Run Security Audit
             </button>
             <button
               onClick={() => setInput('Check PDF Generation Queue')}
               className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
-              disabled={isConnecting}
+              disabled={isStreaming}
             >
               Check PDF Queue
             </button>
@@ -215,11 +174,11 @@ export default function OnyxTerminal() {
                 onChange={(e) => setInput(e.target.value)}
                 className="flex-grow bg-transparent border-none outline-none font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs text-white placeholder:text-zinc-600"
                 placeholder="Enter command..."
-                disabled={isConnecting}
+                disabled={isStreaming}
               />
               <button
                 type="submit"
-                disabled={isConnecting || !input.trim()}
+                disabled={isStreaming || !input.trim()}
                 className="text-axim-teal hover:text-white disabled:opacity-50 transition-colors"
               >
                 <SafeIcon icon={LuSend} className="w-4 h-4" />
