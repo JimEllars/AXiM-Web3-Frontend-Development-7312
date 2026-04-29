@@ -16,6 +16,11 @@ export default function OnyxTerminal() {
 
   const terminalEndRef = useRef(null);
   const { executeOnyxCommand, isStreaming } = useOnyxStream();
+  const { wpDiagnosticError, nodeStatuses, historicalHealth } = useAximStore((state) => ({
+    wpDiagnosticError: state.wpDiagnosticError,
+    nodeStatuses: state.nodeStatuses,
+    historicalHealth: state.historicalHealth
+  }));
 
 
   useEffect(() => {
@@ -29,13 +34,19 @@ export default function OnyxTerminal() {
     if (!input.trim() || isStreaming) return;
 
     const command = input.trim();
+
+    // Inject system context
+    const recentLatency = historicalHealth?.[0]?.latency || 'N/A';
+    const wpStatus = wpDiagnosticError ? 'ERROR: ' + wpDiagnosticError : 'OK';
+    const contextPrefix = `[SYSTEM CONTEXT: WP_STATUS: ${wpStatus}, RECENT_LATENCY: ${recentLatency}ms] USER PROMPT: `;
+    const backendPayload = contextPrefix + command;
     setInput('');
     setHistory(prev => [...prev, { type: 'user', text: `> ${command}` }]);
 
     // Add an empty AI message that we will update
     setHistory(prev => [...prev, { type: 'ai', text: '' }]);
 
-    const response = await executeOnyxCommand(command);
+    const response = await executeOnyxCommand(backendPayload);
 
     if (response) {
       setHistory(prev => {
