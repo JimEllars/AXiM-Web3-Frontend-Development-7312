@@ -1,5 +1,6 @@
 import ProtectedRoute from './components/ProtectedRoute';
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
+import GlobalLoader from './components/GlobalLoader';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Footer from './components/Footer';
@@ -7,23 +8,36 @@ import GlobalTicker from './components/GlobalTicker';
 import Header from './components/Header';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
-import Home from './pages/Home';
-import Articles from './pages/Articles';
-import Tools from './pages/Tools';
-import Consultation from './pages/Consultation';
-import Partners from './pages/Partners';
-import EarlyAccess from './pages/EarlyAccess';
-import Profile from './pages/Profile';
-import Status from './pages/Status';
-import Dashboard from './pages/Dashboard';
-import NdaGeneratorLanding from './pages/tools/NdaGeneratorLanding';
-import NotFound from './pages/NotFound';
-import PayStubLanding from './pages/tools/PayStubLanding';
+
+
+
+
+
+
+
+
+
+
+
+
 
 import Chatbot from './components/Chatbot';
 import ProactiveBanner from './components/ProactiveBanner';
 import { useAximStore } from './store/useAximStore';
 import { logTelemetry } from './lib/telemetry';
+
+const Home = React.lazy(() => import('./pages/Home'));
+const Articles = React.lazy(() => import('./pages/Articles'));
+const Tools = React.lazy(() => import('./pages/Tools'));
+const Consultation = React.lazy(() => import('./pages/Consultation'));
+const Partners = React.lazy(() => import('./pages/Partners'));
+const EarlyAccess = React.lazy(() => import('./pages/EarlyAccess'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const Status = React.lazy(() => import('./pages/Status'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const NdaGeneratorLanding = React.lazy(() => import('./pages/tools/NdaGeneratorLanding'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
 
 function App() {
   const location = useLocation();
@@ -56,6 +70,7 @@ function App() {
       <Header />
       <main className="flex-grow pt-24 pb-20 relative z-10">
         <AnimatePresence mode="wait">
+          <Suspense fallback={<GlobalLoader />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
@@ -71,6 +86,7 @@ function App() {
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
 
           </Routes>
+          </Suspense>
         </AnimatePresence>
       </main>
       <Footer />

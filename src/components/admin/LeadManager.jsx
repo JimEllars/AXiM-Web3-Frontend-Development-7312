@@ -3,12 +3,22 @@ import { motion } from 'framer-motion';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../../store/useAximStore';
+import { useOnyxStream } from '../../hooks/useOnyxStream';
+import { useState } from 'react';
 
 const { LuMail, LuDownload } = LuIcons;
 
 export default function LeadManager() {
   const partnerLeads = useAximStore((state) => state.partnerLeads);
   const updateLeadStatus = useAximStore((state) => state.updateLeadStatus);
+  const { executeOnyxCommand, streamResponse, isStreaming } = useOnyxStream();
+  const [activeLeadId, setActiveLeadId] = useState(null);
+
+  const handleDeployOnyx = async (lead) => {
+    setActiveLeadId(lead.id);
+    const prompt = `[SYSTEM] Draft a highly professional, 3-sentence B2B outreach email to ${lead.primaryContact} at ${lead.companyName} regarding their inquiry about ${lead.serviceInterest}. Format with proper spacing.`;
+    await executeOnyxCommand(prompt);
+  };
 
   const handleExportCSV = () => {
     if (!partnerLeads || partnerLeads.length === 0) return;
@@ -73,7 +83,9 @@ export default function LeadManager() {
             </thead>
             <tbody>
               {partnerLeads.map((lead) => (
-                <tr key={lead.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                <React.Fragment key={lead.id}>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+
                   <td className="py-4 px-4 text-xs font-mono text-zinc-400">
                     {new Date(lead.timestamp).toLocaleDateString()}
                   </td>
@@ -95,7 +107,7 @@ export default function LeadManager() {
                     <div className="text-xs font-mono text-zinc-300">{lead.primaryContact}</div>
                     <div className="text-[0.65rem] font-mono text-zinc-500">{lead.emailAddress}</div>
                   </td>
-                  <td className="py-4 px-4 text-right">
+                  <td className="py-4 px-4 text-right flex flex-col items-end gap-2">
                     <select
                       value={lead.status || 'Pending'}
                       onChange={(e) => updateLeadStatus(lead.id, e.target.value)}
@@ -105,8 +117,32 @@ export default function LeadManager() {
                       <option value="In Progress">In Progress</option>
                       <option value="Closed">Closed</option>
                     </select>
+                    <button
+                      onClick={() => handleDeployOnyx(lead)}
+                      disabled={isStreaming && activeLeadId === lead.id}
+                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-teal/10 border border-axim-teal/30 text-axim-teal hover:bg-axim-teal/20 transition-colors rounded-sm shadow-[0_0_8px_rgba(45,212,191,0.2)] disabled:opacity-50"
+                    >
+                      {isStreaming && activeLeadId === lead.id ? 'Drafting...' : 'Deploy Onyx Engagement'}
+                    </button>
                   </td>
+
                 </tr>
+                {activeLeadId === lead.id && (streamResponse || isStreaming) && (
+                  <tr className="bg-black/40 border-b border-white/5">
+                    <td colSpan="5" className="p-4">
+                      <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-sm p-4 font-mono text-xs text-zinc-300 whitespace-pre-wrap relative">
+                        <div className="absolute top-2 right-2 text-[0.55rem] text-axim-teal uppercase tracking-widest opacity-70">
+                          Onyx Draft Response
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: streamResponse || 'Initializing swarm intelligence...' }} />
+                        {isStreaming && activeLeadId === lead.id && (
+                          <div className="w-2 h-2 bg-axim-teal rounded-full animate-ping inline-block ml-2"></div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
               ))}
             </tbody>
           </table>
