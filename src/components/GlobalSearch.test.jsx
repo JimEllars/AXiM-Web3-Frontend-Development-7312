@@ -20,11 +20,11 @@ describe('GlobalSearch Component', () => {
 
     fireEvent.click(openBtn);
 
-    const input = screen.getByPlaceholderText('Search AXiM Hub...');
+    const input = screen.getByPlaceholderText('Search AXiM Omnibar...');
 
     fireEvent.change(input, { target: { value: 'tools' } });
 
-    // Tools Hub should be visible in results
-    const toolsLink = screen.getByText('Tools Hub');
+    // Tools (The Machine Shop) should be visible in results
+    const toolsLink = screen.getByText('Tools (The Machine Shop)');
   });
 });

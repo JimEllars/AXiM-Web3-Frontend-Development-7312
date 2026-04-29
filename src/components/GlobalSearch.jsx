@@ -9,20 +9,19 @@ import SafeIcon from '../common/SafeIcon';
 const { LuSearch, LuX } = LuIcons;
 
 const STATIC_ROUTES = [
-  { title: "Home", path: "/" },
-  { title: "Articles", path: "/articles" },
-  { title: "Tools Hub", path: "/tools" },
-  { title: "Consultation", path: "/consultation" },
-  { title: "Early Access", path: "/early-access" },
-  { title: "Partner Portal", path: "/partners" },
-  { title: "System Status", path: "/status" },
-  { title: "Dashboard", path: "/dashboard" },
-  { title: "Profile", path: "/profile" },
-  { title: "Demand Letter Generator", path: "/tools" },
-  { title: "NDA Generator", path: "/tools" },
-  { title: "Pay Stub Generator", path: "/tools" },
-  { title: "Right to Privacy Letter", path: "/tools" },
-  { title: "Credit Error Dispute", path: "/tools" }
+  { title: "Dashboard", path: "/dashboard", category: "Direct Access" },
+  { title: "Tools (The Machine Shop)", path: "/tools", category: "Direct Access" },
+  { title: "Intelligence Hub", path: "/articles", category: "Direct Access" },
+  { title: "Profile", path: "/profile", category: "Direct Access" },
+  { title: "Consultation", path: "/consultation", category: "Direct Access" },
+  { title: "System Status", path: "/status", category: "Direct Access" },
+
+  { title: "Open Market Analyzer", path: "/tools", category: "Product Quick-Launch" },
+  { title: "Launch NDA Generator", path: "/tools/nda", category: "Product Quick-Launch" },
+  { title: "Demand Letter Generator", path: "/tools", category: "Product Quick-Launch" },
+  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Product Quick-Launch" },
+  { title: "Right to Privacy Letter", path: "/tools", category: "Product Quick-Launch" },
+  { title: "Credit Error Dispute", path: "/tools", category: "Product Quick-Launch" }
 ];
 
 export default function GlobalSearch() {
@@ -123,7 +122,7 @@ export default function GlobalSearch() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[100]"
               onClick={closeModal}
             />
 
@@ -132,10 +131,8 @@ export default function GlobalSearch() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-bg-void border border-axim-teal/20 shadow-[0_0_50px_rgba(58,170,116,0.05)] z-[101] overflow-hidden"
+              className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(45,212,191,0.05)] z-[101] overflow-hidden"
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-teal to-transparent opacity-50" />
-
               <form onSubmit={(e) => e.preventDefault()} className="relative border-b border-white/10 p-4 flex items-center gap-4 bg-white/5">
                 <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-teal" />
                 <input
@@ -143,14 +140,13 @@ export default function GlobalSearch() {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search AXiM Hub..."
-                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-600 font-mono"
+                  placeholder="Search AXiM Omnibar..."
+                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono"
                 />
                 <button type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
                 </button>
               </form>
-
 
               <div className="p-6 min-h-[150px] max-h-[60vh] overflow-y-auto">
                 {query.trim() && (results.length > 0 || articleResults.length > 0) ? (
@@ -161,26 +157,34 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Pages & Tools</h4>
-                        <div className="space-y-2">
-                          {results.map((route, i) => (
-                            <Link
-                              key={i}
-                              to={route.path}
-                              onClick={closeModal}
-                              className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2"
-                            >
-                              {route.title}
-                            </Link>
-                          ))}
-                        </div>
+                        {['Direct Access', 'Product Quick-Launch'].map(category => {
+                          const categoryResults = results.filter(r => r.category === category);
+                          if (categoryResults.length === 0) return null;
+                          return (
+                            <div key={category} className="mb-4">
+                              <h4 className="text-[0.65rem] font-mono text-axim-teal uppercase tracking-widest mb-2 border-b border-white/10 pb-1">{category}</h4>
+                              <div className="space-y-2">
+                                {categoryResults.map((route, i) => (
+                                  <Link
+                                    key={i}
+                                    to={route.path}
+                                    onClick={closeModal}
+                                    className="block p-3 bg-white/5 border border-white/10 hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2"
+                                  >
+                                    {route.title}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
 
                     {(articleResults.length > 0 || isSearchingArticles) && (
                       <div>
-                        <h4 className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
-                          <span>Intelligence & Articles</span>
+                        <h4 className="text-[0.65rem] font-mono text-axim-teal uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
+                          <span>Intel Search</span>
                           {isSearchingArticles && <span className="text-axim-teal text-[0.55rem] animate-pulse">Searching...</span>}
                         </h4>
                         <div className="space-y-2">
