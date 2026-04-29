@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Only subscribe if authenticated
-    if (!session && !session && !userSession) return;
+    if (!session && !userSession) return;
 
     const fetchMetrics = async () => {
       try {
@@ -115,7 +115,7 @@ export default function Dashboard() {
     };
   }, [session, userSession]);
 
-  const hasAccess = userSession || session ;
+  const hasAccess = userSession || session;
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">

@@ -11,10 +11,10 @@ export const useAximStore = create((set, get) => ({
   wpDiagnosticError: null,
 
   nodeStatuses: {
-    nda: 'operational',
-    demand: 'operational',
-    stub: 'operational',
-    core: 'operational'
+    nda: 'initializing',
+    demand: 'initializing',
+    stub: 'initializing',
+    core: 'initializing'
   },
   activeTelemetry: [
     { id: 1, type: 'marketing_loop', message: 'Roundups AI: Campaign Dispatched successfully - Just now', timestamp: Date.now() - 5000 },
