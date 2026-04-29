@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'isomorphic-dompurify';
 
 import * as LuIcons from 'react-icons/lu';
@@ -24,6 +24,8 @@ const STATIC_ROUTES = [
 ];
 
 export default function GlobalSearch() {
+  const navigate = useNavigate();
+  const [isSynchronizing, setIsSynchronizing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -50,15 +52,22 @@ export default function GlobalSearch() {
             if (selectedIndex < results.length) {
               selectedItem = results[selectedIndex];
               if (selectedItem && selectedItem.path) {
-                // If it's a standard link, we can simulate click or use window.location
-                window.location.href = selectedItem.path;
-                closeModal();
+                setIsSynchronizing(true);
+                setTimeout(() => {
+                  navigate(selectedItem.path);
+                  closeModal();
+                  setIsSynchronizing(false);
+                }, 300);
               }
             } else {
               selectedItem = articleResults[selectedIndex - results.length];
               if (selectedItem && selectedItem.slug) {
-                window.open(`https://wp.axim.us.com/article/${selectedItem.slug}`, '_blank');
-                closeModal();
+                setIsSynchronizing(true);
+                setTimeout(() => {
+                  window.open(`https://wp.axim.us.com/article/${selectedItem.slug}`, '_blank');
+                  closeModal();
+                  setIsSynchronizing(false);
+                }, 300);
               }
             }
           }
@@ -75,7 +84,7 @@ export default function GlobalSearch() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, results, articleResults, selectedIndex, navigate]);
 
 
   useEffect(() => {
@@ -167,10 +176,11 @@ export default function GlobalSearch() {
                 <input
                   autoFocus
                   type="text"
-                  value={query}
+                  value={isSynchronizing ? "Synchronizing..." : query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search AXiM Omnibar..."
-                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(45,212,191,0.2)] rounded-sm px-2 transition-shadow"
+                  disabled={isSynchronizing}
+                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(45,212,191,0.2)] rounded-sm px-2 transition-shadow disabled:opacity-50"
                 />
                 <button type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
@@ -197,14 +207,21 @@ export default function GlobalSearch() {
                                   const globalIndex = results.indexOf(route);
                                   const isSelected = selectedIndex === globalIndex;
                                   return (
-                                    <Link
+                                    <button
                                       key={globalIndex}
-                                      to={route.path}
-                                      onClick={closeModal}
-                                      className={`block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsSynchronizing(true);
+                                        setTimeout(() => {
+                                          navigate(route.path);
+                                          closeModal();
+                                          setIsSynchronizing(false);
+                                        }, 300);
+                                      }}
+                                      className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
                                     >
                                       {route.title}
-                                    </Link>
+                                    </button>
                                   );
                                 })}
                               </div>
@@ -225,13 +242,18 @@ export default function GlobalSearch() {
                             const globalIndex = results.length + idx;
                             const isSelected = selectedIndex === globalIndex;
                             return (
-                              <a
+                              <button
                                 key={post.id}
-                                href={`https://wp.axim.us.com/article/${post.slug}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={closeModal}
-                                className={`block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setIsSynchronizing(true);
+                                  setTimeout(() => {
+                                    window.open(`https://wp.axim.us.com/article/${post.slug}`, '_blank');
+                                    closeModal();
+                                    setIsSynchronizing(false);
+                                  }, 300);
+                                }}
+                                className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
                               />
                             );
