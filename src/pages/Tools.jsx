@@ -95,7 +95,7 @@ export default function Tools() {
           <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-axim-gold border border-white/10">
             <SafeIcon icon={LuFileText} className="w-5 h-5" />
           </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Product Units</h2>
+          <h2 className="text-3xl font-black uppercase tracking-tighter">Product Modules</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -120,7 +120,7 @@ export default function Tools() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
                 whileHover={{ scale: 1.02 }}
-                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-teal/50 shadow-[0_0_15px_rgba(45,212,191,0.2)] animate-pulse duration-3000' : 'border-white/10'} hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
+                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-teal/50 shadow-[0_0_15px_rgba(45,212,191,0.2)] animate-pulse [animation-duration:3s]' : 'border-white/10'} hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
               >
                 <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
@@ -189,7 +189,7 @@ export default function Tools() {
           <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-axim-gold border border-white/10">
             <SafeIcon icon={LuGraduationCap} className="w-5 h-5" />
           </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Academy Modules</h2>
+          <h2 className="text-3xl font-black uppercase tracking-tighter">Academy Frameworks</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

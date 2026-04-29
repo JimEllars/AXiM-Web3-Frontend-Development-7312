@@ -51,24 +51,11 @@ export default function GlobalSearch() {
             let selectedItem;
             if (selectedIndex < results.length) {
               selectedItem = results[selectedIndex];
-              if (selectedItem && selectedItem.path) {
-                setIsSynchronizing(true);
-                setTimeout(() => {
-                  navigate(selectedItem.path);
-                  closeModal();
-                  setIsSynchronizing(false);
-                }, 300);
-              }
             } else {
               selectedItem = articleResults[selectedIndex - results.length];
-              if (selectedItem && selectedItem.slug) {
-                setIsSynchronizing(true);
-                setTimeout(() => {
-                  window.open(`https://wp.axim.us.com/article/${selectedItem.slug}`, '_blank');
-                  closeModal();
-                  setIsSynchronizing(false);
-                }, 300);
-              }
+            }
+            if (selectedItem) {
+              handleSelect(selectedItem);
             }
           }
         }
@@ -124,7 +111,21 @@ export default function GlobalSearch() {
   }, [query]);
 
 
-    const closeModal = () => {
+
+  const handleSelect = (item) => {
+    setIsSynchronizing(true);
+    setTimeout(() => {
+      if (item.path) {
+        navigate(item.path);
+      } else if (item.slug) {
+        window.open(`https://wp.axim.us.com/article/${item.slug}`, '_blank');
+      }
+      closeModal();
+      setIsSynchronizing(false);
+    }, 300);
+  };
+
+  const closeModal = () => {
     setIsOpen(false);
     setQuery('');
     setResults([]);
@@ -209,15 +210,7 @@ export default function GlobalSearch() {
                                   return (
                                     <button
                                       key={globalIndex}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsSynchronizing(true);
-                                        setTimeout(() => {
-                                          navigate(route.path);
-                                          closeModal();
-                                          setIsSynchronizing(false);
-                                        }, 300);
-                                      }}
+                                      onClick={(e) => { e.preventDefault(); handleSelect(route); }}
                                       className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
                                     >
                                       {route.title}
@@ -244,15 +237,7 @@ export default function GlobalSearch() {
                             return (
                               <button
                                 key={post.id}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setIsSynchronizing(true);
-                                  setTimeout(() => {
-                                    window.open(`https://wp.axim.us.com/article/${post.slug}`, '_blank');
-                                    closeModal();
-                                    setIsSynchronizing(false);
-                                  }, 300);
-                                }}
+                                onClick={(e) => { e.preventDefault(); handleSelect(post); }}
                                 className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
                               />

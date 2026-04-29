@@ -10,7 +10,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
     {
       id: 'Demand Letter',
       type: 'Micro-App',
-      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '42ms'], ['Uptime', '99.9%']],
       icon: LuGlobe,
       color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.demand === 'operational' ? 'axim-green' : 'red-500',
@@ -19,7 +19,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
     {
       id: 'NDA Generator',
       type: 'Micro-App',
-      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '38ms'], ['Uptime', '99.9%']],
       icon: LuZap,
       color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.nda === 'operational' ? 'axim-green' : 'red-500',
@@ -28,7 +28,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
     {
       id: 'Pay Stub',
       type: 'Micro-App',
-      status: !nodeStatuses ? 'AWAITING_UPLINK...' : nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
       metrics: [['Latency', '35ms'], ['Uptime', '99.9%']],
       icon: LuFileText,
       color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.stub === 'operational' ? 'axim-green' : 'red-500',
