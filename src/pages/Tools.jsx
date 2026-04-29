@@ -10,7 +10,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useState } from 'react';
 
-const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText, LuLock } = LuIcons;
+const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText, LuLock, LuUnlock } = LuIcons;
 
 const courses = [
   {
@@ -120,7 +120,7 @@ export default function Tools() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
                 whileHover={{ scale: 1.02 }}
-                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.2)]' : 'border-white/10'} hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
+                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.2)] animate-pulse' : 'border-white/10'} hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
               >
                 <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
@@ -154,18 +154,26 @@ export default function Tools() {
                   {isInternal ? (
                     <Link
                       to={destUrl}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
                     >
-                      {isLicensed ? 'Launch Tool' : 'Request Authorization'} <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? (
+                        <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
+                      ) : (
+                        <>Request Authorization <SafeIcon icon={LuLock} className="group-hover/btn:hidden w-4 h-4" /><SafeIcon icon={LuUnlock} className="hidden group-hover/btn:block w-4 h-4" /></>
+                      )}
                     </Link>
                   ) : (
                     <a
                       href={destUrl}
                       target={destUrl !== "#" ? "_blank" : undefined}
                       rel={destUrl !== "#" ? "noopener noreferrer" : undefined}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${isLicensed ? 'border-axim-teal text-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.4)] hover:bg-axim-teal hover:text-black hover:shadow-[0_0_25px_rgba(45,212,191,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]'}`}
                     >
-                      {isLicensed ? 'Launch Tool' : 'Request Authorization'} <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? (
+                        <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
+                      ) : (
+                        <>Request Authorization <SafeIcon icon={LuLock} className="group-hover/btn:hidden w-4 h-4" /><SafeIcon icon={LuUnlock} className="hidden group-hover/btn:block w-4 h-4" /></>
+                      )}
                     </a>
                   )}
 
