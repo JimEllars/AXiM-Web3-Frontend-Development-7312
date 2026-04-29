@@ -12,7 +12,7 @@ import VaultedRecords from '../components/VaultedRecords';
 import { generators } from '../data/companyOfferings';
 import { ensureSafeProtocol } from '../lib/sanitize';
 
-const { LuUser, LuKey, LuShieldAlert, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText, LuRefreshCw } = LuIcons;
+const { LuUser, LuKey, LuShieldAlert, LuShieldCheck, LuLock, LuCopy, LuCheck, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText, LuRefreshCw } = LuIcons;
 
 export default function Profile() {
   const { session, profile, loading } = useAximAuth();
@@ -92,7 +92,7 @@ export default function Profile() {
 
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
             <ProfileMenuButton icon={LuSettings} label="System Settings" />
-            <ProfileMenuButton icon={LuKey} label="API Keys" />
+            <ProfileMenuButton icon={LuShieldCheck} label="Asset Management" />
             <ProfileMenuButton icon={LuShieldAlert} label="Terminate Session" danger={true} />
           </div>
         </div>
@@ -126,39 +126,29 @@ export default function Profile() {
             )}
           </InfoPanel>
 
-          {userSession?.is_partner && (
-            <InfoPanel icon={LuKey} iconColor="text-axim-purple" title="API Credentials (B2B)">
-              <div className="space-y-6">
-                <div className="p-6 border border-axim-purple/20 bg-axim-purple/5 text-left flex flex-col gap-4">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                     <div>
-                       <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Active Key Prefix</div>
-                       <div className="font-mono text-lg text-white">{apiKeyPrefix}</div>
-                     </div>
-                     <div className="text-left sm:text-right">
-                       <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Credits Remaining</div>
-                       <div className="font-bold text-xl text-axim-purple">{creditsRemaining}</div>
-                     </div>
+          <InfoPanel icon={LuLock} iconColor="text-axim-teal" title="Product Licenses">
+            <div className="space-y-4">
+              <div className="p-6 border border-white/10 bg-white/5 text-left flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                  <div>
+                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuShieldCheck} className="w-3 h-3 text-axim-teal"/> Active License</div>
+                    <div className="font-mono text-lg text-white tracking-widest">AXIM-SHIELD-0982-X</div>
                   </div>
-
-                  {apiRollMessage && (
-                    <div className={`p-3 text-xs font-mono ${apiRollMessage.type === 'success' ? 'text-axim-green border border-axim-green/30 bg-axim-green/10' : 'text-red-400 border border-red-400/30 bg-red-400/10'}`}>
-                      {apiRollMessage.text}
-                    </div>
-                  )}
-
-                  <button
-                    onClick={handleRollApiKey}
-                    disabled={isRollingKey}
-                    className="w-full sm:w-auto py-2 px-4 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <SafeIcon icon={LuRefreshCw} className={`w-3 h-3 ${isRollingKey ? 'animate-spin' : ''}`} />
-                    {isRollingKey ? 'Rolling Key...' : 'Roll API Key'}
-                  </button>
+                  <div className="text-left sm:text-right">
+                    <button
+                      onClick={() => navigator.clipboard.writeText('AXIM-SHIELD-0982-X')}
+                      className="px-3 py-1.5 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2"
+                    >
+                      <SafeIcon icon={LuCopy} className="w-3 h-3" /> Copy Key
+                    </button>
+                  </div>
+                </div>
+                <div className="text-xs text-zinc-400 mt-2">
+                  Use this license key to validate your byproduct access. Internal use only.
                 </div>
               </div>
-            </InfoPanel>
-          )}
+            </div>
+          </InfoPanel>
         </div>
       </div>
     </div>

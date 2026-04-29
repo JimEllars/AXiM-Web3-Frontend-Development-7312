@@ -38,15 +38,23 @@ export default function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-zinc-500">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`hover:text-axim-gold transition-colors ${location.pathname === link.path ? 'text-axim-gold' : ''}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              const isTools = link.path === '/tools';
+              const activeClass = isActive
+                ? (isTools ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                : '';
+
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`transition-colors ${activeClass} ${!isActive ? 'hover:text-axim-gold' : ''}`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -57,8 +65,8 @@ export default function Header() {
             {session ? (
               <div className="flex items-center gap-2">
                 <Link
-                  to="/dashboard"
-                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/dashboard' ? 'bg-axim-gold border-axim-gold text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
+                  to="/profile"
+                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-teal border-axim-teal shadow-[0_0_10px_#2dd4bf] text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
                 >
                   <SafeIcon icon={LuUser} className="w-4 h-4" />
                 </Link>
@@ -89,16 +97,24 @@ export default function Header() {
 
       {isMenuOpen && (
         <div className="lg:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-4 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-zinc-400">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.path} 
-              to={link.path} 
-              className={`block hover:text-axim-gold transition-colors ${location.pathname === link.path ? 'text-axim-gold' : ''}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            const isTools = link.path === '/tools';
+            const activeClass = isActive
+              ? (isTools ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+              : '';
+
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`block transition-colors ${activeClass} ${!isActive ? 'hover:text-axim-gold' : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </header>

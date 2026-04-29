@@ -84,7 +84,7 @@ export default function Tools() {
       </Helmet>
       <div className="mb-20">
         <span className="section-label">Academy & Infrastructure</span>
-        <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools</h1>
+        <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools Showroom</h1>
         <p className="text-zinc-500 max-w-2xl text-lg leading-relaxed mb-12">
           Access AXiM's comprehensive suite of document generators and elite training courses. Deploy robust legal frameworks and master modern business strategies.
         </p>
@@ -110,6 +110,9 @@ export default function Tools() {
                 ? `${doc.externalUrl}?source=axim_hub${userSession?.session_token ? `&auth_handoff=${userSession.session_token}` : ''}`
                 : "#";
 
+            const isLicensed = userSession?.clearance_level >= 2 || userSession?.is_premium;
+            const statusLabel = isLicensed ? 'Licensed' : 'Available';
+
             return (
               <motion.div
                 key={doc.id}
@@ -117,7 +120,7 @@ export default function Tools() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
                 whileHover={{ scale: 1.02 }}
-                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md"
+                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-teal shadow-[0_0_15px_rgba(45,212,191,0.2)]' : 'border-white/10'} hover:border-axim-teal hover:shadow-[0_0_15px_#2dd4bf] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
               >
                 <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
@@ -130,41 +133,39 @@ export default function Tools() {
                   )}
 
                   <div className="flex items-center gap-4 mb-6 relative z-10">
-                    <div className="w-14 h-14 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(255,234,0,0.1)]">
+                    <div className="w-14 h-14 rounded-full bg-axim-teal/10 flex items-center justify-center text-axim-teal border border-axim-teal/40 shadow-[0_0_15px_rgba(45,212,191,0.1)]">
                       <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="w-7 h-7" />
                     </div>
                   </div>
 
 
 
-                  <h3 className="text-2xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{doc.title}</h3>
+                  <h3 className="text-2xl font-black uppercase mb-2 relative z-10 group-hover:text-axim-teal transition-colors">{doc.title}</h3>
+                  <div className="mb-4 relative z-10">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border ${isLicensed ? 'bg-axim-teal/10 text-axim-teal border-axim-teal/30' : 'bg-zinc-900 text-zinc-400 border-zinc-700'}`}>
+                      {isLicensed && <SafeIcon icon={LuLock} className="w-3 h-3" />}
+                      {statusLabel}
+                    </span>
+                  </div>
                   <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
                     {doc.desc}
                   </p>
 
-                  <div className="mb-4">
-                    <span className="text-axim-gold font-mono text-sm border border-axim-gold/30 px-3 py-1 rounded bg-axim-gold/5">
-                      {doc.price ? `${doc.price} One-Time` : "$4.00 One-Time"}
-                    </span>
-                  </div>
-
-
-
                   {isInternal ? (
                     <Link
                       to={destUrl}
-                      className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal/50 text-axim-teal hover:bg-axim-teal hover:text-black hover:animate-pulse' : 'border-zinc-700 text-zinc-400 hover:border-axim-teal hover:text-axim-teal'}`}
                     >
-                      View Details <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? 'Launch Tool' : 'Request Access'} <SafeIcon icon={LuArrowRight} />
                     </Link>
                   ) : (
                     <a
                       href={destUrl}
                       target={destUrl !== "#" ? "_blank" : undefined}
                       rel={destUrl !== "#" ? "noopener noreferrer" : undefined}
-                      className="w-full py-4 mt-auto border border-axim-gold/30 text-axim-gold font-bold uppercase text-xs tracking-widest group-hover:bg-axim-gold group-hover:text-black group-hover:animate-pulse transition-all flex items-center justify-center gap-2 relative z-10"
+                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 ${isLicensed ? 'border-axim-teal/50 text-axim-teal hover:bg-axim-teal hover:text-black hover:animate-pulse' : 'border-zinc-700 text-zinc-400 hover:border-axim-teal hover:text-axim-teal'}`}
                     >
-                      Launch App <SafeIcon icon={LuArrowRight} />
+                      {isLicensed ? 'Launch Tool' : 'Request Access'} <SafeIcon icon={LuArrowRight} />
                     </a>
                   )}
 
