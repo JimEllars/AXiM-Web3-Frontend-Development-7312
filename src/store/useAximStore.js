@@ -3,6 +3,14 @@ import { supabase } from '../lib/supabase.js';
 
 export const useAximStore = create((set, get) => ({
   // Telemetry state
+
+  vaultedArtifacts: [
+    { id: 1, name: "Mutual NDA - TechFlow Inc.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
+    { id: 2, name: "Q3 Revenue Report.csv", type: "csv", size: "2.1 MB", date: new Date(Date.now() - 86400000).toISOString(), status: "Verified" },
+    { id: 3, name: "System Access Keys.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
+  ],
+  wpDiagnosticError: null,
+
   nodeStatuses: {
     nda: 'operational',
     demand: 'operational',

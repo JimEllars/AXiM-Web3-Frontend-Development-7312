@@ -11,7 +11,7 @@ const { LuShieldCheck, LuZap, LuFileText, LuArrowRight } = LuIcons;
 
 export default function NdaGeneratorLanding() {
   const userSession = useAximStore((state) => state.userSession);
-  const launchUrl = generateWorkerLaunchUrl('https://nda.axim.us.com', userSession);
+  const launchUrl = generateWorkerLaunchUrl('https://nda.axim.us.com/', userSession);
 
   const jsonLd = {
     "@context": "https://schema.org",
