@@ -12,9 +12,9 @@ export const useAximStore = create((set, get) => ({
 
   nodeStatuses: null,
   activeTelemetry: [
-    { id: 1, type: 'marketing_loop', message: 'Roundups AI: Campaign Dispatched successfully - Just now', timestamp: Date.now() - 5000 },
-    { id: 2, type: 'heartbeat', message: 'Onyx: Healthy - 10s ago', timestamp: Date.now() - 10000 },
-    { id: 3, type: 'revenue', message: 'Pay Stub Generated (USD 4.00) - 2m ago', timestamp: Date.now() - 120000 },
+    { id: 1, type: 'marketing_loop', message: 'UPLINK_STABLE // ARCHIVE_SECURED', timestamp: Date.now() - 5000 },
+    { id: 2, type: 'heartbeat', message: 'INTEGRITY_CHECK: PASSED', timestamp: Date.now() - 10000 },
+    { id: 3, type: 'revenue', message: 'LICENSE_HANDSHAKE: COMPLETE', timestamp: Date.now() - 120000 },
     { id: 4, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
   ],
   isPollingTelemetry: false,
@@ -69,14 +69,14 @@ export const useAximStore = create((set, get) => ({
 
             const rand = Math.random();
             let type = 'heartbeat';
-            let message = 'Onyx: Healthy - Just now';
+            let message = 'INTEGRITY_CHECK: PASSED';
 
             if (rand > 0.85) {
               type = 'revenue';
-              message = 'Demand Letter Generated (USD 4.00) - Just now';
+              message = 'LICENSE_HANDSHAKE: COMPLETE';
             } else if (rand > 0.7) {
               type = 'marketing_loop';
-              message = 'Roundups AI: Campaign Dispatched successfully - Just now';
+              message = 'UPLINK_STABLE // ARCHIVE_SECURED';
             }
 
             const newEvent = {

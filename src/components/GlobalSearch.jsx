@@ -13,10 +13,10 @@ const STATIC_ROUTES = [
   { title: "System Status", path: "/status", category: "Command Center" },
   { title: "Intelligence Hub", path: "/articles", category: "Command Center" },
 
-  { title: "Tools (The Machine Shop)", path: "/tools", category: "Machine Shop" },
-  { title: "Launch NDA Generator", path: "/tools/nda", category: "Machine Shop" },
-  { title: "Demand Letter Generator", path: "/tools", category: "Machine Shop" },
-  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Machine Shop" },
+  { title: "Tools", path: "/tools", category: "Product Suite" },
+  { title: "Launch NDA Generator", path: "/tools/nda", category: "Product Suite" },
+  { title: "Demand Letter Generator", path: "/tools", category: "Product Suite" },
+  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Product Suite" },
 
   { title: "Operator Vault", path: "/profile", category: "Operator Vault" },
   { title: "Asset Licenses", path: "/profile", category: "Operator Vault" },
@@ -197,7 +197,7 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Command Center', 'Machine Shop', 'Operator Vault'].map(category => {
+                        {['Command Center', 'Product Suite', 'Operator Vault'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (

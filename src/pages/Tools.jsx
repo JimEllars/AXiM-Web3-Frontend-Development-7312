@@ -111,7 +111,7 @@ export default function Tools() {
                 : "#";
 
             const isLicensed = userSession?.clearance_level >= 2 || userSession?.is_premium;
-            const statusLabel = isLicensed ? 'PRODUCING_BYPRODUCT' : 'UNIT_AVAILABLE';
+            const statusLabel = isLicensed ? 'LICENSE_ACTIVE' : 'UNIT_AVAILABLE';
 
             return (
               <motion.div
