@@ -98,14 +98,14 @@ export default function VaultedRecords() {
                   <button
                     onClick={() => handlePreview(record.name)}
                     className="text-zinc-400 hover:text-white transition-colors"
-                    title="Preview Artifact"
+                    title="View Asset"
                   >
-                    <SafeIcon icon={LuEye} className="w-4 h-4" />
+                    <SafeIcon icon={LuExternalLink} className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDownload(record.name)}
                     className="text-axim-teal hover:text-white transition-colors"
-                    title="Download Artifact"
+                    title="Download Asset"
                   >
                     <SafeIcon icon={LuDownload} className="w-4 h-4" />
                   </button>

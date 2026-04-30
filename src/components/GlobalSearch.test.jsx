@@ -24,7 +24,7 @@ describe('GlobalSearch Component', () => {
 
     fireEvent.change(input, { target: { value: 'tools' } });
 
-    // Tools (The Machine Shop) should be visible in results
-    const toolsLink = screen.getByText('Tools (The Machine Shop)');
+    // Tools should be visible in results
+    const toolsLink = screen.getByText('Tools');
   });
 });

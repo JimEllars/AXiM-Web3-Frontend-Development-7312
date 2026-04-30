@@ -144,7 +144,7 @@ export default function Profile() {
                   </div>
                 </div>
                 <div className="text-xs text-zinc-400 mt-2">
-                  Use this license key to validate your byproduct access. Internal use only.
+                  Use this license key to validate your asset access. Internal use only.
                 </div>
               </div>
             </div>

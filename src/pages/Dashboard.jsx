@@ -226,7 +226,7 @@ export default function Dashboard() {
                 </div>
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Tabby Reconciled</div>
-                  <div className="font-bold text-xl text-axim-gold font-mono">{metrics.reconciled_revenue === 0 ? "Awaiting Sync" : `$${metrics.reconciled_revenue.toLocaleString()}`}</div>
+                  <div className="font-bold text-xl text-axim-gold font-mono">{metrics.reconciled_revenue === 0 ? "VERIFYING..." : `$${metrics.reconciled_revenue.toLocaleString()}`}</div>
                 </div>
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">WP Affiliates</div>
