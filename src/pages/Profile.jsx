@@ -30,7 +30,7 @@ export default function Profile() {
     setIsSyncing(true);
     setTimeout(() => {
       setIsSyncing(false);
-      setSyncMessage('SYNC_COMPLETE');
+      setSyncMessage('LICENSES_SYNCHRONIZED');
       setTimeout(() => setSyncMessage(''), 3000);
     }, 1000);
   };
