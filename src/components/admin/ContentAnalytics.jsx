@@ -49,7 +49,7 @@ export default function ContentAnalytics() {
           </div>
         ) : articles.length === 0 ? (
           <div className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest">
-            No articles found.
+            SECURE_ARCHIVE_SYNC_PENDING...
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
