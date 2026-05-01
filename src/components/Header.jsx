@@ -33,8 +33,7 @@ export default function Header() {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-8">
           <Link to="/" className="font-mono font-bold text-xl tracking-tighter flex items-center gap-2 group">
-            <div className="w-2.5 h-2.5 bg-axim-gold rounded-full animate-pulse shadow-[0_0_10px_#FFEA00]"></div>
-            AXiM<span className="text-white/40 group-hover:text-white transition-colors">.US.COM</span>
+            <img src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png" alt="AXiM Systems" className="h-8 w-auto object-contain" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-zinc-500">
@@ -42,7 +41,7 @@ export default function Header() {
               const isActive = location.pathname === link.path;
               const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
               const activeClass = isActive
-                ? (isGlowTarget ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
                 : '';
 
               return (
@@ -66,7 +65,7 @@ export default function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   to="/profile"
-                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-teal border-axim-teal shadow-[0_0_10px_#2dd4bf] text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
+                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-purple border-axim-purple shadow-[0_0_10px_#2dd4bf] text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
                 >
                   <SafeIcon icon={LuUser} className="w-4 h-4" />
                 </Link>
@@ -101,7 +100,7 @@ export default function Header() {
             const isActive = location.pathname === link.path;
             const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
               const activeClass = isActive
-                ? (isGlowTarget ? 'text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
                 : '';
 
             return (

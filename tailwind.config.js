@@ -9,11 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        'axim-gold': siteTheme.colors.primary,
-        'axim-purple': siteTheme.colors.purple,
+        'axim-purple': '#7D00FF',
+        'axim-gold': '#F0FF00',
+        'axim-deep': '#120025',
+        'bg-void': '#050505',
         'axim-green': siteTheme.colors.secondary,
         'axim-teal': siteTheme.colors.accent,
-        'bg-void': siteTheme.colors.background,
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],

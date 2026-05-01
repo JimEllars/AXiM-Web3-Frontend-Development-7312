@@ -146,13 +146,13 @@ export default function Dashboard() {
       <div className="mb-12 border-b border-white/10 pb-6 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 flex items-center gap-3 text-white">
-            <SafeIcon icon={LuLayoutDashboard} className="text-axim-teal" />
+            <SafeIcon icon={LuLayoutDashboard} className="text-axim-purple" />
             Executive Hub
           </h1>
           <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">Internal Access Only // Authorized Personnel</p>
         </div>
-        <div className="px-4 py-2 bg-axim-teal/10 border border-axim-teal/30 text-axim-teal font-mono text-xs uppercase tracking-widest flex items-center gap-2 rounded-sm shadow-[0_0_15px_rgba(45,212,191,0.1)]">
-          <div className="w-2 h-2 bg-axim-teal rounded-full animate-pulse"></div>
+        <div className="px-4 py-2 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple font-mono text-xs uppercase tracking-widest flex items-center gap-2 rounded-sm shadow-[0_0_15px_rgba(45,212,191,0.1)]">
+          <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse"></div>
           Secure Connection Established
         </div>
       </div>
@@ -257,7 +257,7 @@ export default function Dashboard() {
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-axim-teal/10 border border-axim-teal/30 flex items-center justify-center rounded-sm text-axim-teal">
+                <div className="w-8 h-8 bg-axim-purple/10 border border-axim-purple/30 flex items-center justify-center rounded-sm text-axim-purple">
                   <SafeIcon icon={LuServer} className="w-4 h-4" />
                 </div>
                 <h3 className="text-lg font-black uppercase text-white tracking-widest">Fleet Health</h3>
@@ -325,7 +325,7 @@ export default function Dashboard() {
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                <SafeIcon icon={LuActivity} className="text-axim-teal animate-pulse" />
+                <SafeIcon icon={LuActivity} className="text-axim-purple animate-pulse" />
                 <h3 className="text-sm font-black uppercase text-white tracking-widest">Live Event Feed</h3>
               </div>
 
@@ -346,7 +346,7 @@ export default function Dashboard() {
                          initial={{ opacity: 0, x: 20 }}
                          animate={{ opacity: 1, x: 0 }}
                          exit={{ opacity: 0, scale: 0.95 }}
-                         className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-green/30 bg-axim-green/10 text-axim-green' : 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal'}`}
+                         className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-green/30 bg-axim-green/10 text-axim-green' : 'border-axim-purple/30 bg-axim-purple/10 text-axim-purple'}`}
                        >
                          <div className="flex gap-2 items-start">
                            <SafeIcon icon={LuInfo} className="w-3 h-3 mt-0.5 shrink-0" />

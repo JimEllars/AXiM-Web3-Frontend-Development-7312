@@ -60,7 +60,7 @@ describe('Hero Component', () => {
     );
 
     const getTypedText = () => {
-      const container = document.querySelector('.bg-axim-green\\/10');
+      const container = document.querySelector('.bg-axim-purple\\/10');
       return container ? container.querySelectorAll('span')[1].textContent : "";
     };
 

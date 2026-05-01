@@ -31,7 +31,7 @@ export default function Pillars() {
         >
           {/* AXiM Built */}
           <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
-            <SafeIcon icon={LuBuilding2} size={40} className="text-axim-gold" />
+            <SafeIcon icon={LuBuilding2} size={40} className="text-transparent bg-clip-text bg-gradient-to-tr from-axim-purple to-axim-gold" style={{ display: "inline-block" }} />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Built</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">Physical infrastructure for a connected world. From next-gen 3D printed smart-structures to utility solar arrays and nationwide fiber networks.</p>
             <a href="https://axim.us.com/built/" className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-axim-gold group-hover:gap-4 transition-all">
@@ -41,7 +41,7 @@ export default function Pillars() {
 
           {/* AXiM Digital */}
           <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
-            <SafeIcon icon={LuDatabase} size={40} className="text-axim-purple" />
+            <SafeIcon icon={LuDatabase} size={40} className="text-transparent bg-clip-text bg-gradient-to-tr from-axim-purple to-axim-gold" style={{ display: "inline-block" }} />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Digital</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">The unified data backbone. Centralizing telemetry, proprietary APIs, and legal automation into a secure, single source of operational truth.</p>
             <a href="https://axim.us.com/digital/" className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-axim-purple group-hover:gap-4 transition-all">
@@ -51,10 +51,10 @@ export default function Pillars() {
 
           {/* AXiM Intelligence */}
           <motion.div variants={item} className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-12 flex flex-col h-full transition duration-500 hover:-translate-y-3 hover:bg-glass-hover hover:border-active group">
-            <SafeIcon icon={LuBrainCircuit} size={40} className="text-axim-teal" />
+            <SafeIcon icon={LuBrainCircuit} size={40} className="text-transparent bg-clip-text bg-gradient-to-tr from-axim-purple to-axim-gold" style={{ display: "inline-block" }} />
             <h3 className="text-[1.75rem] font-extrabold my-6 uppercase">AXiM Intelligence</h3>
             <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">The orchestrator. We plan and manage strategic growth via AXiM Ai, smart protocols, and high-performance document extraction logic.</p>
-            <a href="https://axim.us.com/intelligence/" className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-axim-teal group-hover:gap-4 transition-all">
+            <a href="https://axim.us.com/intelligence/" className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-axim-purple group-hover:gap-4 transition-all">
               Autonomous Logic <SafeIcon icon={LuChevronRight} />
             </a>
           </motion.div>

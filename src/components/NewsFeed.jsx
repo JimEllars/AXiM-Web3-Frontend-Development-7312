@@ -54,7 +54,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
   if (isLoading) {
     return (
       <div className="py-24 flex flex-col justify-center items-center">
-        <div className="w-10 h-10 border-4 border-axim-teal/20 border-t-axim-teal rounded-full animate-spin mb-4"></div>
+        <div className="w-10 h-10 border-4 border-axim-purple/20 border-t-axim-purple rounded-full animate-spin mb-4"></div>
         <p className="text-zinc-500 font-mono text-sm animate-pulse">Syncing with AXiM Intelligence...</p>
       </div>
     );
@@ -74,7 +74,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
           className="mb-12"
         >
           <span className="section-label">Intelligence Hub</span>
-          <h2 className="section-title !mb-0 text-axim-teal">{title || 'Latest Insights & Offerings'}</h2>
+          <h2 className="section-title !mb-0 text-axim-purple">{title || 'Latest Insights & Offerings'}</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -92,7 +92,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                 >
                   {post.featuredImage && (
                     <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="h-48 overflow-hidden relative border-b border-subtle">
-                      <div className="absolute inset-0 bg-axim-teal/10 mix-blend-overlay z-10"></div>
+                      <div className="absolute inset-0 bg-axim-purple/10 mix-blend-overlay z-10"></div>
                       <img
                         src={post.featuredImage}
                         alt={post.title}
@@ -101,15 +101,15 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                     </div></a>
                   )}
                   <div className="p-6 flex flex-col flex-grow">
-                    <span className="font-mono text-[0.7rem] opacity-50 text-axim-teal mb-4 block">
+                    <span className="font-mono text-[0.7rem] opacity-50 text-axim-purple mb-4 block">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
-                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block hover:underline"><h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-teal transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></a>
+                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block hover:underline"><h3 className="text-[1.2rem] font-bold uppercase mb-4 leading-tight group-hover:text-axim-purple transition-colors" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title) }}></h3></a>
                     <div
                       className="text-zinc-400 leading-[1.6] flex-grow mb-6 text-sm line-clamp-3"
                       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.excerpt) }}
                     ></div>
-                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-teal transition-colors mt-auto">
+                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="font-mono text-[0.7rem] font-bold uppercase inline-flex items-center gap-2 text-white group-hover:text-axim-purple transition-colors mt-auto">
                       Read Full Article <SafeIcon icon={LuArrowRight} />
                     </a>
                   </div>

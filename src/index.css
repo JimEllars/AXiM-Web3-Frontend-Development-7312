@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer utilities {
+  .bg-layered-purple {
+    background-image: radial-gradient(circle at center, #1A0033 0%, #050505 100%);
+  }
   .bg-grid {
     background-size: 60px 60px;
     background-image: 
@@ -25,7 +28,7 @@
   }
   
   .btn-primary {
-    @apply bg-axim-gold text-black border border-axim-gold shadow-[0_10px_20px_-10px_rgba(255,234,0,0.3)] hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(255,234,0,0.5)] hover:bg-white hover:border-white;
+    @apply bg-axim-gold text-black border border-axim-gold shadow-[0_10px_20px_-10px_rgba(240,255,0,0.3)] hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(240,255,0,0.5)] hover:bg-white hover:border-white;
   }
   
   .btn-outline {
