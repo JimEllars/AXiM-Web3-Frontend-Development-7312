@@ -73,12 +73,12 @@ export default function Profile() {
         <motion.div
           animate={{ backgroundPosition: ['0% 0%', '0% 100%'] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-0 bg-gradient-to-b from-transparent via-axim-teal/5 to-transparent h-[200%] w-full z-[-1] pointer-events-none opacity-50 mix-blend-screen"
+          className="absolute inset-0 bg-gradient-to-b from-transparent via-axim-purple/5 to-transparent h-[200%] w-full z-[-1] pointer-events-none opacity-50 mix-blend-screen"
         />
         <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 rounded-md relative z-10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
 
       <div className="mb-12">
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">Operator Console // Secure Vault</h1>
+        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">Operator Console // Secure Archive</h1>
         <p className="text-zinc-500 text-sm">Manage your decentralized identity and infrastructure access.</p>
       </div>
 
@@ -96,7 +96,7 @@ export default function Profile() {
         <div className="flex-grow space-y-8">
           <VaultedRecords />
 
-          <InfoPanel icon={LuUnlock} iconColor="text-axim-teal" title="Unlocked Infrastructure">
+          <InfoPanel icon={LuUnlock} iconColor="text-axim-purple" title="Unlocked Infrastructure">
             {!hasAccess ? (
                <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 text-center flex flex-col items-center">
                  <p className="text-sm text-zinc-400 mb-4">You do not currently have access to these tools. Please upgrade your account.</p>
@@ -109,10 +109,10 @@ export default function Profile() {
                       destUrl += `&auth_handoff=${userSession.session_token}`;
                     }
                     return (
-                    <a key={doc.id} href={ensureSafeProtocol(destUrl)}  className="p-4 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-axim-teal/50 transition-colors group flex flex-col gap-2 rounded-sm cursor-pointer block">
+                    <a key={doc.id} href={ensureSafeProtocol(destUrl)}  className="p-4 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-axim-purple/50 transition-colors group flex flex-col gap-2 rounded-sm cursor-pointer block">
                        <div className="flex items-center gap-3">
-                         <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="text-axim-teal w-5 h-5" />
-                         <span className="font-bold text-sm text-white group-hover:text-axim-teal transition-colors uppercase tracking-wider">{doc.title}</span>
+                         <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="text-axim-purple w-5 h-5" />
+                         <span className="font-bold text-sm text-white group-hover:text-axim-purple transition-colors uppercase tracking-wider">{doc.title}</span>
                        </div>
                        <p className="text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">{doc.desc}</p>
                     </a>
@@ -122,12 +122,12 @@ export default function Profile() {
             )}
           </InfoPanel>
 
-          <InfoPanel icon={LuLock} iconColor="text-axim-teal" title="Product Licenses">
+          <InfoPanel icon={LuLock} iconColor="text-axim-purple" title="Product Licenses">
             <div className="space-y-4">
               <div className="p-6 border border-white/10 bg-white/5 text-left flex flex-col gap-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                   <div>
-                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuShieldCheck} className="w-3 h-3 text-axim-teal"/> Active License</div>
+                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuShieldCheck} className="w-3 h-3 text-axim-purple"/> Active License</div>
                     <div className="font-mono text-lg text-white tracking-widest">AXM-BYPR-0982-X</div>
                   </div>
                   <div className="text-left sm:text-right">
@@ -139,7 +139,7 @@ export default function Profile() {
                       >
                         <SafeIcon icon={LuRefreshCw} className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} /> Sync Licenses
                       </button>
-                      {syncMessage && <span className="text-axim-teal text-[0.55rem] font-mono tracking-widest uppercase">{syncMessage}</span>}
+                      {syncMessage && <span className="text-axim-purple text-[0.55rem] font-mono tracking-widest uppercase">{syncMessage}</span>}
                     </div>
                   </div>
                 </div>

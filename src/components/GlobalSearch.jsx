@@ -136,9 +136,9 @@ export default function GlobalSearch() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-sm hover:bg-white/10 hover:border-axim-teal/30 transition-all text-zinc-400 group"
+        className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-sm hover:bg-white/10 hover:border-axim-purple/30 transition-all text-zinc-400 group"
       >
-        <SafeIcon icon={LuSearch} className="w-3.5 h-3.5 group-hover:text-axim-teal transition-colors" />
+        <SafeIcon icon={LuSearch} className="w-3.5 h-3.5 group-hover:text-axim-purple transition-colors" />
         <span className="text-[0.65rem] font-mono uppercase tracking-widest">Search</span>
         <div className="flex gap-1 ml-4">
           <span className="px-1.5 py-0.5 bg-black/40 border border-white/5 rounded text-[0.55rem] font-mono">⌘</span>
@@ -149,7 +149,7 @@ export default function GlobalSearch() {
       {/* Mobile Icon */}
       <button
         onClick={() => setIsOpen(true)}
-        className="md:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm hover:text-axim-teal transition-colors"
+        className="md:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm hover:text-axim-purple transition-colors"
       >
         <SafeIcon icon={LuSearch} className="w-5 h-5" />
       </button>
@@ -173,7 +173,7 @@ export default function GlobalSearch() {
               className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(45,212,191,0.05)] z-[101] overflow-hidden"
             >
               <form onSubmit={(e) => e.preventDefault()} className="relative border-b border-white/10 p-4 flex items-center gap-4 bg-white/5">
-                <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-teal" />
+                <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-purple" />
                 <input
                   autoFocus
                   type="text"
@@ -202,7 +202,7 @@ export default function GlobalSearch() {
                           if (categoryResults.length === 0) return null;
                           return (
                             <div key={category} className="mb-4">
-                              <h4 className="text-[0.65rem] font-mono text-axim-teal uppercase tracking-widest mb-2 border-b border-white/10 pb-1">{category}</h4>
+                              <h4 className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest mb-2 border-b border-white/10 pb-1">{category}</h4>
                               <div className="space-y-2">
                                 {categoryResults.map((route) => {
                                   const globalIndex = results.indexOf(route);
@@ -211,7 +211,7 @@ export default function GlobalSearch() {
                                     <button
                                       key={globalIndex}
                                       onClick={(e) => { e.preventDefault(); handleSelect(route); }}
-                                      className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
+                                      className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
                                     >
                                       {route.title}
                                     </button>
@@ -226,9 +226,9 @@ export default function GlobalSearch() {
 
                     {(articleResults.length > 0 || isSearchingArticles) && (
                       <div>
-                        <h4 className="text-[0.65rem] font-mono text-axim-teal uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
+                        <h4 className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
                           <span>Intel Search</span>
-                          {isSearchingArticles && <span className="text-axim-teal text-[0.55rem] animate-pulse">Searching...</span>}
+                          {isSearchingArticles && <span className="text-axim-purple text-[0.55rem] animate-pulse">Searching...</span>}
                         </h4>
                         <div className="space-y-2">
                           {articleResults.map((post, idx) => {
@@ -238,7 +238,7 @@ export default function GlobalSearch() {
                               <button
                                 key={post.id}
                                 onClick={(e) => { e.preventDefault(); handleSelect(post); }}
-                                className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-teal bg-axim-teal/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-teal/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
+                                className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
                               />
                             );

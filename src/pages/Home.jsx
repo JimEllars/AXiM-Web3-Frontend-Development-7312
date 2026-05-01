@@ -12,11 +12,19 @@ export default function Home() {
       <SEO title="Smart Business Systems"
         description="AXiM Systems delivers smart protocol integrations, web3 interfaces, and intelligent business ecosystems."
        url="https://axim.us.com/"/>
-      <Hero />
-      <FeaturedArticles categorySlug="featured" limit={3} />
-      <NewsFeed categorySlug="article" limit={12} />
-      <Reviews />
-      <Ecosystem />
+      <div className="bg-void">
+        <Hero />
+      </div>
+      <div className="bg-layered-purple">
+        <FeaturedArticles categorySlug="featured" limit={3} />
+      </div>
+      <div className="bg-layered-purple">
+        <NewsFeed categorySlug="article" limit={12} />
+      </div>
+      <div className="bg-void">
+        <Reviews />
+        <Ecosystem />
+      </div>
     </>
   );
 }
