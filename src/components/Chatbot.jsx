@@ -4,7 +4,7 @@ import { theme } from '../config/theme';
 export default function Chatbot() {
   useEffect(() => {
     const CHATBOT_ID = theme.chatbaseBotId;
-    if (!CHATBOT_ID || CHATBOT_ID === "placeholder-bot-id" || CHATBOT_ID === "null" || CHATBOT_ID === "undefined") return;
+    if (!CHATBOT_ID || CHATBOT_ID.includes("placeholder") || CHATBOT_ID === "null" || CHATBOT_ID === "undefined") return;
 
     // Set the window property Chatbase requires
     window.chatbaseConfig = {

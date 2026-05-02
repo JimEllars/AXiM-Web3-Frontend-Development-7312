@@ -19,9 +19,7 @@ export default function ContentAnalytics() {
           // If the 'featured' category fetch doesn't return enough, it'll fallback to recent posts
           setArticles(posts.slice(0, 5));
         }
-      } catch (error) {
-
-      } finally {
+      } catch (error) { /* ignore */ } finally {
         setLoading(false);
       }
     }

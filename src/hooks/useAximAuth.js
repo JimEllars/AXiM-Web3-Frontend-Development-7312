@@ -71,9 +71,7 @@ export function useAximAuth() {
             setProfile(null);
             window.location.href = "/profile";
           }
-        } catch (e) {
-
-        }
+        } catch (e) { /* ignore */ }
       }
     }, 5 * 60 * 1000);
     return () => { isMounted = false; clearInterval(heartbeatInterval); };

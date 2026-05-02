@@ -62,9 +62,7 @@ export default function Dashboard() {
             affiliate_conversions: data.affiliate_conversions || 0
           });
         }
-      } catch (e) {
-
-      }
+      } catch (e) { /* ignore */ }
     };
 
     fetchMetrics();

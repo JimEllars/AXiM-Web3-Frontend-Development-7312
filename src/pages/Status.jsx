@@ -97,15 +97,21 @@ export default function Status() {
              <div className="space-y-2 font-mono text-xs text-zinc-400">
                <div className="flex gap-2">
                  <span className="text-axim-purple">[NODE_NYC]:</span>
-                 <span className="text-axim-gold">ACTIVE</span>
+                 <span className={nodeStatuses?.ny === 'operational' ? "text-axim-gold" : "text-zinc-500"}>
+                   {nodeStatuses?.ny === 'operational' ? 'UPLINK_STABLE' : 'OFFLINE'}
+                 </span>
                </div>
                <div className="flex gap-2">
                  <span className="text-axim-purple">[NODE_LDN]:</span>
-                 <span className="text-axim-gold">SYNCING</span>
+                 <span className={nodeStatuses?.lon === 'operational' ? "text-axim-gold" : "text-zinc-500"}>
+                   {nodeStatuses?.lon === 'operational' ? 'SYNCING_RAG_BANK' : 'OFFLINE'}
+                 </span>
                </div>
                <div className="flex gap-2">
                  <span className="text-axim-purple">[NODE_TOK]:</span>
-                 <span className="text-zinc-500">IDLE</span>
+                 <span className={nodeStatuses?.tok === 'operational' ? "text-axim-gold" : "text-zinc-500"}>
+                   {nodeStatuses?.tok === 'operational' ? 'UPLINK_STABLE' : 'IDLE'}
+                 </span>
                </div>
              </div>
           </div>
