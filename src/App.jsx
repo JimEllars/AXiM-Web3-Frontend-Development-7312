@@ -47,7 +47,7 @@ function App() {
 
   useEffect(() => {
     startTelemetryPolling();
-  }, [startTelemetryPolling]);
+  }, []);
 
   useEffect(() => {
     const clickRankAi = document.createElement("script");

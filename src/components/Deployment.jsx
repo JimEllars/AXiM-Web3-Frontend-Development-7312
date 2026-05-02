@@ -56,7 +56,7 @@ export default function Deployment() {
             <svg width="100%" height="300" viewBox="0 0 100 100" fill="none" className="stroke-axim-gold stroke-[0.5]">
               <rect x="10" y="10" width="80" height="80" strokeOpacity="0.2" />
               <circle cx="50" cy="50" r="30" className="stroke-axim-purple" strokeDasharray="2 2" />
-              <path d="M20 20 L80 80 M80 20 L20 80" className="stroke-axim-teal" strokeOpacity="0.4" />
+              <path d="M20 20 L80 80 M80 20 L20 80" className="stroke-axim-purple" strokeOpacity="0.4" />
               <rect x="42" y="42" width="16" height="16" stroke="#fff" strokeWidth="1" />
               <circle cx="50" cy="50" r="3" fill="#FFEA00">
                 <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />

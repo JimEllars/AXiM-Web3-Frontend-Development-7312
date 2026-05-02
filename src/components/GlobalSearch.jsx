@@ -141,8 +141,8 @@ export default function GlobalSearch() {
         <SafeIcon icon={LuSearch} className="w-3.5 h-3.5 group-hover:text-axim-purple transition-colors" />
         <span className="text-[0.65rem] font-mono uppercase tracking-widest">Search</span>
         <div className="flex gap-1 ml-4">
-          <span className="px-1.5 py-0.5 bg-black/40 border border-white/5 rounded text-[0.55rem] font-mono">⌘</span>
-          <span className="px-1.5 py-0.5 bg-black/40 border border-white/5 rounded text-[0.55rem] font-mono">K</span>
+          <span className="px-1.5 py-0.5 bg-black/40 border border-white/10 rounded text-[0.55rem] font-mono">⌘</span>
+          <span className="px-1.5 py-0.5 bg-black/40 border border-white/10 rounded text-[0.55rem] font-mono">K</span>
         </div>
       </button>
 

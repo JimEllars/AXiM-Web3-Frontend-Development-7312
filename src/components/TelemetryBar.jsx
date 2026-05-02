@@ -15,11 +15,11 @@ export default function TelemetryBar({ label, color, initialValue }) {
     return () => clearInterval(interval);
   }, []);
 
-  const colorClass = color === 'axim-teal' ? 'text-axim-teal bg-axim-teal shadow-[0_0_10px_#00E5FF]' :
+  const colorClass = color === 'axim-purple' ? 'text-axim-purple bg-axim-purple shadow-[0_0_10px_#00E5FF]' :
                      color === 'axim-gold' ? 'text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]' :
                      'text-axim-gold bg-axim-gold shadow-[0_0_10px_#00FF88]';
 
-  const textColor = color === 'axim-teal' ? 'text-axim-teal' :
+  const textColor = color === 'axim-purple' ? 'text-axim-purple' :
                     color === 'axim-gold' ? 'text-axim-gold' :
                     'text-axim-gold';
 

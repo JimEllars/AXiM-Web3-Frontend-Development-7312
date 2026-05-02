@@ -212,7 +212,7 @@ export default function Tools() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
 
               <div className="flex justify-between items-start mb-8 relative z-10">
-                <div className="p-4 bg-white/5 border border-white/5 rounded-sm text-axim-gold">
+                <div className="p-4 bg-white/5 border border-white/10 rounded-sm text-axim-gold">
                   <SafeIcon icon={course.icon} className="w-8 h-8" />
                 </div>
                 <div className="text-right flex items-center gap-3">

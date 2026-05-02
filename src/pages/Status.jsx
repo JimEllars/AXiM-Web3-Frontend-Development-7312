@@ -24,7 +24,7 @@ export default function Status() {
   useEffect(() => {
     async function fetchTelemetryHistory() {
       try {
-        const response = await fetch('https://api.axim.us.com/v1/functions/telemetry-history');
+        const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/telemetry-history');
         if (response.ok) {
           const data = await response.json();
           setMetrics({
@@ -92,6 +92,24 @@ export default function Status() {
                </div>
              </div>
           </div>
+          <div className="p-6 border border-white/10 bg-white/5 flex flex-col mt-4">
+             <h3 className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Live Satellite Queue</h3>
+             <div className="space-y-2 font-mono text-xs text-zinc-400">
+               <div className="flex gap-2">
+                 <span className="text-axim-purple">[NODE_01]:</span>
+                 <span className="text-axim-gold">SCRAPING_ACTIVE</span>
+               </div>
+               <div className="flex gap-2">
+                 <span className="text-axim-purple">[NODE_02]:</span>
+                 <span className="text-zinc-500">IDLE</span>
+               </div>
+               <div className="flex gap-2">
+                 <span className="text-axim-purple">[NODE_03]:</span>
+                 <span className="text-zinc-500">IDLE</span>
+               </div>
+             </div>
+          </div>
+
         </div>
       </div>
 

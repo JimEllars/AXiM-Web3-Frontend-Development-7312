@@ -27,9 +27,9 @@ const testimonials = [
 
 export default function Reviews() {
   return (
-    <section className="py-20 bg-bg-void border-t border-white/5 relative overflow-hidden">
+    <section className="py-20 bg-bg-void border-t border-white/10 relative overflow-hidden">
       {/* Background elements */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-axim-teal/5 blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-axim-purple/5 blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-[1200px] mx-auto px-6 relative z-10">
         <motion.div
@@ -52,13 +52,13 @@ export default function Reviews() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group relative p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all hover:border-axim-teal/30"
+              className="group relative p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all hover:border-axim-purple/30"
             >
               {/* Subtle top border highlight on hover */}
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-axim-teal/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-axim-purple/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-black border border-white/20 flex items-center justify-center text-axim-teal font-mono text-lg font-bold">
+                <div className="w-12 h-12 rounded-full bg-black border border-white/20 flex items-center justify-center text-axim-purple font-mono text-lg font-bold">
                   {testimonial.initials}
                 </div>
                 <div>

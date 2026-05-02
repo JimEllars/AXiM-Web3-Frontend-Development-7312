@@ -68,7 +68,7 @@ export default function OnyxTerminal() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-axim-teal hover:bg-axim-teal/20 transition-colors shadow-[0_0_20px_rgba(45,212,191,0.2)] z-50"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-axim-purple hover:bg-axim-purple/20 transition-colors shadow-[0_0_20px_rgba(45,212,191,0.2)] z-50"
       >
         <SafeIcon icon={LuTerminal} className="w-6 h-6" />
       </button>
@@ -84,7 +84,7 @@ export default function OnyxTerminal() {
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5 cursor-pointer" onClick={() => setIsMinimized(!isMinimized)}>
         <div className="flex items-center gap-2">
-          <SafeIcon icon={LuTerminal} className="w-4 h-4 text-axim-teal" />
+          <SafeIcon icon={LuTerminal} className="w-4 h-4 text-axim-purple" />
           <span className="font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs uppercase text-white tracking-widest font-bold">Onyx Command Terminal</span>
         </div>
         <div className="flex items-center gap-2">
@@ -111,9 +111,9 @@ export default function OnyxTerminal() {
               <div
                 key={i}
                 className={`
-                  ${line.type === 'system' ? 'text-axim-teal opacity-80' : ''}
+                  ${line.type === 'system' ? 'text-axim-purple opacity-80' : ''}
                   ${line.type === 'user' ? 'text-white font-bold' : ''}
-                  ${line.type === 'ai' ? 'text-axim-teal' : ''}
+                  ${line.type === 'ai' ? 'text-axim-purple' : ''}
                   ${line.type === 'error' ? 'text-red-500' : ''}
                   whitespace-pre-wrap break-words
                 `}
@@ -122,8 +122,8 @@ export default function OnyxTerminal() {
               </div>
             ))}
             {isStreaming && (
-              <div className="flex items-center gap-2 text-axim-teal/50">
-                <div className="w-2 h-2 bg-axim-teal rounded-full animate-ping"></div>
+              <div className="flex items-center gap-2 text-axim-purple/50">
+                <div className="w-2 h-2 bg-axim-purple rounded-full animate-ping"></div>
                 Processing...
               </div>
             )}
@@ -155,21 +155,21 @@ export default function OnyxTerminal() {
 <div className="px-3 pb-2 pt-1 border-t border-white/10 bg-black flex gap-2 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => setInput('Analyze Infrastructure')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
               disabled={isStreaming}
             >
               Analyze Infrastructure
             </button>
             <button
               onClick={() => setInput('Run Security Audit')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
               disabled={isStreaming}
             >
               Run Security Audit
             </button>
             <button
               onClick={() => setInput('Check PDF Generation Queue')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-teal text-[0.6rem] font-mono uppercase hover:bg-axim-teal/20 transition-colors rounded-sm"
+              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
               disabled={isStreaming}
             >
               Check PDF Queue
@@ -178,7 +178,7 @@ export default function OnyxTerminal() {
 
           <div className="p-3 border-t border-white/10 bg-black">
             <form onSubmit={handleSubmit} className="flex items-center gap-2">
-              <span className="text-axim-teal font-mono font-[Fira_Code,JetBrains_Mono,monospace] font-bold">{'>'}</span>
+              <span className="text-axim-purple font-mono font-[Fira_Code,JetBrains_Mono,monospace] font-bold">{'>'}</span>
               <input
                 type="text"
                 value={input}
@@ -190,7 +190,7 @@ export default function OnyxTerminal() {
               <button
                 type="submit"
                 disabled={isStreaming || !input.trim()}
-                className="text-axim-teal hover:text-white disabled:opacity-50 transition-colors"
+                className="text-axim-purple hover:text-white disabled:opacity-50 transition-colors"
               >
                 <SafeIcon icon={LuSend} className="w-4 h-4" />
               </button>

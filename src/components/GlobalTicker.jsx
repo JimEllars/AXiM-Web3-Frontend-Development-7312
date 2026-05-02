@@ -10,9 +10,9 @@ export default function GlobalTicker() {
   const activeTelemetry = useAximStore(state => state.activeTelemetry) || [];
 
   return (
-    <div className="fixed bottom-0 left-0 w-full h-8 bg-black/90 backdrop-blur-md border-t border-white/5 z-[100] flex items-center overflow-hidden">
-      <div className="flex-shrink-0 px-4 bg-black/50 border-r border-white/5 h-full flex items-center gap-2 z-10 font-mono text-[0.6rem] uppercase tracking-widest text-zinc-500">
-        <SafeIcon icon={LuActivity} className="w-3 h-3 text-axim-teal animate-pulse" />
+    <div className="fixed bottom-0 left-0 w-full h-8 bg-black/90 backdrop-blur-md border-t border-white/10 z-[100] flex items-center overflow-hidden">
+      <div className="flex-shrink-0 px-4 bg-black/50 border-r border-white/10 h-full flex items-center gap-2 z-10 font-mono text-[0.6rem] uppercase tracking-widest text-zinc-500">
+        <SafeIcon icon={LuActivity} className="w-3 h-3 text-axim-purple animate-pulse" />
         <span>Telemetry</span>
       </div>
 
@@ -21,7 +21,7 @@ export default function GlobalTicker() {
           animate={{ x: [0, -1000] }}
           transition={{
             repeat: Infinity,
-            ease: "linear",
+            ease: "circOut",
             duration: 30
           }}
           className="flex items-center gap-8 px-4 whitespace-nowrap h-full"
@@ -31,7 +31,7 @@ export default function GlobalTicker() {
             let Icon = LuActivity;
 
             if (item.type === 'revenue') {
-              colorClass = 'text-axim-teal';
+              colorClass = 'text-axim-purple';
               Icon = LuDollarSign;
             } else if (item.type === 'heartbeat') {
               colorClass = 'text-axim-gold';
@@ -59,7 +59,7 @@ export default function GlobalTicker() {
             let Icon = LuActivity;
 
             if (item.type === 'revenue') {
-              colorClass = 'text-axim-teal';
+              colorClass = 'text-axim-purple';
               Icon = LuDollarSign;
             } else if (item.type === 'heartbeat') {
               colorClass = 'text-axim-gold';
