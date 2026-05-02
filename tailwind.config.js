@@ -13,8 +13,6 @@ export default {
         'axim-gold': '#F0FF00',
         'axim-deep': '#120025',
         'bg-void': '#050505',
-        'axim-green': siteTheme.colors.secondary,
-        'axim-teal': siteTheme.colors.accent,
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],

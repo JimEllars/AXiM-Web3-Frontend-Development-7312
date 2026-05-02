@@ -85,7 +85,7 @@ export default function NdaGeneratorLanding() {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8"
         >
-          <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-4 h-4" />
+          <SafeIcon icon={LuShieldCheck} className="text-axim-purple w-4 h-4" />
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Enterprise Tool</span>
         </motion.div>
 
@@ -95,7 +95,7 @@ export default function NdaGeneratorLanding() {
           transition={{ delay: 0.1 }}
           className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6 text-white"
         >
-          Enterprise Non-Disclosure Agreements <span className="text-axim-teal">in Seconds</span>
+          Enterprise Non-Disclosure Agreements <span className="text-axim-purple">in Seconds</span>
         </motion.h1>
 
         <motion.p
@@ -116,7 +116,7 @@ export default function NdaGeneratorLanding() {
             href={launchUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-teal text-black font-black uppercase tracking-widest hover:bg-axim-teal/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-purple text-black font-black uppercase tracking-widest hover:bg-axim-purple/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
           >
             Launch Application <SafeIcon icon={LuArrowRight} className="w-5 h-5" />
           </a>
@@ -132,7 +132,7 @@ export default function NdaGeneratorLanding() {
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-4 relative">
           {/* Connector Line */}
-          <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-px bg-axim-teal/30 -z-10 -translate-y-1/2"></div>
+          <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-px bg-axim-purple/30 -z-10 -translate-y-1/2"></div>
 
           {[
             { step: '01', title: 'Input Parameters', desc: 'Provide entity names, effective dates, and jurisdiction via a secure form.' },
@@ -147,7 +147,7 @@ export default function NdaGeneratorLanding() {
               transition={{ delay: i * 0.15 }}
               className="flex-1 w-full bg-bg-void/80 backdrop-blur-xl border border-white/10 p-6 rounded-sm text-center shadow-[0_0_15px_rgba(45,212,191,0.05)] relative"
             >
-              <div className="w-12 h-12 mx-auto bg-axim-teal/10 border border-axim-teal/30 rounded-full flex items-center justify-center text-axim-teal font-mono font-bold mb-4">
+              <div className="w-12 h-12 mx-auto bg-axim-purple/10 border border-axim-purple/30 rounded-full flex items-center justify-center text-axim-purple font-mono font-bold mb-4">
                 {item.step}
               </div>
               <h4 className="text-lg font-bold text-white uppercase mb-2">{item.title}</h4>
@@ -177,7 +177,7 @@ export default function NdaGeneratorLanding() {
               className="bg-white/5 border border-white/10 p-6 rounded-sm"
             >
               <h4 className="text-white font-bold mb-2 flex items-center gap-2">
-                 <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-4 h-4" />
+                 <SafeIcon icon={LuShieldCheck} className="text-axim-purple w-4 h-4" />
                  {faq.q}
               </h4>
               <p className="text-zinc-400 text-sm leading-relaxed ml-6">{faq.a}</p>
@@ -193,9 +193,9 @@ export default function NdaGeneratorLanding() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuZap} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuZap} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">Lightning Fast</h3>
             <p className="text-zinc-400">Generate complex legal documents in a fraction of the time. Input your parameters and receive a ready-to-sign PDF.</p>
           </motion.div>
@@ -205,9 +205,9 @@ export default function NdaGeneratorLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuFileText} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuFileText} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">AI Extraction</h3>
             <p className="text-zinc-400">Intelligent parsing ensures all necessary clauses and entity information are correctly populated without manual review.</p>
           </motion.div>
@@ -217,9 +217,9 @@ export default function NdaGeneratorLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuShieldCheck} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">Legal Compliance</h3>
             <p className="text-zinc-400">Drafted alongside legal professionals to ensure your intellectual property is protected across standard jurisdictions.</p>
           </motion.div>

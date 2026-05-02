@@ -170,7 +170,7 @@ export default function GlobalSearch() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(45,212,191,0.05)] z-[101] overflow-hidden"
+              className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(125,0,255,0.05)] z-[101] overflow-hidden"
             >
               <form onSubmit={(e) => e.preventDefault()} className="relative border-b border-white/10 p-4 flex items-center gap-4 bg-white/5">
                 <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-purple" />
@@ -181,7 +181,7 @@ export default function GlobalSearch() {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search AXiM Omnibar..."
                   disabled={isSynchronizing}
-                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(45,212,191,0.2)] rounded-sm px-2 transition-shadow disabled:opacity-50"
+                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(125,0,255,0.2)] rounded-sm px-2 transition-shadow disabled:opacity-50"
                 />
                 <button type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
@@ -211,7 +211,7 @@ export default function GlobalSearch() {
                                     <button
                                       key={globalIndex}
                                       onClick={(e) => { e.preventDefault(); handleSelect(route); }}
-                                      className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
+                                      className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(125,0,255,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline flex items-center gap-2`}
                                     >
                                       {route.title}
                                     </button>
@@ -238,7 +238,7 @@ export default function GlobalSearch() {
                               <button
                                 key={post.id}
                                 onClick={(e) => { e.preventDefault(); handleSelect(post); }}
-                                className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(45,212,191,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
+                                className={`w-full text-left block p-3 border ${isSelected ? 'border-axim-purple bg-axim-purple/10 shadow-[0_0_10px_rgba(125,0,255,0.2)]' : 'border-white/10 bg-white/5'} hover:border-axim-purple/50 hover:bg-white/10 transition-colors text-sm text-white font-bold no-underline`}
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.title.rendered) }}
                               />
                             );

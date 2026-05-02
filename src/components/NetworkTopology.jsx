@@ -64,7 +64,7 @@ export default function NetworkTopology() {
       </svg>
 
       <div className="absolute bottom-4 right-4 text-right">
-        <div className="text-[10px] font-mono text-axim-green animate-pulse">● UPLINK_SYNCED</div>
+        <div className="text-[10px] font-mono text-axim-gold animate-pulse">● UPLINK_SYNCED</div>
         <div className="text-[8px] font-mono text-zinc-600 mt-1 uppercase">Latency: 14ms</div>
       </div>
     </div>

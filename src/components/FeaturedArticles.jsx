@@ -59,7 +59,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 2,
               className="bg-glass backdrop-blur-xl saturate-150 border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
             >
               {post.featuredImage && (
-                <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="h-64 overflow-hidden relative border-b border-subtle">
+                <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="aspect-video overflow-hidden relative border-b border-subtle">
                   <div className="absolute inset-0 bg-axim-gold/10 mix-blend-overlay z-10"></div>
                   <img
                     src={post.featuredImage}

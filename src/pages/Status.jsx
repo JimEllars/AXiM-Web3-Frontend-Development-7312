@@ -47,8 +47,8 @@ export default function Status() {
   }, []);
 
   return (
-    <div className="max-w-[1000px] mx-auto px-6 py-20 relative z-10">
-      <SEO title="System Status" description="AXiM Ecosystem public status and telemetry."  url="https://axim.us.com/status"/>
+    <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
+      <SEO title="Fleet Status" description="AXiM Ecosystem public status and telemetry."  url="https://axim.us.com/status"/>
 
       <div className="mb-16 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-axim-gold/10 border border-axim-gold/20 text-axim-gold text-[0.65rem] font-mono uppercase tracking-widest mb-6">
@@ -56,40 +56,62 @@ export default function Status() {
           Public Telemetry
         </div>
         <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">
-          Ecosystem <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-green to-axim-teal">Status</span>
+          Fleet <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-gold to-axim-purple">Status</span>
         </h1>
         <p className="text-zinc-400 max-w-2xl mx-auto font-mono text-sm leading-relaxed">
           Real-time node operations and 7-day trailing performance metrics.
         </p>
       </div>
 
-      <div className="mb-16">
-        <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3 mb-6 justify-center">
-          <SafeIcon icon={LuServer} className="text-axim-gold" />
-          Live Fleet Map
-        </h2>
-        <div className="max-w-2xl mx-auto border border-white/10 bg-[#050505] p-4 rounded-sm">
-          <FleetMap />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+        <div className="lg:col-span-3">
+          <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3 mb-6">
+            <SafeIcon icon={LuServer} className="text-axim-gold" />
+            Live Fleet Map
+          </h2>
+          <div className="border border-white/10 bg-[#050505] p-4 rounded-sm">
+            <FleetMap />
+          </div>
+        </div>
+
+        <div className="lg:col-span-1 space-y-4 flex flex-col">
+          <div className="p-6 border border-white/10 bg-white/5 flex flex-col flex-grow">
+             <h3 className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Fleet Stats</h3>
+             <div className="space-y-4 font-mono text-sm">
+               <div className="flex justify-between items-center">
+                 <span className="text-zinc-500 uppercase text-[0.6rem]">Active Satellites</span>
+                 <span className="text-axim-gold font-bold">3</span>
+               </div>
+               <div className="flex justify-between items-center">
+                 <span className="text-zinc-500 uppercase text-[0.6rem]">Jobs in Queue</span>
+                 <span className="text-white">12</span>
+               </div>
+               <div className="flex justify-between items-center">
+                 <span className="text-zinc-500 uppercase text-[0.6rem]">Encryption Protocol</span>
+                 <span className="text-axim-purple">v1.2.4</span>
+               </div>
+             </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3 mb-6">
-          <SafeIcon icon={LuNetwork} className="text-axim-teal" />
+          <SafeIcon icon={LuNetwork} className="text-axim-purple" />
           7-Day Trailing Average
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-8 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center group hover:border-axim-green/30 transition-colors">
-            <SafeIcon icon={LuActivity} className="w-8 h-8 text-axim-green mb-4" />
+          <div className="p-8 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center group hover:border-axim-gold/30 transition-colors">
+            <SafeIcon icon={LuActivity} className="w-8 h-8 text-axim-gold mb-4" />
             <div className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2">Ecosystem Uptime</div>
             <div className="text-4xl font-mono font-bold text-white">
               {metrics.loading ? '...' : metrics.uptime}
             </div>
           </div>
 
-          <div className="p-8 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center group hover:border-axim-teal/30 transition-colors">
-            <SafeIcon icon={LuClock} className="w-8 h-8 text-axim-teal mb-4" />
+          <div className="p-8 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center group hover:border-axim-purple/30 transition-colors">
+            <SafeIcon icon={LuClock} className="w-8 h-8 text-axim-purple mb-4" />
             <div className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2">API Latency</div>
             <div className="text-4xl font-mono font-bold text-white">
               {metrics.loading ? '...' : metrics.latency}
@@ -113,8 +135,8 @@ export default function Status() {
             return (
               <div key={node.id} className="p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col items-center justify-center text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <div className={`w-2 h-2 rounded-full ${isOperational ? 'bg-axim-green shadow-[0_0_8px_rgba(45,212,191,0.5)]' : 'bg-red-500 animate-pulse'}`} />
-                  <span className={`text-[0.65rem] font-mono uppercase tracking-widest ${isOperational ? 'text-axim-green' : 'text-red-500'}`}>
+                  <div className={`w-2 h-2 rounded-full ${isOperational ? 'bg-axim-gold shadow-[0_0_8px_rgba(45,212,191,0.5)]' : 'bg-red-500 animate-pulse'}`} />
+                  <span className={`text-[0.65rem] font-mono uppercase tracking-widest ${isOperational ? 'text-axim-gold' : 'text-red-500'}`}>
                     {isOperational ? 'Operational' : 'Degraded'}
                   </span>
                 </div>

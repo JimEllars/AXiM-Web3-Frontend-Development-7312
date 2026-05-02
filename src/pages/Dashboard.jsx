@@ -151,7 +151,7 @@ export default function Dashboard() {
           </h1>
           <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">Internal Access Only // Authorized Personnel</p>
         </div>
-        <div className="px-4 py-2 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple font-mono text-xs uppercase tracking-widest flex items-center gap-2 rounded-sm shadow-[0_0_15px_rgba(45,212,191,0.1)]">
+        <div className="px-4 py-2 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple font-mono text-xs uppercase tracking-widest flex items-center gap-2 rounded-sm shadow-[0_0_15px_rgba(125,0,255,0.1)]">
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse"></div>
           Secure Connection Established
         </div>
@@ -205,7 +205,7 @@ export default function Dashboard() {
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-axim-green/10 border border-axim-green/30 flex items-center justify-center rounded-sm text-axim-green">
+                <div className="w-8 h-8 bg-axim-gold/10 border border-axim-gold/30 flex items-center justify-center rounded-sm text-axim-gold">
                   <SafeIcon icon={LuServer} className="w-4 h-4" />
                 </div>
                 <h3 className="text-lg font-black uppercase text-white tracking-widest">Infrastructure Health</h3>
@@ -214,7 +214,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">System Errors</div>
-                  <div className="font-bold text-xl text-axim-green font-mono">{metrics.error_count}</div>
+                  <div className="font-bold text-xl text-axim-gold font-mono">{metrics.error_count}</div>
                 </div>
                 <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Funnel Starts</div>
@@ -240,10 +240,10 @@ export default function Dashboard() {
                     <XAxis dataKey="time" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
                     <YAxis stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(45,212,191,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
-                      itemStyle={{ color: '#2dd4bf' }}
+                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(125,0,255,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
+                      itemStyle={{ color: '#7D00FF' }}
                     />
-                    <Line type="monotone" dataKey="latency" stroke="#2dd4bf" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="latency" stroke="#7D00FF" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -300,7 +300,7 @@ export default function Dashboard() {
                         <span className="font-mono text-xs text-zinc-500 uppercase">{pb.id}</span>
                         <span className="font-bold text-white uppercase tracking-wider">{pb.name}</span>
                       </div>
-                      <span className={`text-xs font-mono uppercase px-2 py-1 border rounded-sm ${pb.status === 'Running' ? 'text-axim-green border-axim-green/30 bg-axim-green/10' : 'text-zinc-400 border-zinc-600 bg-zinc-800'}`}>
+                      <span className={`text-xs font-mono uppercase px-2 py-1 border rounded-sm ${pb.status === 'Running' ? 'text-axim-gold border-axim-gold/30 bg-axim-gold/10' : 'text-zinc-400 border-zinc-600 bg-zinc-800'}`}>
                         {pb.status}
                       </span>
                     </div>
@@ -346,7 +346,7 @@ export default function Dashboard() {
                          initial={{ opacity: 0, x: 20 }}
                          animate={{ opacity: 1, x: 0 }}
                          exit={{ opacity: 0, scale: 0.95 }}
-                         className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-green/30 bg-axim-green/10 text-axim-green' : 'border-axim-purple/30 bg-axim-purple/10 text-axim-purple'}`}
+                         className={`p-3 text-xs font-mono border rounded-sm ${ev.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-400' : ev.type === 'success' ? 'border-axim-gold/30 bg-axim-gold/10 text-axim-gold' : 'border-axim-purple/30 bg-axim-purple/10 text-axim-purple'}`}
                        >
                          <div className="flex gap-2 items-start">
                            <SafeIcon icon={LuInfo} className="w-3 h-3 mt-0.5 shrink-0" />

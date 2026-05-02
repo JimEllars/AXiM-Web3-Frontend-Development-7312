@@ -17,11 +17,11 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
   const colorClass = color === 'axim-teal' ? 'text-axim-teal bg-axim-teal shadow-[0_0_10px_#00E5FF]' :
                      color === 'axim-gold' ? 'text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]' :
-                     'text-axim-green bg-axim-green shadow-[0_0_10px_#00FF88]';
+                     'text-axim-gold bg-axim-gold shadow-[0_0_10px_#00FF88]';
 
   const textColor = color === 'axim-teal' ? 'text-axim-teal' :
                     color === 'axim-gold' ? 'text-axim-gold' :
-                    'text-axim-green';
+                    'text-axim-gold';
 
   return (
     <div>

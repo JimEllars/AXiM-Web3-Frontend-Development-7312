@@ -96,6 +96,7 @@ export default function Profile() {
         <div className="flex-grow space-y-8">
           <VaultedRecords />
 
+
           <InfoPanel icon={LuUnlock} iconColor="text-axim-purple" title="Unlocked Infrastructure">
             {!hasAccess ? (
                <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 text-center flex flex-col items-center">
@@ -120,6 +121,24 @@ export default function Profile() {
                  })}
                </div>
             )}
+          </InfoPanel>
+
+          <InfoPanel icon={LuDatabase} iconColor="text-axim-purple" title="AI Memory Banks (RAG)">
+             <div className="p-6 border border-white/10 bg-white/5 flex flex-col gap-4 relative overflow-hidden group hover:border-axim-purple/30 transition-colors">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-purple/5 blur-[40px] pointer-events-none group-hover:bg-axim-purple/10 transition-colors"></div>
+               <div className="flex justify-between items-center relative z-10">
+                 <div>
+                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuCheck} className="w-3 h-3 text-axim-green"/> Synced Intelligence Documents</div>
+                    <div className="font-mono text-sm text-white tracking-widest">3 Active Embeddings</div>
+                 </div>
+                 <button className="px-3 py-1.5 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple hover:text-black font-mono text-[0.65rem] uppercase tracking-widest transition-all">
+                    Manage Vectors
+                 </button>
+               </div>
+               <div className="text-xs text-zinc-400 mt-2 relative z-10">
+                 These documents inform your personal Onyx agent instances context.
+               </div>
+             </div>
           </InfoPanel>
 
           <InfoPanel icon={LuLock} iconColor="text-axim-purple" title="Product Licenses">

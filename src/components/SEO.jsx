@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { theme } from '../config/theme';
 
-export default function SEO({ title, description, image, type = "website", url, customSchema }) {
+export default function SEO({ title, description, image, type = "website", url, jsonLd }) {
   const siteTitle = title ? `${title} | ${theme.siteName}` : theme.siteName;
   const metaDescription = description || "AXiM SYSTEMS - Builders of A New Era.";
 
@@ -61,7 +61,7 @@ export default function SEO({ title, description, image, type = "website", url, 
     "url": url || "https://axim.us.com"
   };
 
-  const schemasToRender = customSchema || [defaultWebPageSchema];
+  const schemasToRender = jsonLd || [defaultWebPageSchema];
 
   return (
     <Helmet>

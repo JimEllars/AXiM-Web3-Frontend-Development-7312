@@ -41,7 +41,7 @@ export default function Header() {
               const isActive = location.pathname === link.path;
               const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
               const activeClass = isActive
-                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#7D00FF]' : 'text-axim-gold')
                 : '';
 
               return (
@@ -65,7 +65,7 @@ export default function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   to="/profile"
-                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-purple border-axim-purple shadow-[0_0_10px_#2dd4bf] text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
+                  className={`p-2.5 rounded-sm border transition-all ${location.pathname === '/profile' ? 'bg-axim-purple border-axim-purple shadow-[0_0_10px_#7D00FF] text-black' : 'bg-white/5 border-white/10 text-white hover:border-white/30'}`}
                 >
                   <SafeIcon icon={LuUser} className="w-4 h-4" />
                 </Link>
@@ -100,7 +100,7 @@ export default function Header() {
             const isActive = location.pathname === link.path;
             const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
               const activeClass = isActive
-                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#2dd4bf]' : 'text-axim-gold')
+                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#7D00FF]' : 'text-axim-gold')
                 : '';
 
             return (

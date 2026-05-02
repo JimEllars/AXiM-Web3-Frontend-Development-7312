@@ -151,8 +151,8 @@ export default function Partners() {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {benefits.map((benefit, idx) => (
-            <div key={idx} className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/30 transition-all flex flex-col items-center text-center group">
-              <div className="w-16 h-16 rounded-full bg-black border border-white/10 flex items-center justify-center mb-6 text-white group-hover:text-axim-teal group-hover:border-axim-teal/30 transition-colors shadow-[0_0_15px_rgba(0,0,0,0)] group-hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+            <div key={idx} className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/30 transition-all flex flex-col items-center text-center group">
+              <div className="w-16 h-16 rounded-full bg-black border border-white/10 flex items-center justify-center mb-6 text-white group-hover:text-axim-purple group-hover:border-axim-purple/30 transition-colors shadow-[0_0_15px_rgba(0,0,0,0)] group-hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
                 <SafeIcon icon={benefit.icon} className="w-8 h-8" />
               </div>
               <h3 className="text-lg font-black uppercase text-white tracking-widest mb-4">{benefit.title}</h3>
@@ -179,35 +179,35 @@ export default function Partners() {
           {/* Tier 1 */}
           <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-white/30 transition-all flex flex-col items-center text-center">
             <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Business Gigabit</h3>
-            <div className="text-axim-teal font-mono text-xl mb-4">1 Gbps</div>
+            <div className="text-axim-purple font-mono text-xl mb-4">1 Gbps</div>
             <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Standard symmetrical connection for branch offices and mid-sized deployments.</p>
             <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-400">
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Symmetrical Bandwidth</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> 99.9% Uptime SLA</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Standard Support</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> Symmetrical Bandwidth</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> 99.9% Uptime SLA</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> Standard Support</li>
             </ul>
           </div>
 
           {/* Tier 2 (Highlighted) */}
-          <div className="p-8 bg-white/5 backdrop-blur-xl border border-axim-teal shadow-[0_0_30px_rgba(0,229,255,0.1)] rounded-sm relative flex flex-col items-center text-center transform md:-translate-y-4">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-axim-teal text-black text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Recommended</div>
+          <div className="p-8 bg-white/5 backdrop-blur-xl border border-axim-purple shadow-[0_0_30px_rgba(0,229,255,0.1)] rounded-sm relative flex flex-col items-center text-center transform md:-translate-y-4">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-axim-purple text-black text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Recommended</div>
             <h3 className="text-xl font-black uppercase text-white tracking-widest mb-2 mt-4">Enterprise 10G</h3>
-            <div className="text-axim-teal font-mono text-2xl mb-4">10 Gbps</div>
+            <div className="text-axim-purple font-mono text-2xl mb-4">10 Gbps</div>
             <p className="text-zinc-400 font-mono text-xs leading-relaxed mb-6">High-capacity interconnects for data centers, trading floors, and heavy AI processing.</p>
             <ul className="text-left w-full space-y-3 font-mono text-xs text-zinc-300">
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Symmetrical Bandwidth</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> 99.99% Uptime SLA</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> Dedicated NOC Support</li>
-              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-teal" /> AXiM Core Integration</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> Symmetrical Bandwidth</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> 99.99% Uptime SLA</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> Dedicated NOC Support</li>
+              <li className="flex items-center gap-2"><SafeIcon icon={LuCheckCircle2} className="w-4 h-4 text-axim-purple" /> AXiM Core Integration</li>
             </ul>
           </div>
 
           {/* Tier 3 */}
-          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/30 transition-all flex flex-col items-center justify-center text-center h-full">
+          <div className="p-8 bg-black/40 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/30 transition-all flex flex-col items-center justify-center text-center h-full">
             <h3 className="text-lg font-black uppercase text-white tracking-widest mb-2">Inquire for more speeds</h3>
-            <div className="text-axim-teal font-mono text-sm mb-4">Custom SLAs & Infrastructure</div>
+            <div className="text-axim-purple font-mono text-sm mb-4">Custom SLAs & Infrastructure</div>
             <p className="text-zinc-500 font-mono text-xs leading-relaxed mb-6">Reach out to our engineering team for specialized multi-gigabit setups.</p>
-            <button onClick={() => { document.getElementById('partner-form').scrollIntoView({ behavior: 'smooth' }); }} className="mt-auto px-4 py-2 border border-white/10 hover:border-axim-teal/50 hover:bg-axim-teal/10 hover:text-axim-teal text-white rounded-sm transition-all font-mono text-xs uppercase tracking-widest">
+            <button onClick={() => { document.getElementById('partner-form').scrollIntoView({ behavior: 'smooth' }); }} className="mt-auto px-4 py-2 border border-white/10 hover:border-axim-purple/50 hover:bg-axim-purple/10 hover:text-axim-purple text-white rounded-sm transition-all font-mono text-xs uppercase tracking-widest">
               Contact Us
             </button>
           </div>
