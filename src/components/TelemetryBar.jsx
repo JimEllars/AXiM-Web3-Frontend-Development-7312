@@ -33,7 +33,8 @@ export default function TelemetryBar({ label, color, initialValue }) {
         <motion.div
           initial={{ width: `${initialValue}%` }}
           animate={{ width: `${value}%` }}
-          transition={{ duration: 1, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "circOut",
+                }}
           className={`h-full ${colorClass.split(' ')[1]} ${colorClass.split(' ')[2]}`}
         />
       </div>

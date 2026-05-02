@@ -114,7 +114,9 @@ export default function Tools() {
                 key={doc.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.1 ,
+                }}
                 whileHover={{ scale: 1.02 }}
                 className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-purple/50 shadow-[0_0_15px_rgba(125,0,255,0.2)] animate-pulse [animation-duration:3s]' : 'border-white/10'} hover:border-axim-purple hover:shadow-[0_0_15px_#7D00FF] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
               >
@@ -205,7 +207,9 @@ export default function Tools() {
               key={course.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1, duration: 0.5 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.1 ,
+                }}
                 whileHover={{ scale: 1.02 }}
                 className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full rounded-md"
             >

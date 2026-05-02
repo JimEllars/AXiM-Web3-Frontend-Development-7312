@@ -87,7 +87,9 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05, duration: 0.5 }}
+                  transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.05 ,
+                }}
                   className="bg-glass backdrop-blur-xl saturate-150 border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
                 >
                   {post.featuredImage && (
@@ -123,7 +125,9 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05, duration: 0.5 }}
+                  transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.05 ,
+                }}
                   className="bg-black/80 border-2 border-axim-gold/30 p-8 flex flex-col h-full hover:-translate-y-2 hover:bg-black hover:border-axim-gold/70 transition duration-300 group shadow-[0_0_20px_rgba(58,170,116,0.1)] hover:shadow-[0_0_30px_rgba(58,170,116,0.2)] relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/10 blur-[50px] rounded-full pointer-events-none"></div>

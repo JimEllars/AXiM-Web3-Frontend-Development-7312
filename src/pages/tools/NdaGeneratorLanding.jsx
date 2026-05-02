@@ -92,7 +92,9 @@ export default function NdaGeneratorLanding() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.1  ,
+                }}
           className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6 text-white"
         >
           Enterprise Non-Disclosure Agreements <span className="text-axim-purple">in Seconds</span>
@@ -101,7 +103,9 @@ export default function NdaGeneratorLanding() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2  ,
+                }}
           className="text-xl text-zinc-400 max-w-2xl mb-12"
         >
           Deploy legally robust, standard Non-Disclosure Agreements for your B2B operations without the overhead.
@@ -110,13 +114,15 @@ export default function NdaGeneratorLanding() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.3  ,
+                }}
         >
           <a
             href={launchUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-purple text-black font-black uppercase tracking-widest hover:bg-axim-purple/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-purple text-black font-black uppercase tracking-widest hover:bg-axim-purple/90 transition-colors rounded-sm shadow-[0_0_20px_125,0,255,0.3)]"
           >
             Launch Application <SafeIcon icon={LuArrowRight} className="w-5 h-5" />
           </a>
@@ -144,8 +150,10 @@ export default function NdaGeneratorLanding() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="flex-1 w-full bg-bg-void/80 backdrop-blur-xl border border-white/10 p-6 rounded-sm text-center shadow-[0_0_15px_rgba(45,212,191,0.05)] relative"
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: i * 0.15  ,
+                }}
+              className="flex-1 w-full bg-bg-void/80 backdrop-blur-xl border border-white/10 p-6 rounded-sm text-center shadow-[0_0_15px_125,0,255,0.05)] relative"
             >
               <div className="w-12 h-12 mx-auto bg-axim-purple/10 border border-axim-purple/30 rounded-full flex items-center justify-center text-axim-purple font-mono font-bold mb-4">
                 {item.step}
@@ -173,7 +181,9 @@ export default function NdaGeneratorLanding() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: i * 0.1  ,
+                }}
               className="bg-white/5 border border-white/10 p-6 rounded-sm"
             >
               <h4 className="text-white font-bold mb-2 flex items-center gap-2">
@@ -204,7 +214,9 @@ export default function NdaGeneratorLanding() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.1  ,
+                }}
             className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
             <SafeIcon icon={LuFileText} className="text-axim-purple w-8 h-8 mb-6" />
@@ -216,7 +228,9 @@ export default function NdaGeneratorLanding() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2  ,
+                }}
             className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
             <SafeIcon icon={LuShieldCheck} className="text-axim-purple w-8 h-8 mb-6" />

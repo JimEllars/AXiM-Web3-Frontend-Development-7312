@@ -3,17 +3,18 @@ import { theme } from '../config/theme';
 
 export default function Chatbot() {
   useEffect(() => {
-    if (!theme.chatbaseBotId || theme.chatbaseBotId === "placeholder-bot-id") return;
+    const CHATBOT_ID = theme.chatbaseBotId;
+    if (!CHATBOT_ID || CHATBOT_ID === "placeholder-bot-id" || CHATBOT_ID === "null" || CHATBOT_ID === "undefined") return;
 
     // Set the window property Chatbase requires
     window.chatbaseConfig = {
-      chatbotId: theme.chatbaseBotId,
+      chatbotId: CHATBOT_ID,
     };
 
     // Create and inject the script
     const script = document.createElement("script");
     script.src = "https://www.chatbase.co/embed.min.js";
-    script.chatbotId = theme.chatbaseBotId;
+    script.chatbotId = CHATBOT_ID;
     script.domain = "www.chatbase.co";
     script.defer = true;
 

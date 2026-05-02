@@ -50,7 +50,9 @@ export default function LeadManager() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4 }}
+      transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.4  ,
+                }}
       className="lg:col-span-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm mt-8"
     >
       <div className="flex items-center justify-between mb-6">
@@ -120,7 +122,7 @@ export default function LeadManager() {
                     <button
                       onClick={() => handleDeployOnyx(lead)}
                       disabled={isStreaming && activeLeadId === lead.id}
-                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple/20 transition-colors rounded-sm shadow-[0_0_8px_rgba(45,212,191,0.2)] disabled:opacity-50"
+                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple/20 transition-colors rounded-sm shadow-[0_0_8px_125,0,255,0.2)] disabled:opacity-50"
                     >
                       {isStreaming && activeLeadId === lead.id ? 'Drafting...' : 'Deploy Onyx Engagement'}
                     </button>

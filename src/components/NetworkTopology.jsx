@@ -38,7 +38,9 @@ export default function NetworkTopology() {
               strokeWidth="0.5"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  repeat: Infinity,
+                }}
             />
           );
         })}
@@ -50,7 +52,9 @@ export default function NetworkTopology() {
               cx={node.x} cy={node.y} r="2"
               fill="#FFEA00"
               animate={{ r: [2, 3, 2], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 3, repeat: Infinity }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  repeat: Infinity  ,
+                }}
             />
             <text 
               x={node.x} y={node.y - 4} 

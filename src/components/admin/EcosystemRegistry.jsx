@@ -158,7 +158,7 @@ export default function EcosystemRegistry() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md bg-black border border-axim-purple/50 rounded-sm shadow-[0_0_30px_rgba(45,212,191,0.15)] relative overflow-hidden"
+              className="w-full max-w-md bg-black border border-axim-purple/50 rounded-sm shadow-[0_0_30px_125,0,255,0.15)] relative overflow-hidden"
             >
               <div className="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
                 <div className="flex items-center gap-2">

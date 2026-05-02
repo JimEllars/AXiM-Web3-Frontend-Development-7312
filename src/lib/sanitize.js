@@ -30,7 +30,7 @@ export function ensureSafeProtocol(url) {
 
   // Block dangerous protocols early
   if (normalizedUrl.startsWith('javascript:') || normalizedUrl.startsWith('data:') || normalizedUrl.startsWith('vbscript:')) {
-    console.warn(`[security] Blocked potentially unsafe protocol: ${url}`);
+
     return '#';
   }
 
@@ -38,6 +38,6 @@ export function ensureSafeProtocol(url) {
     return trimmedUrl;
   }
 
-  console.warn(`[security] Blocked potentially unsafe URL: ${url}`);
+
   return '#';
 }

@@ -51,7 +51,9 @@ export default function Reviews() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: index * 0.1  ,
+                }}
               className="group relative p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all hover:border-axim-purple/30"
             >
               {/* Subtle top border highlight on hover */}

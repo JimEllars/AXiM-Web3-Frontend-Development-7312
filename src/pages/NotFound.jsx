@@ -19,7 +19,8 @@ export default function NotFound() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                }}
           className="mb-8"
         >
           <div className="w-24 h-24 mx-auto rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
@@ -30,7 +31,9 @@ export default function NotFound() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.1 ,
+                }}
           className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-white mb-4 font-mono"
         >
           <span className="text-red-500">404</span> // ROUTE_NOT_FOUND
@@ -39,7 +42,9 @@ export default function NotFound() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2 ,
+                }}
           className="text-xl text-zinc-400 font-mono tracking-wide mb-12 max-w-lg"
         >
           The requested infrastructure node could not be located. Connection severed.
@@ -48,7 +53,9 @@ export default function NotFound() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.3 ,
+                }}
           className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center"
         >
           <Link

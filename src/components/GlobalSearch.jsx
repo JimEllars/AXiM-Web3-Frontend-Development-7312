@@ -169,7 +169,8 @@ export default function GlobalSearch() {
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                }}
               className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(125,0,255,0.05)] z-[101] overflow-hidden"
             >
               <form onSubmit={(e) => e.preventDefault()} className="relative border-b border-white/10 p-4 flex items-center gap-4 bg-white/5">
