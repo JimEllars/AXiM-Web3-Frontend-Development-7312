@@ -180,18 +180,18 @@ export default function Dashboard() {
                   <AreaChart data={historicalRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ffea00" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#ffea00" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#F0FF00" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#F0FF00" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                     <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} />
                     <YAxis stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 10, fontFamily: 'monospace'}} axisLine={false} tickLine={false} tickFormatter={(val) => `$${val}`} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,234,0,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
-                      itemStyle={{ color: '#ffea00' }}
+                      contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(240,255,0,0.3)', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
+                      itemStyle={{ color: '#F0FF00' }}
                     />
-                    <Area type="monotone" dataKey="revenue" stroke="#ffea00" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
+                    <Area type="monotone" dataKey="revenue" stroke="#F0FF00" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -212,23 +212,23 @@ export default function Dashboard() {
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                <div className="p-4 bg-black/40 border border-white/10 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">System Errors</div>
                   <div className="font-bold text-xl text-axim-gold font-mono">{metrics.error_count}</div>
                 </div>
-                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                <div className="p-4 bg-black/40 border border-white/10 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Funnel Starts</div>
                   <div className="font-bold text-xl text-white font-mono">{metrics.funnel_starts}</div>
                 </div>
-                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                <div className="p-4 bg-black/40 border border-white/10 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Conversions</div>
                   <div className="font-bold text-xl text-white font-mono">{metrics.conversions}</div>
                 </div>
-                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                <div className="p-4 bg-black/40 border border-white/10 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">Tabby Reconciled</div>
                   <div className="font-bold text-xl text-axim-gold font-mono">{metrics.reconciled_revenue === 0 ? "VERIFYING..." : `$${metrics.reconciled_revenue.toLocaleString()}`}</div>
                 </div>
-                <div className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                <div className="p-4 bg-black/40 border border-white/10 rounded-sm">
                   <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1">WP Affiliates</div>
                   <div className="font-bold text-xl text-axim-purple font-mono">{metrics.affiliate_conversions === 0 ? "Awaiting Sync" : metrics.affiliate_conversions}</div>
                 </div>
@@ -294,7 +294,7 @@ export default function Dashboard() {
 
               <div className="space-y-4">
                 {activePlaybooks.map(pb => (
-                  <div key={pb.id} className="p-4 bg-black/40 border border-white/5 rounded-sm">
+                  <div key={pb.id} className="p-4 bg-black/40 border border-white/10 rounded-sm">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-xs text-zinc-500 uppercase">{pb.id}</span>
@@ -324,7 +324,7 @@ export default function Dashboard() {
               transition={{ delay: 0.3 }}
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
-              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
                 <SafeIcon icon={LuActivity} className="text-axim-purple animate-pulse" />
                 <h3 className="text-sm font-black uppercase text-white tracking-widest">Live Event Feed</h3>
               </div>

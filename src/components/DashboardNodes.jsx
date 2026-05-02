@@ -55,7 +55,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
           </div>
           <h3 className="text-xl font-bold uppercase mb-1">{node.id}</h3>
           <p className="text-zinc-500 text-xs uppercase tracking-widest mb-4">{node.type}</p>
-          <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-4">
+          <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
             {node.metrics.map(([key, val]) => (
               <div key={key}>
                 <div className="text-[0.6rem] text-zinc-600 uppercase mb-1">{key}</div>

@@ -18,7 +18,7 @@ export function useOnyxStream() {
     setError(null);
 
     try {
-      const response = await fetch('https://api.axim.us.com/api/onyx-bridge', {
+      const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/onyx-bridge', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

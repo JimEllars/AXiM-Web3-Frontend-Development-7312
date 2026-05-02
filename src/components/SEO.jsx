@@ -63,6 +63,15 @@ export default function SEO({ title, description, image, type = "website", url, 
 
   const schemasToRender = jsonLd || [defaultWebPageSchema];
 
+  if (type === "product" || (url && url.includes('/tools/'))) {
+    schemasToRender.push({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": title || "AXiM Tool",
+      "applicationCategory": "BusinessApplication"
+    });
+  }
+
   return (
     <Helmet>
       {/* Standard metadata */}

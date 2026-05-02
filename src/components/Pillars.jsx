@@ -13,7 +13,7 @@ export default function Pillars() {
   
   const item = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.8, 0.2, 1] } }
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "circOut" } }
   };
 
   return (

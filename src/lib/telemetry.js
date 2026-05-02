@@ -1,5 +1,5 @@
 export function logTelemetry(type, payload) {
-  const telemetryUrl = 'https://api.axim.us.com/v1/telemetry/events';
+  const telemetryUrl = 'https://wp.axim.us.com/wp-json/axim/v1/telemetry/events';
   const data = {
     type,
     ...payload,

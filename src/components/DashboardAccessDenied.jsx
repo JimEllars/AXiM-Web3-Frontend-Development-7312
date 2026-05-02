@@ -9,7 +9,7 @@ export default function DashboardAccessDenied() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center relative z-10">
       <div className="relative mb-12">
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-32 h-32 border border-red-500/20 rounded-full flex items-center justify-center" >
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "circOut" }} className="w-32 h-32 border border-red-500/20 rounded-full flex items-center justify-center" >
           <div className="w-24 h-24 border border-red-500/40 rounded-full border-dashed" />
         </motion.div>
         <SafeIcon icon={LuShield} className="w-12 h-12 text-red-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />

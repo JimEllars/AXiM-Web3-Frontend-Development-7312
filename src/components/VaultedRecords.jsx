@@ -48,7 +48,7 @@ export default function VaultedRecords() {
 
       <div className="flex-1 flex flex-col min-h-[300px]">
         {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 text-[0.6rem] text-zinc-500 uppercase tracking-widest mb-4 pb-2 border-b border-white/5 px-4">
+        <div className="grid grid-cols-12 gap-4 text-[0.6rem] text-zinc-500 uppercase tracking-widest mb-4 pb-2 border-b border-white/10 px-4">
           <div className="col-span-6">Artifact_Name</div>
           <div className="col-span-2 text-center">Size</div>
           <div className="col-span-2 text-center">Status</div>
@@ -58,7 +58,7 @@ export default function VaultedRecords() {
         {/* Table Body */}
         {fetching ? (
           <div className="flex-1 flex items-center justify-center opacity-30 animate-pulse flex-col gap-4">
-            <SafeIcon icon={LuLock} className="w-8 h-8 text-axim-teal" />
+            <SafeIcon icon={LuLock} className="w-8 h-8 text-axim-purple" />
             <div className="uppercase text-[0.6rem] text-white tracking-widest">Querying_Secure_Vault...</div>
           </div>
         ) : vaultedArtifacts && vaultedArtifacts.length > 0 ? (
@@ -66,13 +66,13 @@ export default function VaultedRecords() {
             {vaultedArtifacts.map((record) => (
               <div
                 key={record.id}
-                className="group grid grid-cols-12 gap-4 items-center text-[0.7rem] py-3 px-4 bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all rounded-sm"
+                className="group grid grid-cols-12 gap-4 items-center text-[0.7rem] py-3 px-4 bg-white/5 border border-white/10 hover:border-white/10 hover:bg-white/10 transition-all rounded-sm"
               >
                 {/* Artifact Name & Icon */}
                 <div className="col-span-6 flex items-center gap-3 overflow-hidden">
                   <SafeIcon
                     icon={getIconForType(record.type)}
-                    className="text-axim-teal w-4 h-4 shrink-0 group-hover:scale-110 transition-transform"
+                    className="text-axim-purple w-4 h-4 shrink-0 group-hover:scale-110 transition-transform"
                   />
                   <span className="text-white font-bold truncate tracking-wide">{record.name}</span>
                 </div>
@@ -85,7 +85,7 @@ export default function VaultedRecords() {
                 {/* Status */}
                 <div className="col-span-2 text-center">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${
-                    record.status === 'Verified' ? 'bg-axim-teal/10 text-axim-teal border border-axim-teal/20' :
+                    record.status === 'Verified' ? 'bg-axim-purple/10 text-axim-purple border border-axim-purple/20' :
                     record.status === 'Encrypted' ? 'bg-axim-purple/10 text-axim-purple border border-axim-purple/20' :
                     'bg-zinc-800 text-zinc-400 border border-zinc-700'
                   }`}>
@@ -104,7 +104,7 @@ export default function VaultedRecords() {
                   </button>
                   <button
                     onClick={() => handleDownload(record.name)}
-                    className="text-axim-teal hover:text-white transition-colors"
+                    className="text-axim-purple hover:text-white transition-colors"
                     title="Download Asset"
                   >
                     <SafeIcon icon={LuDownload} className="w-4 h-4" />
@@ -114,14 +114,14 @@ export default function VaultedRecords() {
             ))}
           </div>
         ) : (
-          <div className="flex-1 border border-dashed border-white/5 flex flex-col items-center justify-center text-zinc-600">
+          <div className="flex-1 border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600">
             <SafeIcon icon={LuLock} className="w-10 h-10 mb-4 opacity-30" />
             <span className="text-[0.6rem] uppercase tracking-[0.3em] text-zinc-500">Registry_Empty // No_Records</span>
           </div>
         )}
       </div>
 
-      <div className="pt-8 text-center text-zinc-600 text-[0.6rem] uppercase tracking-widest border-t border-white/5 mt-auto">
+      <div className="pt-8 text-center text-zinc-600 text-[0.6rem] uppercase tracking-widest border-t border-white/10 mt-auto">
         SECURE_END_OF_FILE
       </div>
     </div>

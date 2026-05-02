@@ -73,7 +73,7 @@ export default function LeadManager() {
         {partnerLeads && partnerLeads.length > 0 ? (
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr className="border-b border-white/10">
                 <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Date</th>
                 <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Company</th>
                 <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Vertical</th>
@@ -84,7 +84,7 @@ export default function LeadManager() {
             <tbody>
               {partnerLeads.map((lead) => (
                 <React.Fragment key={lead.id}>
-                <tr className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                <tr className="border-b border-white/10 hover:bg-white/[0.02] transition-colors">
 
                   <td className="py-4 px-4 text-xs font-mono text-zinc-400">
                     {new Date(lead.timestamp).toLocaleDateString()}
@@ -95,7 +95,7 @@ export default function LeadManager() {
                   <td className="py-4 px-4">
                     {lead.serviceInterest && (
                       <span className={`text-[0.55rem] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${
-                        lead.serviceInterest === 'Fiber Connectivity' ? 'border-axim-teal/30 bg-axim-teal/10 text-axim-teal' :
+                        lead.serviceInterest === 'Fiber Connectivity' ? 'border-axim-purple/30 bg-axim-purple/10 text-axim-purple' :
                         lead.serviceInterest === 'Solar Infrastructure' ? 'border-axim-gold/30 bg-axim-gold/10 text-axim-gold' :
                         'border-zinc-500/30 bg-zinc-500/10 text-zinc-400'
                       }`}>
@@ -111,7 +111,7 @@ export default function LeadManager() {
                     <select
                       value={lead.status || 'Pending'}
                       onChange={(e) => updateLeadStatus(lead.id, e.target.value)}
-                      className="bg-black/50 border border-white/20 text-[0.65rem] font-mono text-white p-1 rounded-sm focus:outline-none focus:border-axim-teal uppercase tracking-widest appearance-none text-right"
+                      className="bg-black/50 border border-white/20 text-[0.65rem] font-mono text-white p-1 rounded-sm focus:outline-none focus:border-axim-purple uppercase tracking-widest appearance-none text-right"
                     >
                       <option value="Pending">Pending</option>
                       <option value="In Progress">In Progress</option>
@@ -120,7 +120,7 @@ export default function LeadManager() {
                     <button
                       onClick={() => handleDeployOnyx(lead)}
                       disabled={isStreaming && activeLeadId === lead.id}
-                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-teal/10 border border-axim-teal/30 text-axim-teal hover:bg-axim-teal/20 transition-colors rounded-sm shadow-[0_0_8px_rgba(45,212,191,0.2)] disabled:opacity-50"
+                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple/20 transition-colors rounded-sm shadow-[0_0_8px_rgba(45,212,191,0.2)] disabled:opacity-50"
                     >
                       {isStreaming && activeLeadId === lead.id ? 'Drafting...' : 'Deploy Onyx Engagement'}
                     </button>
@@ -128,15 +128,15 @@ export default function LeadManager() {
 
                 </tr>
                 {activeLeadId === lead.id && (streamResponse || isStreaming) && (
-                  <tr className="bg-black/40 border-b border-white/5">
+                  <tr className="bg-black/40 border-b border-white/10">
                     <td colSpan="5" className="p-4">
                       <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-sm p-4 font-mono text-xs text-zinc-300 whitespace-pre-wrap relative">
-                        <div className="absolute top-2 right-2 text-[0.55rem] text-axim-teal uppercase tracking-widest opacity-70">
+                        <div className="absolute top-2 right-2 text-[0.55rem] text-axim-purple uppercase tracking-widest opacity-70">
                           Onyx Draft Response
                         </div>
                         <div dangerouslySetInnerHTML={{ __html: streamResponse || 'Initializing swarm intelligence...' }} />
                         {isStreaming && activeLeadId === lead.id && (
-                          <div className="w-2 h-2 bg-axim-teal rounded-full animate-ping inline-block ml-2"></div>
+                          <div className="w-2 h-2 bg-axim-purple rounded-full animate-ping inline-block ml-2"></div>
                         )}
                       </div>
                     </td>

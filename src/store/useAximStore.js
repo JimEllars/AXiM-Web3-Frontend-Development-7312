@@ -64,7 +64,7 @@ export const useAximStore = create((set, get) => ({
 
     const fetchTelemetry = async () => {
       try {
-        const response = await fetch('https://api.axim.us.com/v1/functions/device-status');
+        const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/device-status');
         if (response.ok) {
           const data = await response.json();
           if (data && typeof data === 'object') {
@@ -98,11 +98,19 @@ export const useAximStore = create((set, get) => ({
         const errorEvent = {
           id: Date.now(),
           type: 'error',
-          message: 'RE-ROUTING_ENCRYPTED_UPLINK',
+          message: 'UPLINK_RECONSTRUCTION_IN_PROGRESS...',
           timestamp: Date.now()
         };
         const currentTelemetry = get().activeTelemetry || [];
-        set({ activeTelemetry: [errorEvent, ...currentTelemetry].slice(0, 10) });
+        const statuses = get().nodeStatuses || {};
+        const newStatuses = {};
+        for (const key in statuses) {
+          newStatuses[key] = 'degraded';
+        }
+        set({
+          activeTelemetry: [errorEvent, ...currentTelemetry].slice(0, 10),
+          nodeStatuses: Object.keys(newStatuses).length > 0 ? newStatuses : { core: 'degraded' }
+        });
       }
     };
 
@@ -147,7 +155,7 @@ export const useAximStore = create((set, get) => ({
         return session;
       } else {
         // Fallback or old method
-        const response = await fetch('https://api.axim.us.com/v1/functions/passport-verify', {
+        const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/passport-verify', {
           credentials: 'include',
         });
 

@@ -49,7 +49,7 @@ export default function Consultation() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://api.axim.us.com/v1/functions/ground-game-assign', {
+      const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/ground-game-assign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

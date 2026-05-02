@@ -20,7 +20,7 @@ export default function SystemBreadcrumb() {
   ];
 
   return (
-    <div className="w-full bg-black/60 backdrop-blur-md border-b border-white/5 px-6 md:px-12 py-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-zinc-500 z-40 relative mt-20">
+    <div className="w-full bg-black/60 backdrop-blur-md border-b border-white/10 px-6 md:px-12 py-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-zinc-500 z-40 relative mt-20">
       {breadcrumbs.map((crumb, index) => {
         const isLast = index === breadcrumbs.length - 1;
         return (

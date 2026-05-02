@@ -59,7 +59,7 @@ export default function ContentAnalytics() {
               const conversions = Math.floor(views * (Math.random() * 0.05 + 0.01)); // 1-6% conversion
 
               return (
-                <div key={article.id || index} className="p-4 bg-black/40 border border-white/5 rounded-sm hover:border-axim-purple/30 transition-colors group">
+                <div key={article.id || index} className="p-4 bg-black/40 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors group">
                   <div className="mb-3 line-clamp-2">
                     <a
                       href={article.link}
