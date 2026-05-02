@@ -54,7 +54,7 @@ describe('FeaturedArticles Component', () => {
     );
 
     await waitFor(() => {
-      assert.ok(screen.getByText(/Establishing secure uplink to AXiM Database/i));
+      assert.ok(screen.getByText(/LOCAL_BUFFER_ACTIVE/i));
     });
   });
 

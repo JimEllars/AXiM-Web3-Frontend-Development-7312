@@ -63,11 +63,9 @@ export default function Consultation() {
         setStep(1);
         setTimeout(() => setIsSuccess(false), 5000);
       } else {
-
+        /* Handle error locally if necessary */
       }
-    } catch (err) {
-
-    } finally {
+    } catch (err) { /* ignore */ } finally {
       setIsSubmitting(false);
     }
   };

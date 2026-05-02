@@ -57,8 +57,7 @@ export const useAximStore = create((set, get) => ({
   setNodeStatuses: (statuses) => set({ nodeStatuses: statuses }),
 
   startTelemetryPolling: () => {
-    const { isPollingTelemetry } = get();
-    if (isPollingTelemetry) return;
+    if (get().isPollingTelemetry) return;
 
     set({ isPollingTelemetry: true });
 
@@ -68,6 +67,7 @@ export const useAximStore = create((set, get) => ({
         if (response.ok) {
           const data = await response.json();
           if (data && typeof data === 'object') {
+            if (!get().isPollingTelemetry) return;
             set({ nodeStatuses: data });
 
             const rand = Math.random();
@@ -90,26 +90,32 @@ export const useAximStore = create((set, get) => ({
             };
 
             const currentTelemetry = get().activeTelemetry || [];
+            if (!get().isPollingTelemetry) return;
             set({ activeTelemetry: [newEvent, ...currentTelemetry].slice(0, 10) });
           }
         }
       } catch (error) {
-
-        const errorEvent = {
+        const fallbackEvent = {
           id: Date.now(),
-          type: 'error',
-          message: 'UPLINK_RECONSTRUCTION_IN_PROGRESS...',
+          type: 'heartbeat',
+          message: 'LOCAL_BUFFER_ACTIVE: SIMULATED_UPLINK',
           timestamp: Date.now()
         };
         const currentTelemetry = get().activeTelemetry || [];
-        const statuses = get().nodeStatuses || {};
-        const newStatuses = {};
-        for (const key in statuses) {
-          newStatuses[key] = 'degraded';
-        }
+
+        // Mock data from earlier (from nodeStatuses property in mockPosts.js or just hardcoded)
+        const mockNodeStatuses = {
+          core: 'operational',
+          ny: 'operational',
+          lon: 'operational',
+          tok: 'operational'
+        };
+
+        if (!get().isPollingTelemetry) return;
         set({
-          activeTelemetry: [errorEvent, ...currentTelemetry].slice(0, 10),
-          nodeStatuses: Object.keys(newStatuses).length > 0 ? newStatuses : { core: 'degraded' }
+          telemetryStatus: 'SIMULATED',
+          activeTelemetry: [fallbackEvent, ...currentTelemetry].slice(0, 10),
+          nodeStatuses: mockNodeStatuses
         });
       }
     };

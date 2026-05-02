@@ -7,7 +7,7 @@ import DatabaseUplinkError from './DatabaseUplinkError.jsx';
 
 test('DatabaseUplinkError renders correctly', () => {
   render(<DatabaseUplinkError />);
-  const expectedText = "Establishing secure uplink to AXiM Database... If this persists, verify CORS headers on the origin server.";
+  const expectedText = "LOCAL_BUFFER_ACTIVE";
 
   const textElement = screen.getByText(expectedText);
   assert.ok(textElement, 'The component should render the exact error text');

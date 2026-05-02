@@ -56,9 +56,7 @@ export const localStore = {
       };
       try {
         localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
-      } catch (e) {
-
-      }
+      } catch (e) { /* ignore */ }
     }
     return profiles[address];
   },
@@ -83,9 +81,7 @@ export const localStore = {
 
     try {
       localStorage.setItem(STORAGE_KEYS.LETTERS, JSON.stringify(letters));
-    } catch (e) {
-
-    }
+    } catch (e) { /* ignore */ }
 
     return newLetter;
   },
