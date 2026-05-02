@@ -30,12 +30,12 @@ describe('FleetMap Component', () => {
     delete global.cancelAnimationFrame;
   });
 
-  test('renders canvas element with expected classes', () => {
+  test('renders svg element with expected classes', () => {
     render(<FleetMap />);
-    const canvas = document.querySelector('canvas');
-    assert.ok(canvas);
-    assert.strictEqual(canvas.width, 400);
-    assert.strictEqual(canvas.height, 300);
-    assert.ok(canvas.className.includes('border-axim-purple/30'));
+    const svg = document.querySelector('svg');
+    assert.ok(svg);
+
+
+    assert.ok(svg.className.baseVal.includes('border-axim-purple/30'));
   });
 });

@@ -27,7 +27,9 @@ export default function Ecosystem() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.6 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.1 ,
+                }}
               className="bg-zinc-900 border border-zinc-700 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between h-full hover:-translate-y-1 hover:border-axim-gold/50 transition duration-300 group"
             >
               <div className="flex items-center gap-5 mb-6 sm:mb-0">

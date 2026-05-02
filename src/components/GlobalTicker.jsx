@@ -19,11 +19,9 @@ export default function GlobalTicker() {
       <div className="flex-grow flex relative h-full">
         <motion.div
           animate={{ x: [0, -1000] }}
-          transition={{
-            repeat: Infinity,
-            ease: "circOut",
-            duration: 30
-          }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  repeat: Infinity,
+                }}
           className="flex items-center gap-8 px-4 whitespace-nowrap h-full"
         >
           {activeTelemetry.map((item, idx) => {

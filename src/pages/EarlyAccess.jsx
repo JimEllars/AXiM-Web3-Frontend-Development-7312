@@ -33,7 +33,9 @@ export default function EarlyAccess() {
         <motion.div 
           initial={{ opacity: 0, x: -30 }} 
           animate={{ opacity: 1, x: 0 }} 
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2  ,
+                }}
           className="space-y-8 hidden lg:block"
         >
           <div className="p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
@@ -64,7 +66,9 @@ export default function EarlyAccess() {
         <motion.div 
           initial={{ opacity: 0, x: 30 }} 
           animate={{ opacity: 1, x: 0 }} 
-          transition={{ delay: 0.4 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.4  ,
+                }}
           className="w-full"
         >
           <div className="max-w-[500px] mx-auto p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">

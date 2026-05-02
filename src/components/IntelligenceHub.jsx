@@ -44,7 +44,9 @@ export default function IntelligenceHub() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.6 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: idx * 0.1 ,
+                }}
               className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-10 flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group"
             >
               <span className="font-mono text-[0.7rem] opacity-50 text-axim-purple mb-4 block">{brief.id}</span>

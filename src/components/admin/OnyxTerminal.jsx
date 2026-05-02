@@ -68,7 +68,7 @@ export default function OnyxTerminal() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-axim-purple hover:bg-axim-purple/20 transition-colors shadow-[0_0_20px_rgba(45,212,191,0.2)] z-50"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-axim-purple hover:bg-axim-purple/20 transition-colors shadow-[0_0_20px_125,0,255,0.2)] z-50"
       >
         <SafeIcon icon={LuTerminal} className="w-6 h-6" />
       </button>

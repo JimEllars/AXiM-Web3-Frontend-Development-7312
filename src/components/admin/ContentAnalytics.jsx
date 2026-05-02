@@ -20,7 +20,7 @@ export default function ContentAnalytics() {
           setArticles(posts.slice(0, 5));
         }
       } catch (error) {
-        console.error("Failed to fetch articles for analytics:", error);
+
       } finally {
         setLoading(false);
       }
@@ -32,7 +32,9 @@ export default function ContentAnalytics() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.15 }}
+      transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.15  ,
+                }}
       className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col w-full h-full"
     >
       <div className="flex items-center gap-3 mb-6">

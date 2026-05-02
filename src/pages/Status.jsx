@@ -13,7 +13,7 @@ export default function Status() {
 
   useEffect(() => {
     startTelemetryPolling();
-  }, [startTelemetryPolling]);
+  }, []);
 
   const [metrics, setMetrics] = useState({
     uptime: '99.99%',
@@ -93,18 +93,18 @@ export default function Status() {
              </div>
           </div>
           <div className="p-6 border border-white/10 bg-white/5 flex flex-col mt-4">
-             <h3 className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Live Satellite Queue</h3>
+             <h3 className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Satellite Registry</h3>
              <div className="space-y-2 font-mono text-xs text-zinc-400">
                <div className="flex gap-2">
-                 <span className="text-axim-purple">[NODE_01]:</span>
-                 <span className="text-axim-gold">SCRAPING_ACTIVE</span>
+                 <span className="text-axim-purple">[NODE_NYC]:</span>
+                 <span className="text-axim-gold">ACTIVE</span>
                </div>
                <div className="flex gap-2">
-                 <span className="text-axim-purple">[NODE_02]:</span>
-                 <span className="text-zinc-500">IDLE</span>
+                 <span className="text-axim-purple">[NODE_LDN]:</span>
+                 <span className="text-axim-gold">SYNCING</span>
                </div>
                <div className="flex gap-2">
-                 <span className="text-axim-purple">[NODE_03]:</span>
+                 <span className="text-axim-purple">[NODE_TOK]:</span>
                  <span className="text-zinc-500">IDLE</span>
                </div>
              </div>
@@ -153,7 +153,7 @@ export default function Status() {
             return (
               <div key={node.id} className="p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col items-center justify-center text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <div className={`w-2 h-2 rounded-full ${isOperational ? 'bg-axim-gold shadow-[0_0_8px_rgba(45,212,191,0.5)]' : 'bg-red-500 animate-pulse'}`} />
+                  <div className={`w-2 h-2 rounded-full ${isOperational ? 'bg-axim-gold shadow-[0_0_8px_240,255,0,0.5)]' : 'bg-red-500 animate-pulse'}`} />
                   <span className={`text-[0.65rem] font-mono uppercase tracking-widest ${isOperational ? 'text-axim-gold' : 'text-red-500'}`}>
                     {isOperational ? 'Operational' : 'Degraded'}
                   </span>

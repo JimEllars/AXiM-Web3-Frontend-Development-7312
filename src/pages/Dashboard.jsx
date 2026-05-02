@@ -63,7 +63,7 @@ export default function Dashboard() {
           });
         }
       } catch (e) {
-        console.error('Failed to fetch executive metrics:', e);
+
       }
     };
 
@@ -201,7 +201,9 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.1  ,
+                }}
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-3 mb-6">
@@ -253,7 +255,9 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.15  ,
+                }}
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-3 mb-6">
@@ -282,7 +286,9 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2  ,
+                }}
               className="lg:col-span-2 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm"
             >
               <div className="flex items-center gap-3 mb-6">
@@ -308,7 +314,8 @@ export default function Dashboard() {
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${pb.progress}%` }}
-                        transition={{ duration: 1 }}
+                        transition={{ duration: 0.4, ease: "circOut",
+                }}
                         className={`h-full ${pb.status === 'Running' ? 'bg-axim-purple' : 'bg-zinc-500'}`}
                       />
                     </div>
@@ -321,7 +328,9 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.3  ,
+                }}
               className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col"
             >
               <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">

@@ -72,7 +72,7 @@ export function useAximAuth() {
             window.location.href = "/profile";
           }
         } catch (e) {
-          console.error("Heartbeat error", e);
+
         }
       }
     }, 5 * 60 * 1000);

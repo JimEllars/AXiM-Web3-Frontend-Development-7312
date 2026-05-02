@@ -63,10 +63,10 @@ export default function Consultation() {
         setStep(1);
         setTimeout(() => setIsSuccess(false), 5000);
       } else {
-        console.error('Failed to submit consultation request');
+
       }
     } catch (err) {
-      console.error('Network error during submission', err);
+
     } finally {
       setIsSubmitting(false);
     }
@@ -111,7 +111,8 @@ export default function Consultation() {
           className="lg:col-span-2 space-y-8"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                }}
         >
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 pointer-events-none" />
@@ -156,7 +157,9 @@ export default function Consultation() {
           className="lg:col-span-3"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  delay: 0.2  ,
+                }}
         >
           <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 relative min-h-[450px]">
             <h3 className="text-2xl font-black uppercase mb-6">
@@ -183,7 +186,8 @@ export default function Consultation() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                        transition={{ duration: 0.4, ease: "circOut",
+                }}
                         className="space-y-6 absolute w-full"
                       >
                         <h4 className="text-lg font-bold text-white mb-4">Organization & Identity</h4>
@@ -237,7 +241,8 @@ export default function Consultation() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                        transition={{ duration: 0.4, ease: "circOut",
+                }}
                         className="space-y-6 absolute w-full"
                       >
                         <h4 className="text-lg font-bold text-white mb-4">Technical Needs</h4>
@@ -264,7 +269,8 @@ export default function Consultation() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                        transition={{ duration: 0.4, ease: "circOut",
+                }}
                         className="space-y-6 absolute w-full"
                       >
                         <h4 className="text-lg font-bold text-white mb-4">Timeline & Budget</h4>

@@ -15,7 +15,7 @@ const SafeIcon = ({ icon: IconComponent, name, ...props }) => {
       const Icon = LuIcons[name] || FiIcons[name];
       if (Icon) return <Icon {...props} />;
     } catch (e) {
-      console.warn(`Icon ${name} not found`);
+
     }
   }
 

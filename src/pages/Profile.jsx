@@ -72,7 +72,9 @@ export default function Profile() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50 z-[-1] pointer-events-none" />
         <motion.div
           animate={{ backgroundPosition: ['0% 0%', '0% 100%'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 0.4, ease: "circOut",
+                  repeat: Infinity ,
+                }}
           className="absolute inset-0 bg-gradient-to-b from-transparent via-axim-purple/5 to-transparent h-[200%] w-full z-[-1] pointer-events-none opacity-50 mix-blend-screen"
         />
         <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 rounded-md relative z-10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">

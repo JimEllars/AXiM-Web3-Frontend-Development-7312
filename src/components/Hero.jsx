@@ -42,7 +42,8 @@ export default function Hero() {
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "circOut" }}
+        transition={{ duration: 0.4, ease: "circOut",
+                }}
         className="max-w-[1200px] w-full mx-auto px-6 relative z-10 text-center md:text-left"
       >
         <a href="https://quickdemandletter.com"
