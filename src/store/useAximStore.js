@@ -4,9 +4,12 @@ import { supabase } from '../lib/supabase.js';
 export const useAximStore = create((set, get) => ({
   // Telemetry state
 
+  isGuardEngaged: false,
+  setGuardEngaged: (status) => set({ isGuardEngaged: status }),
+
   vaultedArtifacts: [
     { id: 1, name: "Generated_NDA_v1.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
-    { id: 2, name: "Market_Intelligence_Byproduct.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
+    { id: 2, name: "CORE_COGNITION_APRIL.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
   ],
   wpDiagnosticError: null,
 

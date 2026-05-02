@@ -14,7 +14,7 @@ const PARTNERS = [
   { id: 'tabby', name: 'Tabby', icon: LuMessageSquare, color: 'text-axim-teal', desc: 'AI Coding & Terminal Automation' },
   { id: 'emailit', name: 'Emailit', icon: LuMail, color: 'text-purple-400', desc: 'High-volume Email Dispatch' },
   { id: 'resend', name: 'Resend', icon: LuMail, color: 'text-red-400', desc: 'Transactional Emails' },
-  { id: 'chatbase', name: 'Chatbase', icon: LuMessageSquare, color: 'text-axim-green', desc: 'Custom AI Chatbots' }
+  { id: 'chatbase', name: 'Chatbase', icon: LuMessageSquare, color: 'text-axim-gold', desc: 'Custom AI Chatbots' }
 ];
 
 export default function EcosystemRegistry() {
@@ -112,13 +112,13 @@ export default function EcosystemRegistry() {
                 disabled={pingStatus[partner.id] === 'pinging'}
                 className={`w-full py-2 border text-xs font-mono uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
                   pingStatus[partner.id] === 'success'
-                    ? 'bg-axim-green/20 border-axim-green text-axim-green'
-                    : 'bg-axim-green/10 border-axim-green text-axim-green hover:bg-axim-green/20'
+                    ? 'bg-axim-gold/20 border-axim-gold text-axim-gold'
+                    : 'bg-axim-gold/10 border-axim-gold text-axim-gold hover:bg-axim-gold/20'
                 }`}
               >
                 {pingStatus[partner.id] === 'pinging' ? (
                   <>
-                    <div className="w-3 h-3 border-2 border-axim-green border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-3 h-3 border-2 border-axim-gold border-t-transparent rounded-full animate-spin"></div>
                     PINGING...
                   </>
                 ) : pingStatus[partner.id] === 'success' ? (
@@ -128,7 +128,7 @@ export default function EcosystemRegistry() {
                   </>
                 ) : (
                   <>
-                    <div className="w-2 h-2 rounded-full bg-axim-green animate-pulse"></div>
+                    <div className="w-2 h-2 rounded-full bg-axim-gold animate-pulse"></div>
                     TEST CONNECTION
                   </>
                 )}
@@ -174,7 +174,7 @@ export default function EcosystemRegistry() {
 
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 {submitStatus && (
-                  <div className={`p-3 text-xs font-mono flex items-center gap-2 ${submitStatus.type === 'success' ? 'text-axim-green border-axim-green/30 bg-axim-green/10 border' : 'text-red-400 border-red-400/30 bg-red-400/10 border'}`}>
+                  <div className={`p-3 text-xs font-mono flex items-center gap-2 ${submitStatus.type === 'success' ? 'text-axim-gold border-axim-gold/30 bg-axim-gold/10 border' : 'text-red-400 border-red-400/30 bg-red-400/10 border'}`}>
                     {submitStatus.type === 'success' && <SafeIcon icon={LuCheck} className="w-4 h-4" />}
                     {submitStatus.message}
                   </div>

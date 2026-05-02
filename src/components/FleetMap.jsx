@@ -25,11 +25,22 @@ export default function FleetMap() {
       const cx = canvas.width / 2;
       const cy = canvas.height / 2;
 
+
+      // Draw world map outline placeholder (simple path representation)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(125, 0, 255, 0.3)'; // axim-purple
+      ctx.lineWidth = 1;
+      // Abstract continents
+      ctx.moveTo(cx - 150, cy - 50); ctx.lineTo(cx - 100, cy - 20); ctx.lineTo(cx - 80, cy + 40); ctx.lineTo(cx - 120, cy + 80); ctx.closePath();
+      ctx.moveTo(cx + 20, cy - 60); ctx.lineTo(cx + 80, cy - 40); ctx.lineTo(cx + 50, cy + 60); ctx.lineTo(cx + 10, cy + 20); ctx.closePath();
+      ctx.moveTo(cx + 100, cy - 30); ctx.lineTo(cx + 160, cy - 10); ctx.lineTo(cx + 140, cy + 50); ctx.lineTo(cx + 90, cy + 30); ctx.closePath();
+      ctx.stroke();
+
       const nodes = [
         { id: 'core', x: cx, y: cy, label: 'AXiM Core' },
-        { id: 'nda', x: cx - 120, y: cy - 80, label: 'NDA Gen' },
-        { id: 'demand', x: cx + 120, y: cy - 80, label: 'Demand Gen' },
-        { id: 'stub', x: cx, y: cy + 120, label: 'Pay Stub Gen' },
+        { id: 'ny', x: cx - 120, y: cy - 40, label: 'New York Node' },
+        { id: 'lon', x: cx + 40, y: cy - 50, label: 'London Node' },
+        { id: 'tok', x: cx + 130, y: cy + 10, label: 'Tokyo Node' },
       ];
 
       // Draw connections
@@ -45,7 +56,7 @@ export default function FleetMap() {
 
         // Draw pulses
         const status = nodeStatusesRef.current[node.id] || 'offline';
-        let pulseColor = 'rgba(0, 229, 255, 0.8)'; // default operational
+        let pulseColor = 'rgba(240, 255, 0, 0.8)'; // Electric Yellow
 
         if (status === 'degraded') {
           pulseColor = 'rgba(255, 165, 0, 0.8)'; // Orange
@@ -79,8 +90,8 @@ export default function FleetMap() {
         } else {
           const status = nodeStatusesRef.current[node.id] || 'offline';
           if (status === 'operational') {
-            ctx.fillStyle = '#00E5FF';
-            ctx.shadowColor = '#00E5FF';
+            ctx.fillStyle = '#F0FF00';
+            ctx.shadowColor = '#F0FF00';
             ctx.globalAlpha = 1;
           } else if (status === 'degraded') {
             ctx.fillStyle = '#FFA500'; // Orange
@@ -123,7 +134,7 @@ export default function FleetMap() {
         ref={canvasRef}
         width={400}
         height={300}
-        className="border border-white/10 bg-[#050505]/50 rounded-sm"
+        className="border border-axim-purple/30 bg-[#050505]/50 rounded-sm"
       />
     </div>
   );

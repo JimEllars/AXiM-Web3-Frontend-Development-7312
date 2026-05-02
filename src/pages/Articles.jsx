@@ -26,12 +26,25 @@ export default function Articles() {
     : "Comprehensive insights, updates, and research from the AXiM ecosystem.";
   const seoImage = firstFeatured ? firstFeatured.featuredImage : undefined;
 
+  const jsonLd = firstFeatured ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": seoTitle,
+    "image": [seoImage],
+    "datePublished": firstFeatured.date,
+    "author": [{
+      "@type": "Organization",
+      "name": "AXiM SYSTEMS"
+    }]
+  } : undefined;
+
   return (
     <div className="w-full relative z-10">
       <SEO title={seoTitle}
         description={seoDesc}
         image={seoImage}
-       url="https://axim.us.com/articles"/>
+        url="https://axim.us.com/articles"
+        jsonLd={jsonLd ? [jsonLd] : undefined} />
       <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-10">
         <span className="section-label">Intelligence Network</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">AXiM Articles</h1>

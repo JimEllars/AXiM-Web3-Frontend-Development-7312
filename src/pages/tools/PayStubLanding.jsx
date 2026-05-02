@@ -85,7 +85,7 @@ export default function PayStubLanding() {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8"
         >
-          <SafeIcon icon={LuDatabase} className="text-axim-teal w-4 h-4" />
+          <SafeIcon icon={LuDatabase} className="text-axim-purple w-4 h-4" />
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Financial Tool</span>
         </motion.div>
 
@@ -95,7 +95,7 @@ export default function PayStubLanding() {
           transition={{ delay: 0.1 }}
           className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6 text-white"
         >
-          Verifiable Pay Stubs <span className="text-axim-teal">in Seconds</span>
+          Verifiable Pay Stubs <span className="text-axim-purple">in Seconds</span>
         </motion.h1>
 
         <motion.p
@@ -116,7 +116,7 @@ export default function PayStubLanding() {
             href={launchUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-teal text-black font-black uppercase tracking-widest hover:bg-axim-teal/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-axim-purple text-black font-black uppercase tracking-widest hover:bg-axim-purple/90 transition-colors rounded-sm shadow-[0_0_20px_rgba(45,212,191,0.3)]"
           >
             Launch Application <SafeIcon icon={LuArrowRight} className="w-5 h-5" />
           </a>
@@ -194,9 +194,9 @@ export default function PayStubLanding() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuZap} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuZap} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">Instant Calculations</h3>
             <p className="text-zinc-400">Automatic computation of federal, state, and local taxes based on your inputs. No manual math required.</p>
           </motion.div>
@@ -206,9 +206,9 @@ export default function PayStubLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuFileText} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuFileText} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">Professional Format</h3>
             <p className="text-zinc-400">Outputs clean, standardized PDF documents accepted by landlords, financial institutions, and agencies.</p>
           </motion.div>
@@ -218,9 +218,9 @@ export default function PayStubLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-teal/50 transition-colors"
+            className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:border-axim-purple/50 transition-colors"
           >
-            <SafeIcon icon={LuShieldCheck} className="text-axim-teal w-8 h-8 mb-6" />
+            <SafeIcon icon={LuShieldCheck} className="text-axim-purple w-8 h-8 mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">Secure Handoff</h3>
             <p className="text-zinc-400">Your session is securely handed off to our processing engine, ensuring your financial data remains private.</p>
           </motion.div>

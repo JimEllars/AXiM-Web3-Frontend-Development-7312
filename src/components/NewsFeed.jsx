@@ -91,7 +91,7 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   className="bg-glass backdrop-blur-xl saturate-150 border border-subtle flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group overflow-hidden"
                 >
                   {post.featuredImage && (
-                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="h-48 overflow-hidden relative border-b border-subtle">
+                    <a href={`https://wp.axim.us.com/article/${post.slug}`} className="block"><div className="aspect-video overflow-hidden relative border-b border-subtle">
                       <div className="absolute inset-0 bg-axim-purple/10 mix-blend-overlay z-10"></div>
                       <img
                         src={post.featuredImage}
@@ -124,22 +124,22 @@ export default function NewsFeed({ categorySlug = 'article', limit = 12, title =
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05, duration: 0.5 }}
-                  className="bg-black/80 border-2 border-axim-green/30 p-8 flex flex-col h-full hover:-translate-y-2 hover:bg-black hover:border-axim-green/70 transition duration-300 group shadow-[0_0_20px_rgba(58,170,116,0.1)] hover:shadow-[0_0_30px_rgba(58,170,116,0.2)] relative overflow-hidden"
+                  className="bg-black/80 border-2 border-axim-gold/30 p-8 flex flex-col h-full hover:-translate-y-2 hover:bg-black hover:border-axim-gold/70 transition duration-300 group shadow-[0_0_20px_rgba(58,170,116,0.1)] hover:shadow-[0_0_30px_rgba(58,170,116,0.2)] relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-axim-green/10 blur-[50px] rounded-full pointer-events-none"></div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/10 blur-[50px] rounded-full pointer-events-none"></div>
                   <div className="flex items-center gap-4 mb-6 relative z-10">
-                    <div className="w-14 h-14 rounded-full bg-axim-green/10 flex items-center justify-center text-axim-green border border-axim-green/40 shadow-[0_0_15px_rgba(58,170,116,0.2)]">
+                    <div className="w-14 h-14 rounded-full bg-axim-gold/10 flex items-center justify-center text-axim-gold border border-axim-gold/40 shadow-[0_0_15px_rgba(58,170,116,0.2)]">
                       <SafeIcon icon={LuIcons[offering.iconName]} className="w-7 h-7" />
                     </div>
                     <div>
-                      <span className="font-mono text-[0.65rem] font-bold text-axim-green uppercase tracking-wider block mb-1">AXiM Core Offering</span>
-                      <h3 className="text-[1.3rem] font-bold uppercase leading-tight text-white group-hover:text-axim-green transition-colors">{offering.title}</h3>
+                      <span className="font-mono text-[0.65rem] font-bold text-axim-gold uppercase tracking-wider block mb-1">AXiM Core Offering</span>
+                      <h3 className="text-[1.3rem] font-bold uppercase leading-tight text-white group-hover:text-axim-gold transition-colors">{offering.title}</h3>
                     </div>
                   </div>
                   <p className="text-zinc-300 text-sm leading-[1.6] flex-grow mb-8 relative z-10">{offering.desc}</p>
                   <a
                     href={ensureSafeProtocol(offering.externalUrl ? `${offering.externalUrl}?source=axim_hub` : '#')}
-                    className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-green hover:bg-axim-green/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
+                    className="font-mono text-[0.8rem] font-bold uppercase flex items-center justify-center gap-3 text-black bg-axim-gold hover:bg-axim-gold/90 transition-colors mt-auto rounded px-5 py-3 w-full relative z-10 shadow-[0_0_10px_rgba(58,170,116,0.3)] hover:shadow-[0_0_20px_rgba(58,170,116,0.5)]"
                   >
                     Access Now <SafeIcon icon={LuArrowRight} />
                   </a>

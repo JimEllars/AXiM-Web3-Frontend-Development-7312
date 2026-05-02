@@ -53,7 +53,7 @@ export default function NotFound() {
         >
           <Link
             to="/"
-            className="btn btn-outline hover:border-axim-teal hover:text-axim-teal w-full sm:w-auto flex justify-center items-center gap-2"
+            className="btn btn-outline hover:border-axim-purple hover:text-axim-purple w-full sm:w-auto flex justify-center items-center gap-2"
           >
             Return to Hub <SafeIcon icon={LuArrowRight} className="w-4 h-4" />
           </Link>

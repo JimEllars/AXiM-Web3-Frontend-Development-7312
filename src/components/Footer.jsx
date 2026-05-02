@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="py-12 border-t border-white/10 text-center font-mono text-[0.7rem] text-zinc-500 uppercase tracking-[0.2em] relative z-10 bg-[#050505]">
+    <footer className="py-12 border-t border-axim-purple/30 text-center font-mono text-[0.7rem] text-zinc-500 uppercase tracking-[0.2em] relative z-10 bg-axim-deep">
       <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         {/* Legal & Security Column */}
         <div className="text-left hidden md:flex flex-col gap-2">
@@ -13,10 +13,10 @@ export default function Footer() {
           <Link to="/security" className="hover:text-white transition-colors">Security Architecture</Link>
         </div>
 
-        {/* System Status Column */}
+        {/* Fleet Status Column */}
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-axim-green rounded-full shadow-[0_0_8px_#3aaa74] animate-pulse"></div>
+            <div className="w-2 h-2 bg-axim-gold rounded-full shadow-[0_0_8px_#F0FF00] animate-pulse"></div>
             <span className="text-white">SYSTEM_STATUS: OPERATIONAL</span>
           </div>
           <div className="opacity-50 text-[0.6rem]">

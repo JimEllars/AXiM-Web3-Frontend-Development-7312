@@ -36,6 +36,6 @@ describe('FleetMap Component', () => {
     assert.ok(canvas);
     assert.strictEqual(canvas.width, 400);
     assert.strictEqual(canvas.height, 300);
-    assert.ok(canvas.className.includes('border-white/10'));
+    assert.ok(canvas.className.includes('border-axim-purple/30'));
   });
 });

@@ -26,7 +26,7 @@ export default function SystemBreadcrumb() {
         return (
           <React.Fragment key={crumb.path}>
             {isLast ? (
-              <span className="text-axim-teal drop-shadow-[0_0_8px_#2dd4bf]">{crumb.name}</span>
+              <span className="text-axim-purple drop-shadow-[0_0_8px_#7D00FF]">{crumb.name}</span>
             ) : (
               <>
                 <Link to={crumb.path} className="hover:text-white transition-colors">{crumb.name}</Link>
