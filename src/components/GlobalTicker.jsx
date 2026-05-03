@@ -8,6 +8,8 @@ const { LuActivity, LuAlertTriangle, LuCheckCircle, LuDollarSign, LuMegaphone } 
 
 export default function GlobalTicker() {
   const activeTelemetry = useAximStore(state => state.activeTelemetry) || [];
+  const telemetryStatus = useAximStore(state => state.telemetryStatus);
+  const hasLocalBuffer = telemetryStatus === 'LOCAL_BUFFER' || activeTelemetry.some(item => item.type === 'error');
 
   return (
     <div className="fixed bottom-0 left-0 w-full h-8 bg-black/90 backdrop-blur-md border-t border-white/10 z-[100] flex items-center overflow-hidden">
@@ -15,6 +17,12 @@ export default function GlobalTicker() {
         <SafeIcon icon={LuActivity} className="w-3 h-3 text-axim-purple animate-pulse" />
         <span>Telemetry</span>
       </div>
+
+      {hasLocalBuffer && (
+        <div className="flex-shrink-0 px-4 h-full flex items-center gap-2 z-10 font-mono text-[0.65rem] uppercase tracking-widest text-[#F0FF00] font-bold">
+          <span>[LOCAL_BUFFER_ACTIVE] // AUTONOMOUS_MODE</span>
+        </div>
+      )}
 
       <div className="flex-grow flex relative h-full">
         <motion.div
