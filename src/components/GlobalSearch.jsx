@@ -9,18 +9,18 @@ import SafeIcon from '../common/SafeIcon';
 const { LuSearch, LuX } = LuIcons;
 
 const STATIC_ROUTES = [
-  { title: "Dashboard", path: "/dashboard", category: "Command Center" },
-  { title: "System Status", path: "/status", category: "Command Center" },
-  { title: "Intelligence Hub", path: "/articles", category: "Command Center" },
+  { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
+  { title: "System Status", path: "/status", category: "Main Menu" },
+  { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
-  { title: "Tools", path: "/tools", category: "Product Suite" },
-  { title: "Launch NDA Generator", path: "/tools/nda", category: "Product Suite" },
-  { title: "Demand Letter Generator", path: "/tools", category: "Product Suite" },
-  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Product Suite" },
+  { title: "Tools", path: "/tools", category: "Our Tools" },
+  { title: "Launch NDA Generator", path: "/tools/nda", category: "Our Tools" },
+  { title: "Demand Letter Generator", path: "/tools", category: "Our Tools" },
+  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Our Tools" },
 
-  { title: "Operator Vault", path: "/profile", category: "Operator Vault" },
-  { title: "Asset Licenses", path: "/profile", category: "Operator Vault" },
-  { title: "Security Settings", path: "/profile", category: "Operator Vault" }
+  { title: "My Account", path: "/profile", category: "My Account" },
+  { title: "Asset Licenses", path: "/profile", category: "My Account" },
+  { title: "Security Settings", path: "/profile", category: "My Account" }
 ];
 
 export default function GlobalSearch() {
@@ -198,7 +198,7 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Command Center', 'Product Suite', 'Operator Vault'].map(category => {
+                        {['Main Menu', 'Our Tools', 'My Account'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (
