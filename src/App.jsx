@@ -45,9 +45,10 @@ function App() {
   const location = useLocation();
   const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     startTelemetryPolling();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

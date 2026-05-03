@@ -30,14 +30,14 @@
     "recharts": "^3.8.1",
     "tailwind-merge": "^2.5.2",
     "thirdweb": "^5.119.4",
-    "vitest": "^4.1.5",
     "zod": "^3.23.8",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",
@@ -50,7 +50,8 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.21",
-    "vite-node": "^3.2.4"
+    "vite-node": "^3.2.4",
+    "vitest": "^4.1.5"
   },
   "overrides": {
     "@emotion/react": "^11.13.3",
