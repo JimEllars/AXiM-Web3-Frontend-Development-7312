@@ -20,8 +20,9 @@ describe('Ecosystem Component', () => {
     cleanup();
   });
 
-  test('renders null successfully (quarantined)', () => {
-    const { container } = render(<Ecosystem />);
-    assert.strictEqual(container.firstChild, null);
+  test('renders successfully and contains title', () => {
+    render(<Ecosystem />);
+    const title = screen.getByText('Built for Reliability');
+    assert.ok(title);
   });
 });

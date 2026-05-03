@@ -48,7 +48,7 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 3 
     <div className="w-full max-w-7xl mx-auto py-12 px-6 mt-8">
       <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-6 flex items-center gap-3">
         <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
-        High-Priority Intelligence
+        Featured
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {articles.slice(0, limit).map(article => (
