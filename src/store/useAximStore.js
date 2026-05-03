@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase.js';
 
 export const useAximStore = create((set, get) => ({
   // Telemetry state
+  telemetryStatus: 'STABLE',
 
   isGuardEngaged: false,
   setGuardEngaged: (status) => set({ isGuardEngaged: status }),

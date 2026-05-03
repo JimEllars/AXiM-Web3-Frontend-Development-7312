@@ -33,9 +33,9 @@ export default function Dashboard() {
   const partnerLeads = useAximStore((state) => state.partnerLeads);
   const fetchDashboardHistoricalData = useAximStore((state) => state.fetchDashboardHistoricalData);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchDashboardHistoricalData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [selectedNode, setSelectedNode] = useState(null);
