@@ -165,7 +165,7 @@ export default function Tools() {
                       ) : isLicensed ? (
                         <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
                       ) : (
-                        <>Request Authorization <SafeIcon icon={LuLock} className="group-hover/btn:hidden w-4 h-4" /><SafeIcon icon={LuUnlock} className="hidden group-hover/btn:block w-4 h-4" /></>
+                        <>Access Tool <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /></>
                       )}
                     </Link>
                   ) : (
@@ -181,7 +181,7 @@ export default function Tools() {
                       ) : isLicensed ? (
                         <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
                       ) : (
-                        <>Request Authorization <SafeIcon icon={LuLock} className="group-hover/btn:hidden w-4 h-4" /><SafeIcon icon={LuUnlock} className="hidden group-hover/btn:block w-4 h-4" /></>
+                        <>Access Tool <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /></>
                       )}
                     </a>
                   )}
