@@ -4,10 +4,10 @@ import assert from 'node:assert';
 import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import FeaturedArticles from './FeaturedArticles.jsx';
+import NewsFeed from './NewsFeed.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-describe('FeaturedArticles Component', () => {
+describe('NewsFeed Component', () => {
   let queryClient;
 
   beforeEach(() => {
@@ -32,21 +32,20 @@ describe('FeaturedArticles Component', () => {
   });
 
   test('renders loading state initially and then shows articles or pending state', async () => {
-    render(
+    const { container } = render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <FeaturedArticles categorySlug="featured" limit={1} />
+          <NewsFeed limit={1} />
         </MemoryRouter>
       </QueryClientProvider>
     );
 
-    assert.ok(screen.getByText(/ESTABLISHING_SECURE_UPLINK.../i));
+    // Initial loading state is null, so it renders nothing
+    assert.strictEqual(container.firstChild, null);
 
-    // We don't need to strictly mock the fetch here since we just want to verify
-    // it handles the component transitions correctly.
     await waitFor(() => {
-        const hasPending = screen.queryByText(/\[INTELLIGENCE_FEED_PENDING\] \/\/ AWAITING_NETWORK_SYNC/i);
-        const hasArticles = screen.queryByText(/High-Priority Intelligence/i);
+        const hasPending = screen.queryByText(/\[GLOBAL_FEED_UNAVAILABLE\]/i);
+        const hasArticles = screen.queryByText(/Global Ecosystem Feed/i);
         assert.ok(hasPending || hasArticles);
     }, { timeout: 3000 });
   });
