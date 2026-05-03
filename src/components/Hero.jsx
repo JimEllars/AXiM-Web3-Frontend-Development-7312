@@ -57,12 +57,12 @@ export default function Hero() {
         </div>
 
         <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] leading-none font-black tracking-[-0.04em] mb-6 uppercase">
-          Smart Business<br className="hidden md:block" />
+          Smarter<br className="hidden md:block" />
           <span className="gradient-text"> Systems</span>
         </h1>
 
         <p className="text-[clamp(1.1rem,2vw,1.25rem)] text-zinc-400 max-w-[700px] mb-12 leading-[1.6] font-light mx-auto md:mx-0">
-          AXiM Systems integrates energy infrastructure, mission-critical connectivity, and autonomous intelligence to power the physical and digital backbone of modern society.
+          AXiM System offers products and services built to make your life easier without breaking the bank. See what we have to offer >>>
         </p>
 
         <div className="flex gap-5 flex-wrap justify-center md:justify-start">
