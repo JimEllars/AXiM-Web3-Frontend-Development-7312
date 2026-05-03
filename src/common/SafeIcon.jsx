@@ -14,7 +14,10 @@ const SafeIcon = ({ icon: IconComponent, name, ...props }) => {
     try {
       const Icon = LuIcons[name] || FiIcons[name];
       if (Icon) return <Icon {...props} />;
-    } catch (e) { /* ignore */ }
+      console.warn(`Icon ${name} not found`);
+    } catch (e) {
+      console.warn(`Icon ${name} not found`);
+    }
   }
 
   // Fallback to alert icon

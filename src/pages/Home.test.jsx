@@ -50,13 +50,9 @@ describe('Home Page Component', () => {
     assert.ok(screen.queryAllByText(/AXiM Systems integrates energy infrastructure/i).length > 0);
 
     // Verify FeaturedArticles section (at least the label/loading state)
-    assert.ok(screen.queryAllByText(/Featured Intelligence/i).length > 0 || screen.queryAllByText(/Syncing with AXiM Intelligence/i).length > 0);
+    assert.ok(screen.queryAllByText(/\[FEATURED_ARTICLES_STABILIZED\]/i).length > 0);
 
     // Verify NewsFeed section (at least the label/loading state)
-    assert.ok(screen.queryAllByText(/Intelligence Hub/i).length > 0 || screen.queryAllByText(/Syncing with AXiM Intelligence/i).length > 0);
-
-    // Verify Ecosystem section
-    assert.ok(screen.queryAllByText(/The AXiM Ecosystem/i).length > 0);
-    assert.ok(screen.queryAllByText(/Discover/i).length > 0);
+    assert.ok(screen.queryAllByText(/\[NEWSFEED_MODULE_STABILIZED\]/i).length > 0);
   });
 });

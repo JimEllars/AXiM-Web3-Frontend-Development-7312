@@ -48,7 +48,7 @@ function App() {
 
   useEffect(() => {
     startTelemetryPolling();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   useEffect(() => {
