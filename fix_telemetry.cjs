@@ -1,4 +1,5 @@
-export function logTelemetry(type, payload) {
+const fs = require('fs');
+let content = `export function logTelemetry(type, payload) {
   const telemetryUrl = 'https://wp.axim.us.com/wp-json/axim/v1/telemetry/events';
   const data = {
     type,
@@ -23,3 +24,5 @@ export function logTelemetry(type, payload) {
     // Silently fail to not block UI
   }
 }
+`;
+fs.writeFileSync('src/lib/telemetry.js', content);
