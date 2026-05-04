@@ -32,11 +32,11 @@ describe('Hero Component', () => {
     );
 
     // Check main title
-    assert.ok(screen.getByText(/Smart Business/));
+    assert.ok(screen.getByText(/Smarter/));
     assert.ok(screen.getAllByText(/Systems/)[0]);
 
     // Check description
-    assert.ok(screen.getByText(/AXiM Systems integrates energy infrastructure/));
+    assert.ok(screen.getByText(/AXiM System offers products and services built to make your life easier/));
 
     // Check links
     const demandLetterLink = screen.getByRole('link', { name: /NEW: \$4\.00 QUICK DEMAND LETTER GENERATOR/i });
