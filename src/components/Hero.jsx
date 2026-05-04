@@ -62,7 +62,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-[clamp(1.1rem,2vw,1.25rem)] text-zinc-400 max-w-[700px] mb-12 leading-[1.6] font-light mx-auto md:mx-0">
-          AXiM System offers products and services built to make your life easier without breaking the bank. See what we have to offer >>>
+          AXiM System offers products and services built to make your life easier without breaking the bank. See what we have to offer &gt;&gt;&gt;
         </p>
 
         <div className="flex gap-5 flex-wrap justify-center md:justify-start">
