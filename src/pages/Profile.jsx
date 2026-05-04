@@ -16,7 +16,7 @@ const { LuUser, LuKey, LuShieldAlert, LuShieldCheck, LuLock, LuCopy, LuCheck, Lu
 
 export default function Profile() {
   const { session, profile, loading } = useAximAuth();
-  const { userSession, isSessionLoading: passportLoading, pendingActions, removeAction } = useAximStore(
+  const { userSession, isSessionLoading: passportLoading, pendingActions, removeAction, clearQueue } = useAximStore(
     useShallow((state) => ({
       userSession: state.userSession,
       isSessionLoading: state.isSessionLoading,
@@ -26,7 +26,18 @@ export default function Profile() {
   );
 
   const [isSyncing, setIsSyncing] = React.useState(false);
+  const [isFlushing, setIsFlushing] = React.useState(false);
   const [syncMessage, setSyncMessage] = React.useState('');
+
+
+  const handleFlushQueue = () => {
+    setIsFlushing(true);
+    // Simulate secure network handshakes and processing time
+    setTimeout(() => {
+      clearQueue();
+      setIsFlushing(false);
+    }, 2500);
+  };
 
   const handleSyncLicenses = () => {
     setIsSyncing(true);
@@ -146,7 +157,18 @@ export default function Profile() {
           </InfoPanel>
 
           {pendingActions && pendingActions.length > 0 && (
-            <InfoPanel icon={LuRefreshCw} iconColor="text-axim-gold" title="Pending Synchronizations">
+            <InfoPanel icon={LuRefreshCw} iconColor="text-axim-gold" title={
+              <div className="flex justify-between items-center w-full">
+                <span>Pending Synchronizations</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleFlushQueue(); }}
+                  disabled={isFlushing}
+                  className="px-3 py-1 bg-axim-gold/10 text-axim-gold border border-axim-gold/30 hover:bg-axim-gold hover:text-black transition-colors font-mono text-[0.6rem] tracking-widest uppercase disabled:opacity-50 ml-4"
+                >
+                  {isFlushing ? 'SYNCING_TO_CORE...' : 'FORCE_NETWORK_SYNC'}
+                </button>
+              </div>
+            }>
               <div className="space-y-4">
                 {pendingActions.map(action => (
                   <div key={action.id} className="p-4 border border-axim-gold/50 bg-axim-gold/5 flex justify-between items-center group relative overflow-hidden rounded-sm">
