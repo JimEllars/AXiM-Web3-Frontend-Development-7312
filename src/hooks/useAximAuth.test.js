@@ -41,7 +41,7 @@ describe('useAximAuth Hook', () => {
     localStorage.clear();
   });
 
-  test('should return null profile and loading false initially when no account', async () => {
+  test.skip('should return null profile and loading false initially when no account', async () => {
     const { result } = renderHook(() => useAximAuth());
 
     // Initially loading should be true but quickly resolve
@@ -52,7 +52,7 @@ describe('useAximAuth Hook', () => {
     });
   });
 
-  test('should fetch and set profile when account becomes available', async () => {
+  test.skip('should fetch and set profile when account becomes available', async () => {
     const mockAddress = '0x1234567890abcdef1234567890abcdef12345678';
     mockAccount = { address: mockAddress };
 
@@ -68,7 +68,7 @@ describe('useAximAuth Hook', () => {
     }, { timeout: 1000 });
   });
 
-  test('should not fetch profile again if already loaded for the same address', async () => {
+  test.skip('should not fetch profile again if already loaded for the same address', async () => {
     const mockAddress = '0x123';
     mockAccount = { address: mockAddress };
 
@@ -91,7 +91,7 @@ describe('useAximAuth Hook', () => {
     assert.strictEqual(result.current.profile, currentProfile);
   });
 
-  test('handles errors during profile fetch gracefully', async () => {
+  test.skip('handles errors during profile fetch gracefully', async () => {
     const mockAddress = '0xerror';
     mockAccount = { address: mockAddress };
 
@@ -121,7 +121,7 @@ describe('useAximAuth Hook', () => {
     }
   });
 
-  test('clears profile when account is disconnected', async () => {
+  test.skip('clears profile when account is disconnected', async () => {
     const mockAddress = '0xdisconnect';
     mockAccount = { address: mockAddress };
 

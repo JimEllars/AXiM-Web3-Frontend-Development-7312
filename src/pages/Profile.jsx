@@ -16,10 +16,12 @@ const { LuUser, LuKey, LuShieldAlert, LuShieldCheck, LuLock, LuCopy, LuCheck, Lu
 
 export default function Profile() {
   const { session, profile, loading } = useAximAuth();
-  const { userSession, isSessionLoading: passportLoading } = useAximStore(
+  const { userSession, isSessionLoading: passportLoading, pendingActions, removeAction } = useAximStore(
     useShallow((state) => ({
       userSession: state.userSession,
       isSessionLoading: state.isSessionLoading,
+      pendingActions: state.pendingActions,
+      removeAction: state.removeAction,
     }))
   );
 
@@ -142,6 +144,29 @@ export default function Profile() {
                </div>
              </div>
           </InfoPanel>
+
+          {pendingActions && pendingActions.length > 0 && (
+            <InfoPanel icon={LuRefreshCw} iconColor="text-axim-gold" title="Pending Synchronizations">
+              <div className="space-y-4">
+                {pendingActions.map(action => (
+                  <div key={action.id} className="p-4 border border-axim-gold/50 bg-axim-gold/5 flex justify-between items-center group relative overflow-hidden rounded-sm">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[40px] pointer-events-none group-hover:bg-axim-gold/10 transition-colors"></div>
+                    <div className="relative z-10 flex flex-col gap-1">
+                      <div className="text-[0.6rem] font-mono text-axim-gold uppercase tracking-widest">[ACTION_QUEUED]</div>
+                      <div className="font-mono text-sm text-white tracking-widest">{action.name}</div>
+                      <div className="text-[0.65rem] font-mono text-zinc-500 uppercase">{action.type} // {new Date(action.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                    <button
+                      onClick={() => removeAction(action.id)}
+                      className="relative z-10 px-2 py-1 text-axim-gold hover:bg-axim-gold/20 border border-transparent hover:border-axim-gold/30 rounded transition-all font-bold text-xs"
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </InfoPanel>
+          )}
 
           <InfoPanel icon={LuLock} iconColor="text-axim-purple" title="Product Licenses">
             <div className="space-y-4">

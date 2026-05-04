@@ -5,10 +5,27 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import { generators } from '../data/companyOfferings';
 import SEO from '../components/SEO';
+const toolsSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": generators.map((tool, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "item": {
+      "@type": "SoftwareApplication",
+      "name": tool.title,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": tool.desc
+    }
+  }))
+};
+
 import { useAximStore } from '../store/useAximStore';
 import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText, LuLock, LuUnlock } = LuIcons;
 
@@ -49,8 +66,16 @@ const courses = [
 
 
 export default function Tools() {
-      const userSession = useAximStore((state) => state.userSession);
+  const userSession = useAximStore((state) => state.userSession);
   const { profile } = useAximAuth();
+  const [queueToast, setQueueToast] = useState(null);
+  const { enqueueAction, telemetryStatus } = useAximStore(
+    useShallow((state) => ({
+      enqueueAction: state.enqueueAction,
+      telemetryStatus: state.telemetryStatus
+    }))
+  );
+
 
   // Simulate premium access via profile clearance_level or a specific flag.
   // We'll treat clearance_level >= 2 as premium for the simulation,
@@ -74,10 +99,7 @@ export default function Tools() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
-      <SEO title="Premium Legal & Financial Tools | AXiM Systems"
-        description="Access AXiM's comprehensive suite of document generators and elite training courses."
-        url="https://axim.us.com/tools"
-        jsonLd={[jsonLd]} />
+      <SEO title="Our Offerings | Tools" description="Smart products and services built to make your life easier." jsonLd={[toolsSchema]} />
       <div className="mb-20">
         <span className="section-label">Academy & Infrastructure</span>
         <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools Showroom</h1>
@@ -158,7 +180,16 @@ export default function Tools() {
                     <Link
                       to={doc.id === 'G_DEMAND' ? destUrl : '#'}
                       className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${doc.id === 'G_DEMAND' ? (isLicensed ? 'border-axim-purple text-axim-purple shadow-[0_0_15px_rgba(125,0,255,0.4)] hover:bg-axim-purple hover:text-black hover:shadow-[0_0_25px_rgba(125,0,255,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]') : 'border-zinc-700 text-zinc-500 cursor-not-allowed opacity-50'}`}
-                      onClick={(e) => { if (doc.id !== 'G_DEMAND') e.preventDefault(); }}
+                      onClick={(e) => {
+                        if (doc.id !== 'G_DEMAND') {
+                          e.preventDefault();
+                        } else if (telemetryStatus === 'LOCAL_BUFFER' || telemetryStatus !== 'STABLE') {
+                          e.preventDefault();
+                          enqueueAction({ type: 'LAUNCH_UNIT', target: doc.id, name: doc.title });
+                          setQueueToast('[ACTION_QUEUED] System is offline. Your request has been securely buffered.');
+                          setTimeout(() => setQueueToast(null), 4000);
+                        }
+                      }}
                     >
                       {doc.id !== 'G_DEMAND' ? (
                          <>Deployment Pending <SafeIcon icon={LuClock} /></>
@@ -174,7 +205,16 @@ export default function Tools() {
                       target={doc.id === 'G_DEMAND' && destUrl !== "#" ? "_blank" : undefined}
                       rel={doc.id === 'G_DEMAND' && destUrl !== "#" ? "noopener noreferrer" : undefined}
                       className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${doc.id === 'G_DEMAND' ? (isLicensed ? 'border-axim-purple text-axim-purple shadow-[0_0_15px_rgba(125,0,255,0.4)] hover:bg-axim-purple hover:text-black hover:shadow-[0_0_25px_rgba(125,0,255,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]') : 'border-zinc-700 text-zinc-500 cursor-not-allowed opacity-50'}`}
-                      onClick={(e) => { if (doc.id !== 'G_DEMAND') e.preventDefault(); }}
+                      onClick={(e) => {
+                        if (doc.id !== 'G_DEMAND') {
+                          e.preventDefault();
+                        } else if (telemetryStatus === 'LOCAL_BUFFER' || telemetryStatus !== 'STABLE') {
+                          e.preventDefault();
+                          enqueueAction({ type: 'LAUNCH_UNIT', target: doc.id, name: doc.title });
+                          setQueueToast('[ACTION_QUEUED] System is offline. Your request has been securely buffered.');
+                          setTimeout(() => setQueueToast(null), 4000);
+                        }
+                      }}
                     >
                       {doc.id !== 'G_DEMAND' ? (
                          <>Deployment Pending <SafeIcon icon={LuClock} /></>
@@ -262,6 +302,12 @@ export default function Tools() {
         </div>
       </section>
 
+      {queueToast && (
+        <div className="fixed bottom-6 right-6 bg-axim-gold text-black px-6 py-4 rounded-sm shadow-[0_0_20px_rgba(240,255,0,0.3)] font-mono text-xs uppercase tracking-widest z-50 flex items-center gap-3">
+          <div className="w-2 h-2 bg-black rounded-full animate-pulse" />
+          {queueToast}
+        </div>
+      )}
     </div>
   );
 }
