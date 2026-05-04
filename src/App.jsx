@@ -38,6 +38,7 @@ const Profile = React.lazy(() => import('./pages/Profile'));
 const Status = React.lazy(() => import('./pages/Status'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const NdaGeneratorLanding = React.lazy(() => import('./pages/tools/NdaGeneratorLanding'));
+const Terms = React.lazy(() => import('./pages/Terms'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Article = React.lazy(() => import('./pages/Article'));
 const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
@@ -86,6 +87,7 @@ function App() {
             <Route path="/tools/paystub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
+            <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
