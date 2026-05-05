@@ -101,15 +101,20 @@ export default function Article() {
         />
       </header>
 
-      {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-        <div className="w-full aspect-video md:aspect-[21/9] mb-12 border border-white/10 rounded-sm overflow-hidden bg-bg-void shadow-[0_0_30px_rgba(125,0,255,0.05)]">
+      <div className="w-full aspect-video md:aspect-[21/9] mb-12 border border-white/10 rounded-sm overflow-hidden bg-gradient-to-br from-axim-deep to-black shadow-[0_0_30px_rgba(125,0,255,0.05)] relative flex items-center justify-center">
+        {article._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
           <img
-            src={article._embedded['wp:featuredmedia'][0].source_url}
+            src={article._embedded['wp:featuredmedia'][0].source_url.replace('http:', 'https:')}
             alt={DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })}
             className="w-full h-full object-cover"
           />
-        </div>
-      )}
+        ) : (
+          <div className="text-axim-purple/30 flex flex-col items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z" /></svg>
+            <span className="font-mono text-[0.6rem] uppercase tracking-widest">AXiM_INTEL_ARCHIVE</span>
+          </div>
+        )}
+      </div>
 
       <div
         className="prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-a:text-axim-purple hover:prose-a:text-axim-gold prose-a:transition-colors prose-img:rounded-md prose-img:border prose-img:border-white/10"
