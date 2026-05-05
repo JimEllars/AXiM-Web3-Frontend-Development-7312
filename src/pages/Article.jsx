@@ -101,6 +101,16 @@ export default function Article() {
         />
       </header>
 
+      {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+        <div className="w-full aspect-video md:aspect-[21/9] mb-12 border border-white/10 rounded-sm overflow-hidden bg-bg-void shadow-[0_0_30px_rgba(125,0,255,0.05)]">
+          <img
+            src={article._embedded['wp:featuredmedia'][0].source_url}
+            alt={DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
       <div
         className="prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-a:text-axim-purple hover:prose-a:text-axim-gold prose-a:transition-colors prose-img:rounded-md prose-img:border prose-img:border-white/10"
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content.rendered) }}

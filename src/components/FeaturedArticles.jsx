@@ -51,15 +51,29 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 3 
         Featured
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {articles.slice(0, limit).map(article => (
-          <a key={article.id} href={`/article/${article.slug}`} className="block border border-white/10 bg-black hover:border-axim-purple/50 transition-colors p-6 group">
-            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || article.title || '')}}></h3>
-            <div className="text-sm text-zinc-400 line-clamp-3 mb-4" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || article.excerpt || '')}}></div>
-            <span className="text-xs font-mono text-axim-gold uppercase tracking-widest flex items-center gap-2">
-              Read Report <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </span>
-          </a>
-        ))}
+        {articles.slice(0, limit).map(article => {
+          const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+          return (
+            <a key={article.id} href={`/article/${article.slug}`} className="block border border-white/10 bg-black hover:border-axim-purple/50 transition-colors group overflow-hidden flex flex-col">
+              <div className="w-full aspect-video border-b border-white/10 bg-axim-purple/5 relative overflow-hidden flex-shrink-0">
+                {imageUrl ? (
+                  <img src={imageUrl} alt="" className="w-full h-full object-cover group-hover:opacity-80 transition-opacity" loading="lazy" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-axim-purple font-mono text-[0.6rem] uppercase tracking-widest opacity-50">NO_MEDIA_ATTACHED</span>
+                  </div>
+                )}
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || article.title || '')}}></h3>
+                <div className="text-sm text-zinc-400 line-clamp-3 mb-4 flex-grow" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || article.excerpt || '')}}></div>
+                <span className="text-xs font-mono text-axim-gold uppercase tracking-widest flex items-center gap-2 mt-auto">
+                  Read Report <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </span>
+              </div>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
