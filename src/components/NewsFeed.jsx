@@ -46,8 +46,13 @@ export default function NewsFeed({ limit = 9 }) {
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="block group flex flex-col gap-3">
               <div className="w-full aspect-video rounded-sm overflow-hidden border border-white/10 group-hover:border-axim-gold/50 transition-colors relative bg-axim-purple/5">
-                {imageUrl && (
-                  <img src={imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" loading="lazy" />
+                {imageUrl ? (
+                  <img src={imageUrl.replace('http:', 'https:')} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" loading="lazy" />
+                ) : (
+                  <div className="text-axim-purple/30 group-hover:text-axim-purple/60 transition-colors flex flex-col items-center justify-center gap-2 w-full h-full bg-gradient-to-br from-axim-deep to-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z" /></svg>
+                    <span className="font-mono text-[0.5rem] uppercase tracking-widest">AXiM_INTEL_ARCHIVE</span>
+                  </div>
                 )}
               </div>
               <div className="mt-2">

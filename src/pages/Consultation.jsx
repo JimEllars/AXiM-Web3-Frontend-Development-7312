@@ -1,352 +1,87 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import * as LuIcons from 'react-icons/lu';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { useAximStore } from '../store/useAximStore';
+import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
-
-const { LuCalendar, LuMail, LuPhone, LuArrowRight, LuArrowLeft, LuBuilding2, LuCheckCircle2 } = LuIcons;
+import * as LuIcons from 'react-icons/lu';
 
 export default function Consultation() {
-  const [step, setStep] = useState(1);
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    company: '',
-    technicalNeeds: [],
-    timeline: '',
-    budget: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const navigate = useNavigate();
+  const enqueueAction = useAximStore((state) => state.enqueueAction);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', focus: 'automation' });
 
-  const technicalOptions = [
-    'Document Orchestration',
-    'Fleet Telemetry',
-    'Custom LLM Integration',
-    'Web3 Infrastructure',
-    'Enterprise Architecture'
-  ];
-
-  const toggleTechnicalNeed = (need) => {
-    setFormState(prev => {
-      const needs = prev.technicalNeeds.includes(need)
-        ? prev.technicalNeeds.filter(n => n !== need)
-        : [...prev.technicalNeeds, need];
-      return { ...prev, technicalNeeds: needs };
-    });
-  };
-
-  const nextStep = () => setStep(s => Math.min(s + 1, 3));
-  const prevStep = () => setStep(s => Math.max(s - 1, 1));
-
-  const handleSubmit = async (e) => {
+  const handleBooking = (e) => {
     e.preventDefault();
-    if (step < 3) {
-      nextStep();
-      return;
-    }
+    if (!formData.name || !formData.email) return;
 
-    setIsSubmitting(true);
+    setIsProcessing(true);
 
-    try {
-      const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/ground-game-assign', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formState),
+    // Simulate secure network routing to Autonomous Queue
+    setTimeout(() => {
+      enqueueAction({
+        type: 'CONSULTATION_REQUEST',
+        target: formData.email,
+        name: `Strategy Session: ${formData.name}`
       });
-
-      if (response.ok) {
-        setIsSuccess(true);
-        setFormState({ name: '', email: '', company: '', technicalNeeds: [], timeline: '', budget: '', message: '' });
-        setStep(1);
-        setTimeout(() => setIsSuccess(false), 5000);
-      } else {
-        /* Handle error locally if necessary */
-      }
-    } catch (err) { /* ignore */ } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 50 : -50,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 50 : -50,
-      opacity: 0
-    })
+      setIsProcessing(false);
+      navigate('/profile'); // Send to vault to see queued action
+    }, 800);
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
-      <div className="mb-20">
-        <span className="section-label">Strategic Advisory</span>
-        <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Request Consultation</h1>
-        <p className="text-zinc-500 max-w-2xl text-lg leading-relaxed mb-12">
-          Connect with our enterprise architects and business strategists to discuss bespoke solutions, infrastructure scaling, and operational modernization for your organization.
-        </p>
-      </div>
+    <div className="max-w-3xl mx-auto px-6 py-20 relative z-10">
+      <SEO title="Strategy Session | AXiM Systems" description="Book a consultation to streamline your business architecture." />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-        <motion.div
-          className="lg:col-span-2 space-y-8"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: "circOut",
-                }}
-        >
-          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 pointer-events-none" />
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12 bg-black/60 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(125,0,255,0.05)] rounded-sm">
 
-            <h3 className="text-2xl font-black uppercase mb-8">Direct Access</h3>
+        <header className="mb-10 border-b border-white/10 pb-8 text-center">
+          <div className="inline-flex items-center gap-2 text-axim-purple font-mono text-xs uppercase tracking-widest mb-4 px-3 py-1 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">
+            <div className="w-1.5 h-1.5 bg-axim-purple rounded-full animate-pulse" />
+            Direct Uplink
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">Strategy Session</h1>
+          <p className="text-zinc-400 text-sm leading-relaxed max-w-lg mx-auto">
+            Connect with our architecture team to identify bottlenecks, deploy autonomous tools, and scale your operations efficiently.
+          </p>
+        </header>
 
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/5 border border-white/10 rounded text-axim-gold">
-                  <SafeIcon icon={LuCalendar} className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-white uppercase tracking-wider text-sm mb-1">Schedule Call</h4>
-                  <p className="text-zinc-400 text-sm">Select a time on our calendar for an initial discovery session.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/5 border border-white/10 rounded text-axim-gold">
-                  <SafeIcon icon={LuMail} className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-white uppercase tracking-wider text-sm mb-1">Email Protocol</h4>
-                  <p className="text-zinc-400 text-sm">strategy@axim.us.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/5 border border-white/10 rounded text-axim-gold">
-                  <SafeIcon icon={LuBuilding2} className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-white uppercase tracking-wider text-sm mb-1">Headquarters</h4>
-                  <p className="text-zinc-400 text-sm">Global Remote Operations<br />Enterprise Division</p>
-                </div>
-              </div>
+        <form onSubmit={handleBooking} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Operator Name</label>
+              <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-black border border-white/10 p-3 text-white font-mono text-sm focus:border-axim-purple focus:outline-none transition-colors" placeholder="e.g. John Doe" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Secure Comms (Email)</label>
+              <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-black border border-white/10 p-3 text-white font-mono text-sm focus:border-axim-purple focus:outline-none transition-colors" placeholder="sysadmin@company.com" />
             </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          className="lg:col-span-3"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: "circOut",
-                  delay: 0.2  ,
-                }}
-        >
-          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-8 relative min-h-[450px]">
-            <h3 className="text-2xl font-black uppercase mb-6">
-              {isSuccess ? 'Initiate Request' : `Step ${step} of 3`}
-            </h3>
-
-            {isSuccess ? (
-              <div className="bg-axim-gold/10 border border-axim-gold/30 p-6 text-center mt-12">
-                <div className="w-16 h-16 bg-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-4 text-axim-gold">
-                  <SafeIcon icon={LuCheckCircle2} className="w-8 h-8" />
-                </div>
-                <h4 className="text-xl font-bold uppercase text-axim-gold mb-2">Request Received</h4>
-                <p className="text-zinc-400">Our strategic team will review your inquiry and initiate contact within 24 hours.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6 h-full flex flex-col justify-between">
-                <div className="relative overflow-hidden flex-grow">
-                  <AnimatePresence mode="wait" custom={1}>
-                    {step === 1 && (
-                      <motion.div
-                        key="step1"
-                        custom={1}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.4, ease: "circOut",
-                }}
-                        className="space-y-6 absolute w-full"
-                      >
-                        <h4 className="text-lg font-bold text-white mb-4">Organization & Identity</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Primary Contact</label>
-                            <input
-                              type="text"
-                              name="name"
-                              required
-                              value={formState.name}
-                              onChange={handleChange}
-                              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors"
-                              placeholder="Full Name"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Comms Channel</label>
-                            <input
-                              type="email"
-                              name="email"
-                              required
-                              value={formState.email}
-                              onChange={handleChange}
-                              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors"
-                              placeholder="Corporate Email"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Organization</label>
-                          <input
-                            type="text"
-                            name="company"
-                            required
-                            value={formState.company}
-                            onChange={handleChange}
-                            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors"
-                            placeholder="Company Name"
-                          />
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {step === 2 && (
-                      <motion.div
-                        key="step2"
-                        custom={1}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.4, ease: "circOut",
-                }}
-                        className="space-y-6 absolute w-full"
-                      >
-                        <h4 className="text-lg font-bold text-white mb-4">Technical Needs</h4>
-                        <p className="text-sm text-zinc-400 mb-4">Select the domains relevant to your inquiry:</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {technicalOptions.map((opt) => (
-                            <div
-                              key={opt}
-                              onClick={() => toggleTechnicalNeed(opt)}
-                              className={`p-3 border cursor-pointer transition-colors text-sm ${formState.technicalNeeds.includes(opt) ? 'border-axim-gold bg-axim-gold/10 text-white' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/30'}`}
-                            >
-                              {opt}
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {step === 3 && (
-                      <motion.div
-                        key="step3"
-                        custom={1}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.4, ease: "circOut",
-                }}
-                        className="space-y-6 absolute w-full"
-                      >
-                        <h4 className="text-lg font-bold text-white mb-4">Timeline & Budget</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Expected Timeline</label>
-                            <select
-                              name="timeline"
-                              value={formState.timeline}
-                              onChange={handleChange}
-                              className="w-full bg-black/50 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors appearance-none"
-                            >
-                              <option value="" disabled>Select Timeline</option>
-                              <option value="Immediate">Immediate (0-1 Month)</option>
-                              <option value="Short Term">Short Term (1-3 Months)</option>
-                              <option value="Medium Term">Medium Term (3-6 Months)</option>
-                              <option value="Exploratory">Exploratory / Ongoing</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Budget Range</label>
-                            <select
-                              name="budget"
-                              value={formState.budget}
-                              onChange={handleChange}
-                              className="w-full bg-black/50 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors appearance-none"
-                            >
-                              <option value="" disabled>Select Budget</option>
-                              <option value="<$10k">&lt; $10k</option>
-                              <option value="$10k-$50k">$10k - $50k</option>
-                              <option value="$50k-$250k">$50k - $250k</option>
-                              <option value="$250k+">$250k+</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 mb-2">Strategic Objectives</label>
-                          <textarea
-                            name="message"
-                            required
-                            value={formState.message}
-                            onChange={handleChange}
-                            rows={3}
-                            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white focus:border-axim-gold focus:outline-none transition-colors resize-none"
-                            placeholder="Detail your primary challenges or scaling objectives..."
-                          ></textarea>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="flex gap-4 mt-8 pt-6 border-t border-white/10 z-10 bg-bg-void/50 backdrop-blur-sm">
-                  {step > 1 && (
-                    <button
-                      type="button"
-                      onClick={prevStep}
-                      className="px-6 py-4 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <SafeIcon icon={LuArrowLeft} /> Back
-                    </button>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || (step === 1 && (!formState.name || !formState.email || !formState.company))}
-                    className="flex-grow py-4 bg-axim-gold text-black font-bold uppercase tracking-widest hover:bg-white transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Transmitting...' : step < 3 ? 'Continue' : 'Submit Request'}
-                    {step < 3 ? <SafeIcon icon={LuArrowRight} /> : null}
-                  </button>
-                </div>
-              </form>
-            )}
+          <div className="space-y-2">
+            <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Primary Objective</label>
+            <select value={formData.focus} onChange={e => setFormData({...formData, focus: e.target.value})} className="w-full bg-black border border-white/10 p-3 text-white font-mono text-sm focus:border-axim-purple focus:outline-none transition-colors appearance-none">
+              <option value="automation">Process Automation & Tooling</option>
+              <option value="infrastructure">Decentralized Infrastructure Setup</option>
+              <option value="intelligence">Custom Intelligence Feeds</option>
+            </select>
           </div>
-        </motion.div>
-      </div>
+
+          <button
+            type="submit"
+            disabled={isProcessing}
+            className="w-full mt-4 px-10 py-4 bg-axim-gold text-black font-black uppercase text-sm tracking-widest hover:bg-white transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+            {isProcessing ? (
+              <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"/> TRANSMITTING...</span>
+            ) : (
+              <span className="flex items-center gap-2">Request Authorization <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4"/></span>
+            )}
+          </button>
+        </form>
+
+      </motion.div>
     </div>
   );
 }

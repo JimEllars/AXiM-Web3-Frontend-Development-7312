@@ -169,24 +169,24 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
         let posts = [];
 
         if (!categorySlug) {
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else if (!categoryId) {
           // No category found, fallback to fetching recent posts
 
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
-          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
 
           if (!posts || posts.length === 0) {
 
-            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
             if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
             posts = await postsRes.json();
           }
@@ -257,3 +257,17 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
   return fetchPromise;
 }
+
+
+export const fetchPosts = async (params = {}) => {
+  // Strictly enforce _embed=1 for media retrieval
+  const queryParams = new URLSearchParams({
+    _embed: '1',
+    ...params
+  });
+
+  const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?${queryParams}`);
+  if (!res.ok) throw new Error('Failed to fetch WordPress posts');
+
+  return res.json();
+};
