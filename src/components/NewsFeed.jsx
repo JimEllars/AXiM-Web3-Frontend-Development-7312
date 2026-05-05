@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { fetchPostsByCategory as fetchPosts } from '../lib/wp-fetch';
+import WPImage from './WPImage';
 
 export default function NewsFeed({ limit = 9 }) {
   const [articles, setArticles] = useState([]);
@@ -42,18 +43,14 @@ export default function NewsFeed({ limit = 9 }) {
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
         {articles.slice(0, limit).map(article => {
-          const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="block group flex flex-col gap-3">
-              <div className="w-full aspect-video rounded-sm overflow-hidden border border-white/10 group-hover:border-axim-gold/50 transition-colors relative bg-axim-purple/5">
-                {imageUrl ? (
-                  <img src={imageUrl.replace('http:', 'https:')} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" loading="lazy" />
-                ) : (
-                  <div className="text-axim-purple/30 group-hover:text-axim-purple/60 transition-colors flex flex-col items-center justify-center gap-2 w-full h-full bg-gradient-to-br from-axim-deep to-black">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z" /></svg>
-                    <span className="font-mono text-[0.5rem] uppercase tracking-widest">AXiM_INTEL_ARCHIVE</span>
-                  </div>
-                )}
+              <div className="w-full aspect-video rounded-sm overflow-hidden relative group-hover:border-axim-gold/50 transition-colors">
+                <WPImage
+                  mediaId={article.featured_media}
+                  alt=""
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                />
               </div>
               <div className="mt-2">
                 <div className="text-[0.65rem] font-mono text-axim-purple mb-2 uppercase tracking-widest flex items-center gap-2">
