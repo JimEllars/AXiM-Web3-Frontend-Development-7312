@@ -1,3 +1,26 @@
+
+export const getFeaturedImage = (article) => {
+  if (!article) return null;
+
+  // 1. Primary: Native WP Embed
+  const media = article._embedded?.['wp:featuredmedia']?.[0];
+  let url = media?.source_url ||
+            media?.media_details?.sizes?.large?.source_url ||
+            media?.media_details?.sizes?.full?.source_url;
+
+  // 2. Secondary: Hunt for SEO/Plugin "Ghost" Fields if _embedded was stripped
+  if (!url) {
+    url = article.yoast_head_json?.og_image?.[0]?.url ||
+          article.jetpack_featured_media_url ||
+          article.featured_image_src ||
+          article.featured_media_src_url ||
+          null;
+  }
+
+  // 3. Force HTTPS to avoid mixed-content blocks
+  return url ? url.replace('http:', 'https:') : null;
+};
+
 /**
  * Headless WordPress Fetch Utility
  * Adapted for Vite/React SPA fetching. 
@@ -220,10 +243,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
       // 3. Map the properties and ensure the explicit absolute URL link is included
       const mappedPosts = posts.map(post => {
         // Get featured image if available
-        let featuredImage = null;
-        if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]) {
-          featuredImage = post._embedded['wp:featuredmedia'][0].source_url;
-        }
+        let featuredImage = getFeaturedImage(post);
 
         return {
           id: post.id,

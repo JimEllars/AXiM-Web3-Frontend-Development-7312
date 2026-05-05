@@ -42,6 +42,7 @@ const Terms = React.lazy(() => import('./pages/Terms'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Article = React.lazy(() => import('./pages/Article'));
 const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
+const MakeLanding = React.lazy(() => import('./pages/partners/MakeLanding'));
 
 function App() {
   const location = useLocation();
@@ -86,6 +87,7 @@ function App() {
             <Route path="/tools/nda" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
             <Route path="/tools/paystub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
+            <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
