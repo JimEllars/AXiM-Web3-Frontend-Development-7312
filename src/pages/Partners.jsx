@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -212,7 +213,29 @@ export default function Partners() {
             </button>
           </div>
         </div>
-      </motion.section>      {/* Solar Infrastructure Section */}
+      </motion.section>
+      {/* Make Integration Highlight */}
+      <div className="w-full max-w-5xl mx-auto mt-16 mb-8">
+        <div className="p-8 md:p-12 bg-gradient-to-br from-axim-deep to-black border border-axim-purple/30 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+            <SafeIcon icon={LuIcons.LuWorkflow} className="w-32 h-32 text-axim-purple" />
+          </div>
+          <div className="relative z-10">
+            <div className="text-[0.65rem] font-mono text-axim-gold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-axim-gold rounded-full animate-pulse" /> Official Integration Partner
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">Automate with Make</h2>
+            <p className="text-zinc-400 max-w-xl mb-8 leading-relaxed">
+              Visually design, build, and automate complex workflows across thousands of applications without writing a single line of code.
+            </p>
+            <Link to="/partners/make" className="inline-flex px-6 py-3 bg-axim-purple/20 text-axim-purple border border-axim-purple/50 font-bold uppercase text-xs tracking-widest hover:bg-axim-purple hover:text-white transition-colors items-center gap-2">
+              Explore Integration <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4"/>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Solar Infrastructure Section */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
