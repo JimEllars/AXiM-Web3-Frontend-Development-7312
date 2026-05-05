@@ -280,14 +280,29 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
 
 export const fetchPosts = async (params = {}) => {
-  // Strictly enforce _embed=1 for media retrieval
-  const queryParams = new URLSearchParams({
-    _embed: '1',
-    ...params
-  });
+  const queryParams = new URLSearchParams(params).toString();
+  const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?_embed=1&${queryParams}`);
 
-  const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?${queryParams}`);
   if (!res.ok) throw new Error('Failed to fetch WordPress posts');
+  let posts = await res.json();
 
-  return res.json();
+  // THE ABSOLUTE RESOLVER: If CDN stripped the embed but a featured_media ID exists, fetch it directly.
+  posts = await Promise.all(posts.map(async (post) => {
+     if (post.featured_media && post.featured_media > 0 && !post._embedded?.['wp:featuredmedia']) {
+         try {
+             const mediaRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/media/${post.featured_media}`);
+             if (mediaRes.ok) {
+                 const mediaData = await mediaRes.json();
+                 // Reconstruct the stripped embed object locally
+                 if (!post._embedded) post._embedded = {};
+                 post._embedded['wp:featuredmedia'] = [mediaData];
+             }
+         } catch (e) {
+             console.log("[MEDIA_RESOLVER] Failed to reconstruct media for post:", post.id);
+         }
+     }
+     return post;
+  }));
+
+  return posts;
 };

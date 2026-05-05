@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { motion } from 'framer-motion';
+import { fetchPosts, getFeaturedImage } from '../lib/wp-fetch';
 
 export default function Article() {
   const { slug } = useParams();
@@ -18,10 +19,8 @@ export default function Article() {
 
     const loadArticle = async () => {
       try {
-        const response = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?slug=${slug}&_embed`);
-        if (!response.ok) throw new Error("Uplink failed");
-
-        const data = await response.json();
+        // Utilize the absolute resolver utility instead of manual fetch
+        const data = await fetchPosts({ slug: slug });
 
         if (isMounted) {
           if (data && data.length > 0) {
