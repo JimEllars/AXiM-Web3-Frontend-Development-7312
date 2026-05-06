@@ -1,6 +1,7 @@
+window.scrollTo = vi.fn();
 import 'global-jsdom/register';
-import { test, describe, afterEach, mock } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, afterEach, vi } from 'vitest';
+import assert from 'assert';
 import { render, cleanup } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';

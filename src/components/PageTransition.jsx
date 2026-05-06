@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -16,6 +16,11 @@ const pageTransition = {
 
 export default function PageTransition({ children }) {
   const location = useLocation();
+  const { pathname } = location;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <motion.div
