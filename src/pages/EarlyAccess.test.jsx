@@ -1,7 +1,7 @@
 import 'global-jsdom/register';
 import React from 'react';
-import { describe, it, beforeEach, mock } from 'node:test';
-import assert from 'node:assert';
+import { describe, it, beforeEach, vi } from 'vitest';
+import assert from 'assert';
 import { render, screen, fireEvent } from '@testing-library/react';
 import EarlyAccess from './EarlyAccess.jsx';
 
@@ -16,7 +16,7 @@ global.IntersectionObserver = class IntersectionObserver {
 describe('EarlyAccess Component', () => {
   beforeEach(() => {
     // Mock alert
-    global.alert = mock.fn();
+    global.alert = vi.fn();
   });
 
   it('renders the header and main content', () => {
@@ -65,6 +65,6 @@ describe('EarlyAccess Component', () => {
     fireEvent.submit(form);
 
     assert.strictEqual(global.alert.mock.calls.length, 1);
-    assert.strictEqual(global.alert.mock.calls[0].arguments[0], 'Thanks for joining the waitlist!');
+    assert.strictEqual(global.alert.mock.calls[0][0], 'Thanks for joining the waitlist!');
   });
 });

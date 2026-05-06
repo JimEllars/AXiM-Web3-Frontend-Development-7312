@@ -175,7 +175,9 @@ export default function Profile() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[40px] pointer-events-none group-hover:bg-axim-gold/10 transition-colors"></div>
                     <div className="relative z-10 flex flex-col gap-1">
                       <div className="text-[0.6rem] font-mono text-axim-gold uppercase tracking-widest">[ACTION_QUEUED]</div>
-                      <div className="font-mono text-sm text-white tracking-widest">{action.name}</div>
+                      <span className="font-mono text-xs uppercase text-white truncate max-w-[250px]">
+  {action.name ? action.name : action.type.replace(/_/g, ' ')}
+</span>
                       <div className="text-[0.65rem] font-mono text-zinc-500 uppercase">{action.type} // {new Date(action.timestamp).toLocaleTimeString()}</div>
                     </div>
                     <button

@@ -67,6 +67,8 @@ export default function Article() {
     );
   }
 
+const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://axim.us.com/default-og-image.jpg"; // Replace default with actual fallback URL later if needed
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -76,6 +78,7 @@ export default function Article() {
       <SEO
         title={DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })}
         description={DOMPurify.sanitize(article.excerpt.rendered, { ALLOWED_TAGS: [] })}
+        image={featuredImageUrl}
         type="article"
       />
 
