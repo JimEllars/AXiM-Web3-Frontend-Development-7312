@@ -55,14 +55,16 @@ export default function FeaturedArticles({ categorySlug = 'featured', limit = 3 
         {articles.slice(0, limit).map(article => {
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="block border border-white/10 bg-black hover:border-axim-purple/50 transition-colors group overflow-hidden flex flex-col">
-              <div className="w-full aspect-video relative overflow-hidden flex-shrink-0">
-                {/* Inject self-hydrating image component */}
-                <WPImage
-                  mediaId={article.featured_media}
-                  alt=""
-                  className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
-                />
-              </div>
+              {article.featuredImage && (
+                <div className="w-full aspect-video relative overflow-hidden flex-shrink-0">
+                  {/* Inject self-hydrating image component */}
+                  <WPImage
+                    src={article.featuredImage}
+                    alt=""
+                    className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
+                  />
+                </div>
+              )}
               <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-lg font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || article.title || '')}}></h3>
                 <div className="text-sm text-zinc-400 line-clamp-3 mb-4 flex-grow" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || article.excerpt || '')}}></div>

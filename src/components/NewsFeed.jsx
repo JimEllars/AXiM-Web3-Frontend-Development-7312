@@ -45,13 +45,15 @@ export default function NewsFeed({ limit = 9 }) {
         {articles.slice(0, limit).map(article => {
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="block group flex flex-col gap-3">
-              <div className="w-full aspect-video rounded-sm overflow-hidden relative group-hover:border-axim-gold/50 transition-colors">
-                <WPImage
-                  mediaId={article.featured_media}
-                  alt=""
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
-              </div>
+              {article.featuredImage && (
+                <div className="w-full aspect-video rounded-sm overflow-hidden relative group-hover:border-axim-gold/50 transition-colors">
+                  <WPImage
+                    src={article.featuredImage}
+                    alt=""
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                </div>
+              )}
               <div className="mt-2">
                 <div className="text-[0.65rem] font-mono text-axim-purple mb-2 uppercase tracking-widest flex items-center gap-2">
                   <div className="w-1 h-1 bg-axim-gold rounded-full" />
