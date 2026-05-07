@@ -161,6 +161,7 @@ export default function GlobalSearch() {
 
       {/* Mobile Icon */}
       <button
+        aria-label="Open Omnibar Search"
         onClick={() => setIsOpen(true)}
         className="md:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm hover:text-axim-purple transition-colors"
       >
@@ -197,7 +198,7 @@ export default function GlobalSearch() {
                   disabled={isSynchronizing}
                   className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(125,0,255,0.2)] rounded-sm px-2 transition-shadow disabled:opacity-50"
                 />
-                <button type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
+                <button aria-label="Close Search" type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
                 </button>
               </form>

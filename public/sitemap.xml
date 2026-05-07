@@ -6,22 +6,27 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://axim.us.com/tools</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://axim.us.com/articles</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://axim.us.com/documentation</loc>
+    <loc>https://axim.us.com/tools</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://axim.us.com/tool-guides</loc>
+    <loc>https://axim.us.com/tools/nda</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/tools/paystub</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/consultation</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -31,12 +36,17 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://axim.us.com/status</loc>
+    <loc>https://axim.us.com/partners/make</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://axim.us.com/early-access</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/article/how-make-transforms-automation-for-business-professionals-our-detailed-look</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>

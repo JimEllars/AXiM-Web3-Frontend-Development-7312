@@ -48,12 +48,13 @@ async function generateSitemap() {
   console.log("Generating sitemap...");
   const staticRoutes = [
     '/',
-    '/tools',
     '/articles',
-    '/documentation',
-    '/tool-guides',
+    '/tools',
+    '/tools/nda',
+    '/tools/paystub',
+    '/consultation',
     '/partners',
-    '/status',
+    '/partners/make', // Added Make partner route
     '/early-access'
   ];
 
