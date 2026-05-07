@@ -18,6 +18,7 @@ const makeSeoSchema = {
 
 export default function MakeLanding() {
   const affiliateLink = "https://www.make.com/en/register?pc=aximpartner";
+  const featuredImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/Best-featuresat-Make-Dark.webp";
 
   return (
     <div className="w-full relative z-10">
@@ -25,6 +26,7 @@ export default function MakeLanding() {
         title="AXiM x Make | Automate Your Business Systems"
         description="Stop doing busywork. Start building systems. Get started with Make through the official AXiM partner program."
         customSchema={[makeSeoSchema]}
+        image={featuredImage}
       />
 
       {/* Hero Section */}
@@ -66,46 +68,53 @@ export default function MakeLanding() {
                 </a>
               </motion.div>
 
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 text-[0.7rem] font-mono text-zinc-500 flex items-center uppercase tracking-widest">
-                <SafeIcon icon={LuIcons.LuCheck} className="w-3 h-3 text-axim-gold mr-2" />
-                Free forever plan available. No credit card required.
-              </motion.p>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                   <div className="flex -space-x-2">
+                     <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-600"></div>
+                     <div className="w-6 h-6 rounded-full bg-zinc-700 border border-zinc-500"></div>
+                     <div className="w-6 h-6 rounded-full bg-[#9333EA] border border-[#DB2777] flex items-center justify-center text-[0.4rem] font-bold text-white">+</div>
+                   </div>
+                   <span className="text-[0.65rem] font-mono text-zinc-400 uppercase tracking-widest">Join 500,000+ Modern Operators</span>
+                </div>
+                <p className="text-[0.65rem] font-mono text-zinc-500 flex items-center uppercase tracking-widest">
+                  <SafeIcon icon={LuIcons.LuCheck} className="w-3 h-3 text-axim-gold mr-2" />
+                  Free forever plan available. No credit card required.
+                </p>
+              </motion.div>
             </div>
 
-            {/* Hero Visual (Workflow Mockup) */}
-            <div className="relative hidden lg:block h-[500px]">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#9333EA]/20 to-[#DB2777]/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
+            {/* Hero Visual (Workflow Mockup & Featured Image) */}
+            <div className="relative hidden lg:block w-full max-w-lg ml-auto mt-8">
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#9333EA]/30 to-[#DB2777]/30 rounded-full blur-[100px] opacity-70 pointer-events-none" />
 
-              {/* Node 1 */}
-              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-10 left-10 bg-white/5 backdrop-blur-xl p-4 rounded-sm flex items-center space-x-4 border border-white/10 w-64 shadow-2xl">
-                <div className="w-10 h-10 rounded bg-[#9333EA]/20 flex items-center justify-center text-[#9333EA]">
-                  <SafeIcon icon={LuIcons.LuMail} className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white uppercase tracking-widest">Watch Emails</p>
-                  <p className="text-[0.6rem] font-mono text-zinc-500 uppercase">Trigger</p>
-                </div>
+              {/* Featured Image Glass Frame */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "circOut", delay: 0.2 }}
+                className="relative rounded-md overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(147,51,234,0.15)] z-10 bg-black"
+              >
+                <img
+                  src={featuredImage}
+                  alt="Make Visual Automation Features"
+                  className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
+                />
               </motion.div>
 
-              {/* Node 2 */}
-              <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }} className="absolute top-24 right-10 bg-white/5 backdrop-blur-xl p-4 rounded-sm flex items-center space-x-4 border border-white/10 w-64 shadow-2xl">
-                <div className="w-10 h-10 rounded bg-axim-gold/20 flex items-center justify-center text-axim-gold">
-                  <SafeIcon icon={LuIcons.LuDatabase} className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white uppercase tracking-widest">Update CRM</p>
-                  <p className="text-[0.6rem] font-mono text-zinc-500 uppercase">Action</p>
-                </div>
-              </motion.div>
-
-              {/* Node 3 */}
-              <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }} className="absolute bottom-32 right-32 bg-white/5 backdrop-blur-xl p-4 rounded-sm flex items-center space-x-4 border border-white/10 w-64 shadow-2xl">
+              {/* Overlapping Floating Node for Depth */}
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -bottom-8 -left-12 bg-black/80 backdrop-blur-xl p-4 rounded-sm flex items-center space-x-4 border border-white/10 w-64 shadow-2xl z-20"
+              >
                 <div className="w-10 h-10 rounded bg-[#DB2777]/20 flex items-center justify-center text-[#DB2777]">
-                  <SafeIcon icon={LuIcons.LuMessageSquare} className="w-5 h-5" />
+                  <SafeIcon icon={LuIcons.LuZap} className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white uppercase tracking-widest">Slack Alert</p>
-                  <p className="text-[0.6rem] font-mono text-zinc-500 uppercase">Action</p>
+                  <p className="text-xs font-bold text-white uppercase tracking-widest">Active Sync</p>
+                  <p className="text-[0.6rem] font-mono text-zinc-500 uppercase">System Optimized</p>
                 </div>
               </motion.div>
             </div>
