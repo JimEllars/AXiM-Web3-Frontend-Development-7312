@@ -61,7 +61,21 @@ export default function SEO({ title, description, image, type = "website", url, 
     "url": url || "https://axim.us.com"
   };
 
-  const schemasToRender = jsonLd || [defaultWebPageSchema];
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://axim.us.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://axim.us.com/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const schemasToRender = jsonLd || [defaultWebPageSchema, websiteSchema];
 
   if (type === "product" || (url && url.includes('/tools/'))) {
     schemasToRender.push({

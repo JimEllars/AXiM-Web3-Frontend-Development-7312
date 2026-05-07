@@ -77,6 +77,7 @@ export default function Header() {
                   <SafeIcon icon={LuUser} className="w-4 h-4" />
                 </Link>
                 <button
+                  aria-label="Secure Logout"
                   onClick={handleLogout}
                   className="p-2.5 rounded-sm border bg-white/5 border-white/10 text-white hover:border-red-500/50 hover:text-red-500 transition-all"
                 >
@@ -87,6 +88,7 @@ export default function Header() {
           </div>
 
           <button
+            aria-label="Toggle mobile menu"
             className="lg:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
