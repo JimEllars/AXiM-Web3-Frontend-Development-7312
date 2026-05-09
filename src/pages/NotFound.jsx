@@ -11,8 +11,9 @@ export default function NotFound() {
   return (
     <div className="w-full relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
       <SEO
-        title="404 - Not Found | AXiM Hub"
-        description="The requested infrastructure node could not be located."
+        title="404 - System Malfunction"
+        description="The requested route could not be located."
+        noindex={true}
       />
 
       <div className="max-w-[800px] w-full px-6 flex flex-col items-center text-center">
