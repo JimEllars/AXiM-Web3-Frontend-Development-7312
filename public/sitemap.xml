@@ -41,6 +41,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://axim.us.com/partners/powur-solar</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/partners/powur-join</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://axim.us.com/early-access</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>

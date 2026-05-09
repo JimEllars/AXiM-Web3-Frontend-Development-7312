@@ -43,6 +43,8 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Article = React.lazy(() => import('./pages/Article'));
 const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
 const MakeLanding = React.lazy(() => import('./pages/partners/MakeLanding'));
+const PowurSolarLanding = React.lazy(() => import('./pages/partners/PowurSolarLanding'));
+const PowurJoinLanding = React.lazy(() => import('./pages/partners/PowurJoinLanding'));
 
 function App() {
   const location = useLocation();
@@ -88,6 +90,8 @@ function App() {
             <Route path="/tools/paystub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />
+            <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
+            <Route path="/partners/powur-join" element={<PageTransition><PowurJoinLanding /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
