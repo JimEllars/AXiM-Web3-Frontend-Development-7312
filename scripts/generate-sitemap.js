@@ -55,6 +55,8 @@ async function generateSitemap() {
     '/consultation',
     '/partners',
     '/partners/make', // Added Make partner route
+    '/partners/powur-solar',
+    '/partners/powur-join',
     '/early-access'
   ];
 

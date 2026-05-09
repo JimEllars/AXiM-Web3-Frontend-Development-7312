@@ -8,6 +8,7 @@ AXiM Systems delivers smart protocol integrations, web3 interfaces, and intellig
 AXiM operates as a distributed edge network, providing high-fidelity digital byproducts and business generators without the complex learning curve.
 
 ## Key Offerings & Tools
+- Residential Solar Infrastructure: Through our partnership with Powur, we provide zero-down residential solar solutions and a cloud-based agency model for sellers.
 - **Mutual NDA Generator:** Instantly deploy rigorously structured, mutual Non-Disclosure Agreements designed to protect proprietary information.
 - **Pay Stub Generator:** Enterprise-grade payroll documentation generation.
 - **Partner Ecosystem:** We natively support and integrate with [Make.com] for complex, visual business automation and systems scaling.
