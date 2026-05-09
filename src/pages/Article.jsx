@@ -69,6 +69,28 @@ export default function Article() {
 
 const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://axim.us.com/default-og-image.jpg"; // Replace default with actual fallback URL later if needed
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] }),
+    "image": [featuredImageUrl],
+    "datePublished": new Date(article.date).toISOString(),
+    "dateModified": new Date(article.modified).toISOString(),
+    "author": [{
+        "@type": "Organization",
+        "name": "AXiM Systems",
+        "url": "https://axim.us.com"
+    }],
+    "publisher": {
+        "@type": "Organization",
+        "name": "AXiM Systems",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+        }
+    }
+  };
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -80,6 +102,7 @@ const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_ur
         description={DOMPurify.sanitize(article.excerpt.rendered, { ALLOWED_TAGS: [] })}
         image={featuredImageUrl}
         type="article"
+        customSchema={[articleSchema]}
       />
 
       <Link to="/articles" className="inline-flex items-center gap-2 text-axim-purple hover:text-axim-gold font-mono text-xs uppercase tracking-widest transition-colors mb-12 group">
