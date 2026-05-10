@@ -94,6 +94,10 @@ export default function PowurSolarLanding() {
               <SafeIcon icon={LuIcons.LuStar} className="w-5 h-5 text-axim-gold" />
               YELP 5-STARS
             </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuGlobe} className="w-5 h-5 text-axim-green" />
+              ECOLOGI PARTNER
+            </div>
           </div>
         </div>
       </section>
@@ -122,6 +126,40 @@ export default function PowurSolarLanding() {
                 <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Installation</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">We handle all permitting and engineering. Once installed, flip the switch to generate clean, decentralized power.</p>
              </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Educational Block: How Solar Works */}
+      <section className="py-24 bg-black relative border-b border-white/10">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4 text-center">The Mechanics of <span className="text-axim-gold">Independence</span></h2>
+          <p className="text-sm text-zinc-400 text-center mb-16">Understanding how your home transforms from an energy consumer into an energy producer.</p>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="p-8 border border-white/10 bg-white/5 rounded-sm hover:border-axim-gold/30 transition-colors">
+              <div className="w-12 h-12 bg-black border border-white/10 text-axim-gold rounded flex items-center justify-center mb-6">
+                <SafeIcon icon={LuIcons.LuSun} className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">1. Capture</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">The sun shines onto your Tier-1 panels, which instantly convert the solar radiation into Direct Current (DC) energy.</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-8 border border-white/10 bg-white/5 rounded-sm hover:border-axim-gold/30 transition-colors">
+              <div className="w-12 h-12 bg-black border border-white/10 text-axim-gold rounded flex items-center justify-center mb-6">
+                <SafeIcon icon={LuIcons.LuZap} className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">2. Inversion</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">Your system's micro-inverters seamlessly convert the raw DC energy into Alternating Current (AC), safely powering your home's appliances.</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-8 border border-white/10 bg-white/5 rounded-sm hover:border-axim-gold/30 transition-colors">
+              <div className="w-12 h-12 bg-black border border-white/10 text-axim-gold rounded flex items-center justify-center mb-6">
+                <SafeIcon icon={LuIcons.LuArrowLeftRight} className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">3. Net Metering</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">Any excess electricity you generate is sent back to the grid. The power company credits your account, radically lowering the cost of energy you use at night.</p>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -167,6 +205,30 @@ export default function PowurSolarLanding() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Environmental Impact & Secondary CTA */}
+      <section className="py-24 bg-axim-gold text-black relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 relative z-10 text-center">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-black/10 border border-black/20 text-xs font-black uppercase tracking-widest text-black mb-6 rounded-sm">
+            <SafeIcon icon={LuIcons.LuLeaf} className="w-3 h-3" />
+            <span>100% Renewable</span>
+          </div>
+
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 leading-tight">
+            Powur Your Life. <br /> Protect The Future.
+          </h2>
+
+          <p className="text-base md:text-lg font-medium text-black/80 max-w-2xl mx-auto mb-10">
+            Solar energy is entirely renewable and clean, emitting zero greenhouse gasses. Enjoy the peace of mind that comes with knowing you are actively contributing to a cleaner energy future for the next generation.
+          </p>
+
+          <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex justify-center items-center px-10 py-5 rounded-sm bg-black text-white font-black uppercase tracking-widest text-xs hover:scale-105 transition-transform shadow-2xl">
+            Get Your Free System Design
+            <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4 text-axim-gold" />
+          </a>
         </div>
       </section>
 
