@@ -98,6 +98,33 @@ export default function PowurSolarLanding() {
         </div>
       </section>
 
+      {/* 3-Step Transition Protocol */}
+      <section className="py-24 bg-axim-deep/30 border-b border-white/10 relative">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-16 text-center">The <span className="text-axim-gold">Transition</span> Plan</h2>
+          <div className="grid md:grid-cols-3 gap-8 relative">
+             <div className="hidden md:block absolute top-6 left-10 right-10 h-0.5 bg-gradient-to-r from-axim-gold/10 via-axim-gold to-axim-gold/10 z-0"></div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-gold text-axim-gold flex items-center justify-center font-black rounded-full mb-6 text-lg">1</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Free Energy Audit</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">Provide your current utility bill. We calculate your exact energy usage to design a system that offsets 100% of your power needs.</p>
+             </div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-axim-gold border-2 border-axim-gold text-black flex items-center justify-center font-black rounded-full mb-6 text-lg shadow-[0_0_20px_rgba(240,255,0,0.4)]">2</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Custom Proposal</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">Review your custom 3D system design, Tier-1 hardware specs, and strict financing options with zero-down out of pocket.</p>
+             </div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-gold text-axim-gold flex items-center justify-center font-black rounded-full mb-6 text-lg">3</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Installation</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">We handle all permitting and engineering. Once installed, flip the switch to generate clean, decentralized power.</p>
+             </div>
+          </div>
+        </div>
+      </section>
 
       {/* Interactive Savings Estimator */}
       <section className="py-24 relative overflow-hidden bg-white/5 border-y border-white/10">

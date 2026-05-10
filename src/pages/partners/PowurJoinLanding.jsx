@@ -13,12 +13,13 @@ const joinSeoSchema = {
 };
 
 export default function PowurJoinLanding() {
+  const featuredImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
   const affiliateLink = "https://powur.com/axim/join";
   const [installs, setInstalls] = useState(3);
 
   return (
     <div className="w-full relative z-10">
-      <SEO title="AXiM x Powur | Build Your Business" description="Join the fastest-growing cloud-based solar platform." customSchema={[joinSeoSchema]} />
+      <SEO title="AXiM x Powur | Build Your Business" description="Join the fastest-growing cloud-based solar platform." image={featuredImage} customSchema={[joinSeoSchema]} />
 
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-bg-void border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/10 to-transparent pointer-events-none" />
@@ -68,6 +69,55 @@ export default function PowurJoinLanding() {
                </ul>
             </motion.div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Official Trust Indicators */}
+      <section className="py-8 bg-black border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500 items-center">
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuAward} className="w-5 h-5 text-axim-purple" />
+              INC. 5000 FASTEST GROWING
+            </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuCloud} className="w-5 h-5 text-axim-purple" />
+              100% CLOUD-BASED
+            </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuUsers} className="w-5 h-5 text-axim-purple" />
+              80,000+ ACTIVE SELLERS
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3-Step Execution Protocol */}
+      <section className="py-24 bg-axim-deep/30 border-b border-white/10 relative">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-16 text-center">The <span className="text-axim-purple">Execution</span> Protocol</h2>
+          <div className="grid md:grid-cols-3 gap-8 relative">
+             {/* Connecting Line for Desktop */}
+             <div className="hidden md:block absolute top-6 left-10 right-10 h-0.5 bg-gradient-to-r from-axim-purple/10 via-axim-purple to-axim-purple/10 z-0"></div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-purple/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-purple text-axim-purple flex items-center justify-center font-black rounded-full mb-6 text-lg">1</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Onboard & Train</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">Access the enterprise academy. Learn the platform, solar fundamentals, and compliance protocols at your own pace.</p>
+             </div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-purple/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-axim-purple border-2 border-axim-purple text-white flex items-center justify-center font-black rounded-full mb-6 text-lg shadow-[0_0_20px_rgba(125,0,255,0.4)]">2</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Submit Leads</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">Input homeowner utility data into the cloud portal. Powur's engineering team handles the custom system design and proposals.</p>
+             </div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-purple/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-purple text-axim-purple flex items-center justify-center font-black rounded-full mb-6 text-lg">3</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Scale & Earn</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">Powur manages the physical installation and permitting. You collect your aggressive rev-share commission upon project milestones.</p>
+             </div>
           </div>
         </div>
       </section>
