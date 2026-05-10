@@ -13,40 +13,88 @@ const solarSeoSchema = {
 };
 
 export default function PowurSolarLanding() {
+  const featuredImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
   const affiliateLink = "https://powur.com/axim/solar";
   const [monthlyBill, setMonthlyBill] = useState(200);
 
   return (
     <div className="w-full relative z-10">
-      <SEO title="AXiM x Powur | Residential Solar" description="Decentralize your energy with zero-down residential solar through AXiM and Powur." customSchema={[solarSeoSchema]} />
+      <SEO title="AXiM x Powur | Residential Solar" description="Stop wasting money on utility bills. Decentralize your energy with zero-down residential solar through AXiM and Powur." image={featuredImage} customSchema={[solarSeoSchema]} />
 
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-bg-void border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(240,255,0,0.05)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-axim-gold/10 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "circOut" }} className="inline-flex items-center space-x-3 px-4 py-1.5 rounded-sm bg-white/5 border border-white/10 text-sm font-medium mb-8 backdrop-blur-md">
-            <span className="text-white font-black tracking-tight uppercase">Powur</span>
-            <SafeIcon icon={LuIcons.LuX} className="w-3 h-3 text-zinc-500" />
-            <span className="text-axim-gold font-bold tracking-tight uppercase">AXiM</span>
-            <div className="w-1 h-1 rounded-full bg-zinc-600 mx-2"></div>
-            <span className="text-zinc-400 font-mono text-[0.65rem] uppercase tracking-widest">Official Infrastructure Partner</span>
-          </motion.div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column: Flyer Copy */}
+            <div className="text-left">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "circOut" }} className="inline-flex items-center space-x-3 px-4 py-1.5 rounded-sm bg-white/5 border border-white/10 text-sm font-medium mb-8 backdrop-blur-md">
+                <span className="text-white font-black tracking-tight uppercase">Powur</span>
+                <SafeIcon icon={LuIcons.LuX} className="w-3 h-3 text-zinc-500" />
+                <span className="text-axim-gold font-bold tracking-tight uppercase">AXiM</span>
+                <div className="w-1 h-1 rounded-full bg-zinc-600 mx-2"></div>
+                <span className="text-zinc-400 font-mono text-[0.65rem] uppercase tracking-widest">Official Infrastructure Partner</span>
+              </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }} className="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-white uppercase leading-tight">
-            Decentralize Your <br /> <span className="text-axim-gold drop-shadow-[0_0_15px_rgba(240,255,0,0.3)]">Grid Power.</span>
-          </motion.h1>
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }} className="text-5xl md:text-6xl font-black tracking-tighter mb-6 text-white uppercase leading-tight">
+                Stop Wasting Money On <span className="text-axim-gold drop-shadow-[0_0_15px_rgba(240,255,0,0.3)]">Utility Bills.</span>
+              </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }} className="text-lg text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Stop renting electricity from monopolies. Through our partnership with Powur, upgrade to a customized, zero-down solar system and take ownership of your energy production.
-          </motion.p>
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }} className="text-lg text-zinc-400 mb-8 max-w-2xl leading-relaxed">
+                Start generating your own power, reduce your total reliance on the public utility, and start saving money today. Own your energy and break free from skyrocketing energy costs from monopolized utility companies.
+              </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3, ease: "circOut" }}>
-            <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex justify-center items-center px-10 py-5 rounded-sm bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white hover:scale-105 transition-all shadow-[0_0_30px_rgba(240,255,0,0.2)]">
-              Request Free Solar Proposal
-              <SafeIcon icon={LuIcons.LuSun} className="ml-3 w-4 h-4" />
-            </a>
-          </motion.div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3, ease: "circOut" }}>
+                <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex justify-center items-center px-10 py-5 rounded-sm bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white hover:scale-105 transition-all shadow-[0_0_30px_rgba(240,255,0,0.2)]">
+                  Request Free Solar Proposal
+                  <SafeIcon icon={LuIcons.LuSun} className="ml-3 w-4 h-4" />
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Right Column: High-Tech Solar Visual */}
+            <div className="relative hidden lg:block w-full max-w-lg ml-auto">
+              <div className="absolute inset-0 bg-axim-gold/20 rounded-full blur-[100px] opacity-70 pointer-events-none" />
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "circOut", delay: 0.2 }}
+                className="relative rounded-md overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(240,255,0,0.1)] z-10 bg-black"
+              >
+                <img
+                  src={featuredImage}
+                  alt="Enterprise Grade Solar Panels"
+                  className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
+                />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Official Trust Indicators */}
+      <section className="py-8 bg-black border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500 items-center">
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuAward} className="w-5 h-5 text-axim-gold" />
+              INC. 5000 (4 YEARS)
+            </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-axim-gold" />
+              BBB A+ RATING
+            </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuLeaf} className="w-5 h-5 text-axim-green" />
+              CERTIFIED B-CORP
+            </div>
+            <div className="text-zinc-400 font-black tracking-tighter flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuStar} className="w-5 h-5 text-axim-gold" />
+              YELP 5-STARS
+            </div>
+          </div>
         </div>
       </section>
 
@@ -102,22 +150,22 @@ export default function PowurSolarLanding() {
               <div className="w-12 h-12 rounded bg-axim-gold/20 flex items-center justify-center mb-6 group-hover:bg-axim-gold group-hover:text-black text-axim-gold transition-colors">
                 <SafeIcon icon={LuIcons.LuBatteryCharging} className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-black uppercase tracking-tighter text-white mb-3">Tier-1 Hardware</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">We source only the highest quality panels and battery backups to ensure your grid is resilient, efficient, and future-proof.</p>
+              <h3 className="text-lg font-black uppercase tracking-tighter text-white mb-3">Fast & Personalized</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">We source the highest quality hardware via an innovative platform model to ensure a fast, simple, and highly customized installation process.</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="bg-white/5 border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-colors group">
               <div className="w-12 h-12 rounded bg-axim-gold/20 flex items-center justify-center mb-6 group-hover:bg-axim-gold group-hover:text-black text-axim-gold transition-colors">
                 <SafeIcon icon={LuIcons.LuBadgeDollarSign} className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-black uppercase tracking-tighter text-white mb-3">Zero-Down Options</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">Swap your unpredictable electric bill for a fixed, lower monthly solar payment with no upfront out-of-pocket capital required.</p>
+              <p className="text-sm text-zinc-400 leading-relaxed">Swap your unpredictable electric bill for a fixed, lower monthly payment. Our $0 down financing options allow you to save up to 50% on energy costs immediately.</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="bg-white/5 border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-colors group">
               <div className="w-12 h-12 rounded bg-axim-gold/20 flex items-center justify-center mb-6 group-hover:bg-axim-gold group-hover:text-black text-axim-gold transition-colors">
                 <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-black uppercase tracking-tighter text-white mb-3">30-Year Warranty</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">Sleep easy with an industry-leading 30-year warranty covering your panels, inverters, roof penetrations, and performance.</p>
+              <h3 className="text-lg font-black uppercase tracking-tighter text-white mb-3">Increase Home Value</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">Not only do you transition to clean, renewable energy, but a fully owned Powur solar system immediately increases the resale value of your property.</p>
             </motion.div>
           </div>
         </div>
