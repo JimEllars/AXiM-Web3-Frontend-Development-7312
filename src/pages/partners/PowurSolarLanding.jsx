@@ -102,11 +102,11 @@ export default function PowurSolarLanding() {
         </div>
       </section>
 
-      {/* 3-Step Transition Protocol */}
+      {/* 4-Step Transition Protocol */}
       <section className="py-24 bg-axim-deep/30 border-b border-white/10 relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-16 text-center">The <span className="text-axim-gold">Transition</span> Plan</h2>
-          <div className="grid md:grid-cols-3 gap-8 relative">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
              <div className="hidden md:block absolute top-6 left-10 right-10 h-0.5 bg-gradient-to-r from-axim-gold/10 via-axim-gold to-axim-gold/10 z-0"></div>
 
              <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
@@ -116,15 +116,21 @@ export default function PowurSolarLanding() {
              </div>
 
              <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
-                <div className="w-12 h-12 mx-auto bg-axim-gold border-2 border-axim-gold text-black flex items-center justify-center font-black rounded-full mb-6 text-lg shadow-[0_0_20px_rgba(240,255,0,0.4)]">2</div>
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-gold text-axim-gold flex items-center justify-center font-black rounded-full mb-6 text-lg">2</div>
                 <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Custom Proposal</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">Review your custom 3D system design, Tier-1 hardware specs, and strict financing options with zero-down out of pocket.</p>
              </div>
 
              <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
-                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-gold text-axim-gold flex items-center justify-center font-black rounded-full mb-6 text-lg">3</div>
+                <div className="w-12 h-12 mx-auto bg-axim-gold border-2 border-axim-gold text-black flex items-center justify-center font-black rounded-full mb-6 text-lg shadow-[0_0_20px_rgba(240,255,0,0.4)]">3</div>
+                <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Permitting</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed">We handle all the paperwork with your local government and utility. It's a waiting game, but your new solar payments won't start until after installation is complete.</p>
+             </div>
+
+             <div className="relative z-10 bg-black p-8 border border-white/10 rounded-sm text-center hover:border-axim-gold/50 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-black border-2 border-axim-gold text-axim-gold flex items-center justify-center font-black rounded-full mb-6 text-lg">4</div>
                 <h3 className="text-lg font-bold text-white uppercase tracking-widest mb-3">Installation</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">We handle all permitting and engineering. Once installed, flip the switch to generate clean, decentralized power.</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">Our enterprise crews handle the engineering. Once installed and approved by the utility, flip the switch to generate clean, decentralized power.</p>
              </div>
           </div>
         </div>
@@ -272,6 +278,12 @@ export default function PowurSolarLanding() {
               <h3 className="text-axim-gold font-bold mb-2">Why partner through AXiM?</h3>
               <p className="text-sm text-zinc-400 leading-relaxed">AXiM vets enterprise-grade infrastructure. Powur is the first 100% cloud-based solar platform, allowing us to pass massive efficiency savings directly to your system's design.</p>
             </div>
+          </div>
+          <div className="mt-12 text-center">
+            <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex justify-center items-center px-10 py-5 rounded-sm bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white hover:scale-105 transition-all shadow-[0_0_30px_rgba(240,255,0,0.2)]">
+              Request Free Solar Proposal
+              <SafeIcon icon={LuIcons.LuSun} className="ml-3 w-4 h-4" />
+            </a>
           </div>
         </div>
       </section>
