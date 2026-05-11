@@ -9,8 +9,8 @@ import SEO from '../components/SEO';
 export default function Home() {
   return (
     <>
-      <SEO title="Smart Business Systems"
-        description="AXiM Systems delivers smart protocol integrations, web3 interfaces, and intelligent business ecosystems."
+      <SEO title="Smarter Systems | AXiM"
+        description="Smarter Systems. Products and services built to make your life easier without breaking the bank."
        url="https://axim.us.com/"/>
       <div className="bg-void">
         <Hero />
