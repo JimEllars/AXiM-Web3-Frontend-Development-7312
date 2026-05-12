@@ -81,6 +81,18 @@ export default function Tools() {
   // We'll treat clearance_level >= 2 as premium for the simulation,
   // or userSession.is_premium
 
+
+  const handleLaunchTool = (tool) => {
+    if (telemetryStatus === 'LOCAL_BUFFER' || telemetryStatus !== 'STABLE') {
+      enqueueAction({ type: 'LAUNCH_UNIT', target: tool.id, name: tool.title });
+      setQueueToast('[ACTION_QUEUED] System is offline. Your request has been securely buffered.');
+      setTimeout(() => setQueueToast(null), 4000);
+    } else {
+      setQueueToast('[DEPLOYMENT_PENDING] ' + tool.title + ' is currently compiling.');
+      setTimeout(() => setQueueToast(null), 4000);
+    }
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -98,207 +110,76 @@ export default function Tools() {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-6 py-20 relative z-10">
-      <SEO title="Our Offerings | Tools" description="Smart products and services built to make your life easier." jsonLd={[toolsSchema]} />
-      <div className="mb-20">
-        <span className="section-label">Academy & Infrastructure</span>
-        <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">Tools Showroom</h1>
-        <p className="text-zinc-500 max-w-2xl text-lg leading-relaxed mb-12">
-          Access AXiM's comprehensive suite of document generators and elite training courses. Deploy robust legal frameworks and master modern business strategies.
-        </p>
-      </div>
+    <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
+      <SEO title="Our Offerings | Smart Systems" description="Smart products and services built to make your life easier." customSchema={[toolsSchema]} />
 
-      <div className="mb-24">
-        <div className="mb-12 flex items-center gap-4">
-          <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-axim-gold border border-white/10">
-            <SafeIcon icon={LuFileText} className="w-5 h-5" />
-          </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Product Modules</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-          {generators.map((doc, idx) => {
-            const isInternal = doc.externalUrl && doc.externalUrl.startsWith('/tools');
-
-            // For internal tools, we don't apply auth handoff here, that happens on the landing page
-            const destUrl = isInternal
-              ? doc.externalUrl
-              : doc.externalUrl && doc.externalUrl !== "#"
-                ? `${doc.externalUrl}?source=axim_hub${userSession?.session_token ? `&auth_handoff=${userSession.session_token}` : ''}`
-                : "#";
-
-            const isLicensed = userSession?.clearance_level >= 2 || userSession?.is_premium;
-            const statusLabel = isLicensed ? 'LICENSE_ACTIVE' : 'UNIT_AVAILABLE';
-
-            return (
-              <motion.div
-                key={doc.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: "circOut",
-                  delay: idx * 0.1 ,
-                }}
-                whileHover={{ scale: 1.02 }}
-                className={`group bg-white/5 backdrop-blur-xl saturate-150 border ${isLicensed ? 'border-axim-purple/50 shadow-[0_0_15px_rgba(125,0,255,0.2)] animate-pulse [animation-duration:3s]' : 'border-white/10'} hover:border-axim-purple hover:shadow-[0_0_15px_#7D00FF] transition-all relative overflow-hidden flex flex-col h-full rounded-md`}
-              >
-                <div className="p-8 flex flex-col h-full cursor-pointer relative z-10">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
-
-                  {/* Badges for specific generators */}
-                  {(doc.id === 'G_DEMAND' || doc.id === 'G_NDA') && (
-                    <div className="absolute top-6 right-6 z-20 px-3 py-1 bg-axim-purple text-black text-[0.65rem] font-bold uppercase tracking-widest rounded-full animate-pulse shadow-[0_0_10px_rgba(125,0,255,0.5)]">
-                      {doc.id === 'G_DEMAND' ? 'Trending' : 'Popular'}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4 mb-6 relative z-10">
-                    <div className="w-14 h-14 rounded-full bg-axim-purple/10 flex items-center justify-center text-axim-purple border border-axim-purple/40 shadow-[0_0_15px_rgba(125,0,255,0.1)]">
-                      <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="w-7 h-7" />
-                    </div>
-                  </div>
-
-
-
-                  <h3 className="text-2xl font-black uppercase mb-2 relative z-10 group-hover:text-axim-purple transition-colors">{doc.title}</h3>
-                  <div className="mb-4 relative z-10 flex flex-col gap-2">
-                    <span className={`w-fit inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border ${isLicensed ? 'bg-axim-purple/10 text-axim-purple border-axim-purple/30 shadow-[0_0_8px_rgba(125,0,255,0.5)] animate-pulse' : 'bg-zinc-900 text-zinc-500 border-zinc-700'}`}>
-                      {isLicensed && <SafeIcon icon={LuLock} className="w-3 h-3" />}
-                      {statusLabel}
-                    </span>
-                    {doc.id !== 'G_DEMAND' && (
-                      <span className="w-fit inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border bg-zinc-900 text-axim-gold border-axim-gold/50">
-                        Coming Soon
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
-                    {doc.desc}
-                  </p>
-
-                  {isInternal ? (
-                    <Link
-                      to={doc.id === 'G_DEMAND' ? destUrl : '#'}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${doc.id === 'G_DEMAND' ? (isLicensed ? 'border-axim-purple text-axim-purple shadow-[0_0_15px_rgba(125,0,255,0.4)] hover:bg-axim-purple hover:text-black hover:shadow-[0_0_25px_rgba(125,0,255,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]') : 'border-zinc-700 text-zinc-500 cursor-not-allowed opacity-50'}`}
-                      onClick={(e) => {
-                        if (doc.id !== 'G_DEMAND') {
-                          e.preventDefault();
-                        } else if (telemetryStatus === 'LOCAL_BUFFER' || telemetryStatus !== 'STABLE') {
-                          e.preventDefault();
-                          enqueueAction({ type: 'LAUNCH_UNIT', target: doc.id, name: doc.title });
-                          setQueueToast('[ACTION_QUEUED] System is offline. Your request has been securely buffered.');
-                          setTimeout(() => setQueueToast(null), 4000);
-                        }
-                      }}
-                    >
-                      {doc.id !== 'G_DEMAND' ? (
-                         <>Deployment Pending <SafeIcon icon={LuClock} /></>
-                      ) : isLicensed ? (
-                        <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
-                      ) : (
-                        <>Access Tool <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /></>
-                      )}
-                    </Link>
-                  ) : (
-                    <a
-                      href={doc.id === 'G_DEMAND' ? destUrl : '#'}
-                      target={doc.id === 'G_DEMAND' && destUrl !== "#" ? "_blank" : undefined}
-                      rel={doc.id === 'G_DEMAND' && destUrl !== "#" ? "noopener noreferrer" : undefined}
-                      className={`w-full py-4 mt-auto border font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 relative z-10 group/btn ${doc.id === 'G_DEMAND' ? (isLicensed ? 'border-axim-purple text-axim-purple shadow-[0_0_15px_rgba(125,0,255,0.4)] hover:bg-axim-purple hover:text-black hover:shadow-[0_0_25px_rgba(125,0,255,0.8)] hover:scale-[1.02]' : 'border-axim-gold/50 text-axim-gold hover:border-axim-gold hover:text-axim-gold hover:shadow-[0_0_10px_rgba(255,234,0,0.5)]') : 'border-zinc-700 text-zinc-500 cursor-not-allowed opacity-50'}`}
-                      onClick={(e) => {
-                        if (doc.id !== 'G_DEMAND') {
-                          e.preventDefault();
-                        } else if (telemetryStatus === 'LOCAL_BUFFER' || telemetryStatus !== 'STABLE') {
-                          e.preventDefault();
-                          enqueueAction({ type: 'LAUNCH_UNIT', target: doc.id, name: doc.title });
-                          setQueueToast('[ACTION_QUEUED] System is offline. Your request has been securely buffered.');
-                          setTimeout(() => setQueueToast(null), 4000);
-                        }
-                      }}
-                    >
-                      {doc.id !== 'G_DEMAND' ? (
-                         <>Deployment Pending <SafeIcon icon={LuClock} /></>
-                      ) : isLicensed ? (
-                        <>Launch Tool <SafeIcon icon={LuArrowRight} /></>
-                      ) : (
-                        <>Access Tool <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /></>
-                      )}
-                    </a>
-                  )}
-
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div>
-        <div className="mb-12 flex items-center gap-4">
-          <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-axim-gold border border-white/10">
-            <SafeIcon icon={LuGraduationCap} className="w-5 h-5" />
-          </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Academy Frameworks</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {courses.map((course, idx) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "circOut",
-                  delay: idx * 0.1 ,
-                }}
-                whileHover={{ scale: 1.02 }}
-                className="group bg-white/5 backdrop-blur-xl saturate-150 border border-white/10 p-8 hover:border-axim-gold/50 cursor-pointer transition-all relative overflow-hidden flex flex-col h-full rounded-md"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[60px] translate-x-16 -translate-y-16 group-hover:bg-axim-gold/10 transition-colors pointer-events-none" />
-
-              <div className="flex justify-between items-start mb-8 relative z-10">
-                <div className="p-4 bg-white/5 border border-white/10 rounded-sm text-axim-gold">
-                  <SafeIcon icon={course.icon} className="w-8 h-8" />
-                </div>
-                <div className="text-right flex items-center gap-3">
-                  <span className="px-3 py-1 bg-white/5 border border-white/10 text-[0.6rem] font-mono uppercase tracking-widest text-zinc-400">
-                    {course.level}
-                  </span>
-                  <span className="flex items-center gap-1 text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest">
-                    <SafeIcon icon={LuClock} className="w-3 h-3" /> {course.time}
-                  </span>
-                </div>
-              </div>
-
-              <h3 className="text-3xl font-black uppercase mb-4 relative z-10 group-hover:text-axim-gold transition-colors">{course.title}</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8 relative z-10 flex-grow">
-                {course.desc}
-              </p>
-
-              <div className="w-fit mb-6 relative z-10 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold uppercase tracking-widest border bg-zinc-900 text-axim-gold border-axim-gold/50">
-                Coming Soon
-              </div>
-
-              <a href="#" target="_blank" rel="noopener noreferrer" className="w-full py-4 mt-auto border border-zinc-700 text-zinc-500 font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-2 relative z-10 cursor-not-allowed opacity-50" onClick={(e) => e.preventDefault()}>
-                Deployment Pending <SafeIcon icon={LuClock} />
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Articles Widget */}
-      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-white/5 backdrop-blur-xl saturate-150">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <div className="w-16 h-16 bg-axim-purple/10 rounded-full flex items-center justify-center mx-auto mb-6 text-axim-purple border border-axim-purple/30">
-            <SafeIcon icon={LuIcons.LuNewspaper} className="w-8 h-8" />
-          </div>
-          <h2 className="text-3xl font-black uppercase mb-4 text-white">Read AXiM Articles</h2>
-          <p className="text-zinc-400 max-w-2xl mx-auto mb-8">
-            Stay updated with comprehensive insights, updates, and research from the AXiM ecosystem.
+      <section className="pt-32 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
+            Digital <span className="text-axim-purple">Byproducts.</span>
+          </h1>
+          <p className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
+            Enterprise-grade generators and strategic courses designed to eliminate operational friction. Select an offering to vault it to your secure profile.
           </p>
-          <Link to="/articles" className="btn btn-outline inline-flex hover:border-axim-purple hover:text-axim-purple">
-            Read Articles <SafeIcon icon={LuIcons.LuArrowRight} />
-          </Link>
+        </div>
+      </section>
+
+      {/* Autonomous Tools Collage */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 mb-20">
+        <div className="mb-8 border-b border-white/10 pb-4 flex items-center gap-3">
+          <SafeIcon icon={LuIcons.LuCpu} className="w-5 h-5 text-axim-purple" />
+          <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Autonomous Generators</h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+           {/* Tool 1 (NDA) */}
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="lg:col-span-7 bg-black border border-white/10 rounded-sm p-8 md:p-12 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+              <div className="absolute top-0 right-0 w-1/2 h-full bg-axim-purple/10 blur-[100px] group-hover:bg-axim-purple/20 transition-colors pointer-events-none" />
+              <div className="relative z-10">
+                <SafeIcon icon={LuIcons.LuSignature} className="w-8 h-8 text-axim-purple mb-6" />
+                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">Mutual NDA Generator</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed max-w-sm">Instantly deploy a rigorously structured, mutual Non-Disclosure Agreement before entering vendor negotiations.</p>
+              </div>
+              <div className="relative z-10 mt-8">
+                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'nda_generator', title: 'Mutual NDA Generator'}); }} className="inline-flex items-center px-6 py-3 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-axim-purple hover:border-axim-purple transition-colors">
+                  Vault Tool <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+           </motion.div>
+
+           {/* Tool 2 (Paystub) */}
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="lg:col-span-5 bg-black border border-white/10 rounded-sm p-8 md:p-12 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+              <div className="absolute top-0 right-0 w-full h-1/2 bg-axim-purple/10 blur-[80px] group-hover:bg-axim-purple/20 transition-colors pointer-events-none" />
+              <div className="relative z-10">
+                <SafeIcon icon={LuIcons.LuReceipt} className="w-8 h-8 text-axim-purple mb-6" />
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Enterprise Pay Stub</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">Streamline compensation tracking and generate verifiable income records for your workforce instantly.</p>
+              </div>
+              <div className="relative z-10 mt-8">
+                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'paystub_generator', title: 'Pay Stub Generator'}); }} className="inline-flex items-center px-6 py-3 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-axim-purple hover:border-axim-purple transition-colors">
+                  Vault Tool <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+           </motion.div>
+        </div>
+      </section>
+
+      {/* Enterprise Academy Collage */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div className="mb-8 border-b border-white/10 pb-4 flex items-center gap-3">
+          <SafeIcon icon={LuIcons.LuGraduationCap} className="w-5 h-5 text-axim-gold" />
+          <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Enterprise Academy</h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+           <div className="lg:col-span-12 bg-axim-gold/5 border border-axim-gold/20 rounded-sm p-12 text-center relative overflow-hidden min-h-[250px] flex flex-col items-center justify-center">
+              <div className="w-12 h-12 border-2 border-axim-gold/30 rounded-full flex items-center justify-center mb-4">
+                <div className="w-4 h-4 bg-axim-gold rounded-full animate-pulse" />
+              </div>
+              <h3 className="text-xl font-bold text-axim-gold uppercase tracking-widest mb-2">Curriculum Compiling</h3>
+              <p className="text-zinc-400 text-sm max-w-md mx-auto">High-impact operational courses are currently undergoing structural review. Awaiting transmission.</p>
+           </div>
         </div>
       </section>
 
