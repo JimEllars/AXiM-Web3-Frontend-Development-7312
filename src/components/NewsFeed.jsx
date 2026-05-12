@@ -3,7 +3,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { fetchPostsByCategory as fetchPosts } from '../lib/wp-fetch';
 import WPImage from './WPImage';
 
-export default function NewsFeed({ limit = 9 }) {
+export default function NewsFeed({ limit = 12 }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,8 +38,8 @@ export default function NewsFeed({ limit = 9 }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto pb-20 px-6 mt-8">
-      <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-6 border-b border-white/10 pb-4">
-        All Articles
+      <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter mb-8 border-b border-white/10 pb-4">
+        All Intelligence Briefings
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
         {articles.slice(0, limit).map(article => {

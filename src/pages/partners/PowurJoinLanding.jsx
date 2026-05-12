@@ -56,7 +56,7 @@ export default function PowurJoinLanding() {
               </motion.div>
 
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }} className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-white uppercase leading-tight">
-                Scale A Cloud <br /> <span className="text-axim-purple drop-shadow-[0_0_15px_rgba(125,0,255,0.3)]">Solar Business.</span>
+                Scale A Remote <br /> <span className="text-axim-purple drop-shadow-[0_0_15px_rgba(125,0,255,0.3)]">Solar Business.</span>
               </motion.h1>
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }} className="text-base text-zinc-400 mb-8 leading-relaxed max-w-lg">
@@ -118,7 +118,7 @@ export default function PowurJoinLanding() {
       {/* 3-Step Execution Protocol */}
       <section className="py-24 bg-axim-deep/30 border-b border-white/10 relative">
         <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-16 text-center">The <span className="text-axim-purple">Execution</span> Protocol</h2>
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-16 text-center">Built To <span className="text-axim-purple">Grow</span></h2>
           <div className="grid md:grid-cols-3 gap-8 relative">
              <div className="hidden md:block absolute top-6 left-10 right-10 h-0.5 bg-gradient-to-r from-axim-purple/10 via-axim-purple to-axim-purple/10 z-0"></div>
 
