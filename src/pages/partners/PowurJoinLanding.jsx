@@ -143,6 +143,45 @@ export default function PowurJoinLanding() {
         </div>
       </section>
 
+
+      {/* Enterprise Back-Office Value Prop */}
+      <section className="py-24 bg-black border-b border-white/10 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
+          <div className="mb-16 md:flex justify-between items-end border-b border-white/10 pb-6">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-2">The <span className="text-axim-purple">Enterprise</span> Back-Office</h2>
+              <p className="text-sm text-zinc-400">You focus purely on acquisition. The platform handles the rest.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <div className="p-6 bg-white/5 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors">
+               <SafeIcon icon={LuIcons.LuDraftingCompass} className="w-8 h-8 text-axim-purple mb-4" />
+               <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-2">3D Engineering</h4>
+               <p className="text-xs text-zinc-500 leading-relaxed">Powur's internal engineering team creates customized, interactive 3D solar system designs for every lead you submit.</p>
+             </div>
+
+             <div className="p-6 bg-white/5 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors">
+               <SafeIcon icon={LuIcons.LuBuilding2} className="w-8 h-8 text-axim-purple mb-4" />
+               <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-2">Vetted Financiers</h4>
+               <p className="text-xs text-zinc-500 leading-relaxed">Instantly access Tier-1 national financing partners like GoodLeap and Sunnova right inside your cloud portal.</p>
+             </div>
+
+             <div className="p-6 bg-white/5 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors">
+               <SafeIcon icon={LuIcons.LuHardHat} className="w-8 h-8 text-axim-purple mb-4" />
+               <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-2">Installation Crews</h4>
+               <p className="text-xs text-zinc-500 leading-relaxed">Powur manages a nationwide network of highly vetted local installation crews, completely removing operational liability from you.</p>
+             </div>
+
+             <div className="p-6 bg-white/5 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors">
+               <SafeIcon icon={LuIcons.LuFileCheck} className="w-8 h-8 text-axim-purple mb-4" />
+               <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-2">Automated Permitting</h4>
+               <p className="text-xs text-zinc-500 leading-relaxed">The platform's project managers handle all complex city permitting, HOA approvals, and utility interconnection paperwork.</p>
+             </div>
+          </div>
+        </div>
+      </section>
+
       {/* Advanced Compensation Calculator */}
       <section className="py-24 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-axim-purple/5 blur-[150px] pointer-events-none" />
