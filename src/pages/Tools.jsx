@@ -140,14 +140,42 @@ export default function Tools() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-           {/* Tool 1 (NDA) - High Conversion Focus */}
-           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="lg:col-span-7 bg-black border border-white/10 rounded-xl p-8 md:p-10 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[380px] shadow-2xl">
+           {/* HEADLINING TOOL: AXiM Demand Letter */}
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="lg:col-span-12 bg-black border border-white/10 rounded-xl p-8 md:p-12 hover:border-axim-gold/50 group relative overflow-hidden flex flex-col md:flex-row items-center justify-between min-h-[300px] shadow-2xl">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-axim-gold/10 to-transparent pointer-events-none group-hover:from-axim-gold/20 transition-colors duration-700 opacity-50" />
+
+              <div className="relative z-10 w-full md:w-2/3 mb-8 md:mb-0">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center">
+                    <SafeIcon icon={LuIcons.LuScale} className="w-6 h-6 text-axim-gold" />
+                  </div>
+                  <span className="text-[0.65rem] font-mono text-axim-gold uppercase tracking-widest bg-axim-gold/10 px-3 py-1 rounded border border-axim-gold/20">Flagship Legal Tool</span>
+                </div>
+
+                <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">AXiM Demand Letter Generator</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed max-w-xl mb-8">Instantly draft a highly authoritative, legally sound demand letter. Designed to force immediate resolutions, enforce contracts, and secure payments prior to costly litigation.</p>
+
+                <ul className="space-y-2 hidden md:block">
+                  <li className="flex items-center text-xs text-zinc-400 font-mono uppercase tracking-widest"><SafeIcon icon={LuIcons.LuCheck} className="w-3 h-3 text-axim-gold mr-2"/> Actionable Legal Structuring</li>
+                  <li className="flex items-center text-xs text-zinc-400 font-mono uppercase tracking-widest"><SafeIcon icon={LuIcons.LuCheck} className="w-3 h-3 text-axim-gold mr-2"/> Automated Dispute Formatting</li>
+                </ul>
+              </div>
+
+              <div className="relative z-10 w-full md:w-auto md:text-right shrink-0">
+                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'demand_letter', title: 'AXiM Demand Letter Generator'}); }} className="w-full md:w-auto inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(240,255,0,0.15)]">
+                  Launch Flagship Tool <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
+                </button>
+              </div>
+           </motion.div>
+
+           {/* Tool 2 (NDA) */}
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="lg:col-span-7 bg-black border border-white/10 rounded-xl p-8 md:p-10 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[380px] shadow-2xl">
               <div className="absolute top-0 right-0 w-3/4 h-full bg-gradient-to-l from-axim-purple/10 to-transparent pointer-events-none group-hover:from-axim-purple/20 transition-colors duration-700" />
 
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center">
-                    <SafeIcon icon={LuIcons.LuSignature} className="w-6 h-6 text-axim-purple" />
+                    <SafeIcon icon={LuIcons.LuPenTool} className="w-6 h-6 text-axim-purple" />
                   </div>
                   <span className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Legal Parser Engine</span>
                 </div>
@@ -168,8 +196,8 @@ export default function Tools() {
               </div>
            </motion.div>
 
-           {/* Tool 2 (Paystub) */}
-           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="lg:col-span-5 bg-[#0F172A] border border-white/10 rounded-xl p-8 md:p-10 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[380px] shadow-2xl">
+           {/* Tool 3 (Paystub) */}
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="lg:col-span-5 bg-[#0F172A] border border-white/10 rounded-xl p-8 md:p-10 hover:border-axim-purple/50 group relative overflow-hidden flex flex-col justify-between min-h-[380px] shadow-2xl">
               <div className="absolute top-0 right-0 w-full h-1/2 bg-axim-purple/5 blur-[80px] group-hover:bg-axim-purple/10 transition-colors pointer-events-none" />
 
               <div className="relative z-10">
