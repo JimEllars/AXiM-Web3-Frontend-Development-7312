@@ -1,3 +1,15 @@
+export const fetchCategoryBySlug = async (slug) => {
+  try {
+    const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.length > 0 ? data[0].id : null;
+  } catch (error) {
+    console.error(`[WP_FETCH] Failed to resolve category slug: ${slug}`);
+    return null;
+  }
+};
+
 
 export const getFeaturedImage = (article) => {
   if (!article) return null;
