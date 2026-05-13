@@ -53,7 +53,7 @@ export default function Articles() {
             {heroArticle._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={heroArticle._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/60 to-[#0F172A] z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-hard-light" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
             <div className="relative z-10 max-w-4xl">
@@ -70,7 +70,7 @@ export default function Articles() {
               {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                   <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/60 to-[#0F172A] z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-hard-light" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
               <div className="relative z-10 mt-auto">

@@ -31,29 +31,32 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
         {title}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:grid-rows-4 gap-4">
-        {articles.map((article) => (
-          <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-6 min-h-[220px]">
-            {/* Image Layer */}
-            {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-                <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {articles.map((article) => {
+          const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
+          const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
 
-            {/* Highly Visible Thematic Reveal Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+          return (
+            <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-6 min-h-[220px]">
+              {/* Image Layer with Fallback */}
+              <img src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
 
-            {/* Text Protector (Never fades) */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+              {/* Highly Saturated Thematic Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/60 to-[#0F172A] z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-hard-light" />
 
-            <div className="relative z-10 mt-auto">
-              <div className="text-[0.55rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">
-                {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              {/* Text Protector (Never fades) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+
+              <div className="relative z-10 mt-auto">
+                <div className="text-[0.55rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">
+                  {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </div>
+                <h3 className="text-sm md:text-base font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || 'Untitled Briefing')}} />
+                <div className="text-xs text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
               </div>
-              <h3 className="text-sm md:text-base font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || '')}} />
-              <div className="text-xs text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
-            </div>
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
