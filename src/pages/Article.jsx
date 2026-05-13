@@ -1,74 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'isomorphic-dompurify';
+import { fetchPosts } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
+import GlobalLoader from '../components/GlobalLoader';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import { motion } from 'framer-motion';
-import { fetchPosts, getFeaturedImage } from '../lib/wp-fetch';
 
 export default function Article() {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
-
     const loadArticle = async () => {
       try {
-        // Utilize the absolute resolver utility instead of manual fetch
-        const data = await fetchPosts({ slug: slug });
-
+        // Fetch specific article by slug
+        const data = await fetchPosts({ slug, _embed: true });
         if (isMounted) {
-          if (data && data.length > 0) {
-            setArticle(data[0]);
-          } else {
-            setIsError(true);
-          }
+          setArticle(data?.length ? data[0] : null);
           setIsLoading(false);
         }
       } catch (error) {
-        if (isMounted) {
-          console.log("[ARTICLE_UPLINK] Connection degraded.");
-          setIsError(true);
-          setIsLoading(false);
-        }
+        if (isMounted) setIsLoading(false);
       }
     };
-
     loadArticle();
     return () => { isMounted = false; };
   }, [slug]);
 
-  if (isLoading) {
+  if (isLoading) return <GlobalLoader />;
+
+  if (!article) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center font-mono text-axim-purple text-xs uppercase tracking-widest">
-        <div className="w-8 h-8 border-2 border-axim-purple border-t-transparent rounded-full animate-spin mb-4" />
-        ESTABLISHING_SECURE_UPLINK...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-bg-void">
+        <SafeIcon icon={LuIcons.LuSearchX} className="w-12 h-12 text-zinc-600 mb-4" />
+        <h1 className="text-2xl font-black text-white uppercase tracking-widest">Briefing Not Found</h1>
+        <Link to="/articles" className="mt-6 text-axim-purple font-mono text-sm hover:underline">Return to Hub</Link>
       </div>
     );
   }
 
-  if (isError || !article) {
-    return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
-        <div className="text-axim-gold font-mono text-xs uppercase tracking-widest mb-4 px-3 py-1 bg-axim-gold/10 border border-axim-gold/20 rounded-sm">
-          [UPLINK_DEGRADED] // INTELLIGENCE_UNAVAILABLE
-        </div>
-        <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Record Not Found</h1>
-        <p className="text-zinc-500 mb-8 max-w-md">The requested intelligence briefing could not be retrieved from the decentralized storage bank.</p>
-        <Link to="/articles" className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-colors font-mono text-xs uppercase">
-          Return to Hub
-        </Link>
-      </div>
-    );
-  }
+  const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
+  const publishDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://axim.us.com/default-og-image.jpg"; // Replace default with actual fallback URL later if needed
-
+  // AEO/SEO Rich Schema
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -76,75 +53,90 @@ const featuredImageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_ur
     "image": [featuredImageUrl],
     "datePublished": new Date(article.date).toISOString(),
     "dateModified": new Date(article.modified).toISOString(),
-    "author": [{
-        "@type": "Organization",
-        "name": "AXiM Systems",
-        "url": "https://axim.us.com"
-    }],
-    "publisher": {
-        "@type": "Organization",
-        "name": "AXiM Systems",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
-        }
-    }
+    "author": [{"@type": "Organization", "name": "AXiM Systems", "url": "https://axim.us.com"}],
+    "publisher": {"@type": "Organization", "name": "AXiM Systems", "logo": {"@type": "ImageObject", "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"}}
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="max-w-4xl mx-auto px-6 py-20 relative z-10"
-    >
+    <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
       <SEO
-        title={DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })}
+        title={`${DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })} | AXiM Intelligence`}
         description={DOMPurify.sanitize(article.excerpt.rendered, { ALLOWED_TAGS: [] })}
         image={featuredImageUrl}
         type="article"
         customSchema={[articleSchema]}
       />
 
-      <Link to="/articles" className="inline-flex items-center gap-2 text-axim-purple hover:text-axim-gold font-mono text-xs uppercase tracking-widest transition-colors mb-12 group">
-        <SafeIcon icon={LuIcons.LuArrowLeft} className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        Back to Intelligence Hub
-      </Link>
+      {/* 1. Editorial Hero */}
+      <section className="relative w-full h-[50vh] md:h-[70vh] bg-black border-b border-white/10 overflow-hidden flex flex-col justify-end">
+        <img src={featuredImageUrl} alt="Featured Briefing" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-axim-purple/20 mix-blend-overlay z-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-void via-bg-void/80 to-transparent z-0" />
 
-      <header className="mb-12 border-b border-white/10 pb-12">
-        <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-widest text-zinc-500 mb-6">
-          <span className="flex items-center gap-2 text-axim-gold">
-            <div className="w-1.5 h-1.5 bg-axim-gold rounded-full" />
-            Verified Record
-          </span>
-          <span>//</span>
-          <time>{new Date(article.date).toLocaleDateString()}</time>
-        </div>
-
-        <h1
-          className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-tight"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.title.rendered) }}
-        />
-      </header>
-
-      <div className="w-full aspect-video md:aspect-[21/9] mb-12 border border-white/10 rounded-sm overflow-hidden bg-gradient-to-br from-axim-deep to-black shadow-[0_0_30px_rgba(125,0,255,0.05)] relative flex items-center justify-center">
-        {article._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
-          <img
-            src={article._embedded['wp:featuredmedia'][0].source_url.replace('http:', 'https:')}
-            alt={DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="text-axim-purple/30 flex flex-col items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z" /></svg>
-            <span className="font-mono text-[0.6rem] uppercase tracking-widest">AXiM_INTEL_ARCHIVE</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full pb-12">
+          <Link to="/articles" className="inline-flex items-center gap-2 text-axim-purple hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
+            <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+            Intelligence Hub
+          </Link>
+          <div className="text-[0.65rem] font-mono text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-4">
+             <span>{publishDate}</span>
+             <span className="w-1 h-1 bg-zinc-600 rounded-full" />
+             <span className="text-axim-gold">Official Briefing</span>
           </div>
-        )}
-      </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-tight max-w-5xl" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title.rendered)}} />
+        </div>
+      </section>
 
-      <div
-        className="prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-a:text-axim-purple hover:prose-a:text-axim-gold prose-a:transition-colors prose-img:rounded-md prose-img:border prose-img:border-white/10"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content.rendered) }}
-      />
-    </motion.article>
+      {/* 2. Content & Sidebar Grid */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 mt-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+
+          {/* Left Column: The Article */}
+          <article className="lg:col-span-8 prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-axim-purple hover:prose-a:text-axim-gold prose-a:transition-colors prose-img:rounded-md prose-img:border prose-img:border-white/10">
+            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.content.rendered, { ADD_ATTR: ['target'] })}} />
+          </article>
+
+          {/* Right Column: Sticky Sidebar Funnels */}
+          <aside className="lg:col-span-4 relative hidden lg:block">
+            <div className="sticky top-32 flex flex-col gap-6">
+
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest border-b border-white/10 pb-2 mb-2 flex items-center gap-2">
+                <SafeIcon icon={LuIcons.LuNetwork} className="w-3 h-3" /> Partner Network
+              </div>
+
+              {/* Sidebar Promo: Make.com */}
+              <div className="bg-[#0F172A] border border-[#9333EA]/30 rounded-xl p-8 relative overflow-hidden group shadow-2xl">
+                <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-[#9333EA]/10 blur-[50px] pointer-events-none group-hover:bg-[#9333EA]/20 transition-colors duration-700" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-white text-2xl font-black tracking-tight uppercase">make</span>
+                  </div>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2 leading-tight">Scale Your Systems</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mb-6">Automate your workflows instantly without writing code.</p>
+                  <a href="https://www.make.com/en/register?pc=aximpartner" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-[#9333EA] to-[#DB2777] text-white font-black uppercase tracking-widest text-[0.65rem] hover:scale-105 transition-transform shadow-lg">
+                    Start Free <SafeIcon icon={LuIcons.LuExternalLink} className="ml-2 w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Sidebar Promo: Powur */}
+              <div className="bg-black border border-axim-gold/30 rounded-xl p-8 relative overflow-hidden group shadow-2xl mt-4">
+                <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-axim-gold/10 blur-[50px] pointer-events-none group-hover:bg-axim-gold/20 transition-colors duration-700" />
+                <div className="relative z-10">
+                  <SafeIcon icon={LuIcons.LuSun} className="w-8 h-8 text-axim-gold mb-4" />
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2 leading-tight">Decentralize Your Power</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mb-6">Transition to Tier-1 residential solar and save up to 50% on utility costs.</p>
+                  <Link to="/partners/powur-solar" className="w-full flex items-center justify-center px-4 py-3 bg-axim-gold text-black font-black uppercase tracking-widest text-[0.65rem] hover:bg-white transition-colors shadow-lg">
+                    Calculate Savings <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+
+            </div>
+          </aside>
+
+        </div>
+      </section>
+    </div>
   );
 }
