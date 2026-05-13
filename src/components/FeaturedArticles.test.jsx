@@ -46,7 +46,7 @@ describe('FeaturedArticles Component', () => {
     // it handles the component transitions correctly.
     await waitFor(() => {
         const hasPending = screen.queryByText(/\[INTELLIGENCE_FEED_PENDING\] \/\/ AWAITING_NETWORK_SYNC/i);
-        const hasArticles = screen.queryByText(/Featured/i);
+        const hasArticles = screen.queryAllByText(/Featured/i).length > 0;
         assert.ok(hasPending || hasArticles);
     }, { timeout: 3000 });
   });

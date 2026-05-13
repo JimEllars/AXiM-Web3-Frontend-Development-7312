@@ -19,7 +19,7 @@ export default function Home() {
         <Hero />
 
         {/* 1. Featured Category */}
-        <FeaturedArticles title="Featured" categorySlug="featured" limit={6} />
+        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} />
 
         {/* 2. Partner Break: Make */}
         <PartnerPromo
@@ -32,7 +32,7 @@ export default function Home() {
         />
 
         {/* 3. Spotlight Category */}
-        <FeaturedArticles title="Software Spotlight" categorySlug="app-spotlight" limit={6} />
+        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} />
 
         {/* 4. Partner Break: Powur */}
         <PartnerPromo
@@ -45,7 +45,7 @@ export default function Home() {
         />
 
         {/* 5. The Firehose */}
-        <NewsFeed limit={12} />
+        <NewsFeed limit={12} title="All Articles" />
 
         <ProactiveBanner />
         <EngagementGuard />

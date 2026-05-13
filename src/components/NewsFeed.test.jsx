@@ -45,7 +45,7 @@ describe('NewsFeed Component', () => {
 
     await waitFor(() => {
         const hasPending = screen.queryByText(/\[GLOBAL_FEED_UNAVAILABLE\]/i);
-        const hasArticles = screen.queryByText(/All Intelligence Briefings/i);
+        const hasArticles = screen.queryByText(/All Articles/i);
         assert.ok(hasPending || hasArticles);
     }, { timeout: 3000 });
   });

@@ -36,8 +36,8 @@ export default function Article() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-bg-void">
         <SafeIcon icon={LuIcons.LuSearchX} className="w-12 h-12 text-zinc-600 mb-4" />
-        <h1 className="text-2xl font-black text-white uppercase tracking-widest">Briefing Not Found</h1>
-        <Link to="/articles" className="mt-6 text-axim-purple font-mono text-sm hover:underline">Return to Hub</Link>
+        <h1 className="text-2xl font-black text-white uppercase tracking-widest">Article Not Found</h1>
+        <Link to="/articles" className="mt-6 text-axim-purple font-mono text-sm hover:underline">Return to Articles</Link>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function Article() {
   return (
     <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
       <SEO
-        title={`${DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })} | AXiM Intelligence`}
+        title={`${DOMPurify.sanitize(article.title.rendered, { ALLOWED_TAGS: [] })} | AXiM Articles`}
         description={DOMPurify.sanitize(article.excerpt.rendered, { ALLOWED_TAGS: [] })}
         image={featuredImageUrl}
         type="article"
@@ -76,12 +76,12 @@ export default function Article() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full pb-12">
           <Link to="/articles" className="inline-flex items-center gap-2 text-axim-purple hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
             <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-            Intelligence Hub
+            Return to Articles
           </Link>
           <div className="text-[0.65rem] font-mono text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-4">
              <span>{publishDate}</span>
              <span className="w-1 h-1 bg-zinc-600 rounded-full" />
-             <span className="text-axim-gold">Official Briefing</span>
+             <span className="text-axim-gold">Published Article</span>
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-tight max-w-5xl" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title.rendered)}} />
         </div>
