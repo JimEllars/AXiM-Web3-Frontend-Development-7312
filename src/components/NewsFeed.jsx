@@ -37,34 +37,32 @@ export default function NewsFeed({ limit = 12 }) {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto pb-20 px-6 mt-8">
+    <div className="w-full max-w-7xl mx-auto py-16 px-6">
       <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter mb-8 border-b border-white/10 pb-4">
         All Intelligence Briefings
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
-        {articles.slice(0, limit).map(article => {
-          return (
-            <a key={article.id} href={`/article/${article.slug}`} className="block group flex flex-col gap-3">
-              {article.featuredImage && (
-                <div className="w-full aspect-video rounded-sm overflow-hidden relative group-hover:border-axim-gold/50 transition-colors">
-                  <WPImage
-                    src={article.featuredImage}
-                    alt=""
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                  />
-                </div>
-              )}
-              <div className="mt-2">
-                <div className="text-[0.65rem] font-mono text-axim-purple mb-2 uppercase tracking-widest flex items-center gap-2">
-                  <div className="w-1 h-1 bg-axim-gold rounded-full" />
-                  Article
-                </div>
-                <h3 className="text-md font-bold text-white mb-2 group-hover:text-axim-gold transition-colors line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || article.title || '')}}></h3>
-                <div className="text-xs text-zinc-500 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || article.excerpt || '')}}></div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:grid-rows-4 gap-4">
+        {articles.map((article) => (
+          <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-6 min-h-[220px]">
+            {/* Image Layer */}
+            {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+                <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700" />
+            )}
+            {/* Thematic Reveal Overlay */}
+            <div className="absolute inset-0 bg-axim-purple/30 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            {/* Text Protector */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/20 z-0" />
+
+            <div className="relative z-10 mt-auto">
+              <div className="text-[0.55rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">
+                {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
               </div>
-            </a>
-          );
-        })}
+              <h3 className="text-sm md:text-base font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || '')}} />
+              <div className="text-xs text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   );

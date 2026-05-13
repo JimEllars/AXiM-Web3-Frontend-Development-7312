@@ -127,7 +127,7 @@ export default function Tools() {
             Fast, Reliable <br/><span className="text-axim-purple">Solutions.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
-            Enterprise-grade generators and strategic tools designed to eliminate operational friction. Select an offering below to vault it to your secure profile and begin generation.
+            Enterprise-grade generators and strategic tools designed to eliminate operational friction. Select an offering below to generate high-fidelity digital assets.
           </motion.p>
         </div>
       </section>
@@ -140,7 +140,8 @@ export default function Tools() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-           {/* HEADLINING TOOL: AXiM Demand Letter */}
+
+           {/* HEADLINING TOOL: AXiM Demand Letter (EXTERNAL LINK) */}
            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="lg:col-span-12 bg-black border border-white/10 rounded-xl p-8 md:p-12 hover:border-axim-gold/50 group relative overflow-hidden flex flex-col md:flex-row items-center justify-between min-h-[300px] shadow-2xl">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-axim-gold/10 to-transparent pointer-events-none group-hover:from-axim-gold/20 transition-colors duration-700 opacity-50" />
 
@@ -162,9 +163,10 @@ export default function Tools() {
               </div>
 
               <div className="relative z-10 w-full md:w-auto md:text-right shrink-0">
-                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'demand_letter', title: 'AXiM Demand Letter Generator'}); }} className="w-full md:w-auto inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(240,255,0,0.15)]">
-                  Launch Flagship Tool <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-                </button>
+                {/* External Link Restored */}
+                <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="w-full md:w-auto inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(240,255,0,0.15)]">
+                  Launch Flagship Tool <SafeIcon icon={LuIcons.LuExternalLink} className="ml-3 w-4 h-4" />
+                </a>
               </div>
            </motion.div>
 
@@ -190,9 +192,9 @@ export default function Tools() {
               </div>
 
               <div className="relative z-10 mt-auto">
-                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'nda_generator', title: 'Mutual NDA Generator'}); }} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-axim-purple hover:text-white transition-colors shadow-lg">
+                <Link to="/tools/nda" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-axim-purple hover:text-white transition-colors shadow-lg">
                   Access Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-                </button>
+                </Link>
               </div>
            </motion.div>
 
@@ -217,9 +219,9 @@ export default function Tools() {
               </div>
 
               <div className="relative z-10 mt-auto">
-                <button onClick={(e) => { e.preventDefault(); handleLaunchTool({id: 'paystub_generator', title: 'Pay Stub Generator'}); }} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-transparent border border-axim-purple text-axim-purple font-black uppercase tracking-widest text-xs hover:bg-axim-purple hover:text-white transition-colors">
+                <Link to="/tools/paystub" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-transparent border border-axim-purple text-axim-purple font-black uppercase tracking-widest text-xs hover:bg-axim-purple hover:text-white transition-colors">
                   Access Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-                </button>
+                </Link>
               </div>
            </motion.div>
         </div>
@@ -245,13 +247,6 @@ export default function Tools() {
            </div>
         </div>
       </section>
-
-      {queueToast && (
-        <div className="fixed bottom-6 right-6 bg-axim-gold text-black px-6 py-4 rounded-sm shadow-[0_0_20px_rgba(240,255,0,0.3)] font-mono text-xs uppercase tracking-widest z-50 flex items-center gap-3">
-          <div className="w-2 h-2 bg-black rounded-full animate-pulse" />
-          {queueToast}
-        </div>
-      )}
     </div>
   );
 }
