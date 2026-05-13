@@ -47,7 +47,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
                <img src={articles[0]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
             {/* Thematic Gradient Reveal */}
-            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             {/* Persistent Text Protector */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
@@ -65,7 +65,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
             {articles[1]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={articles[1]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -80,7 +80,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
             {articles[2]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={articles[2]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -98,7 +98,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
               {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                  <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-700" />
               )}
-              <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent z-0" />
 
               <div className="relative z-10">
