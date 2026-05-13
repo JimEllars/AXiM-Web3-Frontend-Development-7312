@@ -8,7 +8,7 @@
     "build": "node scripts/generate-sitemap.js && vite build --sourcemap false",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run src/components/BackgroundEffects.test.jsx && vitest run src/pages/Articles.test.jsx && vitest run src/pages/Home.test.jsx && vitest run src/components/Hero.test.jsx && vitest run src/components/Deployment.test.jsx && vitest run src/common/SafeIcon.test.jsx && vitest run src/components/ErrorBoundary.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js && vitest run src/components/Ecosystem.test.jsx && vitest run src/lib/thirdweb-client.test.js && node --experimental-test-module-mocks --test src/hooks/useAximAuth.test.js && vitest run src/components/PageTransition.test.jsx && vitest run src/components/Pillars.test.jsx && vitest run src/components/InfoPanel.test.jsx && vitest run src/components/FeaturedArticles.test.jsx && vitest run src/pages/EarlyAccess.test.jsx && vitest run src/common/DatabaseUplinkError.test.jsx && vitest run src/components/FleetMap.test.jsx",
+    "test": "vite-node src/components/BackgroundEffects.test.jsx && vite-node src/pages/Articles.test.jsx && vite-node src/pages/Home.test.jsx && vite-node src/components/Hero.test.jsx && vite-node src/components/Deployment.test.jsx && vite-node src/common/SafeIcon.test.jsx && vite-node src/components/ErrorBoundary.test.jsx && node --test src/lib/persistence.test.js && node --test src/lib/wp-fetch.test.js && node --test src/lib/sanitize.test.js && vite-node src/components/Ecosystem.test.jsx && vite-node src/lib/thirdweb-client.test.js && node --experimental-test-module-mocks --test src/hooks/useAximAuth.test.js && vite-node src/components/PageTransition.test.jsx && vite-node src/components/Pillars.test.jsx && vite-node src/components/InfoPanel.test.jsx && vite-node src/components/FeaturedArticles.test.jsx && vite-node src/pages/EarlyAccess.test.jsx && vite-node src/common/DatabaseUplinkError.test.jsx && vite-node src/components/FleetMap.test.jsx",
     "prebuild": "node scripts/generate-sitemap.js",
     "prepare": "husky"
   },
@@ -52,7 +52,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.21",
-    "vitest run": "^3.2.4",
+    "vite-node": "^3.2.4",
     "vitest": "^4.1.5"
   },
   "overrides": {
