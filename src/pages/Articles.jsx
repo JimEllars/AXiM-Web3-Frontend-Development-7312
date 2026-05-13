@@ -1,82 +1,89 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import * as LuIcons from 'react-icons/lu';
-import SafeIcon from '../common/SafeIcon';
-import FeaturedArticles from '../components/FeaturedArticles';
-import NewsFeed from '../components/NewsFeed';
-import SEO from '../components/SEO';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPostsByCategory } from '../lib/wp-fetch';
+import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
+import { fetchPosts } from '../lib/wp-fetch';
+import SEO from '../components/SEO';
+import GlobalLoader from '../components/GlobalLoader';
 
 export default function Articles() {
-  const { data: featuredPosts } = useQuery({
-    queryKey: ['wp-posts-featured', 'featured', 1],
-    queryFn: () => fetchPostsByCategory('featured', 1),
-    staleTime: 1000 * 60 * 5,
-  });
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const firstFeatured = featuredPosts && featuredPosts.length > 0 ? featuredPosts[0] : null;
+  useEffect(() => {
+    let isMounted = true;
+    const loadArticles = async () => {
+      try {
+        const data = await fetchPosts({ per_page: 15 });
+        if (isMounted) {
+          setArticles(data || []);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    loadArticles();
+    return () => { isMounted = false; };
+  }, []);
 
-  // We only dynamically inject title/desc/image if we actually have data,
-  // otherwise fallback to the defaults.
-  const seoTitle = firstFeatured ? DOMPurify.sanitize(firstFeatured.title, { ALLOWED_TAGS: [] }) : "Intelligence Network";
-  const seoDesc = firstFeatured
-    ? DOMPurify.sanitize(firstFeatured.excerpt, { ALLOWED_TAGS: [] }).substring(0, 160)
-    : "Comprehensive insights, updates, and research from the AXiM ecosystem.";
-  const seoImage = firstFeatured ? firstFeatured.featuredImage : undefined;
+  if (isLoading) return <GlobalLoader />;
+  if (!articles || articles.length === 0) return <div className="text-white text-center py-20 font-mono">No briefings found.</div>;
 
-  const jsonLd = firstFeatured ? {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": seoTitle,
-    "image": [seoImage],
-    "datePublished": firstFeatured.date,
-    "author": [{
-      "@type": "Organization",
-      "name": "AXiM SYSTEMS"
-    }]
-  } : undefined;
+  const heroArticle = articles[0];
+  const gridArticles = articles.slice(1);
 
   return (
-    <div className="w-full relative z-10">
-      <SEO title={seoTitle}
-        description={seoDesc}
-        image={seoImage}
-        url="https://axim.us.com/articles"
-        jsonLd={jsonLd ? [jsonLd] : undefined} />
-      <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-10">
-        <span className="section-label">Intelligence Network</span>
-        <h1 className="text-6xl font-black uppercase tracking-tighter mb-6">AXiM Articles</h1>
-        <p className="text-zinc-500 max-w-2xl text-lg leading-relaxed">
-          Comprehensive insights, updates, and research from the AXiM ecosystem. Explore top stories and deep dives into our core protocols and infrastructure.
-        </p>
-      </div>
+    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <SEO title="Intelligence Hub | Smart Systems" description="Strategic insights, platform updates, and decentralized infrastructure briefings." />
 
-      {/* 1. Main Featured Section */}
-      <FeaturedArticles categorySlug="featured" limit={3} title="Featured Intelligence" />
-
-      {/* 2. App Spotlight Section */}
-      <NewsFeed categorySlug="app-spotlight" limit={6} title="App Spotlight" />
-
-      {/* 3. Software Spotlight Section */}
-      <NewsFeed categorySlug="software-spotlight" limit={6} title="Software Spotlight" />
-
-      {/* 4. Tools Widget */}
-      <section className="py-16 relative z-10 border-t border-subtle mt-16 bg-glass backdrop-blur-xl saturate-150">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <div className="w-16 h-16 bg-axim-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 text-axim-gold border border-axim-gold/30">
-            <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8" />
-          </div>
-          <h2 className="text-3xl font-black uppercase mb-4 text-white">Explore AXiM Tools</h2>
-          <p className="text-zinc-400 max-w-2xl mx-auto mb-8">
-            Access our suite of powerful applications, document generators, and smart protocols designed to streamline your business operations.
+      <section className="pt-32 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
+            Intelligence <span className="text-axim-purple">Hub.</span>
+          </h1>
+          <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+            Strategic insights, platform updates, and tactical blueprints for scaling your decentralized edge architecture.
           </p>
-          <Link to="/tools" className="btn btn-primary inline-flex">
-            View All Tools <SafeIcon icon={LuIcons.LuArrowRight} />
-          </Link>
         </div>
       </section>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Hub Hero */}
+        <a href={`/article/${heroArticle.slug}`} className="block relative border border-white/10 bg-black overflow-hidden group min-h-[500px] flex flex-col justify-end p-8 md:p-16 hover:border-axim-purple/50 transition-colors mb-6 shadow-2xl">
+            {heroArticle._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+               <img src={heroArticle._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-axim-purple/40 to-transparent z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
+
+            <div className="relative z-10 max-w-4xl">
+              <div className="text-xs font-mono text-axim-purple mb-4 uppercase tracking-widest bg-white/5 border border-white/10 inline-block px-3 py-1 rounded-sm">Latest Publication</div>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-4 group-hover:text-axim-purple transition-colors leading-tight" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(heroArticle.title?.rendered || '')}} />
+              <div className="text-sm md:text-base text-zinc-300 line-clamp-3 mb-6" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(heroArticle.excerpt?.rendered || '')}} />
+            </div>
+        </a>
+
+        {/* Hub Masonry Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {gridArticles.map((article) => (
+            <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 min-h-[300px] shadow-lg">
+              {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+                  <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700" />
+              )}
+              <div className="absolute inset-0 bg-axim-purple/20 z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-overlay" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+
+              <div className="relative z-10 mt-auto">
+                <div className="text-[0.6rem] font-mono text-zinc-400 uppercase tracking-widest mb-3">
+                  {new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </div>
+                <h3 className="text-xl font-black text-white mb-3 group-hover:text-axim-purple transition-colors leading-tight" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || '')}} />
+                <div className="text-sm text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

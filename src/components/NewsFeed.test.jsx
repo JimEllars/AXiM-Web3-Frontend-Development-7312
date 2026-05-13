@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, beforeEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, afterEach, beforeEach } from 'vitest';
+import assert from 'assert';
 import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -45,7 +45,7 @@ describe('NewsFeed Component', () => {
 
     await waitFor(() => {
         const hasPending = screen.queryByText(/\[GLOBAL_FEED_UNAVAILABLE\]/i);
-        const hasArticles = screen.queryByText(/All Articles/i);
+        const hasArticles = screen.queryByText(/All Intelligence Briefings/i);
         assert.ok(hasPending || hasArticles);
     }, { timeout: 3000 });
   });
