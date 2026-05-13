@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { fetchPostsByCategory as fetchPosts } from '../lib/wp-fetch';
+import { fetchPosts } from '../lib/wp-fetch';
 
 export default function NewsFeed({ limit = 12, title = "All Articles" }) {
   const [articles, setArticles] = useState([]);
@@ -10,7 +10,8 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
     let isMounted = true;
     const loadArticles = async () => {
       try {
-        const data = await fetchPosts(null, limit);
+        // Explicitly requesting _embed: 1 ensures media and author nodes are included in the payload
+        const data = await fetchPosts({ per_page: limit, _embed: 1 });
         if (isMounted) {
           setArticles(data || []);
           setIsLoading(false);
@@ -31,28 +32,34 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
         {title}
       </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article) => {
           const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
           const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
+          const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
 
           return (
-            <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-6 min-h-[220px]">
-              {/* Image Layer with Fallback */}
+            <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 min-h-[280px] shadow-lg rounded-sm">
+              {/* Image Layer */}
               <img src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
 
-              {/* Highly Saturated Thematic Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/60 to-[#0F172A] z-0 group-hover:opacity-0 transition-opacity duration-700 mix-blend-hard-light" />
+              {/* Predictable, High-Contrast Thematic Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
 
               {/* Text Protector (Never fades) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
               <div className="relative z-10 mt-auto">
-                <div className="text-[0.55rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">
-                  {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                  <div className="text-[0.6rem] font-mono text-zinc-400 uppercase tracking-widest border-l-2 border-axim-purple pl-2">
+                    {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </div>
+                  <div className="text-[0.55rem] font-mono text-axim-gold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-1 rounded-sm">
+                    {authorName}
+                  </div>
                 </div>
-                <h3 className="text-sm md:text-base font-bold text-white mb-2 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || 'Untitled Briefing')}} />
-                <div className="text-xs text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
+                <h3 className="text-base md:text-lg font-black text-white mb-3 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || 'Untitled Briefing')}} />
+                <div className="text-sm text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
               </div>
             </a>
           );
