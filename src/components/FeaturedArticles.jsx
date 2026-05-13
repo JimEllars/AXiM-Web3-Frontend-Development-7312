@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 
-export default function FeaturedArticles({ title = "Featured Intelligence", categorySlug = "featured", limit = 6 }) {
+export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6 }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,12 +47,12 @@ export default function FeaturedArticles({ title = "Featured Intelligence", cate
                <img src={articles[0]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
             {/* Thematic Gradient Reveal */}
-            <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/80 via-axim-purple/20 to-transparent z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             {/* Persistent Text Protector */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
-              <div className="text-[0.6rem] font-mono text-axim-gold mb-3 uppercase tracking-widest bg-black/50 inline-block px-2 py-1 rounded border border-white/5">Priority Briefing</div>
+              <div className="text-[0.6rem] font-mono text-axim-gold mb-3 uppercase tracking-widest bg-black/50 inline-block px-2 py-1 rounded border border-white/5">Featured Article</div>
               <h3 className="text-3xl md:text-4xl font-black text-white mb-3 group-hover:text-axim-purple transition-colors leading-tight line-clamp-3" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(articles[0].title?.rendered || '')}} />
               <div className="text-sm text-zinc-300 line-clamp-2 max-w-xl" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(articles[0].excerpt?.rendered || '')}} />
             </div>
@@ -65,7 +65,7 @@ export default function FeaturedArticles({ title = "Featured Intelligence", cate
             {articles[1]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={articles[1]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-bl from-axim-purple/60 via-axim-purple/10 to-transparent z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -80,7 +80,7 @@ export default function FeaturedArticles({ title = "Featured Intelligence", cate
             {articles[2]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={articles[2]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-tl from-axim-purple/60 via-axim-purple/10 to-transparent z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -98,7 +98,7 @@ export default function FeaturedArticles({ title = "Featured Intelligence", cate
               {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                  <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-700" />
               )}
-              <div className="absolute inset-0 bg-axim-purple/40 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+              <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent z-0" />
 
               <div className="relative z-10">
