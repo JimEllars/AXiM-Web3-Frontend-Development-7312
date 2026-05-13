@@ -40,7 +40,7 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
             )}
 
             {/* Highly Visible Thematic Reveal Overlay */}
-            <div className="absolute inset-0 bg-axim-purple/60 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/30 to-axim-purple/90 mix-blend-multiply z-0 group-hover:opacity-0 transition-opacity duration-700" />
 
             {/* Text Protector (Never fades) */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
