@@ -20,7 +20,7 @@ describe('GlobalSearch Component', () => {
 
     fireEvent.click(openBtn);
 
-    const input = screen.getByPlaceholderText('Search AXiM Omnibar...');
+    const input = screen.getByPlaceholderText('Search Intelligence Hub & Offerings...');
 
     fireEvent.change(input, { target: { value: 'tools' } });
 
