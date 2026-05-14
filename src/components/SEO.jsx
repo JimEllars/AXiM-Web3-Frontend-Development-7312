@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { theme } from '../config/theme';
 
 export default function SEO({ title, description, image, type = "website", url, customSchema, noindex = false }) {
-  const siteTitle = title ? `${title} | ${theme.siteName}` : theme.siteName;
+  const siteTitle = title ? (title.includes('AXiM') ? title : `${title} | ${theme.siteName}`) : theme.siteName;
   const metaDescription = description || "AXiM SYSTEMS - Builders of A New Era.";
 
   const organizationSchema = {
@@ -92,6 +92,7 @@ export default function SEO({ title, description, image, type = "website", url, 
       {/* Standard metadata */}
       <title>{siteTitle}</title>
       <meta name="description" content={metaDescription} />
+      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
       {/* OpenGraph tags */}
       <meta property="og:title" content={siteTitle} />

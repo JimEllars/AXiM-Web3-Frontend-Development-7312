@@ -46,7 +46,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
             {articles[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={articles[0]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/90 via-axim-purple/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -64,7 +64,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
                <img src={articles[1]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
             {/* Dynamic Color: Slate */}
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-800/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-indigo-700/90 via-indigo-900/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -81,7 +81,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
                <img src={articles[2]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
             {/* Dynamic Color: Zinc */}
-            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-fuchsia-700/90 via-fuchsia-900/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
             <div className="relative z-10">
@@ -98,9 +98,9 @@ export default function FeaturedArticles({ title = "Featured Articles", category
           {articles.slice(3, 6).map((article, index) => {
              // Rotate overlay colors for variety
              const overlayColors = [
-               "from-axim-purple/80",
-               "from-slate-800/80",
-               "from-zinc-800/80"
+               "from-axim-purple/90 via-axim-purple/40",
+               "from-indigo-700/90 via-indigo-900/40",
+               "from-fuchsia-700/90 via-fuchsia-900/40"
              ];
              const color = overlayColors[index % overlayColors.length];
 
