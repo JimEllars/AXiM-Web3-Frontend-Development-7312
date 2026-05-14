@@ -98,7 +98,7 @@ export default function Article() {
 
           {/* Right Column: Sticky Sidebar Funnels */}
           <aside className="lg:col-span-4 relative hidden lg:block">
-            <div className="sticky top-32 flex flex-col gap-6">
+            <div className="sticky top-32 flex flex-col gap-6 max-h-[calc(100vh-8rem)] overflow-y-auto overscroll-contain pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 
               <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest border-b border-white/10 pb-2 mb-2 flex items-center gap-2">
                 <SafeIcon icon={LuIcons.LuNetwork} className="w-3 h-3" /> Partner Network

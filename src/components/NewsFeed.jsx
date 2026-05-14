@@ -39,7 +39,11 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
           const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
 
           // Dynamic Colors
-          const overlayColors = ["from-slate-800/80", "from-axim-purple/80", "from-zinc-800/80"];
+          const overlayColors = [
+            "from-indigo-700/90 via-indigo-900/40",
+            "from-axim-purple/90 via-axim-purple/40",
+            "from-fuchsia-700/90 via-fuchsia-900/40"
+          ];
           const overlayClass = overlayColors[index % overlayColors.length];
 
           return (

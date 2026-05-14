@@ -53,7 +53,7 @@ export default function Articles() {
             {heroArticle._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                <img src={heroArticle._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/90 via-axim-purple/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
             <div className="relative z-10 max-w-4xl">
@@ -66,7 +66,11 @@ export default function Articles() {
         {/* Hub Masonry Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {gridArticles.map((article, index) => {
-            const overlayColors = ["from-slate-800/80", "from-axim-purple/80", "from-zinc-800/80"];
+            const overlayColors = [
+              "from-indigo-700/90 via-indigo-900/40",
+              "from-axim-purple/90 via-axim-purple/40",
+              "from-fuchsia-700/90 via-fuchsia-900/40"
+            ];
             const overlayClass = overlayColors[index % overlayColors.length];
 
             return (
