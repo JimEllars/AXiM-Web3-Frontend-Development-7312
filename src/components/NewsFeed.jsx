@@ -33,28 +33,28 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article) => {
+        {articles.map((article, index) => {
           const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
           const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
           const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
 
+          // Dynamic Colors
+          const overlayColors = ["from-slate-800/80", "from-axim-purple/80", "from-zinc-800/80"];
+          const overlayClass = overlayColors[index % overlayColors.length];
+
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 min-h-[280px] shadow-lg rounded-sm">
-              {/* Image Layer */}
               <img src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
 
-              {/* Predictable, High-Contrast Thematic Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
-
-              {/* Text Protector (Never fades) */}
+              <div className={`absolute inset-0 bg-gradient-to-b ${overlayClass} to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700`} />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
               <div className="relative z-10 mt-auto">
-                <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                  <div className="text-[0.6rem] font-mono text-zinc-400 uppercase tracking-widest border-l-2 border-axim-purple pl-2">
-                    {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                <div className="flex justify-between items-center mb-4">
+                  <div className="text-[0.55rem] font-mono text-axim-gold uppercase tracking-widest bg-axim-gold/10 border border-axim-gold/20 px-2 py-1 rounded-sm">
+                    Latest Article
                   </div>
-                  <div className="text-[0.55rem] font-mono text-axim-gold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-1 rounded-sm">
+                  <div className="text-[0.55rem] font-mono text-zinc-400 uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-1 rounded-sm">
                     {authorName}
                   </div>
                 </div>

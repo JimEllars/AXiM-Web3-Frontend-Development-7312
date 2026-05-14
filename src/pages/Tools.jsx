@@ -150,10 +150,10 @@ export default function Tools() {
                   <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center">
                     <SafeIcon icon={LuIcons.LuScale} className="w-6 h-6 text-axim-gold" />
                   </div>
-                  <span className="text-[0.65rem] font-mono text-axim-gold uppercase tracking-widest bg-axim-gold/10 px-3 py-1 rounded border border-axim-gold/20">Flagship Legal Tool</span>
+                  <span className="text-[0.65rem] font-mono text-axim-gold uppercase tracking-widest bg-axim-gold/10 px-3 py-1 rounded border border-axim-gold/20">Legal Operations</span>
                 </div>
 
-                <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">AXiM Demand Letter Generator</h3>
+                <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Demand Letter Generator</h3>
                 <p className="text-sm text-zinc-400 leading-relaxed max-w-xl mb-8">Instantly draft a highly authoritative, legally sound demand letter. Designed to force immediate resolutions, enforce contracts, and secure payments prior to costly litigation.</p>
 
                 <ul className="space-y-2 hidden md:block">
@@ -165,7 +165,7 @@ export default function Tools() {
               <div className="relative z-10 w-full md:w-auto md:text-right shrink-0">
                 {/* External Link Restored */}
                 <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="w-full md:w-auto inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(240,255,0,0.15)]">
-                  Launch Flagship Tool <SafeIcon icon={LuIcons.LuExternalLink} className="ml-3 w-4 h-4" />
+                  Start Draft <SafeIcon icon={LuIcons.LuExternalLink} className="ml-3 w-4 h-4" />
                 </a>
               </div>
            </motion.div>
