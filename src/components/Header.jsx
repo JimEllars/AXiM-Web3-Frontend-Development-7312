@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import GlobalSearch from "./GlobalSearch";
 import { useAximAuth } from '../hooks/useAximAuth';
 import { supabase } from '../lib/supabase.js';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const { LuUser, LuLogOut } = LuIcons;
 
@@ -30,7 +31,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 w-full p-4 px-6 md:px-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/10 z-50">
+    <header className="fixed top-0 w-full p-4 px-6 md:px-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/10 z-[100]">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-8">
           <Link to="/" className="font-mono font-bold text-xl tracking-tighter flex items-center gap-2 group">
@@ -103,34 +104,55 @@ export default function Header() {
         </div>
       </div>
 
-      {isMenuOpen && telemetryStatus === 'LOCAL_BUFFER' && (
-        <div className="md:hidden mt-4 flex justify-center items-center gap-2 px-3 py-2 bg-axim-gold/10 border border-axim-gold/50 text-axim-gold text-[0.65rem] font-mono font-bold uppercase tracking-widest rounded-sm shadow-[0_0_10px_rgba(240,255,0,0.3)] animate-pulse">
-          [LOCAL_BUFFER_ACTIVE] // AUTONOMOUS_MODE
-        </div>
-      )}
+      {/* Full-Screen Mobile Navigation Takeover */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden fixed inset-0 z-[90] bg-[#050505]/95 backdrop-blur-2xl border-b border-axim-purple/20 flex flex-col pt-24 px-8 pb-8 h-screen"
+          >
+            {/* Close Button Absolute Top Right */}
+            <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-2 text-zinc-400 hover:text-white border border-white/10 bg-white/5 rounded-sm">
+              <SafeIcon icon={LuIcons.LuX} className="w-6 h-6" />
+            </button>
 
-      {isMenuOpen && (
-        <div className="lg:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-4 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-zinc-400">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            const isGlowTarget = link.path === '/tools' || link.path === '/dashboard';
-              const activeClass = isActive
-                ? (isGlowTarget ? 'text-axim-purple drop-shadow-[0_0_8px_#7D00FF]' : 'text-axim-gold')
-                : '';
+            <div className="flex-1 flex flex-col justify-center space-y-8">
+              <div className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-4">System Nodes</div>
+              {[
+                { path: '/tools', label: 'Offerings', icon: LuIcons.LuCpu },
+                { path: '/articles', label: 'Intelligence', icon: LuIcons.LuDatabase },
+                { path: '/partners', label: 'Partners', icon: LuIcons.LuNetwork },
+                { path: '/consultation', label: 'Consultation', icon: LuIcons.LuMessageSquare }
+              ].map((item) => {
+                const isActive = location.pathname.startsWith(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`text-2xl font-black uppercase tracking-tighter transition-colors flex items-center gap-4 ${isActive ? 'text-white' : 'text-zinc-500 hover:text-white'}`}
+                  >
+                    <SafeIcon icon={item.icon} className={`w-6 h-6 ${isActive ? 'text-axim-purple' : 'opacity-50'}`} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
 
-            return (
+            <div className="mt-auto pt-8 border-t border-white/10">
               <Link
-                key={link.path}
-                to={link.path}
-                className={`block transition-colors ${activeClass} ${!isActive ? 'hover:text-axim-gold' : ''}`}
+                to="/consultation"
                 onClick={() => setIsMenuOpen(false)}
+                className="w-full flex justify-center items-center px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs"
               >
-                {link.label}
+                Initialize Uplink <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
               </Link>
-            );
-          })}
-        </div>
-      )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -5,6 +5,7 @@ import { fetchPosts } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
 import GlobalLoader from '../components/GlobalLoader';
 import SafeIcon from '../common/SafeIcon';
+import NewsFeed from '../components/NewsFeed';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Article() {
@@ -136,6 +137,13 @@ export default function Article() {
           </aside>
 
         </div>
+      </section>
+
+      {/* 3. Read Next Loop */}
+      <section className="mt-12 pt-12 border-t border-white/10 bg-black/50">
+         <div className="max-w-7xl mx-auto">
+            <NewsFeed limit={3} title="Recent Transmissions" />
+         </div>
       </section>
     </div>
   );
