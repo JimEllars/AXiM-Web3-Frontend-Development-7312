@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
+import WPImage from './WPImage';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 
 export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6 }) {
@@ -44,7 +45,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         {articles[0] && (
           <a href={`/article/${articles[0].slug}`} className="lg:col-span-7 lg:row-span-2 relative border border-white/10 bg-black overflow-hidden group min-h-[400px] flex flex-col justify-end p-8 hover:border-axim-purple/50 transition-colors">
             {articles[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-               <img src={articles[0]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
+               <WPImage src={articles[0]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
             )}
             <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/90 via-axim-purple/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
@@ -61,7 +62,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         {articles[1] && (
           <a href={`/article/${articles[1].slug}`} className="lg:col-span-5 lg:row-span-1 relative border border-white/10 bg-black overflow-hidden group min-h-[220px] flex flex-col justify-end p-6 hover:border-axim-purple/50 transition-colors">
             {articles[1]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-               <img src={articles[1]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
+               <WPImage src={articles[1]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
             {/* Dynamic Color: Slate */}
             <div className="absolute inset-0 bg-gradient-to-b from-indigo-700/90 via-indigo-900/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
@@ -78,7 +79,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         {articles[2] && (
            <a href={`/article/${articles[2].slug}`} className="lg:col-span-5 lg:row-span-1 relative border border-white/10 bg-black overflow-hidden group min-h-[220px] flex flex-col justify-end p-6 hover:border-axim-purple/50 transition-colors">
             {articles[2]._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-               <img src={articles[2]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
+               <WPImage src={articles[2]._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-all duration-700" />
             )}
             {/* Dynamic Color: Zinc */}
             <div className="absolute inset-0 bg-gradient-to-b from-fuchsia-700/90 via-fuchsia-900/40 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
@@ -107,7 +108,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
              return (
               <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-6 min-h-[180px]">
                 {article._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
-                   <img src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-700" />
+                   <WPImage src={article._embedded['wp:featuredmedia'][0].source_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-700" />
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-b ${color} to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent z-0" />

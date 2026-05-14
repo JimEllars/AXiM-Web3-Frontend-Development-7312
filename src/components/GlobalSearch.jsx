@@ -171,34 +171,26 @@ export default function GlobalSearch() {
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[100]"
-              onClick={closeModal}
-            />
-
+            <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 bg-[#050505]/90 backdrop-blur-md" onClick={() => setIsOpen(false)}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.4, ease: "circOut",
-                }}
-              className="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(125,0,255,0.05)] z-[101] overflow-hidden"
-            >
-              <form onSubmit={(e) => e.preventDefault()} className="relative border-b border-white/10 p-4 flex items-center gap-4 bg-white/5">
+              transition={{ duration: 0.4, ease: "circOut" }}
+              className="w-full max-w-2xl bg-[#0F172A] border border-axim-purple/30 rounded-xl overflow-hidden shadow-[0_0_100px_rgba(147,51,234,0.15)] flex flex-col"
+             onClick={(e) => e.stopPropagation()}>
+              <form onSubmit={(e) => e.preventDefault()} className="p-4 border-b border-white/10 flex items-center gap-4 bg-black/50">
                 <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-purple" />
                 <input
                   autoFocus
                   type="text"
                   value={isSynchronizing ? "Synchronizing..." : query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search AXiM Omnibar..."
+                  placeholder="Search Intelligence Hub & Offerings..."
                   disabled={isSynchronizing}
-                  className="flex-grow bg-transparent border-none text-white text-lg focus:outline-none focus:ring-0 placeholder-zinc-500 font-mono focus:shadow-[0_0_15px_rgba(125,0,255,0.2)] rounded-sm px-2 transition-shadow disabled:opacity-50"
+                  className="w-full bg-transparent text-white text-lg placeholder:text-zinc-600 focus:outline-none font-medium"
                 />
-                <button aria-label="Close Search" type="button" onClick={closeModal} className="p-1 text-zinc-500 hover:text-white transition-colors">
+                <button aria-label="Close Search" type="button" onClick={closeModal} className="text-zinc-500 hover:text-white p-2 bg-white/5 rounded-sm border border-white/10">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
                 </button>
               </form>
@@ -275,6 +267,7 @@ export default function GlobalSearch() {
               </div>
 
             </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { fetchPosts } from '../lib/wp-fetch';
+import WPImage from './WPImage';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
@@ -67,7 +68,7 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
 
           return (
             <a key={article.id} href={`/article/${article.slug}`} className="relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 min-h-[280px] shadow-lg rounded-sm">
-              <img src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
+              <WPImage src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
