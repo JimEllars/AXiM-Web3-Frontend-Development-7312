@@ -1,43 +1,36 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
 import { useShallow } from 'zustand/react/shallow';
 import * as LuIcons from 'react-icons/lu';
+const { LuUser } = LuIcons;
 import SafeIcon from '../common/SafeIcon';
-import ProfileCard from '../components/ProfileCard';
-import ProfileMenuButton from '../components/ProfileMenuButton';
-import InfoPanel from '../components/InfoPanel';
 import VaultedRecords from '../components/VaultedRecords';
-import { generators } from '../data/companyOfferings';
-import { ensureSafeProtocol } from '../lib/sanitize';
+import SEO from '../components/SEO';
+import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
-const { LuUser, LuKey, LuShieldAlert, LuShieldCheck, LuLock, LuCopy, LuCheck, LuDatabase, LuHardDrive, LuSettings, LuArrowRight, LuUnlock, LuFileText, LuRefreshCw } = LuIcons;
+
 
 export default function Profile() {
   const { session, profile, loading } = useAximAuth();
-  const { userSession, isSessionLoading: passportLoading, pendingActions, removeAction, clearQueue } = useAximStore(
+  const { userSession, isSessionLoading: passportLoading } = useAximStore(
     useShallow((state) => ({
       userSession: state.userSession,
-      isSessionLoading: state.isSessionLoading,
-      pendingActions: state.pendingActions,
-      removeAction: state.removeAction,
+      isSessionLoading: state.isSessionLoading
     }))
   );
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  }
+
   const [isSyncing, setIsSyncing] = React.useState(false);
-  const [isFlushing, setIsFlushing] = React.useState(false);
-  const [syncMessage, setSyncMessage] = React.useState('');
+    const [syncMessage, setSyncMessage] = React.useState('');
 
 
-  const handleFlushQueue = () => {
-    setIsFlushing(true);
-    // Simulate secure network handshakes and processing time
-    setTimeout(() => {
-      clearQueue();
-      setIsFlushing(false);
-    }, 2500);
-  };
+
 
   const handleSyncLicenses = () => {
     setIsSyncing(true);
@@ -48,22 +41,22 @@ export default function Profile() {
     }, 1000);
   };
 
-  const hasAccess = true;
+    const user = session?.user || userSession;
 
-  if (loading) return (
+  if (loading || passportLoading) return (
     <div className="min-h-screen flex flex-col gap-4 items-center justify-center font-mono text-axim-gold">
       <SafeIcon icon={LuUser} className="w-8 h-8 animate-pulse" />
       <span>INITIALIZING_PROFILE...</span>
     </div>
   );
 
-  if (!session) {
+  if (!session && !userSession) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
         <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
           <SafeIcon icon={LuUser} className="w-10 h-10 text-axim-gold opacity-50" />
         </div>
-        <h2 className="text-2xl font-black uppercase mb-4">Identity Required</h2>
+        <h2 className="text-2xl font-black uppercase mb-4 text-white">Identity Required</h2>
         <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Sign in to access secure profile data.</p>
         <div className="flex justify-center scale-110 origin-center mb-8">
 
@@ -76,153 +69,80 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-[1000px] mx-auto px-6 py-20 relative z-10">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative"
-      >
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50 z-[-1] pointer-events-none" />
-        <motion.div
-          animate={{ backgroundPosition: ['0% 0%', '0% 100%'] }}
-          transition={{ duration: 0.4, ease: "circOut",
-                  repeat: Infinity ,
-                }}
-          className="absolute inset-0 bg-gradient-to-b from-transparent via-axim-purple/5 to-transparent h-[200%] w-full z-[-1] pointer-events-none opacity-50 mix-blend-screen"
-        />
-        <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 rounded-md relative z-10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+    <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
+      <SEO title="Operator Vault | AXiM Systems" description="Secure dashboard and generated digital byproducts." noindex={true} />
 
-      <div className="mb-12">
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">Operator Console // Secure Archive</h1>
-        <p className="text-zinc-500 text-sm">Manage your decentralized identity and infrastructure access.</p>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-12 items-start">
-        <div className="w-full md:w-80 space-y-6">
-          <ProfileCard address={session?.user?.email || userSession?.email || 'Guest Operator'} clearanceLevel={profile?.clearance_level || 'Standard'} />
-
-          <div className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-6 space-y-4">
-            <ProfileMenuButton icon={LuSettings} label="System Settings" />
-            <ProfileMenuButton icon={LuShieldCheck} label="Asset Management" />
-            <ProfileMenuButton icon={LuShieldAlert} label="Terminate Session" danger={true} />
+      <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-axim-purple/5 blur-[120px] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-axim-green/10 border border-axim-green/20 text-[0.65rem] font-mono uppercase tracking-widest text-axim-green mb-4 rounded-sm">
+              <SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3" />
+              <span>Connection Secure</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-tight">
+              Operator <span className="text-axim-purple">Vault.</span>
+            </h1>
+            <p className="text-zinc-400 text-sm font-mono tracking-widest mt-2 uppercase">ID: {user?.id?.substring(0, 12) || 'ANONYMOUS_NODE'}...</p>
           </div>
+
+          {user && (
+             <button onClick={signOut} className="inline-flex items-center px-6 py-3 border border-white/10 bg-white/5 text-zinc-400 font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm cursor-pointer">
+               Sever Connection <SafeIcon icon={LuIcons.LuLogOut} className="ml-2 w-4 h-4" />
+             </button>
+          )}
         </div>
+      </section>
 
-        <div className="flex-grow space-y-8">
-          <VaultedRecords />
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
+          {/* Identity & Status Sidebar */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+             <div className="bg-[#0F172A] border border-axim-purple/30 p-8 rounded-sm shadow-[0_0_30px_rgba(147,51,234,0.05)] relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-axim-purple" />
+                <h3 className="text-white font-black uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
+                  <SafeIcon icon={LuIcons.LuUser} className="w-4 h-4 text-axim-purple" /> Active Identity
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Email Address</label>
+                    <div className="text-sm text-white font-medium break-all">{user?.email || 'N/A'}</div>
+                  </div>
+                  <div>
+                    <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Clearance Level</label>
+                    <div className="text-sm text-white font-medium">Standard Operator</div>
+                  </div>
+                </div>
+             </div>
 
-          <InfoPanel icon={LuUnlock} iconColor="text-axim-purple" title="Unlocked Infrastructure">
-            {!hasAccess ? (
-               <div className="p-6 border border-axim-gold/20 bg-axim-gold/5 text-center flex flex-col items-center">
-                 <p className="text-sm text-zinc-400 mb-4">You do not currently have access to these tools. Please upgrade your account.</p>
+             <div className="bg-black border border-white/10 p-8 rounded-sm">
+               <h3 className="text-white font-black uppercase tracking-widest mb-4 text-sm">Need Infrastructure?</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed mb-6">If you require enterprise-grade system integrations, initialize a consultation protocol with our engineering team.</p>
+               <Link to="/consultation" className="w-full inline-flex justify-center items-center px-4 py-3 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-[0.65rem] hover:bg-axim-purple hover:border-axim-purple transition-colors">
+                  Request Consult
+               </Link>
+             </div>
+          </div>
+
+          {/* The Vault (Action Queue) */}
+          <div className="lg:col-span-8">
+             <div className="bg-black border border-white/10 rounded-sm overflow-hidden min-h-[400px]">
+               <div className="bg-white/5 border-b border-white/10 p-6 flex items-center justify-between">
+                 <h2 className="text-lg font-black text-white uppercase tracking-tighter flex items-center gap-2">
+                    <SafeIcon icon={LuIcons.LuArchive} className="w-5 h-5 text-axim-purple" /> Digital Byproducts
+                 </h2>
+                 <span className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Encrypted Storage</span>
                </div>
-            ) : (
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                 {generators.map((doc) => {
-                    let destUrl = doc.externalUrl ? `${doc.externalUrl}?source=axim_hub` : "#";
-                    if (doc.externalUrl && userSession && userSession.session_token) {
-                      destUrl += `&auth_handoff=${userSession.session_token}`;
-                    }
-                    return (
-                    <a key={doc.id} href={ensureSafeProtocol(destUrl)}  className="p-4 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-axim-purple/50 transition-colors group flex flex-col gap-2 rounded-sm cursor-pointer block">
-                       <div className="flex items-center gap-3">
-                         <SafeIcon icon={LuIcons[doc.iconName] || LuIcons.LuFileText} className="text-axim-purple w-5 h-5" />
-                         <span className="font-bold text-sm text-white group-hover:text-axim-purple transition-colors uppercase tracking-wider">{doc.title}</span>
-                       </div>
-                       <p className="text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">{doc.desc}</p>
-                    </a>
-                    );
-                 })}
-               </div>
-            )}
-          </InfoPanel>
 
-          <InfoPanel icon={LuDatabase} iconColor="text-axim-purple" title="AI Memory Banks (RAG)">
-             <div className="p-6 border border-white/10 bg-white/5 flex flex-col gap-4 relative overflow-hidden group hover:border-axim-purple/30 transition-colors">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-axim-purple/5 blur-[40px] pointer-events-none group-hover:bg-axim-purple/10 transition-colors"></div>
-               <div className="flex justify-between items-center relative z-10">
-                 <div>
-                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuCheck} className="w-3 h-3 text-axim-green"/> Synced Intelligence Documents</div>
-                    <div className="font-mono text-sm text-white tracking-widest">3 Active Embeddings</div>
-                 </div>
-                 <button className="px-3 py-1.5 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple hover:text-black font-mono text-[0.65rem] uppercase tracking-widest transition-all">
-                    Manage Vectors
-                 </button>
-               </div>
-               <div className="text-xs text-zinc-400 mt-2 relative z-10">
-                 These documents inform your personal Onyx agent instances context.
+               <div className="p-6">
+                 <VaultedRecords />
                </div>
              </div>
-          </InfoPanel>
+          </div>
 
-          {pendingActions && pendingActions.length > 0 && (
-            <InfoPanel icon={LuRefreshCw} iconColor="text-axim-gold" title={
-              <div className="flex justify-between items-center w-full">
-                <span>Pending Synchronizations</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); handleFlushQueue(); }}
-                  disabled={isFlushing}
-                  className="px-3 py-1 bg-axim-gold/10 text-axim-gold border border-axim-gold/30 hover:bg-axim-gold hover:text-black transition-colors font-mono text-[0.6rem] tracking-widest uppercase disabled:opacity-50 ml-4"
-                >
-                  {isFlushing ? 'SYNCING_TO_CORE...' : 'FORCE_NETWORK_SYNC'}
-                </button>
-              </div>
-            }>
-              <div className="space-y-4">
-                {pendingActions.map(action => (
-                  <div key={action.id} className="p-4 border border-axim-gold/50 bg-axim-gold/5 flex justify-between items-center group relative overflow-hidden rounded-sm">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/5 blur-[40px] pointer-events-none group-hover:bg-axim-gold/10 transition-colors"></div>
-                    <div className="relative z-10 flex flex-col gap-1">
-                      <div className="text-[0.6rem] font-mono text-axim-gold uppercase tracking-widest">[ACTION_QUEUED]</div>
-                      <span className="font-mono text-xs uppercase text-white truncate max-w-[250px]">
-  {action.name ? action.name : action.type.replace(/_/g, ' ')}
-</span>
-                      <div className="text-[0.65rem] font-mono text-zinc-500 uppercase">{action.type} // {new Date(action.timestamp).toLocaleTimeString()}</div>
-                    </div>
-                    <button
-                      onClick={() => removeAction(action.id)}
-                      className="relative z-10 px-2 py-1 text-axim-gold hover:bg-axim-gold/20 border border-transparent hover:border-axim-gold/30 rounded transition-all font-bold text-xs"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </InfoPanel>
-          )}
-
-          <InfoPanel icon={LuLock} iconColor="text-axim-purple" title="Product Licenses">
-            <div className="space-y-4">
-              <div className="p-6 border border-white/10 bg-white/5 text-left flex flex-col gap-4">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                  <div>
-                    <div className="text-[0.6rem] font-mono text-zinc-500 uppercase mb-1 flex items-center gap-1"><SafeIcon icon={LuShieldCheck} className="w-3 h-3 text-axim-purple"/> Active License</div>
-                    <div className="font-mono text-lg text-white tracking-widest">AXM-BYPR-0982-X</div>
-                  </div>
-                  <div className="text-left sm:text-right">
-                    <div className="flex flex-col items-end gap-2">
-                      <button
-                        onClick={handleSyncLicenses}
-                        disabled={isSyncing}
-                        className="px-3 py-1.5 bg-white/5 border border-white/10 text-white font-mono text-[0.65rem] uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                      >
-                        <SafeIcon icon={LuRefreshCw} className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} /> Sync Licenses
-                      </button>
-                      {syncMessage && <span className="text-axim-purple text-[0.55rem] font-mono tracking-widest uppercase">{syncMessage}</span>}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-xs text-zinc-400 mt-2">
-                  Use this license key to validate your asset access. Internal use only.
-                </div>
-              </div>
-            </div>
-          </InfoPanel>
         </div>
-      </div>
-      </div>
-      </motion.div>
+      </section>
     </div>
   );
 }
