@@ -3,10 +3,11 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 
-const { LuClock, LuExternalLink, LuLock, LuDownload, LuEye, LuFileText, LuFileSpreadsheet, LuFileKey } = LuIcons;
+const { LuLock } = LuIcons;
 
 export default function VaultedRecords() {
   const vaultedArtifacts = useAximStore((state) => state.vaultedArtifacts);
+  const removeAction = useAximStore((state) => state.removeAction);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
@@ -16,114 +17,47 @@ export default function VaultedRecords() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleDownload = (recordName) => {
-    // Simulate a download by opening a blank blob
-    const blob = new Blob(["Simulated content for " + recordName], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  };
 
-  const handlePreview = (recordName) => {
-    window.open('about:blank', '_blank');
-  };
 
-  const getIconForType = (type) => {
-    switch (type) {
-      case 'csv': return LuFileSpreadsheet;
-      case 'enc': return LuFileKey;
-      default: return LuFileText;
-    }
-  };
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl saturate-150 border border-white/10 p-8 overflow-hidden relative font-mono h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-black uppercase flex items-center gap-3 text-white">
-          Vaulted Records
-        </h3>
-        <button className="text-[0.6rem] text-axim-gold hover:text-white uppercase tracking-widest flex items-center gap-2 transition-colors">
-          Export Registry <SafeIcon icon={LuExternalLink} className="w-3 h-3" />
-        </button>
-      </div>
-
-      <div className="flex-1 flex flex-col min-h-[300px]">
-        {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 text-[0.6rem] text-zinc-500 uppercase tracking-widest mb-4 pb-2 border-b border-white/10 px-4">
-          <div className="col-span-6">Artifact_Name</div>
-          <div className="col-span-2 text-center">Size</div>
-          <div className="col-span-2 text-center">Status</div>
-          <div className="col-span-2 text-right">Actions</div>
-        </div>
-
-        {/* Table Body */}
+    <>
         {fetching ? (
-          <div className="flex-1 flex items-center justify-center opacity-30 animate-pulse flex-col gap-4">
+          <div className="flex-1 flex items-center justify-center opacity-30 animate-pulse flex-col gap-4 py-8">
             <SafeIcon icon={LuLock} className="w-8 h-8 text-axim-purple" />
-            <div className="uppercase text-[0.6rem] text-white tracking-widest">Querying_Secure_Vault...</div>
+            <div className="uppercase text-[0.6rem] text-white tracking-widest font-mono">Querying_Secure_Vault...</div>
           </div>
         ) : vaultedArtifacts && vaultedArtifacts.length > 0 ? (
           <div className="space-y-2">
             {vaultedArtifacts.map((record) => (
-              <div
-                key={record.id}
-                className="group grid grid-cols-12 gap-4 items-center text-[0.7rem] py-3 px-4 bg-white/5 border border-white/10 hover:border-white/10 hover:bg-white/10 transition-all rounded-sm"
-              >
-                {/* Artifact Name & Icon */}
-                <div className="col-span-6 flex items-center gap-3 overflow-hidden">
-                  <SafeIcon
-                    icon={getIconForType(record.type)}
-                    className="text-axim-purple w-4 h-4 shrink-0 group-hover:scale-110 transition-transform"
-                  />
-                  <span className="text-white font-bold truncate tracking-wide">{record.name}</span>
-                </div>
+              <div key={record.id} className="group relative p-4 mb-3 bg-[#050505] border border-white/5 hover:border-axim-purple/40 rounded-sm flex items-center justify-between transition-colors overflow-hidden">
+          <div className="absolute left-0 top-0 w-1 h-full bg-zinc-800 group-hover:bg-axim-purple transition-colors" />
 
-                {/* Size */}
-                <div className="col-span-2 text-zinc-400 text-center font-mono">
-                  {record.size}
+          <div className="flex items-center gap-4 pl-3">
+             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center shrink-0">
+               <SafeIcon icon={LuIcons.LuFileCode2} className="w-5 h-5 text-axim-purple" />
+             </div>
+             <div>
+                <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-1">{record.name || record.target}</h4>
+                <div className="flex items-center gap-3">
+                  <span className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest">{new Date(record.timestamp || record.date).toLocaleDateString()}</span>
+                  <span className="text-[0.55rem] font-mono text-axim-gold uppercase tracking-widest px-2 py-0.5 bg-axim-gold/10 border border-axim-gold/20 rounded">Pending Parse</span>
                 </div>
+             </div>
+          </div>
 
-                {/* Status */}
-                <div className="col-span-2 text-center">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${
-                    record.status === 'Verified' ? 'bg-axim-purple/10 text-axim-purple border border-axim-purple/20' :
-                    record.status === 'Encrypted' ? 'bg-axim-purple/10 text-axim-purple border border-axim-purple/20' :
-                    'bg-zinc-800 text-zinc-400 border border-zinc-700'
-                  }`}>
-                    {record.status}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-2 flex items-center justify-end gap-3 opacity-50 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => handlePreview(record.name)}
-                    className="text-zinc-400 hover:text-white transition-colors"
-                    title="View Asset"
-                  >
-                    <SafeIcon icon={LuExternalLink} className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDownload(record.name)}
-                    className="text-axim-purple hover:text-white transition-colors"
-                    title="Download Asset"
-                  >
-                    <SafeIcon icon={LuDownload} className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+          <button onClick={() => removeAction(record.id)} className="text-zinc-600 hover:text-[#DB2777] p-2 transition-colors" title="Purge Record">
+             <SafeIcon icon={LuIcons.LuTrash2} className="w-4 h-4" />
+          </button>
+        </div>
             ))}
           </div>
         ) : (
-          <div className="flex-1 border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600">
+          <div className="flex-1 border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 py-12">
             <SafeIcon icon={LuLock} className="w-10 h-10 mb-4 opacity-30" />
-            <span className="text-[0.6rem] uppercase tracking-[0.3em] text-zinc-500">Registry_Empty // No_Records</span>
+            <span className="text-[0.6rem] uppercase tracking-[0.3em] font-mono text-zinc-500">Registry_Empty // No_Records</span>
           </div>
         )}
-      </div>
-
-      <div className="pt-8 text-center text-zinc-600 text-[0.6rem] uppercase tracking-widest border-t border-white/10 mt-auto">
-        SECURE_END_OF_FILE
-      </div>
-    </div>
+    </>
   );
 }
