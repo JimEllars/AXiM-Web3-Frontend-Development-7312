@@ -11,6 +11,7 @@ export default {
       colors: {
         'axim-purple': '#7D00FF',
         'axim-gold': '#F0FF00',
+        'axim-green': '#00FF00',
         'axim-deep': '#120025',
         'bg-void': '#050505',
       },

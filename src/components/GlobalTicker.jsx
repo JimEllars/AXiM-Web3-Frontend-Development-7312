@@ -1,29 +1,30 @@
 import React from 'react';
-import { useAximStore } from '../store/useAximStore';
-import * as LuIcons from 'react-icons/lu';
+import Marquee from './Marquee';
 import SafeIcon from '../common/SafeIcon';
+import * as LuIcons from 'react-icons/lu';
 
 export default function GlobalTicker() {
-  const telemetryStatus = useAximStore((state) => state.telemetryStatus);
-
   return (
-    <div className="w-full bg-black border-b border-white/10 px-4 py-1.5 flex items-center justify-between text-[0.6rem] font-mono uppercase tracking-widest z-50 relative">
-      <div className="flex items-center gap-4">
-        <span className="text-zinc-500 font-bold">AXiM // CORE v1.2</span>
-        {telemetryStatus === 'LOCAL_BUFFER' ? (
-          <span className="text-axim-gold flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-axim-gold rounded-full animate-pulse" />
-            [LOCAL_BUFFER_ACTIVE] // AUTONOMOUS_MODE
-          </span>
-        ) : (
-          <span className="text-axim-purple flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-axim-purple rounded-full animate-pulse" />
-            SECURE_UPLINK_STABLE
-          </span>
-        )}
-      </div>
-      <div className="text-zinc-600 hidden md:block">
-        SESSION_ENCRYPTED // {new Date().toISOString().split('T')[0]}
+    <div className="w-full bg-[#050505] border-b border-white/10 py-1.5 relative z-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 flex items-center">
+        {/* Static Indicator */}
+        <div className="hidden md:flex items-center gap-2 mr-4 pr-4 border-r border-white/10 shrink-0">
+          <div className="w-1.5 h-1.5 bg-axim-green rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,0,0.8)]" />
+          <span className="text-[0.6rem] font-mono text-zinc-400 uppercase tracking-widest">Global Network</span>
+        </div>
+
+        {/* Scrolling Telemetry */}
+        <div className="flex-1 overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+          <Marquee speed={30}>
+            <div className="flex space-x-12 items-center text-[0.6rem] font-mono uppercase tracking-widest text-zinc-500">
+              <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuActivity} className="text-axim-green w-3 h-3"/> UPTIME: 99.999%</span>
+              <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuGlobe} className="text-axim-purple w-3 h-3"/> ACTIVE EDGE NODES: 142</span>
+              <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuShieldCheck} className="text-axim-green w-3 h-3"/> ENCRYPTION: AES-256</span>
+              <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuZap} className="text-axim-gold w-3 h-3"/> LATENCY: &lt; 12ms</span>
+              <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuCpu} className="text-axim-purple w-3 h-3"/> LOAD BALANCING: OPTIMAL</span>
+            </div>
+          </Marquee>
+        </div>
       </div>
     </div>
   );

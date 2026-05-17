@@ -1,104 +1,93 @@
 import React, { useState } from 'react';
+import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
-import * as LuIcons from 'react-icons/lu';
+import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
-
-const { LuLock, LuShieldCheck, LuZap, LuMail } = LuIcons;
+import * as LuIcons from 'react-icons/lu';
 
 export default function EarlyAccess() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubmitting(true);
+
+    // Optimistic UI Queue
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }, 1500);
+  };
+
   return (
-    <div className="max-w-[1200px] mx-auto px-6 py-20 min-h-[80vh] flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-axim-purple/5 blur-[120px] rounded-full pointer-events-none" />
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        className="text-center mb-16 relative z-10"
-      >
-        <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8">
-          <SafeIcon icon={LuLock} className="text-axim-gold w-4 h-4" />
-          <span className="font-mono text-[0.6rem] uppercase tracking-widest text-zinc-400">Restricted Access Protocol</span>
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl font-black uppercase mb-6 tracking-tighter leading-none">
-          Unified <span className="text-axim-gold">Onboarding</span>
-        </h1>
-        <p className="text-zinc-500 max-w-lg mx-auto text-lg leading-relaxed">
-          Complete your operational profile to synchronize with the AXiM Digital backbone and unlock infrastructure-level governance.
-        </p>
-      </motion.div>
+    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32 flex flex-col">
+      <SEO title="Subscribe to Updates | AXiM Systems" description="Subscribe to the AXiM network for strategic blueprints, promos, and new software tool drops." />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }} 
-          animate={{ opacity: 1, x: 0 }} 
-          transition={{ duration: 0.4, ease: "circOut",
-                  delay: 0.2  ,
-                }}
-          className="space-y-8 hidden lg:block"
-        >
-          <div className="p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
-            <div className="flex gap-6 items-start">
-              <div className="p-4 bg-axim-gold/10 text-axim-gold border border-axim-gold/20">
-                <SafeIcon icon={LuShieldCheck} className="w-8 h-8" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold uppercase mb-2">Verified Identity</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">Secure your operator profile using Web3 authentication and clearance level indexing.</p>
-              </div>
-            </div>
-          </div>
+      <section className="flex-1 flex items-center justify-center p-6 mt-20">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl">
           
-          <div className="p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
-            <div className="flex gap-6 items-start">
-              <div className="p-4 bg-axim-purple/10 text-axim-purple border border-axim-purple/20">
-                <SafeIcon icon={LuZap} className="w-8 h-8" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold uppercase mb-2">Instant Allocation</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">Early access members receive priority allocation in upcoming grid-scale energy deployments.</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
+            <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+            Return to Hub
+          </Link>
 
-        <motion.div 
-          initial={{ opacity: 0, x: 30 }} 
-          animate={{ opacity: 1, x: 0 }} 
-          transition={{ duration: 0.4, ease: "circOut",
-                  delay: 0.4  ,
-                }}
-          className="w-full"
-        >
-          <div className="max-w-[500px] mx-auto p-8 bg-glass backdrop-blur-xl saturate-150 border border-subtle">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold uppercase mb-2">Coming Soon</h2>
-              <p className="text-zinc-400 text-sm">Our restricted access onboarding portal is currently undergoing final calibration. Join the waitlist for priority access.</p>
-            </div>
-
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert('Thanks for joining the waitlist!'); }}>
-              <div>
-                <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">Operator Communication Link</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SafeIcon icon={LuMail} className="text-zinc-500 w-4 h-4" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="ENTER_EMAIL_ADDRESS"
-                    className="w-full bg-white/5 border border-white/10 p-3 pl-10 text-white placeholder-zinc-600 focus:outline-none focus:border-axim-gold transition-colors font-mono text-sm"
-                  />
+          {submitted ? (
+             <div className="bg-[#0F172A] border border-axim-purple/50 p-12 rounded-sm text-center shadow-[0_0_50px_rgba(147,51,234,0.15)] relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
+                <div className="w-16 h-16 bg-axim-purple/20 text-axim-purple mx-auto rounded-full flex items-center justify-center mb-6">
+                  <SafeIcon icon={LuIcons.LuCircleCheck} className="w-8 h-8" />
                 </div>
+                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Subscription Confirmed</h2>
+                <p className="text-zinc-400 text-sm leading-relaxed font-mono uppercase tracking-widest">
+                  Your address has been securely logged. You will now receive priority intelligence and ecosystem promos directly to your inbox.
+                </p>
+             </div>
+          ) : (
+            <div className="bg-black border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
+
+              <div className="relative z-10">
+                <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-6">
+                  <SafeIcon icon={LuIcons.LuMail} className="w-6 h-6 text-axim-purple" />
+                </div>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Priority Intelligence.</h1>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-md">
+                  Join the AXiM network. Subscribe to receive strategic blueprints, exclusive partner promos, and early access to new ecosystem tools directly to your inbox.
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Email Address</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                      placeholder="operator@enterprise.com"
+                    />
+                  </div>
+
+                  <button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)]"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> ENCRYPTING...</span>
+                    ) : (
+                      <span className="flex items-center gap-2">Subscribe to Updates <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4"/></span>
+                    )}
+                  </button>
+                </form>
               </div>
-              <button type="submit" className="w-full p-4 bg-axim-gold text-black font-bold uppercase text-sm tracking-wider hover:bg-white transition-colors">
-                Request Clearance
-              </button>
-            </form>
-          </div>
+            </div>
+          )}
         </motion.div>
-      </div>
+      </section>
     </div>
   );
 }

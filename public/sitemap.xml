@@ -56,6 +56,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://axim.us.com/article/unleashing-the-power-of-automation-a-detailed-look-at-the-latest-software</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://axim.us.com/article/energy-independence-the-neighborhood-microgrid-blueprint</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
