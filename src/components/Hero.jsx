@@ -40,22 +40,22 @@ export default function Hero() {
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "circOut" }}
-        className="max-w-4xl w-full mx-auto px-6 relative z-10 text-center"
+        transition={{ duration: 0.5, ease: "circOut" }}
+        className="max-w-4xl w-full mx-auto px-6 relative z-10 text-center flex flex-col items-center"
       >
         <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer"
-           className="font-mono text-[0.7rem] text-axim-gold bg-axim-gold/10 px-3.5 py-1.5 rounded border border-axim-gold uppercase font-bold mb-8 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(255,234,0,0.1)] transition hover:bg-axim-gold/20">
+           className="font-mono text-[0.7rem] text-axim-gold bg-axim-gold/10 px-4 py-2 rounded border border-axim-gold uppercase font-bold mb-8 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(255,234,0,0.1)] transition hover:bg-axim-gold/20">
           <SafeIcon icon={LuIcons.LuSparkles} className="w-3.5 h-3.5" /> NEW: $4.00 QUICK DEMAND LETTER GENERATOR
         </a>
 
-        <div className="font-mono text-xs text-axim-purple bg-axim-purple/10 px-4 py-2 rounded-full border border-axim-purple/30 mb-8 inline-flex items-center gap-3 backdrop-blur-md mx-auto">
+        <div className="font-mono text-xs text-axim-purple bg-axim-purple/10 px-5 py-2.5 rounded-full border border-axim-purple/30 mb-8 inline-flex items-center gap-3 backdrop-blur-md mx-auto">
           <span className="w-2 h-2 bg-axim-purple rounded-full shadow-[0_0_10px_#7D00FF] animate-pulse"></span>
           <span>{typewriterText}<span className="animate-ping">_</span></span>
         </div>
 
         <h1 className="text-[clamp(3rem,8vw,6.5rem)] leading-none font-black tracking-[-0.04em] mb-6 uppercase">
           Smarter<br className="hidden md:block" />
-          <span className="gradient-text"> Systems</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-purple to-[#DB2777]"> Systems</span>
         </h1>
 
         <p className="text-[clamp(1.1rem,2vw,1.25rem)] text-zinc-400 max-w-2xl mx-auto mb-10 leading-[1.6] font-light">
