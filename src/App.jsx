@@ -23,8 +23,6 @@ import PageTransition from './components/PageTransition';
 
 
 import Chatbot from './components/Chatbot';
-import ProactiveBanner from './components/ProactiveBanner';
-import EngagementGuard from './components/EngagementGuard';
 import { useAximStore } from './store/useAximStore';
 import { logTelemetry } from './lib/telemetry';
 
@@ -74,8 +72,12 @@ function App() {
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
       <BackgroundEffects />
-      <ProactiveBanner />
-      <EngagementGuard />
+      {/* CRITICAL FIX:
+        <ProactiveBanner /> and <EngagementGuard /> have been removed from here.
+        They belong inside page-level layouts (like Home.jsx), NOT the global root.
+      */}
+
+
       <Chatbot />
       <Header />
       <SystemBreadcrumb />
