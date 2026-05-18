@@ -41,7 +41,7 @@ describe('Hero Component', () => {
     // Check links
     const demandLetterLink = screen.getByRole('link', { name: /NEW: \$4\.00 QUICK DEMAND LETTER GENERATOR/i });
     assert.ok(demandLetterLink);
-    assert.strictEqual(demandLetterLink.getAttribute('href'), 'https://quickdemandletter.com');
+    assert.strictEqual(demandLetterLink.getAttribute('href'), 'https://quickdemandletter.com/start');
 
     const exploreToolsLink = screen.getByRole('link', { name: /Explore Tools/i });
     assert.ok(exploreToolsLink);
