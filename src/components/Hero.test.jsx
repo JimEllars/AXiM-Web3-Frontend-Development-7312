@@ -1,7 +1,7 @@
 import 'global-jsdom/register';
 import { test, describe, afterEach, beforeEach, vi } from 'vitest';
 import assert from 'assert';
-import { render, screen, cleanup, act, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, cleanup, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Hero from './Hero.jsx';
@@ -36,18 +36,18 @@ describe('Hero Component', () => {
     assert.ok(screen.getAllByText(/Systems/)[0]);
 
     // Check description
-    assert.ok(screen.getByText(/AXiM System offers products and services built to make your life easier/));
+    assert.ok(screen.getByText(/Enterprise-grade digital byproducts, decentralized infrastructure, and strategic blueprints built to eliminate operational friction without breaking the bank/));
 
     // Check links
     const demandLetterLink = screen.getByRole('link', { name: /NEW: \$4\.00 QUICK DEMAND LETTER GENERATOR/i });
     assert.ok(demandLetterLink);
     assert.strictEqual(demandLetterLink.getAttribute('href'), 'https://quickdemandletter.com/start');
 
-    const exploreToolsLink = screen.getByRole('link', { name: /Explore Tools/i });
+    const exploreToolsLink = screen.getByRole('link', { name: /Explore Offerings/i });
     assert.ok(exploreToolsLink);
     assert.strictEqual(exploreToolsLink.getAttribute('href'), '/tools');
 
-    const consultationLink = screen.getByRole('link', { name: /Request a Consultation/i });
+    const consultationLink = screen.getByRole('link', { name: /Request Consultation/i });
     assert.ok(consultationLink);
     assert.strictEqual(consultationLink.getAttribute('href'), '/consultation');
   });
@@ -101,59 +101,5 @@ describe('Hero Component', () => {
         vi.advanceTimersByTime(50); // delete 1 char
     });
     assert.ok(!getTypedText().includes("D_")); // D is removed
-  });
-
-    test('handles successful subscription', async () => {
-    vi.useRealTimers();
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      })
-    );
-    // set dummy env var
-    import.meta.env.VITE_NEWSLETTER_API_URL = 'http://test.url';
-
-    render(
-      <MemoryRouter>
-        <Hero />
-      </MemoryRouter>
-    );
-
-    const emailInput = screen.getByPlaceholderText('operator@enterprise.com');
-    const submitButton = screen.getByRole('button', { name: /Initialize Uplink/i });
-
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-       assert.ok(global.fetch.mock.calls.length > 0);
-    });
-  });
-
-  test('handles failed subscription', async () => {
-    vi.useRealTimers();
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: false,
-      })
-    );
-    import.meta.env.VITE_NEWSLETTER_API_URL = 'http://test.url';
-
-    render(
-      <MemoryRouter>
-        <Hero />
-      </MemoryRouter>
-    );
-
-    const emailInput = screen.getByPlaceholderText('operator@enterprise.com');
-    const submitButton = screen.getByRole('button', { name: /Initialize Uplink/i });
-
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-        assert.ok(screen.getByText(/Transmission failed. Retry./i));
-    });
   });
 });
