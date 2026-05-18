@@ -63,7 +63,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4">
               <li><Link to="/profile" className="text-zinc-400 hover:text-white text-sm transition-colors">Operator Dashboard</Link></li>
-              <li><Link to="/early-access" className="text-zinc-400 hover:text-white text-sm transition-colors">Request Early Access</Link></li>
+              <li><Link to="/early-access" className="text-zinc-400 hover:text-white text-sm transition-colors">Newsletter & Updates</Link></li>
               <li><a href="mailto:support@axim.us.com" className="text-zinc-400 hover:text-white text-sm transition-colors">support@axim.us.com</a></li>
             </ul>
           </div>
