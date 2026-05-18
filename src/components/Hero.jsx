@@ -48,7 +48,7 @@ export default function Hero() {
           <SafeIcon icon={LuIcons.LuSparkles} className="w-3.5 h-3.5" /> NEW: $4.00 QUICK DEMAND LETTER GENERATOR
         </a>
 
-        <div className="font-mono text-xs text-axim-purple bg-axim-purple/10 px-4 py-2 rounded-full border border-axim-purple/30 mb-8 inline-flex items-center gap-3 backdrop-blur-md mx-auto flex w-max">
+        <div className="font-mono text-xs text-axim-purple bg-axim-purple/10 px-4 py-2 rounded-full border border-axim-purple/30 mb-8 inline-flex items-center gap-3 backdrop-blur-md mx-auto">
           <span className="w-2 h-2 bg-axim-purple rounded-full shadow-[0_0_10px_#7D00FF] animate-pulse"></span>
           <span>{typewriterText}<span className="animate-ping">_</span></span>
         </div>
