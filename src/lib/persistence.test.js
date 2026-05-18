@@ -1,5 +1,5 @@
-import { test, describe, beforeEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, beforeEach } from 'vitest';
+import assert from 'assert';
 import { localStore } from './persistence.js';
 
 // Mock localStorage

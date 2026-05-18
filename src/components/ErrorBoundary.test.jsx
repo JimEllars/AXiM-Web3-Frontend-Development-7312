@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, mock } from 'node:test';
-import assert from 'node:assert';
+import {  test, describe, afterEach, mock , vi } from 'vitest';
+import assert from 'assert';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import React from 'react';
 import ErrorBoundary from './ErrorBoundary.jsx';
@@ -21,7 +21,7 @@ describe('ErrorBoundary Component', () => {
 
   test('renders fallback UI when child component throws', () => {
     const originalConsoleError = console.error;
-    console.error = mock.fn(); // Mock to prevent error logging in test output
+    console.error = vi.fn(); // Mock to prevent error logging in test output
 
     const ThrowError = () => {
       throw new Error('Test Error from Child');
@@ -45,7 +45,7 @@ describe('ErrorBoundary Component', () => {
 
   test('reboot button attempts to reload window', () => {
     const originalConsoleError = console.error;
-    console.error = mock.fn();
+    console.error = vi.fn();
 
     const ThrowError = () => {
       throw new Error('Another Error');

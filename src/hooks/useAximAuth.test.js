@@ -1,32 +1,31 @@
 global.import = { meta: { env: { VITE_ENABLE_WEB3: 'true' } } };
 import 'global-jsdom/register';
-import { test, describe, afterEach, mock } from 'node:test';
-import assert from 'node:assert';
+import {  test, describe, afterEach, mock , vi } from 'vitest';
+import assert from 'assert';
 import { renderHook, waitFor, cleanup } from '@testing-library/react';
 import React from 'react';
 
-// Use mock.module before importing useAximAuth
+// Use vi.mock before importing useAximAuth
 // We will test multiple scenarios by updating the returned value
 let mockAccount = null;
 
-mock.module('thirdweb/react', {
-  namedExports: {
-    useActiveAccount: () => mockAccount,
-    ThirdwebProvider: ({ children }) => React.createElement(React.Fragment, null, children)
-  }
-});
+vi.mock('thirdweb/react', () => ({
+  useActiveAccount: () => mockAccount,
+  useConnect: () => ({ connect: vi.fn(), isConnecting: false })
+}));
 
-mock.module('../lib/supabase.js', {
-  namedExports: {
-    supabase: {
-      auth: {
-        getSession: async () => ({ data: { session: null } }),
-        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-        setSession: async () => ({ data: { session: null } })
-      }
+vi.mock('../lib/supabase.js', () => ({
+  supabase: {
+    auth: {
+      getSession: vi.fn(),
+      getUser: vi.fn(),
+      signInWithPassword: vi.fn(),
+      signUp: vi.fn(),
+      signOut: vi.fn(),
+      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } }))
     }
   }
-});
+}));
 
 // Import dynamically to ensure mock is applied
 const { useAximAuth } = await import('./useAximAuth.js');
@@ -35,7 +34,7 @@ const { localStore } = await import('../lib/persistence.js');
 describe('useAximAuth Hook', () => {
   afterEach(() => {
     cleanup();
-    mock.restoreAll();
+    vi.restoreAllMocks();
     localStore.clearCache();
     mockAccount = null;
     localStorage.clear();
@@ -99,7 +98,7 @@ describe('useAximAuth Hook', () => {
     const originalConsoleError = console.error;
 
     // Suppress expected error logs
-    console.error = mock.fn();
+    console.error = vi.fn();
 
     // Force an error
     localStore.getProfile = () => {

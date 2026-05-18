@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, mock } from 'node:test';
-import assert from 'node:assert';
+import {  test, describe, afterEach, mock , vi } from 'vitest';
+import assert from 'assert';
 import { render, cleanup } from '@testing-library/react';
 import React from 'react';
 import BackgroundEffects from './BackgroundEffects.jsx';
@@ -9,7 +9,7 @@ describe('BackgroundEffects Component', () => {
 
   afterEach(() => {
     cleanup();
-    mock.restoreAll();
+    vi.restoreAllMocks();
   });
 
   test('renders container with correct classes', () => {

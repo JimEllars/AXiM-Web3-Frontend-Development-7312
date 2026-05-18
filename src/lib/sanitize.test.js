@@ -1,5 +1,5 @@
-import test from 'node:test';
-import assert from 'node:assert';
+import { test } from 'vitest';
+import assert from 'assert';
 import { ensureSafeProtocol } from './sanitize.js';
 
 test('ensureSafeProtocol - allows http and https', () => {

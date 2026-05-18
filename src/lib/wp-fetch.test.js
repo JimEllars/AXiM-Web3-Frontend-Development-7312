@@ -1,5 +1,5 @@
-import { test, describe, beforeEach, afterEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, beforeEach, afterEach } from 'vitest';
+import assert from 'assert';
 import { getWordPressPost, fetchPostsByCategory, fetchCache } from './wp-fetch.js';
 
 describe('getWordPressPost', () => {

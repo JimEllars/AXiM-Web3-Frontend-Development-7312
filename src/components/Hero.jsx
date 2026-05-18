@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 
-const { LuSparkles, LuArrowRight, LuMail, LuCheckCircle2 } = LuIcons;
+const { LuSparkles, LuArrowRight, LuMail, LuCheck } = LuIcons;
 
 export default function Hero() {
   // Typewriter State
@@ -15,6 +15,7 @@ export default function Hero() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let pIndex = 0, i = 0, isDeleting = false, timeoutId;
@@ -41,16 +42,40 @@ export default function Hero() {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!email) return;
     setIsSubmitting(true);
+    setError(false);
 
-    // Optimistic UI Queue
-    setTimeout(() => {
+    try {
+      const url = import.meta.env.VITE_NEWSLETTER_API_URL;
+      if (!url) {
+        // Fallback for when env var is not set, just simulate success after a delay
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubscribed(true);
+        }, 1200);
+        return;
+      }
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (res.ok) {
+        setIsSubmitting(false);
+        setSubscribed(true);
+      } else {
+        setIsSubmitting(false);
+        setError(true);
+      }
+    } catch (err) {
       setIsSubmitting(false);
-      setSubscribed(true);
-    }, 1200);
+      setError(true);
+    }
   };
 
   return (
@@ -107,7 +132,7 @@ export default function Hero() {
 
             {subscribed ? (
                <div className="text-center py-8 relative z-10">
-                  <SafeIcon icon={LuCheckCircle2} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
+                  <SafeIcon icon={LuCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
                   <h4 className="text-white font-black uppercase tracking-widest text-sm mb-2">Comms Secured</h4>
                   <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase">Awaiting Transmission.</p>
                </div>
@@ -127,6 +152,7 @@ export default function Hero() {
                     className="w-full bg-black border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                     required
                   />
+                  {error && <p className="text-red-500 text-xs font-mono mt-1">Transmission failed. Retry.</p>}
                   <button
                     type="submit"
                     disabled={isSubmitting}

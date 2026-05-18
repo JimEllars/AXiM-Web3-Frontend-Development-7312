@@ -1,5 +1,5 @@
-import test, { describe, it } from 'node:test';
-import assert from 'node:assert';
+import test, { describe, it } from 'vitest';
+import assert from 'assert';
 import * as thirdwebClientModule from './thirdweb-client.js';
 
 describe('thirdweb-client configuration', () => {

@@ -1,9 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function ProactiveBanner() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubmitting(true);
+    setError(false);
+
+    try {
+      const url = import.meta.env.VITE_NEWSLETTER_API_URL;
+      if (!url) {
+        // Fallback
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubscribed(true);
+        }, 1200);
+        return;
+      }
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (res.ok) {
+        setIsSubmitting(false);
+        setSubscribed(true);
+      } else {
+        setIsSubmitting(false);
+        setError(true);
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setError(true);
+    }
+  };
+
   return (
     <div className="w-full bg-[#050505] border-y border-axim-purple/20 py-16 relative overflow-hidden group">
       <div className="absolute top-0 right-0 w-3/4 h-full bg-gradient-to-l from-axim-purple/10 to-transparent blur-[80px] pointer-events-none group-hover:from-axim-purple/20 transition-colors duration-700" />
@@ -21,9 +62,33 @@ export default function ProactiveBanner() {
         </div>
 
         <div className="shrink-0 w-full md:w-auto md:text-right">
-          <Link to="/early-access" className="w-full md:w-auto inline-flex justify-center items-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.2)]">
-            Subscribe Now <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-          </Link>
+          {subscribed ? (
+            <div className="w-full md:w-auto inline-flex flex-col justify-center items-center px-10 py-3 bg-axim-purple/20 text-axim-purple border border-axim-purple shadow-[0_0_30px_rgba(147,51,234,0.2)]">
+              <span className="font-black uppercase tracking-widest text-xs flex items-center gap-2"><SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /> Comms Secured</span>
+              <span className="text-[10px] font-mono mt-1 opacity-70">Awaiting Transmission.</span>
+            </div>
+          ) : (
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-2 w-full md:w-80">
+              <div className="flex w-full">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="operator@enterprise.com"
+                  className="w-full bg-black border border-white/10 px-4 py-4 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 shadow-[0_0_30px_rgba(147,51,234,0.2)]"
+                >
+                  {isSubmitting ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> : <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />}
+                </button>
+              </div>
+              {error && <p className="text-red-500 text-xs font-mono text-left">Transmission failed. Retry.</p>}
+            </form>
+          )}
         </div>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, beforeEach } from 'node:test';
-import assert from 'node:assert';
-import { render, screen, cleanup, act } from '@testing-library/react';
+import { test, describe, afterEach, beforeEach, vi } from 'vitest';
+import assert from 'assert';
+import { render, screen, cleanup, act, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Hero from './Hero.jsx';
 
 describe('Hero Component', () => {
-  beforeEach((context) => {
+  beforeEach(() => {
     // Mock IntersectionObserver for framer-motion
     global.IntersectionObserver = class IntersectionObserver {
       constructor() {}
@@ -17,7 +17,7 @@ describe('Hero Component', () => {
     };
 
     // Enable fake timers
-    context.mock.timers.enable({ apis: ['setTimeout'] });
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -52,7 +52,7 @@ describe('Hero Component', () => {
     assert.strictEqual(consultationLink.getAttribute('href'), '/consultation');
   });
 
-  test('typewriter effect works deterministically with fake timers', (context) => {
+  test('typewriter effect works deterministically with fake timers', () => {
     render(
       <MemoryRouter>
         <Hero />
@@ -65,41 +65,95 @@ describe('Hero Component', () => {
     };
 
     act(() => {
-        context.mock.timers.tick(100);
+        vi.advanceTimersByTime(100);
     });
     assert.ok(getTypedText().includes("A"));
 
     act(() => {
-        context.mock.timers.tick(100);
+        vi.advanceTimersByTime(100);
     });
     assert.ok(getTypedText().includes("AX"));
 
     act(() => {
-        context.mock.timers.tick(100);
+        vi.advanceTimersByTime(100);
     });
     assert.ok(getTypedText().includes("AXi"));
 
     act(() => {
-        context.mock.timers.tick(100);
+        vi.advanceTimersByTime(100);
     });
     assert.ok(getTypedText().includes("AXiM"));
 
     // Advance multiple characters
     for (let i = 0; i < 15; i++) {
       act(() => {
-        context.mock.timers.tick(100);
+        vi.advanceTimersByTime(100);
       });
     }
 
     assert.ok(getTypedText().includes("AXiM_CORE_CONNECTED"));
 
     act(() => {
-        context.mock.timers.tick(2000); // pause
+        vi.advanceTimersByTime(2000); // pause
     });
 
     act(() => {
-        context.mock.timers.tick(50); // delete 1 char
+        vi.advanceTimersByTime(50); // delete 1 char
     });
     assert.ok(!getTypedText().includes("D_")); // D is removed
+  });
+
+    test('handles successful subscription', async () => {
+    vi.useRealTimers();
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+    );
+    // set dummy env var
+    import.meta.env.VITE_NEWSLETTER_API_URL = 'http://test.url';
+
+    render(
+      <MemoryRouter>
+        <Hero />
+      </MemoryRouter>
+    );
+
+    const emailInput = screen.getByPlaceholderText('operator@enterprise.com');
+    const submitButton = screen.getByRole('button', { name: /Initialize Uplink/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+       assert.ok(global.fetch.mock.calls.length > 0);
+    });
+  });
+
+  test('handles failed subscription', async () => {
+    vi.useRealTimers();
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: false,
+      })
+    );
+    import.meta.env.VITE_NEWSLETTER_API_URL = 'http://test.url';
+
+    render(
+      <MemoryRouter>
+        <Hero />
+      </MemoryRouter>
+    );
+
+    const emailInput = screen.getByPlaceholderText('operator@enterprise.com');
+    const submitButton = screen.getByRole('button', { name: /Initialize Uplink/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+        assert.ok(screen.getByText(/Transmission failed. Retry./i));
+    });
   });
 });

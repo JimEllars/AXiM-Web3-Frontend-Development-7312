@@ -1,12 +1,12 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, before } from 'node:test';
-import assert from 'node:assert';
+import {  test, describe, afterEach, before , beforeAll } from 'vitest';
+import assert from 'assert';
 import { render, screen, cleanup } from '@testing-library/react';
 import React from 'react';
 import Ecosystem from './Ecosystem.jsx';
 
 describe('Ecosystem Component', () => {
-  before(() => {
+  beforeAll(() => {
     // Mock IntersectionObserver for framer-motion
     global.IntersectionObserver = class IntersectionObserver {
       constructor() {}
