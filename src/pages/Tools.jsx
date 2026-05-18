@@ -235,15 +235,22 @@ export default function Tools() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-           <div className="lg:col-span-12 bg-axim-gold/5 border border-axim-gold/20 rounded-xl p-12 text-center relative overflow-hidden min-h-[250px] flex flex-col items-center justify-center shadow-[0_0_30px_rgba(240,255,0,0.05)]">
+           <div className="lg:col-span-12 bg-axim-gold/5 border border-axim-gold/20 rounded-xl p-12 text-center relative overflow-hidden min-h-[300px] flex flex-col items-center justify-center shadow-[0_0_30px_rgba(240,255,0,0.05)]">
               <div className="absolute inset-0 bg-[radial-gradient(rgba(240,255,0,0.1)_1px,transparent_1px)] [background-size:20px_20px] opacity-20 pointer-events-none" />
+
               <div className="w-12 h-12 border-2 border-axim-gold/30 rounded-full flex items-center justify-center mb-6 relative z-10 bg-black">
-                <div className="w-4 h-4 bg-axim-gold rounded-full animate-pulse" />
+                <SafeIcon icon={LuIcons.LuLock} className="w-4 h-4 text-axim-gold" />
               </div>
-              <h3 className="text-xl font-bold text-axim-gold uppercase tracking-widest mb-3 relative z-10">Curriculum Compiling</h3>
-              <p className="text-zinc-400 text-sm max-w-md mx-auto relative z-10 leading-relaxed">
+
+              <h3 className="text-xl md:text-2xl font-black text-axim-gold uppercase tracking-widest mb-3 relative z-10">Curriculum Compiling</h3>
+
+              <p className="text-zinc-400 text-sm max-w-md mx-auto relative z-10 leading-relaxed mb-8">
                 High-impact operational courses and playbooks are currently undergoing structural review by our engineering team. Awaiting transmission.
               </p>
+
+              <Link to="/early-access" className="relative z-10 inline-flex items-center px-8 py-4 border border-axim-gold text-axim-gold font-bold uppercase tracking-widest text-xs hover:bg-axim-gold hover:text-black transition-colors shadow-lg">
+                Get Notified Upon Release <SafeIcon icon={LuIcons.LuBell} className="ml-3 w-4 h-4" />
+              </Link>
            </div>
         </div>
       </section>
