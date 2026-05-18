@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
 import React from 'react';
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { render, screen, cleanup } from '@testing-library/react';
 import DatabaseUplinkError from './DatabaseUplinkError.jsx';

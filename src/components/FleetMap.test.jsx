@@ -1,30 +1,30 @@
 import 'global-jsdom/register';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { test, mock, describe, afterEach, beforeEach } from 'node:test';
-import assert from 'node:assert';
+import {  test, mock, describe, afterEach, beforeEach , vi } from 'vitest';
+import assert from 'assert';
 import FleetMap from './FleetMap';
 
 describe('FleetMap Component', () => {
   beforeEach(() => {
-    mock.timers.enable({ apis: ['setInterval'] });
+    vi.useFakeTimers();
     global.window.HTMLCanvasElement.prototype.getContext = () => ({
-      clearRect: mock.fn(),
-      beginPath: mock.fn(),
-      moveTo: mock.fn(),
-      lineTo: mock.fn(),
-      stroke: mock.fn(),
-      arc: mock.fn(),
-      fill: mock.fn(),
-      fillText: mock.fn(),
+      clearRect: vi.fn(),
+      beginPath: vi.fn(),
+      moveTo: vi.fn(),
+      lineTo: vi.fn(),
+      stroke: vi.fn(),
+      arc: vi.fn(),
+      fill: vi.fn(),
+      fillText: vi.fn(),
     });
-    global.requestAnimationFrame = mock.fn();
-    global.cancelAnimationFrame = mock.fn();
+    global.requestAnimationFrame = vi.fn();
+    global.cancelAnimationFrame = vi.fn();
   });
 
   afterEach(() => {
-    mock.timers.reset();
-    mock.restoreAll();
+    vi.clearAllTimers();
+    vi.restoreAllMocks();
     delete global.window.HTMLCanvasElement.prototype.getContext;
     delete global.requestAnimationFrame;
     delete global.cancelAnimationFrame;

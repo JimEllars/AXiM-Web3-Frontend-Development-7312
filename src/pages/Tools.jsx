@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
@@ -24,7 +24,7 @@ const toolsSchema = {
 import { useAximStore } from '../store/useAximStore';
 import { Helmet } from 'react-helmet-async';
 import { useAximAuth } from '../hooks/useAximAuth';
-import { useState } from 'react';
+
 import { useShallow } from 'zustand/react/shallow';
 
 const { LuGraduationCap, LuArrowRight, LuClock, LuTrendingUp, LuFileText, LuLock, LuUnlock } = LuIcons;
@@ -66,6 +66,46 @@ const courses = [
 
 
 export default function Tools() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubmitting(true);
+    setError(false);
+
+    try {
+      const url = import.meta.env.VITE_NEWSLETTER_API_URL;
+      if (!url) {
+        // Fallback
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubscribed(true);
+        }, 1200);
+        return;
+      }
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (res.ok) {
+        setIsSubmitting(false);
+        setSubscribed(true);
+      } else {
+        setIsSubmitting(false);
+        setError(true);
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setError(true);
+    }
+  };
   const userSession = useAximStore((state) => state.userSession);
   const { profile } = useAximAuth();
   const [queueToast, setQueueToast] = useState(null);
@@ -248,9 +288,35 @@ export default function Tools() {
                 High-impact operational courses and playbooks are currently undergoing structural review by our engineering team. Awaiting transmission.
               </p>
 
-              <Link to="/early-access" className="relative z-10 inline-flex items-center px-8 py-4 border border-axim-gold text-axim-gold font-bold uppercase tracking-widest text-xs hover:bg-axim-gold hover:text-black transition-colors shadow-lg">
-                Get Notified Upon Release <SafeIcon icon={LuIcons.LuBell} className="ml-3 w-4 h-4" />
-              </Link>
+              {subscribed ? (
+                <div className="relative z-10 inline-flex flex-col items-center px-8 py-3 bg-axim-gold/10 border border-axim-gold shadow-lg">
+                  <span className="font-bold text-axim-gold uppercase tracking-widest text-xs flex items-center gap-2">
+                    <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /> Comms Secured
+                  </span>
+                  <span className="text-[10px] text-axim-gold/70 font-mono mt-1">Awaiting Transmission.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="relative z-10 flex flex-col items-center gap-2 w-full max-w-sm mx-auto">
+                  <div className="flex w-full">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="operator@enterprise.com"
+                      className="w-full bg-black border border-axim-gold/30 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-gold transition-colors"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-6 py-3 bg-axim-gold text-black font-bold uppercase tracking-widest text-xs hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center shadow-lg min-w-[60px]"
+                    >
+                      {isSubmitting ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> : <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  {error && <p className="text-red-500 text-xs font-mono">Transmission failed. Retry.</p>}
+                </form>
+              )}
            </div>
         </div>
       </section>

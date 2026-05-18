@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach, beforeEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, afterEach, beforeEach } from 'vitest';
+import assert from 'assert';
 import { render, screen, cleanup } from '@testing-library/react';
 import React from 'react';
 import Pillars from './Pillars.jsx';
