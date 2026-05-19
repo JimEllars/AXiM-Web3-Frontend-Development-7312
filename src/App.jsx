@@ -18,6 +18,7 @@ const Home = React.lazy(() => import('./pages/Home'));
 const Articles = React.lazy(() => import('./pages/Articles'));
 const Tools = React.lazy(() => import('./pages/Tools'));
 const Consultation = React.lazy(() => import('./pages/Consultation'));
+const Support = React.lazy(() => import('./pages/Support'));
 const Partners = React.lazy(() => import('./pages/Partners'));
 const EarlyAccess = React.lazy(() => import('./pages/EarlyAccess'));
 const Profile = React.lazy(() => import('./pages/Profile'));
@@ -81,6 +82,7 @@ function App() {
             <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
             <Route path="/partners/powur-join" element={<PageTransition><PowurJoinLanding /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
+            <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
