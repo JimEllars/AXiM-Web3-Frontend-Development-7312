@@ -10,18 +10,6 @@ import SystemBreadcrumb from './components/SystemBreadcrumb';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
 
-
-
-
-
-
-
-
-
-
-
-
-
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
 import { logTelemetry } from './lib/telemetry';
@@ -48,10 +36,8 @@ function App() {
   const location = useLocation();
   const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
 
-
   useEffect(() => {
     startTelemetryPolling();
-
   }, []);
 
   useEffect(() => {
@@ -72,11 +58,11 @@ function App() {
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
       <BackgroundEffects />
-      {/* CRITICAL FIX:
-        <ProactiveBanner /> and <EngagementGuard /> have been removed from here.
-        They belong inside page-level layouts (like Home.jsx), NOT the global root.
-      */}
 
+      {/* CRITICAL FIX:
+        <ProactiveBanner /> and <EngagementGuard /> have been PURGED from this global root.
+        They must only load on page-level components to preserve the top-of-page visual hierarchy.
+      */}
 
       <Chatbot />
       <Header />
@@ -102,7 +88,6 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute><PageTransition><Dashboard /></PageTransition></ProtectedRoute>} />
             <Route path="/article/:slug" element={<PageTransition><Article /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-
           </Routes>
           </Suspense>
         </AnimatePresence>
