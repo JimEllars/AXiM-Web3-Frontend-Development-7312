@@ -21,7 +21,7 @@ export default function Header() {
     { path: '/articles', label: 'Articles' },
     { path: '/tools', label: 'Tools' },
     { path: '/partners', label: 'Partners' },
-    { path: '/consultation', label: 'Consultation' },
+    { path: '/support', label: 'Support' },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -124,7 +124,7 @@ export default function Header() {
                 { path: '/tools', label: 'Offerings', icon: LuIcons.LuCpu },
                 { path: '/articles', label: 'Intelligence', icon: LuIcons.LuDatabase },
                 { path: '/partners', label: 'Partners', icon: LuIcons.LuNetwork },
-                { path: '/consultation', label: 'Consultation', icon: LuIcons.LuMessageSquare }
+                { path: '/support', label: 'Support', icon: LuIcons.LuLifeBuoy }
               ].map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
                 return (
@@ -143,11 +143,11 @@ export default function Header() {
 
             <div className="mt-auto pt-8 border-t border-white/10">
               <Link
-                to="/consultation"
+                to="/support"
                 onClick={() => setIsMenuOpen(false)}
                 className="w-full flex justify-center items-center px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs"
               >
-                Initialize Uplink <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                Initialize Support <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
               </Link>
             </div>
           </motion.div>
