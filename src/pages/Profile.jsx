@@ -70,7 +70,7 @@ export default function Profile() {
 
   return (
     <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
-      <SEO title="Operator Vault | AXiM Systems" description="Secure dashboard and generated digital byproducts." noindex={true} />
+      <SEO title="Operator Vault | AXiM Systems" description="Secure dashboard and generated digital products." noindex={true} />
 
       <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-axim-purple/5 blur-[120px] pointer-events-none" />
@@ -130,7 +130,7 @@ export default function Profile() {
              <div className="bg-black border border-white/10 rounded-sm overflow-hidden min-h-[400px]">
                <div className="bg-white/5 border-b border-white/10 p-6 flex items-center justify-between">
                  <h2 className="text-lg font-black text-white uppercase tracking-tighter flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuArchive} className="w-5 h-5 text-axim-purple" /> Digital Byproducts
+                    <SafeIcon icon={LuIcons.LuArchive} className="w-5 h-5 text-axim-purple" /> Digital Products
                  </h2>
                  <span className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Encrypted Storage</span>
                </div>

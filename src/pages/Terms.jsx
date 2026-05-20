@@ -25,7 +25,7 @@ export default function Terms() {
           <h2>1. Ecosystem Protocol</h2>
           <p>By accessing the AXiM Hub infrastructure, you are entering a secure, decentralized digital environment. These terms govern the usage of all proprietary software suites, intelligence briefings, and partner networking funnels provided herein.</p>
 
-          <h2>2. Digital Byproducts & Usage</h2>
+          <h2>2. Digital Products & Usage</h2>
           <p>The automated generators (including but not limited to the Mutual NDA, Demand Letter, and Pay Stub systems) are provided for structural efficiency. They do not constitute formal legal or financial advice. Operators assume all liability for the deployment of generated assets.</p>
 
           <h2>3. Data Privacy & Telemetry</h2>

@@ -47,7 +47,7 @@ describe('Home Page Component', () => {
     // Verify Hero section
     assert.ok(screen.queryAllByText(/Smarter/i).length > 0);
     assert.ok(screen.queryAllByText(/Systems/i).length > 0);
-    assert.ok(screen.queryAllByText(/Enterprise-grade digital byproducts, decentralized infrastructure, and strategic blueprints/i).length > 0);
+    assert.ok(screen.queryAllByText(/On-Demand Business Systems without Breaking the Bank/i).length > 0);
 
     // Verify FeaturedArticles section (at least the label/loading state)
     // assert.ok(screen.queryAllByText(/Featured/i).length > 0);

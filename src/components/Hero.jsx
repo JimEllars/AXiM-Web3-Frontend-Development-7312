@@ -59,7 +59,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-[clamp(1.1rem,2vw,1.25rem)] text-zinc-400 max-w-2xl mx-auto mb-10 leading-[1.6] font-light">
-          Enterprise-grade digital byproducts, decentralized infrastructure, and strategic blueprints built to eliminate operational friction without breaking the bank.
+          On-Demand Business Systems without Breaking the Bank.
         </p>
 
         <div className="flex gap-5 flex-wrap justify-center">

@@ -27,7 +27,7 @@ export default function Home() {
           title="Scale Your Systems With Visual Automation"
           description="Connect your apps and automate your workflows without writing a single line of code. Leverage the backend engine that powers AXiM."
           learnMorePath="/partners/make"
-          startNowUrl="https://www.make.com/en/register?pc=aximpartner"
+          startNowUrl="/partners/make"
           theme="purple"
         />
 
@@ -40,7 +40,7 @@ export default function Home() {
           title="Decentralize Your Home's Energy Grid"
           description="Stop overpaying for grid power. Transition to clean, Tier-1 residential solar with zero-down financing and take ownership of your energy production."
           learnMorePath="/partners/powur-solar"
-          startNowUrl="https://powur.com/axim/solar"
+          startNowUrl="/partners/powur-solar"
           theme="gold"
         />
 
