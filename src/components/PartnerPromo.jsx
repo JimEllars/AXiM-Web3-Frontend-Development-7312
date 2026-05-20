@@ -26,9 +26,17 @@ export default function PartnerPromo({ partnerName, title, description, learnMor
         <Link to={learnMorePath} className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors text-center flex justify-center items-center">
           Learn More
         </Link>
-        <a href={startNowUrl} target="_blank" rel="noopener noreferrer" className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}>
-          Start Now <SafeIcon icon={LuIcons.LuExternalLink} className="w-4 h-4" />
-        </a>
+        {startNowUrl && startNowUrl.startsWith('/') ? (
+          <Link to={startNowUrl} className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}>
+            Start Now <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
+          </Link>
+        ) : (
+          startNowUrl && (
+            <a href={startNowUrl} target="_blank" rel="noopener noreferrer" className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}>
+              Start Now <SafeIcon icon={LuIcons.LuExternalLink} className="w-4 h-4" />
+            </a>
+          )
+        )}
       </div>
     </motion.div>
   );

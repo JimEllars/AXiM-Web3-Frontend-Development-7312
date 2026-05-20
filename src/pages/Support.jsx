@@ -77,8 +77,8 @@ export default function Support() {
   };
 
   const faqs = [
-    { q: "How do I access generated digital byproducts?", a: "Navigate to the Operator Vault via your Profile. All parsed legal and financial documents are securely encrypted and vaulted there for extraction." },
-    { q: "Are digital byproducts legally binding?", a: "AXiM generators provide structural efficiency and standardized formatting. However, operators must consult independent counsel to guarantee jurisdictional compliance." },
+    { q: "How do I access generated digital products?", a: "Navigate to the Operator Vault via your Profile. All parsed legal and financial documents are securely encrypted and vaulted there for extraction." },
+    { q: "Are digital products legally binding?", a: "AXiM generators provide structural efficiency and standardized formatting. However, operators must consult independent counsel to guarantee jurisdictional compliance." },
     { q: "How do I upgrade my infrastructure tier?", a: "Enterprise scaling requires a Consultation protocol. Submit a request via the footer uplink to speak with our engineering team." }
   ];
 

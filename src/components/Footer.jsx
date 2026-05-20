@@ -22,7 +22,7 @@ export default function Footer() {
               <span className="text-xl font-black text-white tracking-tighter">AXiM</span>
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed max-w-xs mb-6 font-mono tracking-widest uppercase">
-              Smarter Systems.<br/>Decentralized infrastructure & high-fidelity digital byproducts.
+              Smarter Systems.<br/>Decentralized infrastructure & high-fidelity digital products.
             </p>
             <Link to="/status" className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-sm text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">
               <div className="w-2 h-2 bg-axim-green rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
