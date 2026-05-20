@@ -1,22 +1,79 @@
 import React, { useState } from 'react';
 import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Support() {
-  const [formData, setFormData] = useState({ email: '', issue: '', priority: 'Standard' });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Standard', attachment: null });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email || !formData.subject || !formData.issue) return;
+
     setIsSubmitting(true);
-    // Optimistic UI Queue
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setErrorMsg(null);
+
+    try {
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      // Graceful local dev fallback if env vars are missing
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing VITE_ONYX_WORKER_URL or VITE_AXIM_ONYX_SECRET. Simulating autonomous triage...");
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 1500);
+        return;
+      }
+
+      // Construct multipart/form-data payload
+      const payload = new FormData();
+      payload.append('customer_email', formData.email);
+      if (formData.name) payload.append('customer_name', formData.name);
+      payload.append('subject', `[${formData.priority}] ${formData.subject}`);
+      payload.append('description', formData.issue);
+      payload.append('source', 'website');
+      if (formData.attachment) payload.append('attachment', formData.attachment);
+
+      // Execute Secure Transmission
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${secret}`
+          // Note: Do NOT set Content-Type header. The browser automatically sets it with the correct boundary for FormData.
+        },
+        body: payload
+      });
+
+      if (!response.ok) {
+        throw new Error(`Edge transmission rejected: ${response.status}`);
+      }
+
       setSubmitted(true);
-    }, 1500);
+    } catch (err) {
+      console.error("Support Uplink Failed:", err);
+      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Restrict to 5MB to match AI Vision Triage spec
+      if (file.size > 5 * 1024 * 1024) {
+        setErrorMsg("Attachment exceeds 5MB payload limit.");
+        return;
+      }
+      setErrorMsg(null);
+      setFormData({ ...formData, attachment: file });
+    }
   };
 
   const faqs = [
@@ -36,7 +93,6 @@ export default function Support() {
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="System Support | AXiM" description="Technical support, FAQs, and ecosystem documentation." />
 
-      {/* Hero */}
       <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10 text-center">
@@ -59,10 +115,10 @@ export default function Support() {
           {submitted ? (
              <div className="bg-[#0F172A] border border-axim-purple/50 p-10 rounded-sm text-center shadow-[0_0_50px_rgba(147,51,234,0.15)] relative overflow-hidden h-full flex flex-col justify-center min-h-[400px]">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
-                <SafeIcon icon={LuIcons.LuCircleCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
+                <SafeIcon icon={LuIcons.LuCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
                 <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Ticket Logged</h2>
                 <p className="text-zinc-400 text-xs leading-relaxed font-mono tracking-widest uppercase">
-                  Support protocol initialized. Our technicians will ping your comms shortly.
+                  Support protocol initialized. Our autonomous triage layer has received your payload.
                 </p>
              </div>
           ) : (
@@ -73,17 +129,48 @@ export default function Support() {
                 <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2 flex items-center gap-2">
                   <SafeIcon icon={LuIcons.LuTerminal} className="w-5 h-5 text-axim-purple" /> Request Assistance
                 </h3>
-                <p className="text-xs text-zinc-500 mb-6 leading-relaxed">Submit your operational error or request. High-priority tickets are triaged immediately.</p>
+                <p className="text-xs text-zinc-500 mb-6 leading-relaxed">Submit your operational error or request. Diagnostics with visual attachments are triaged faster.</p>
+
+                {errorMsg && (
+                  <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
+                    <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+                    {errorMsg}
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Operator Name</label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="John Doe"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms</label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        required
+                        placeholder="operator@enterprise.com"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms (Email)</label>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Diagnostic Subject</label>
                     <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      type="text"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
                       required
-                      placeholder="operator@enterprise.com"
+                      placeholder="Brief description of the anomaly"
                       className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                     />
                   </div>
@@ -93,7 +180,7 @@ export default function Support() {
                     <select
                       value={formData.priority}
                       onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm appearance-none"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm appearance-none cursor-pointer"
                     >
                       <option value="Standard" className="bg-[#0F172A]">Standard (24-48h)</option>
                       <option value="High" className="bg-[#0F172A]">High (System Degradation)</option>
@@ -113,15 +200,34 @@ export default function Support() {
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2 flex justify-between">
+                      <span>Telemetry / Screenshot</span>
+                      <span className="text-zinc-600">Max 5MB</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        onChange={handleFileChange}
+                        accept="image/*,.pdf,.txt"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <div className="w-full bg-white/5 border border-white/10 border-dashed px-4 py-3 text-zinc-400 text-xs font-mono uppercase tracking-widest flex items-center justify-center gap-2 rounded-sm group-hover:border-axim-purple transition-colors">
+                         <SafeIcon icon={LuIcons.LuPaperclip} className="w-4 h-4" />
+                         {formData.attachment ? formData.attachment.name : "Attach Diagnostic Payload"}
+                      </div>
+                    </div>
+                  </div>
+
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm shadow-lg"
+                    className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm shadow-lg mt-4"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Transmitting...</span>
                     ) : (
-                       <span className="flex items-center gap-2">Initialize Ticket <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
+                       <span className="flex items-center gap-2">Initialize Protocol <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
                     )}
                   </button>
                 </form>
@@ -136,7 +242,7 @@ export default function Support() {
           {/* FAQ */}
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuCircleHelp} className="w-5 h-5 text-axim-gold" />
+              <SafeIcon icon={LuIcons.LuInfo} className="w-5 h-5 text-axim-gold" />
               <h2 className="text-xl font-black uppercase tracking-tighter text-white">Frequently Asked Parameters</h2>
             </div>
             <div className="space-y-4">
