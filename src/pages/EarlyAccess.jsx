@@ -9,18 +9,21 @@ export default function EarlyAccess() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
+
     setIsSubmitting(true);
-    setError(false);
+    setErrorMsg(null);
 
     try {
-      const url = import.meta.env.VITE_NEWSLETTER_API_URL;
-      if (!url) {
-        // Optimistic UI Queue Fallback
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing Environment Keys. Simulating subscription...");
         setTimeout(() => {
           setIsSubmitting(false);
           setSubmitted(true);
@@ -28,22 +31,27 @@ export default function EarlyAccess() {
         return;
       }
 
-      const res = await fetch(url, {
+      const payload = new FormData();
+      payload.append('customer_email', email);
+      payload.append('subject', '[Newsletter] Priority Intelligence Subscription');
+      payload.append('description', 'User subscribed to ecosystem updates and promos.');
+      payload.append('source', 'newsletter_form');
+
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        headers: {
+          'Authorization': `Bearer ${secret}`
+        },
+        body: payload
       });
 
-      if (res.ok) {
-        setIsSubmitting(false);
-        setSubmitted(true);
-      } else {
-        setIsSubmitting(false);
-        setError(true);
-      }
+      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
+      setSubmitted(true);
     } catch (err) {
+      console.error("Subscription Uplink Failed:", err);
+      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+    } finally {
       setIsSubmitting(false);
-      setError(true);
     }
   };
 
@@ -80,8 +88,15 @@ export default function EarlyAccess() {
                 </div>
                 <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Priority Intelligence.</h1>
                 <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-md">
-                  Subscribe to receive strategic blueprints and exclusive software drops directly to your inbox.
+                  Join the AXiM network. Subscribe to receive strategic blueprints, exclusive partner promos, and early access to new ecosystem tools directly to your inbox.
                 </p>
+
+                {errorMsg && (
+                  <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
+                    <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+                    {errorMsg}
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
@@ -91,16 +106,15 @@ export default function EarlyAccess() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                       placeholder="operator@enterprise.com"
                     />
-                    {error && <p className="text-red-500 text-xs font-mono mt-2">Transmission failed. Retry.</p>}
                   </div>
 
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)]"
+                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)] rounded-sm"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> ENCRYPTING...</span>
