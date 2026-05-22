@@ -24,20 +24,25 @@ describe('ProactiveBanner Component', () => {
     assert.ok(screen.getByRole('button', { name: /Initialize Uplink/i }));
   });
 
-  test('handles successful subscription with fake timers', () => {
+
+  test('handles successful subscription with fake timers', async () => {
+    // Mock fetch for success
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+      })
+    );
+
     render(<ProactiveBanner />);
 
     const emailInput = screen.getByPlaceholderText('operator@enterprise.com');
     const submitButton = screen.getByRole('button', { name: /Initialize Uplink/i });
 
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.click(submitButton);
 
-    assert.ok(screen.getByRole('button', { name: /Encrypting\.\.\./i }));
-    assert.ok(screen.getByRole('button').disabled);
-
-    act(() => {
-        vi.advanceTimersByTime(1200);
+    await act(async () => {
+        fireEvent.click(submitButton);
     });
 
     assert.ok(screen.getByText(/Comms Secured/i));

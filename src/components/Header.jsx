@@ -145,7 +145,7 @@ export default function Header() {
               <Link
                 to="/support"
                 onClick={() => setIsMenuOpen(false)}
-                className="w-full flex justify-center items-center px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs"
+                className="w-full flex justify-center items-center px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors"
               >
                 Initialize Support <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
               </Link>
