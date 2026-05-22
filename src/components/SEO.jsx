@@ -107,22 +107,16 @@ export default function SEO({ title, description, image, type = "website", url, 
       <meta name="twitter:description" content={metaDescription} />
       {image && <meta name="twitter:image" content={image} />}
 
-      <script type="application/ld+json">
-          {JSON.stringify(organizationSchema)}
-        </script>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         {breadcrumbSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       )}
 
       {url && <link rel="canonical" href={url} />}
       {!url && <link rel="canonical" href="https://axim.us.com" />}
 
       {schemasToRender.map((schema, index) => (
-        <script key={index} type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
     </Helmet>
   );

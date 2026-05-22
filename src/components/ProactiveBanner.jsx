@@ -6,17 +6,50 @@ export default function ProactiveBanner() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!email) return;
-    setIsSubmitting(true);
 
-    // Optimistic UI Queue
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing Environment Keys. Simulating subscription...");
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubscribed(true);
+        }, 1200);
+        return;
+      }
+
+      const payload = new FormData();
+      payload.append('customer_email', email);
+      payload.append('subject', '[Newsletter] Global Banner Subscription');
+      payload.append('description', 'User subscribed via the Proactive Banner.');
+      payload.append('source', 'newsletter_form');
+
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${secret}`
+        },
+        body: payload
+      });
+
+      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
       setSubscribed(true);
-    }, 1200);
+    } catch (err) {
+      console.error("Subscription Uplink Failed:", err);
+      setErrorMsg("Network transmission failed. Try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -39,13 +72,21 @@ export default function ProactiveBanner() {
         <div className="w-full lg:w-1/2 max-w-md mx-auto lg:mx-0">
           {subscribed ? (
              <div className="bg-white/5 border border-axim-purple/50 p-8 rounded-sm text-center shadow-[0_0_30px_rgba(147,51,234,0.1)]">
-                <SafeIcon icon={LuIcons.LuCheck} className="w-10 h-10 text-axim-purple mx-auto mb-3" />
+                <SafeIcon icon={LuIcons.LuCircleCheck} className="w-10 h-10 text-axim-purple mx-auto mb-3" />
                 <h4 className="text-white font-black uppercase tracking-widest text-sm mb-1">Comms Secured</h4>
                 <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase">Awaiting Transmission.</p>
              </div>
           ) : (
             <form onSubmit={handleSubscribe} className="bg-black border border-white/10 p-6 rounded-sm shadow-2xl relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
+
+              {errorMsg && (
+                <div className="mb-4 p-2 bg-red-500/10 border border-red-500/30 text-red-500 text-[0.65rem] font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
+                  <SafeIcon icon={LuIcons.LuCircleAlert} className="w-3 h-3 shrink-0" />
+                  {errorMsg}
+                </div>
+              )}
+
               <div className="mb-4">
                 <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms (Email)</label>
                 <input
