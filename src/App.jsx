@@ -57,7 +57,7 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void">
+    <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
       <BackgroundEffects />
 
       {/* CRITICAL FIX:

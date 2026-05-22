@@ -8,6 +8,20 @@ import * as LuIcons from 'react-icons/lu';
 import NewsFeed from '../components/NewsFeed';
 import WPImage from '../components/WPImage';
 
+const SkeletonCard = ({ isHero = false }) => (
+  <div className={`relative block border border-white/5 bg-[#050505] overflow-hidden flex flex-col justify-end p-8 shadow-lg rounded-sm animate-pulse ${isHero ? 'min-h-[450px] lg:col-span-2' : 'min-h-[300px]'}`}>
+    <div className="relative z-10 mt-auto w-full">
+      <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+        <div className="w-16 h-3 bg-white/10 rounded-sm" />
+        <div className="w-20 h-4 bg-white/10 rounded-sm" />
+      </div>
+      <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-3" />
+      <div className="w-full h-4 bg-white/10 rounded-sm mb-1" />
+      <div className="w-5/6 h-4 bg-white/10 rounded-sm" />
+    </div>
+  </div>
+);
+
 // DRY Sub-Component for visual parity across sections
 const ArticleCard = ({ article, isHero = false }) => {
   const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
@@ -77,7 +91,7 @@ export default function Articles() {
     return () => { isMounted = false; };
   }, []);
 
-  if (isLoading) return <GlobalLoader />;
+  // Removed GlobalLoader blocking return
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
@@ -99,46 +113,68 @@ export default function Articles() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
 
         {/* Section 1: Featured Articles */}
-        {catData.featured.length > 0 && (
-          <section>
+        <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {catData.featured.map((article, idx) => (
-                 <ArticleCard key={article.id} article={article} isHero={idx === 0} />
-              ))}
+              {isLoading ? (
+                 <>
+                   <SkeletonCard isHero={true} />
+                   <SkeletonCard />
+                   <SkeletonCard />
+                 </>
+              ) : (
+                 catData.featured.map((article, idx) => (
+                   <ArticleCard key={article.id} article={article} isHero={idx === 0} />
+                 ))
+              )}
             </div>
           </section>
-        )}
 
         {/* Section 2: App Spotlight */}
-        {catData.appSpotlight.length > 0 && (
+        {(!isLoading || catData.appSpotlight.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-purple" />
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Software Spotlight</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {catData.appSpotlight.map((article) => (
-                 <ArticleCard key={article.id} article={article} />
-              ))}
+              {isLoading ? (
+                 <>
+                   <SkeletonCard />
+                   <SkeletonCard />
+                   <SkeletonCard />
+                 </>
+              ) : (
+                 catData.appSpotlight.map((article) => (
+                   <ArticleCard key={article.id} article={article} />
+                 ))
+              )}
             </div>
           </section>
         )}
 
         {/* Section 3: Service Spotlight */}
-        {catData.serviceSpotlight.length > 0 && (
+        {(!isLoading || catData.serviceSpotlight.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-[#DB2777]" />
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Service Spotlight</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {catData.serviceSpotlight.map((article) => (
-                 <ArticleCard key={article.id} article={article} />
-              ))}
+              {isLoading ? (
+                 <>
+                   <SkeletonCard />
+                   <SkeletonCard />
+                   <SkeletonCard />
+                 </>
+              ) : (
+                 catData.serviceSpotlight.map((article) => (
+                   <ArticleCard key={article.id} article={article} />
+                 ))
+              )}
             </div>
           </section>
         )}

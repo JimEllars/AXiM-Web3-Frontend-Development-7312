@@ -43,11 +43,19 @@ describe('Articles Page Component', () => {
       </HelmetProvider>
     );
 
-    // Verify it renders GlobalLoader or 'No briefings found.'
-    assert.ok(screen.queryByText(/Initializing/i) || screen.queryByText(/No briefings found/i) || screen.queryByText(/Intelligence Hub/i));
+    // Verify it renders the Hero section or skeleton loader parts or section headings
+    assert.ok(
+      screen.queryByText(/Articles./i) ||
+      screen.queryByText(/Strategic insights, partner integrations/i) ||
+      screen.queryByText(/Featured/i) ||
+      document.querySelector('.animate-pulse')
+    );
 
     await waitFor(() => {
-      assert.ok(screen.queryByText(/Initializing/i) || screen.queryByText(/No briefings found/i) || screen.queryByText(/Intelligence Hub/i));
+      assert.ok(
+        screen.queryByText(/Articles./i) ||
+        screen.queryByText(/Strategic insights, partner integrations/i)
+      );
     }, { timeout: 3000 });
   });
 });
