@@ -9,16 +9,52 @@ export default function Consultation() {
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    if (!formData.name || !formData.email || !formData.message) return;
 
-    // Optimistic UI Queue
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing Environment Keys. Simulating consultation uplink...");
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 1500);
+        return;
+      }
+
+      // Construct multipart/form-data payload
+      const payload = new FormData();
+      payload.append('customer_email', formData.email);
+      payload.append('customer_name', formData.name);
+      payload.append('subject', `[Consultation] ${formData.company || 'Independent Operator'}`);
+      payload.append('description', formData.message);
+      payload.append('source', 'consultation_form');
+
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${secret}`
+        },
+        body: payload
+      });
+
+      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
       setSubmitted(true);
-    }, 1500);
+    } catch (err) {
+      console.error("Consultation Uplink Failed:", err);
+      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,6 +100,13 @@ export default function Consultation() {
                   Submit your operational parameters below. Our team will review your infrastructure requirements and propose a decentralized integration strategy.
                 </p>
 
+                {errorMsg && (
+                  <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
+                    <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+                    {errorMsg}
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -73,7 +116,7 @@ export default function Consultation() {
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         required
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                         placeholder="John Doe"
                       />
                     </div>
@@ -84,7 +127,7 @@ export default function Consultation() {
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                         required
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                         placeholder="operator@enterprise.com"
                       />
                     </div>
@@ -96,7 +139,7 @@ export default function Consultation() {
                       type="text"
                       value={formData.company}
                       onChange={(e) => setFormData({...formData, company: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                       placeholder="Company Name"
                     />
                   </div>
@@ -108,7 +151,7 @@ export default function Consultation() {
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
                       required
                       rows="4"
-                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none rounded-sm"
                       placeholder="Detail your operational bottlenecks or integration requirements..."
                     />
                   </div>
@@ -116,7 +159,7 @@ export default function Consultation() {
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)] mt-4"
+                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)] mt-4 rounded-sm"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> TRANSMITTING...</span>
