@@ -9,6 +9,42 @@ const makeImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/Best-featur
 const solarImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
 
 export default function Partners() {
+  const detailedPartners = [
+    {
+      title: "Powur Solar",
+      desc: "Stop overpaying for grid power. Transition to clean, Tier-1 residential solar with zero-down financing and take ownership of your energy production. Lock in your energy rates and increase your home's value.",
+      features: ["Zero-down financing options", "Tier-1 solar equipment", "25-year system warranty", "Utility offset optimization"],
+      link: "/partners/powur-solar",
+      icon: LuIcons.LuSun,
+      color: "text-axim-gold",
+      bgHover: "hover:border-axim-gold/30",
+      btnClass: "bg-axim-gold text-black hover:bg-white hover:text-black",
+      isExternal: false
+    },
+    {
+      title: "Powur Agency",
+      desc: "Join the fastest-growing cloud-based solar platform. Build a massive revenue stream with zero installation overhead. Tap into a billion-dollar industry with a revolutionary model.",
+      features: ["Cloud-based sales platform", "Zero installation liability", "High-ticket commissions", "Enterprise training materials"],
+      link: "/partners/powur-join",
+      icon: LuIcons.LuTrendingUp,
+      color: "text-axim-purple",
+      bgHover: "hover:border-axim-purple/30",
+      btnClass: "bg-axim-purple text-white hover:bg-white hover:text-black",
+      isExternal: false
+    },
+    {
+      title: "Make.com",
+      desc: "Connect your apps and automate your workflows without writing a single line of code. Leverage the backend engine that powers AXiM and scale your systems.",
+      features: ["Visual drag-and-drop builder", "Thousands of app integrations", "Complex logic and routing", "Enterprise-grade reliability"],
+      link: "/partners/make",
+      icon: LuIcons.LuNetwork,
+      color: "text-[#DB2777]",
+      bgHover: "hover:border-[#DB2777]/30",
+      btnClass: "bg-gradient-to-r from-[#9333EA] to-[#DB2777] text-white hover:scale-105 transition-transform",
+      isExternal: false
+    }
+  ];
+
   return (
     <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
       <SEO title="Partner Showcase | Smart Systems" description="Explore world-class platforms and physical infrastructure curated by AXiM." />
@@ -106,6 +142,46 @@ export default function Partners() {
             </div>
           </motion.div>
 
+        </div>
+      </section>
+
+      {/* Deep Dive Partner Breakdowns */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 pb-16">
+        <div className="py-16 space-y-16">
+          {detailedPartners.map((partner, index) => (
+            <div key={index} className="flex flex-col md:flex-row items-center gap-12 group">
+               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${partner.bgHover} md:order-${index % 2 === 0 ? '1' : '2'}`}>
+                  <SafeIcon icon={partner.icon} className={`w-16 h-16 ${partner.color} mb-6`} />
+                  <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">{partner.title}</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed mb-8">{partner.desc}</p>
+
+                  <ul className="space-y-3 mb-10">
+                    {partner.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-center gap-3 text-xs font-mono uppercase tracking-widest text-zinc-500">
+                        <SafeIcon icon={LuIcons.LuCheck} className={`w-4 h-4 ${partner.color}`} /> {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {partner.isExternal ? (
+                    <a href={partner.link} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center px-8 py-4 font-black uppercase tracking-widest text-xs transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
+                      Explore Partner <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                    </a>
+                  ) : (
+                    <Link to={partner.link} className={`inline-flex items-center px-8 py-4 font-black uppercase tracking-widest text-xs transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
+                      Explore Partner <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                    </Link>
+                  )}
+               </div>
+
+               <div className={`flex-1 md:order-${index % 2 === 0 ? '2' : '1'} hidden md:flex justify-center`}>
+                 <div className="w-64 h-64 border border-white/10 rounded-full flex items-center justify-center relative bg-black/50 backdrop-blur-sm">
+                   <div className="absolute inset-4 border border-dashed border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
+                   <SafeIcon icon={partner.icon} className={`w-20 h-20 opacity-50 ${partner.color}`} />
+                 </div>
+               </div>
+            </div>
+          ))}
         </div>
       </section>
 
