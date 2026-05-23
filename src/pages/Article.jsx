@@ -101,6 +101,17 @@ export default function Article() {
           <aside className="lg:col-span-4 relative hidden lg:block">
             <div className="sticky top-32 flex flex-col gap-6 max-h-[calc(100vh-8rem)] overflow-y-auto overscroll-contain pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 
+              {/* Featured App Promo */}
+              <div className="bg-[#050505] border border-axim-gold/30 p-8 rounded-sm shadow-[0_0_30px_rgba(255,234,0,0.05)] relative overflow-hidden group mb-8">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/10 blur-[40px] pointer-events-none group-hover:bg-axim-gold/20 transition-colors" />
+                <SafeIcon icon={LuIcons.LuScale} className="w-8 h-8 text-axim-gold mb-4 relative z-10" />
+                <h3 className="text-lg font-black text-white uppercase tracking-tighter mb-2 relative z-10">Quick Demand Letter</h3>
+                <p className="text-[0.7rem] text-zinc-400 mb-6 leading-relaxed relative z-10 font-mono uppercase tracking-widest">Generate a structurally optimized, formal demand letter in seconds using our autonomous AI. No retainer required.</p>
+                <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="relative z-10 w-full inline-flex justify-center items-center px-4 py-3 bg-axim-gold text-black font-black uppercase tracking-widest text-[0.65rem] hover:bg-white transition-colors rounded-sm shadow-lg">
+                   Generate For $4.00 <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
+                </a>
+              </div>
+
               <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest border-b border-white/10 pb-2 mb-2 flex items-center gap-2">
                 <SafeIcon icon={LuIcons.LuNetwork} className="w-3 h-3" /> Partner Network
               </div>

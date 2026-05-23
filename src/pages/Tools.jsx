@@ -66,6 +66,42 @@ const courses = [
 
 
 export default function Tools() {
+  const detailedTools = [
+    {
+      title: "Quick Demand Letter Engine",
+      desc: "Bypass exorbitant legal retainers for straightforward disputes. Our engine extracts your scenario parameters and structures them into a formal, legally optimized demand letter ready for print and mailing.",
+      features: ["50-State formatting guidelines", "Instant PDF generation", "AI-assisted tone optimization", "Fractional cost ($4.00)"],
+      link: "https://quickdemandletter.com/start",
+      icon: LuIcons.LuScale,
+      color: "text-axim-gold",
+      bgHover: "hover:border-axim-gold/30",
+      btnClass: "bg-axim-gold text-black hover:bg-white hover:text-black",
+      isExternal: true
+    },
+    {
+      title: "Mutual NDA Generator",
+      desc: "Protect your intellectual property and operational blueprints before entering into B2B consultations. This tool generates a balanced, two-way non-disclosure agreement optimized for technology and software collaborations.",
+      features: ["Symmetric protection clauses", "Cryptographic vaulting", "Digital product extraction", "Enterprise standard verbiage"],
+      link: "/tools/nda",
+      icon: LuIcons.LuShieldCheck,
+      color: "text-axim-purple",
+      bgHover: "hover:border-axim-purple/30",
+      btnClass: "bg-axim-purple text-white hover:bg-white hover:text-black",
+      isExternal: false
+    },
+    {
+      title: "Autonomous Pay Stub System",
+      desc: "Standardize your payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified pay stub document.",
+      features: ["Automated deduction routing", "Cryptographic receipt generation", "Standardized layout protocols", "Instant extraction"],
+      link: "/tools/paystub",
+      icon: LuIcons.LuFileText,
+      color: "text-[#DB2777]",
+      bgHover: "hover:border-[#DB2777]/30",
+      btnClass: "bg-[#DB2777] text-white hover:bg-white hover:text-black",
+      isExternal: false
+    }
+  ];
+
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
@@ -266,6 +302,44 @@ export default function Tools() {
            </motion.div>
         </div>
       </section>
+
+        {/* Deep Dive Tool Breakdowns */}
+        <div className="py-16 space-y-16">
+          {detailedTools.map((tool, index) => (
+            <div key={index} className="flex flex-col md:flex-row items-center gap-12 group">
+               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${tool.bgHover} md:order-${index % 2 === 0 ? '1' : '2'}`}>
+                  <SafeIcon icon={tool.icon} className={`w-16 h-16 ${tool.color} mb-6`} />
+                  <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">{tool.title}</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed mb-8">{tool.desc}</p>
+
+                  <ul className="space-y-3 mb-10">
+                    {tool.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-center gap-3 text-xs font-mono uppercase tracking-widest text-zinc-500">
+                        <SafeIcon icon={LuIcons.LuCheck} className={`w-4 h-4 ${tool.color}`} /> {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {tool.isExternal ? (
+                    <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center px-8 py-4 font-black uppercase tracking-widest text-xs transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                      Initialize Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                    </a>
+                  ) : (
+                    <Link to={tool.link} className={`inline-flex items-center px-8 py-4 font-black uppercase tracking-widest text-xs transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                      Initialize Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                    </Link>
+                  )}
+               </div>
+
+               <div className={`flex-1 md:order-${index % 2 === 0 ? '2' : '1'} hidden md:flex justify-center`}>
+                 <div className="w-64 h-64 border border-white/10 rounded-full flex items-center justify-center relative bg-black/50 backdrop-blur-sm">
+                   <div className="absolute inset-4 border border-dashed border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
+                   <SafeIcon icon={tool.icon} className={`w-20 h-20 opacity-50 ${tool.color}`} />
+                 </div>
+               </div>
+            </div>
+          ))}
+        </div>
 
       {/* Educational Modules / Courses */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
