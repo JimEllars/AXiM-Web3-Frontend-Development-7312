@@ -45,11 +45,11 @@ export default function EarlyAccess() {
         body: payload
       });
 
-      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
+      if (!response.ok) throw new Error(`Edge submission rejected: ${response.status}`);
       setSubmitted(true);
     } catch (err) {
       console.error("Subscription Uplink Failed:", err);
-      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+      setErrorMsg("Network submission failed. Please verify connection and try again.");
     } finally {
       setIsSubmitting(false);
     }

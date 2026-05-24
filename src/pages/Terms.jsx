@@ -37,7 +37,7 @@ export default function Terms() {
           <hr className="border-white/10 my-12" />
 
           <p className="text-center font-mono text-xs text-zinc-500">
-             For formal compliance inquiries or data deletion requests, initiate a secure transmission to <a href="mailto:support@axim.us.com">support@axim.us.com</a>.
+             For formal compliance inquiries or data deletion requests, initiate a secure communication to <a href="mailto:support@axim.us.com">support@axim.us.com</a>.
           </p>
 
         </div>

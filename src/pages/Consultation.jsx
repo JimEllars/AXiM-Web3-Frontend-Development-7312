@@ -23,7 +23,7 @@ export default function Consultation() {
       const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
 
       if (!workerUrl || !secret) {
-        console.warn("EDGE WARNING: Missing Environment Keys. Simulating consultation uplink...");
+        console.warn("EDGE WARNING: Missing Environment Keys. Simulating consultation submission...");
         setTimeout(() => {
           setIsSubmitting(false);
           setSubmitted(true);
@@ -47,11 +47,11 @@ export default function Consultation() {
         body: payload
       });
 
-      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
+      if (!response.ok) throw new Error(`Edge submission rejected: ${response.status}`);
       setSubmitted(true);
     } catch (err) {
       console.error("Consultation Uplink Failed:", err);
-      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+      setErrorMsg("Network submission failed. Please verify connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -59,7 +59,7 @@ export default function Consultation() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32 flex flex-col">
-      <SEO title="Request Consultation | AXiM Systems" description="Initialize a secure uplink with our engineering and integration team." />
+      <SEO title="Request Consultation | AXiM Systems" description="Initialize a secure connection with our engineering and integration team." />
 
       <section className="flex-1 flex items-center justify-center p-6 mt-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl">
@@ -75,7 +75,7 @@ export default function Consultation() {
                 <div className="w-16 h-16 bg-axim-purple/20 text-axim-purple mx-auto rounded-full flex items-center justify-center mb-6">
                   <SafeIcon icon={LuIcons.LuCircleCheck} className="w-8 h-8" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Uplink Established</h2>
+                <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Request Submitted</h2>
                 <p className="text-zinc-400 text-sm leading-relaxed font-mono uppercase tracking-widest">
                   Your architecture parameters have been securely logged. An integration specialist will ping your secure comms within 24 hours.
                 </p>
@@ -95,7 +95,7 @@ export default function Consultation() {
                   </div>
                 </div>
 
-                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Engineering Uplink</h1>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Engineering Consultation</h1>
                 <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-lg">
                   Submit your operational parameters below. Our team will review your infrastructure requirements and propose a decentralized integration strategy.
                 </p>

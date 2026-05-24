@@ -42,11 +42,11 @@ export default function ProactiveBanner() {
         body: payload
       });
 
-      if (!response.ok) throw new Error(`Edge transmission rejected: ${response.status}`);
+      if (!response.ok) throw new Error(`Edge submission rejected: ${response.status}`);
       setSubscribed(true);
     } catch (err) {
       console.error("Subscription Uplink Failed:", err);
-      setErrorMsg("Network transmission failed. Try again.");
+      setErrorMsg("Network submission failed. Try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +73,7 @@ export default function ProactiveBanner() {
           {subscribed ? (
              <div className="bg-white/5 border border-axim-purple/50 p-8 rounded-sm text-center shadow-[0_0_30px_rgba(147,51,234,0.1)]">
                 <SafeIcon icon={LuIcons.LuCircleCheck} className="w-10 h-10 text-axim-purple mx-auto mb-3" />
-                <h4 className="text-white font-black uppercase tracking-widest text-sm mb-1">Comms Secured</h4>
+                <h4 className="text-white font-black uppercase tracking-widest text-sm mb-1">Subscription Confirmed</h4>
                 <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase">You have been added to the secure list.</p>
              </div>
           ) : (
