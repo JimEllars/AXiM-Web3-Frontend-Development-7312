@@ -5,7 +5,7 @@ import WPImage from './WPImage';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
-export default function NewsFeed({ limit = 12, title = "All Articles" }) {
+export default function NewsFeed({ limit = 12, title = "All Articles", hidePagination = false }) {
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +89,7 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
         })}
       </div>
 
-      {hasMore && (
+      {hasMore && !hidePagination && (
         <div className="text-center">
           <button
             onClick={loadMore}

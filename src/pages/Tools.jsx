@@ -307,7 +307,7 @@ export default function Tools() {
         <div className="py-16 space-y-16">
           {detailedTools.map((tool, index) => (
             <div key={index} className="flex flex-col md:flex-row items-center gap-12 group">
-               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${tool.bgHover} md:order-${index % 2 === 0 ? '1' : '2'}`}>
+               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${tool.bgHover} ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
                   <SafeIcon icon={tool.icon} className={`w-16 h-16 ${tool.color} mb-6`} />
                   <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">{tool.title}</h3>
                   <p className="text-sm text-zinc-400 leading-relaxed mb-8">{tool.desc}</p>
@@ -331,7 +331,7 @@ export default function Tools() {
                   )}
                </div>
 
-               <div className={`flex-1 md:order-${index % 2 === 0 ? '2' : '1'} hidden md:flex justify-center`}>
+               <div className={`flex-1 hidden md:flex justify-center ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
                  <div className="w-64 h-64 border border-white/10 rounded-full flex items-center justify-center relative bg-black/50 backdrop-blur-sm">
                    <div className="absolute inset-4 border border-dashed border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
                    <SafeIcon icon={tool.icon} className={`w-20 h-20 opacity-50 ${tool.color}`} />
@@ -359,15 +359,15 @@ export default function Tools() {
               <h3 className="text-xl md:text-2xl font-black text-axim-gold uppercase tracking-widest mb-3 relative z-10">Curriculum Compiling</h3>
 
               <p className="text-zinc-400 text-sm max-w-md mx-auto relative z-10 leading-relaxed mb-8">
-                High-impact operational courses and playbooks are currently undergoing structural review by our engineering team. Awaiting transmission.
+                High-impact operational courses and playbooks are currently undergoing structural review by our engineering team. Awaiting release.
               </p>
 
               {subscribed ? (
                 <div className="relative z-10 inline-flex flex-col items-center px-8 py-3 bg-axim-gold/10 border border-axim-gold shadow-lg">
                   <span className="font-bold text-axim-gold uppercase tracking-widest text-xs flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /> Comms Secured
+                    <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /> Subscription Confirmed
                   </span>
-                  <span className="text-[10px] text-axim-gold/70 font-mono mt-1">Awaiting Transmission.</span>
+                  <span className="text-[10px] text-axim-gold/70 font-mono mt-1">You have been securely added to our network.</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="relative z-10 flex flex-col items-center gap-2 w-full max-w-sm mx-auto">
@@ -388,7 +388,7 @@ export default function Tools() {
                       {isSubmitting ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> : <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />}
                     </button>
                   </div>
-                  {error && <p className="text-red-500 text-xs font-mono">Transmission failed. Retry.</p>}
+                  {error && <p className="text-red-500 text-xs font-mono">Submission failed. Retry.</p>}
                 </form>
               )}
            </div>

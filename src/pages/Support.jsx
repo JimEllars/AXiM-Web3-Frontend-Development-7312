@@ -40,7 +40,7 @@ export default function Support() {
       payload.append('source', 'website');
       if (formData.attachment) payload.append('attachment', formData.attachment);
 
-      // Execute Secure Transmission
+      // Execute Secure Submission
       const response = await fetch(`${workerUrl}/webhooks/intake`, {
         method: 'POST',
         headers: {
@@ -51,13 +51,13 @@ export default function Support() {
       });
 
       if (!response.ok) {
-        throw new Error(`Edge transmission rejected: ${response.status}`);
+        throw new Error(`Edge submission rejected: ${response.status}`);
       }
 
       setSubmitted(true);
     } catch (err) {
       console.error("Support Uplink Failed:", err);
-      setErrorMsg("Network transmission failed. Please verify connection and try again.");
+      setErrorMsg("Network submission failed. Please verify connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -79,7 +79,7 @@ export default function Support() {
   const faqs = [
     { q: "How do I access generated digital products?", a: "Navigate to the Operator Vault via your Profile. All parsed legal and financial documents are securely encrypted and vaulted there for extraction." },
     { q: "Are digital products legally binding?", a: "AXiM generators provide structural efficiency and standardized formatting. However, operators must consult independent counsel to guarantee jurisdictional compliance." },
-    { q: "How do I upgrade my infrastructure tier?", a: "Enterprise scaling requires a Consultation protocol. Submit a request via the footer uplink to speak with our engineering team." }
+    { q: "How do I upgrade my infrastructure tier?", a: "Enterprise scaling requires a Consultation protocol. Submit a request via the footer link to speak with our engineering team." }
   ];
 
   const wikiCategories = [

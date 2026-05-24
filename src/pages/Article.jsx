@@ -153,7 +153,7 @@ export default function Article() {
       {/* 3. Read Next Loop */}
       <section className="mt-12 pt-12 border-t border-white/10 bg-black/50">
          <div className="max-w-7xl mx-auto">
-            <NewsFeed limit={3} title="Recent Articles" />
+            <NewsFeed limit={3} title="Recent Articles" hidePagination={true} />
          </div>
       </section>
     </div>

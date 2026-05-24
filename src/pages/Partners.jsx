@@ -150,7 +150,7 @@ export default function Partners() {
         <div className="py-16 space-y-16">
           {detailedPartners.map((partner, index) => (
             <div key={index} className="flex flex-col md:flex-row items-center gap-12 group">
-               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${partner.bgHover} md:order-${index % 2 === 0 ? '1' : '2'}`}>
+               <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${partner.bgHover} ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
                   <SafeIcon icon={partner.icon} className={`w-16 h-16 ${partner.color} mb-6`} />
                   <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">{partner.title}</h3>
                   <p className="text-sm text-zinc-400 leading-relaxed mb-8">{partner.desc}</p>
@@ -174,7 +174,7 @@ export default function Partners() {
                   )}
                </div>
 
-               <div className={`flex-1 md:order-${index % 2 === 0 ? '2' : '1'} hidden md:flex justify-center`}>
+               <div className={`flex-1 hidden md:flex justify-center ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
                  <div className="w-64 h-64 border border-white/10 rounded-full flex items-center justify-center relative bg-black/50 backdrop-blur-sm">
                    <div className="absolute inset-4 border border-dashed border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
                    <SafeIcon icon={partner.icon} className={`w-20 h-20 opacity-50 ${partner.color}`} />
