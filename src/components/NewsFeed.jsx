@@ -81,7 +81,7 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
                     {authorName}
                   </div>
                 </div>
-                <h3 className="text-base md:text-lg font-black text-white mb-3 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || 'Untitled Briefing')}} />
+                <h3 className="text-base md:text-lg font-black text-white mb-3 group-hover:text-axim-purple transition-colors line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered || 'Untitled Article')}} />
                 <div className="text-sm text-zinc-400 line-clamp-2" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.excerpt?.rendered || '')}} />
               </div>
             </a>
@@ -99,7 +99,7 @@ export default function NewsFeed({ limit = 12, title = "All Articles" }) {
             {isFetchingMore ? (
               <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> Processing...</span>
             ) : (
-              <span className="flex items-center gap-2">Load Previous Transmissions <SafeIcon icon={LuIcons.LuChevronDown} className="w-4 h-4"/></span>
+              <span className="flex items-center gap-2">Load Previous Articles <SafeIcon icon={LuIcons.LuChevronDown} className="w-4 h-4"/></span>
             )}
           </button>
         </div>

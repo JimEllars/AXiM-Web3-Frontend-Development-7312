@@ -122,7 +122,7 @@ export default function Header() {
               <div className="text-xs font-mono text-axim-purple uppercase tracking-widest mb-4 border-b border-white/10 pb-4">System Nodes</div>
               {[
                 { path: '/tools', label: 'Offerings', icon: LuIcons.LuCpu },
-                { path: '/articles', label: 'Intelligence', icon: LuIcons.LuDatabase },
+                { path: '/articles', label: 'Articles', icon: LuIcons.LuDatabase },
                 { path: '/partners', label: 'Partners', icon: LuIcons.LuNetwork },
                 { path: '/support', label: 'Support', icon: LuIcons.LuLifeBuoy }
               ].map((item) => {
@@ -147,7 +147,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className="w-full flex justify-center items-center px-6 py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors"
               >
-                Initialize Support <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
+                Request Support <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
               </Link>
             </div>
           </motion.div>

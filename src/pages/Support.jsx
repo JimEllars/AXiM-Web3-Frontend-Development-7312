@@ -103,7 +103,7 @@ export default function Support() {
             System <span className="text-axim-purple">Support.</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Initialize a support ticket, browse frequently asked parameters, or access the comprehensive ecosystem wiki.
+            Submit a support ticket, browse frequently asked parameters, or access the comprehensive ecosystem wiki.
           </p>
         </div>
       </section>
@@ -118,7 +118,7 @@ export default function Support() {
                 <SafeIcon icon={LuIcons.LuCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
                 <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Ticket Logged</h2>
                 <p className="text-zinc-400 text-xs leading-relaxed font-mono tracking-widest uppercase">
-                  Support protocol initialized. Our autonomous triage layer has received your payload.
+                  Awaiting Support Agent.
                 </p>
              </div>
           ) : (
@@ -225,9 +225,9 @@ export default function Support() {
                     className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm shadow-lg mt-4"
                   >
                     {isSubmitting ? (
-                      <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Transmitting...</span>
+                      <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Submitting...</span>
                     ) : (
-                       <span className="flex items-center gap-2">Initialize Protocol <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
+                       <span className="flex items-center gap-2">Submit Request <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
                     )}
                   </button>
                 </form>

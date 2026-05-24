@@ -74,7 +74,7 @@ export default function ProactiveBanner() {
              <div className="bg-white/5 border border-axim-purple/50 p-8 rounded-sm text-center shadow-[0_0_30px_rgba(147,51,234,0.1)]">
                 <SafeIcon icon={LuIcons.LuCircleCheck} className="w-10 h-10 text-axim-purple mx-auto mb-3" />
                 <h4 className="text-white font-black uppercase tracking-widest text-sm mb-1">Comms Secured</h4>
-                <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase">Awaiting Transmission.</p>
+                <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase">You have been added to the secure list.</p>
              </div>
           ) : (
             <form onSubmit={handleSubscribe} className="bg-black border border-white/10 p-6 rounded-sm shadow-2xl relative">
@@ -104,9 +104,9 @@ export default function ProactiveBanner() {
                 className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Encrypting...</span>
+                  <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Submitting...</span>
                 ) : (
-                  <span className="flex items-center gap-2">Initialize Uplink <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
+                  <span className="flex items-center gap-2">Subscribe <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3"/></span>
                 )}
               </button>
             </form>
