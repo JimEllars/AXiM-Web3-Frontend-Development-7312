@@ -117,7 +117,7 @@ export default function EarlyAccess() {
                     className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)] rounded-sm"
                   >
                     {isSubmitting ? (
-                      <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> ENCRYPTING...</span>
+                      <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> SUBMITTING...</span>
                     ) : (
                       <span className="flex items-center gap-2">Subscribe to Updates <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4"/></span>
                     )}

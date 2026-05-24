@@ -183,7 +183,7 @@ export default function Articles() {
 
       {/* Section 4: All Articles (The Catch-All Firehose) */}
       <div className="mt-12 bg-[#050505] border-t border-white/10 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
-         <NewsFeed limit={9} title="All Intelligence Briefings" />
+         <NewsFeed limit={9} title="All Articles" />
       </div>
 
     </div>
