@@ -7,6 +7,7 @@ import GlobalLoader from '../components/GlobalLoader';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
+import NewsFeed from '../components/NewsFeed';
 
 export default function Article() {
   const { slug } = useParams();
@@ -19,7 +20,7 @@ export default function Article() {
     const loadContent = async () => {
       setIsLoading(true);
       try {
-        // Parallel fetch: Get the main article + 4 recent articles (in case one is the current article)
+        // Parallel fetch for speed: Main article + Recent sidebar articles
         const [mainRes, recentRes] = await Promise.all([
           fetchPosts({ slug, _embed: 1 }),
           fetchPosts({ per_page: 4, _embed: 1 })
@@ -30,7 +31,7 @@ export default function Article() {
             setArticle(mainRes[0]);
           }
           if (recentRes) {
-            // Filter out current article and keep only 3
+            // Filter out current article and slice to 3
             setRecentArticles(recentRes.filter(p => p.slug !== slug).slice(0, 3));
           }
           setIsLoading(false);
@@ -49,7 +50,7 @@ export default function Article() {
   if (!article) return (
     <div className="min-h-screen flex items-center justify-center bg-bg-void text-white font-mono">
       <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-6 h-6 text-axim-purple mr-3" />
-      Article not found.
+      Signal Lost // Article not found.
     </div>
   );
 
@@ -57,16 +58,6 @@ export default function Article() {
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
   const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  // Quick Links Data for Sidebar
-  const sidebarTools = [
-    { title: "Mutual NDA Generator", link: "/tools/nda", icon: LuIcons.LuShieldCheck, color: "text-axim-purple" },
-    { title: "Autonomous Pay Stub", link: "/tools/paystub", icon: LuIcons.LuFileText, color: "text-[#DB2777]" }
-  ];
-  const sidebarPartners = [
-    { title: "Make.com Automation", link: "/partners/make", icon: LuIcons.LuCpu, color: "text-[#DB2777]" },
-    { title: "Powur Solar Grid", link: "/partners/powur-solar", icon: LuIcons.LuSun, color: "text-axim-gold" }
-  ];
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
@@ -80,7 +71,7 @@ export default function Article() {
         <WPImage src={imageUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover grayscale-[30%]" />
 
         {/* Vibrant Multi-Color Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/60 via-[#DB2777]/40 to-axim-gold/30 mix-blend-overlay z-0" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/70 via-[#DB2777]/50 to-axim-gold/40 mix-blend-overlay z-0" />
         <div className="absolute inset-0 bg-gradient-to-t from-bg-void via-bg-void/80 to-transparent z-10" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-20 w-full">
@@ -100,14 +91,14 @@ export default function Article() {
           <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.content?.rendered)}} />
         </article>
 
-        {/* Dynamic Sidebar */}
+        {/* Dynamic High-Converting Sidebar */}
         <aside className="lg:col-span-4 space-y-8">
 
           {/* Metadata Block */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
             <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/5">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
-                <SafeIcon icon={LuIcons.LuUser} className="w-5 h-5 text-axim-purple" />
+              <div className="w-12 h-12 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded flex items-center justify-center shadow-[0_0_15px_rgba(219,39,119,0.3)]">
+                <SafeIcon icon={LuIcons.LuUser} className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Operator</div>
@@ -123,7 +114,9 @@ export default function Article() {
           {/* Featured App Promo (Demand Letter) */}
           <div className="bg-[#050505] border border-axim-gold/30 p-8 rounded-sm shadow-[0_0_30px_rgba(255,234,0,0.05)] relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/10 blur-[40px] pointer-events-none group-hover:bg-axim-gold/20 transition-colors" />
-            <SafeIcon icon={LuIcons.LuScale} className="w-8 h-8 text-axim-gold mb-4 relative z-10" />
+            <div className="w-10 h-10 bg-gradient-to-br from-axim-gold to-yellow-600 rounded flex items-center justify-center shadow-[0_0_15px_rgba(255,234,0,0.3)] mb-4 relative z-10">
+               <SafeIcon icon={LuIcons.LuScale} className="w-5 h-5 text-black" />
+            </div>
             <h3 className="text-lg font-black text-white uppercase tracking-tighter mb-2 relative z-10">Quick Demand Letter</h3>
             <p className="text-[0.7rem] text-zinc-400 mb-6 leading-relaxed relative z-10 font-mono uppercase tracking-widest">Generate a structurally optimized, formal demand letter in seconds using our autonomous AI. No retainer required.</p>
             <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="relative z-10 w-full inline-flex justify-center items-center px-4 py-3 bg-axim-gold text-black font-black uppercase tracking-widest text-[0.65rem] hover:bg-white transition-colors rounded-sm shadow-lg">
@@ -132,51 +125,63 @@ export default function Article() {
           </div>
 
           {/* Ecosystem Tools */}
-          <div className="bg-black border border-white/10 p-6 rounded-sm shadow-xl">
-             <h4 className="text-sm font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+          <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
+             <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
                <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Ecosystem Tools
              </h4>
-             <div className="space-y-3">
-               {sidebarTools.map((tool, idx) => (
-                 <Link key={idx} to={tool.link} className="flex items-center gap-3 p-3 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group">
-                   <SafeIcon icon={tool.icon} className={`w-4 h-4 ${tool.color}`} />
-                   <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">{tool.title}</span>
-                 </Link>
-               ))}
+             <div className="space-y-4">
+               <Link to="/tools/nda" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Mutual NDA</span>
+               </Link>
+               <Link to="/tools/paystub" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-[#DB2777] to-red-600 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Auto Pay Stub</span>
+               </Link>
              </div>
           </div>
 
           {/* Partner Network */}
-          <div className="bg-black border border-white/10 p-6 rounded-sm shadow-xl">
-             <h4 className="text-sm font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+          <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
+             <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
                <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-zinc-500" /> Partner Network
              </h4>
-             <div className="space-y-3">
-               {sidebarPartners.map((partner, idx) => (
-                 <Link key={idx} to={partner.link} className="flex items-center gap-3 p-3 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group">
-                   <SafeIcon icon={partner.icon} className={`w-4 h-4 ${partner.color}`} />
-                   <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">{partner.title}</span>
-                 </Link>
-               ))}
+             <div className="space-y-4">
+               <Link to="/partners/make" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-indigo-600 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuCpu} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Make.com</span>
+               </Link>
+               <Link to="/partners/powur-solar" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuSun} className="w-4 h-4 text-black" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Powur Solar</span>
+               </Link>
              </div>
           </div>
 
           {/* Recent Articles */}
           {recentArticles.length > 0 && (
-            <div className="bg-black border border-white/10 p-6 rounded-sm shadow-xl">
-               <h4 className="text-sm font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
+               <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuBookOpen} className="w-4 h-4 text-zinc-500" /> Recent Reads
                </h4>
-               <div className="space-y-4">
-                 {recentArticles.map(article => {
-                   const thumb = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
+               <div className="space-y-5">
+                 {recentArticles.map(post => {
+                   const thumb = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
                    return (
-                     <Link key={article.id} to={`/article/${article.slug}`} className="flex gap-4 group items-center border-b border-white/5 pb-4 last:border-0 last:pb-0">
+                     <Link key={post.id} to={`/article/${post.slug}`} className="flex gap-4 group items-center border-b border-white/5 pb-5 last:border-0 last:pb-0">
                        <div className="w-16 h-16 shrink-0 rounded-sm overflow-hidden border border-white/10 relative">
                          <WPImage src={thumb} alt="Thumbnail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                          <div className="absolute inset-0 bg-axim-purple/20 mix-blend-overlay group-hover:opacity-0 transition-opacity" />
                        </div>
-                       <h5 className="text-xs font-bold text-zinc-300 group-hover:text-axim-purple transition-colors leading-snug line-clamp-3" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
+                       <h5 className="text-xs font-bold text-zinc-300 group-hover:text-axim-purple transition-colors leading-snug line-clamp-3" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(post.title?.rendered)}} />
                      </Link>
                    )
                  })}
@@ -186,6 +191,12 @@ export default function Article() {
 
         </aside>
       </div>
+
+      {/* End of Page Firehose */}
+      <div className="mt-20 bg-black border-t border-white/10 pt-16 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
+         <NewsFeed limit={3} title="Continue Reading" hidePagination={true} />
+      </div>
+
     </div>
   );
 }
