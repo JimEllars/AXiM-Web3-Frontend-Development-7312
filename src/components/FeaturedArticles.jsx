@@ -3,7 +3,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import WPImage from './WPImage';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 
-export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6 }) {
+export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6, excludeIds = [] }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,12 +13,17 @@ export default function FeaturedArticles({ title = "Featured Articles", category
     const loadArticles = async () => {
       try {
         const categoryId = await fetchCategoryBySlug(categorySlug);
-        const params = { per_page: limit };
+        const params = { per_page: limit + (excludeIds ? excludeIds.length : 0) };
         if (categoryId) params.categories = categoryId;
 
         const data = await fetchPosts(params);
         if (isMounted) {
-          setArticles(data || []);
+          let finalData = data || [];
+          if (excludeIds.length > 0) {
+            const excludeSet = new Set(excludeIds);
+            finalData = finalData.filter(post => !excludeSet.has(post.id));
+          }
+          setArticles(finalData.slice(0, limit));
           setIsLoading(false);
         }
       } catch (error) {
@@ -28,7 +33,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
 
     loadArticles();
     return () => { isMounted = false; };
-  }, [categorySlug, limit]);
+  }, [categorySlug, limit, JSON.stringify(excludeIds)]);
 
   if (isLoading || !articles || articles.length === 0) return null;
 
