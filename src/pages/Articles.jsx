@@ -24,7 +24,7 @@ const SkeletonCard = ({ isHero = false }) => (
 
 // DRY Sub-Component for visual parity across sections
 const ArticleCard = ({ article, isHero = false }) => {
-  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
+  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-axim-axim-axim-1l1j90l.webp";
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
 
