@@ -54,7 +54,7 @@ export default function Article() {
     </div>
   );
 
-  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Solar-Powur-Image-Panels-tech.png";
+  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
   const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
