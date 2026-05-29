@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import ArticleCard from '../components/ArticleCard';
+import { fetchPosts } from '../lib/wp-fetch';
 import Hero from '../components/Hero';
 import Reviews from '../components/Reviews';
 import FeaturedArticles from '../components/FeaturedArticles';
@@ -12,6 +14,32 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Home() {
+
+  const [dailyNews, setDailyNews] = useState([]);
+  const [isNewsLoading, setIsNewsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchDailyNews = async () => {
+      try {
+        const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=daily-news`);
+        const cats = await res.json();
+        if (cats && cats.length > 0) {
+          const posts = await fetchPosts({ categories: cats[0].id, per_page: 3, _embed: 1 });
+          if (isMounted) {
+            setDailyNews(posts || []);
+            setIsNewsLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load daily news", err);
+        if (isMounted) setIsNewsLoading(false);
+      }
+    };
+    fetchDailyNews();
+    return () => { isMounted = false; };
+  }, []);
+
   return (
     <>
       <SEO title="Smart Systems | AXiM"
@@ -45,6 +73,26 @@ export default function Home() {
           startNowUrl="/partners/powur-solar"
           theme="gold"
         />
+
+        {/* Daily News Feed */}
+        {dailyNews.length > 0 && (
+          <section className="py-24 relative overflow-hidden bg-bg-void">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+              <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
+                <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
+                <h2 className="text-3xl font-black uppercase tracking-tighter text-white">Daily News</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {isNewsLoading ? (
+                  // Simple skeleton fallback
+                  [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
+                ) : (
+                  dailyNews.map(article => <ArticleCard key={article.id} article={article} />)
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Featured Application Spotlight */}
         <section className="py-24 relative overflow-hidden bg-[#0F172A] border-y border-white/10">
