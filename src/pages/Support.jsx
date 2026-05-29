@@ -37,7 +37,7 @@ export default function Support() {
       if (formData.name) payload.append('customer_name', formData.name);
       payload.append('subject', `[${formData.priority}] ${formData.subject}`);
       payload.append('description', formData.issue);
-      payload.append('source', 'website');
+      payload.append('source', 'support_form');
       if (formData.attachment) payload.append('attachment', formData.attachment);
 
       // Execute Secure Submission

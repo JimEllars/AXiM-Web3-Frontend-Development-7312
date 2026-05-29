@@ -10,7 +10,7 @@ export const useAximStore = create(
       enqueueAction: (action) => {
         const newAction = { id: Date.now(), timestamp: new Date().toISOString(), status: 'QUEUED', ...action };
         set((state) => ({ pendingActions: [...state.pendingActions, newAction] }));
-        console.log("[AUTONOMOUS_ENGINE] Action Queued:", action.type);
+
       },
       removeAction: (id) => {
         set((state) => ({ pendingActions: state.pendingActions.filter(a => a.id !== id) }));

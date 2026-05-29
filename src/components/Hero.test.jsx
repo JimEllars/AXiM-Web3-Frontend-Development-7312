@@ -36,7 +36,7 @@ describe('Hero Component', () => {
     assert.ok(screen.getAllByText(/Systems/)[0]);
 
     // Check description
-    assert.ok(screen.getByText(/On-Demand Business Systems without Breaking the Bank/));
+    assert.ok(screen.getByText(/Access On-Demand Templates & Tools without Breaking the Bank/));
 
     // Check links
     const demandLetterLink = screen.getByRole('link', { name: /NEW: \$4\.00 QUICK DEMAND LETTER GENERATOR/i });
