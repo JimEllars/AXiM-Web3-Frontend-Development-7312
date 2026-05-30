@@ -40,6 +40,8 @@ export default function Home() {
     return () => { isMounted = false; };
   }, []);
 
+  const excludeDailyNews = dailyNews.map(dn => dn.id);
+
   return (
     <>
       <SEO title="Smart Systems | AXiM"
@@ -49,7 +51,7 @@ export default function Home() {
         <Hero />
 
         {/* 1. Featured Category */}
-        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} />
+        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
 
         {/* 2. Partner Break: Make */}
         <PartnerPromo
@@ -62,7 +64,7 @@ export default function Home() {
         />
 
         {/* 3. Spotlight Category */}
-        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} />
+        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
 
         {/* 4. Partner Break: Powur */}
         <PartnerPromo

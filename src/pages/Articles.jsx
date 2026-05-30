@@ -51,7 +51,14 @@ export default function Articles() {
         ]);
 
         if (isMounted) {
-          setCatData({ dailyNews: dn || [], featured: feat || [], appSpotlight: app || [], serviceSpotlight: svc || [] });
+          const dailyNewsIds = new Set((dn || []).map(post => post.id));
+
+          setCatData({
+            dailyNews: dn || [],
+            featured: (feat || []).filter(post => !dailyNewsIds.has(post.id)),
+            appSpotlight: (app || []).filter(post => !dailyNewsIds.has(post.id)),
+            serviceSpotlight: (svc || []).filter(post => !dailyNewsIds.has(post.id))
+          });
           setIsLoading(false);
         }
       } catch (error) {
