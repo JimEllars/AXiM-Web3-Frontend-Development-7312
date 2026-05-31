@@ -77,5 +77,5 @@ export function useAximAuth() {
     return () => { isMounted = false; clearInterval(heartbeatInterval); };
   }, []);
 
-  return { profile, loading, session };
+  return { profile, loading, isLoading: loading, session };
 }
