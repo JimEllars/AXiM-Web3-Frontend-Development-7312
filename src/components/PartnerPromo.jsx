@@ -4,14 +4,14 @@ import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
-export default function PartnerPromo({ partnerName, title, description, learnMorePath, startNowUrl, theme = 'purple' }) {
+export default function PartnerPromo({ partnerName, title, description, learnMorePath, startNowUrl, theme = 'purple', onClick }) {
   const isGold = theme === 'gold';
   const bgClass = isGold ? 'from-axim-gold/10 border-axim-gold/30' : 'from-[#9333EA]/10 border-[#9333EA]/30';
   const textClass = isGold ? 'text-axim-gold' : 'text-[#DB2777]';
   const btnClass = isGold ? 'bg-axim-gold text-black hover:bg-white' : 'bg-gradient-to-r from-[#9333EA] to-[#DB2777] text-white hover:scale-105 shadow-[0_0_20px_rgba(219,39,119,0.3)]';
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className={`w-full max-w-7xl mx-auto my-16 p-8 md:p-12 bg-black border border-white/10 rounded-sm flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden group hover:border-white/20 transition-colors`}>
+    <motion.div onClick={onClick} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className={`w-full max-w-7xl mx-auto my-16 p-8 md:p-12 bg-black border border-white/10 rounded-sm flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden group hover:border-white/20 transition-colors`}>
       <div className={`absolute top-0 left-0 w-full md:w-1/2 h-full bg-gradient-to-r ${bgClass} to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity`} />
 
       <div className="max-w-2xl relative z-10">

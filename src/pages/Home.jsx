@@ -12,6 +12,7 @@ import ProactiveBanner from '../components/ProactiveBanner';
 import EngagementGuard from '../components/EngagementGuard';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function Home() {
   const [dailyNews, setDailyNews] = useState([]);
@@ -78,6 +79,7 @@ export default function Home() {
           learnMorePath="/partners/make"
           startNowUrl="/partners/make"
           theme="purple"
+          onClick={() => logTelemetry('partner_click', { partner: 'make', zone: 'homepage_promo' })}
         />
 
         {/* 4. Spotlight Category (Strict isolation preventing Daily News leakage) */}
@@ -91,6 +93,7 @@ export default function Home() {
           learnMorePath="/partners/powur-solar"
           startNowUrl="/partners/powur-solar"
           theme="gold"
+          onClick={() => logTelemetry('partner_click', { partner: 'powur_solar', zone: 'homepage_promo' })}
         />
 
         {/* 6. Featured Application Spotlight */}
