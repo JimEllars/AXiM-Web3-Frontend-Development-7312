@@ -14,7 +14,6 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Home() {
-
   const [dailyNews, setDailyNews] = useState([]);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
 
@@ -40,45 +39,18 @@ export default function Home() {
     return () => { isMounted = false; };
   }, []);
 
+  // Map primitive array indices explicitly to ensure down-stream compliance
   const excludeDailyNews = dailyNews.map(dn => dn.id);
 
   return (
     <>
-      <SEO title="Smart Systems | AXiM"
-        description="Products and services built to make your life easier without breaking the bank."
-       url="https://axim.us.com/"/>
+      <SEO title="Smart Systems | AXiM" description="Products and services built to make your life easier without breaking the bank." url="https://axim.us.com/"/>
       <div className="w-full">
         <Hero />
 
-        {/* 1. Featured Category */}
-        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
-
-        {/* 2. Partner Break: Make */}
-        <PartnerPromo
-          partnerName="Make.com"
-          title="Scale Your Systems With Visual Automation"
-          description="Connect your apps and automate your workflows without writing a single line of code. Leverage the backend engine that powers AXiM."
-          learnMorePath="/partners/make"
-          startNowUrl="/partners/make"
-          theme="purple"
-        />
-
-        {/* 3. Spotlight Category */}
-        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
-
-        {/* 4. Partner Break: Powur */}
-        <PartnerPromo
-          partnerName="Powur Solar"
-          title="Decentralize Your Home's Energy Grid"
-          description="Stop overpaying for grid power. Transition to clean, Tier-1 residential solar with zero-down financing and take ownership of your energy production."
-          learnMorePath="/partners/powur-solar"
-          startNowUrl="/partners/powur-solar"
-          theme="gold"
-        />
-
-        {/* Daily News Feed */}
+        {/* 1. Daily News Feed (Primary Top-Of-Funnel Sequence) */}
         {dailyNews.length > 0 && (
-          <section className="py-24 relative overflow-hidden bg-bg-void">
+          <section className="py-16 relative overflow-hidden bg-bg-void">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
                 <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
@@ -86,7 +58,6 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {isNewsLoading ? (
-                  // Simple skeleton fallback
                   [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : (
                   dailyNews.map(article => <ArticleCard key={article.id} article={article} />)
@@ -96,7 +67,33 @@ export default function Home() {
           </section>
         )}
 
-        {/* Featured Application Spotlight */}
+        {/* 2. Featured Category (Safely isolated via parsed exclusion hooks) */}
+        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
+
+        {/* 3. Partner Break: Make */}
+        <PartnerPromo
+          partnerName="Make.com"
+          title="Scale Your Systems With Visual Automation"
+          description="Connect your apps and automate your workflows without writing a single line of code. Leverage the backend engine that powers AXiM."
+          learnMorePath="/partners/make"
+          startNowUrl="/partners/make"
+          theme="purple"
+        />
+
+        {/* 4. Spotlight Category (Strict isolation preventing Daily News leakage) */}
+        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
+
+        {/* 5. Partner Break: Powur */}
+        <PartnerPromo
+          partnerName="Powur Solar"
+          title="Decentralize Your Home's Energy Grid"
+          description="Stop overpaying for grid power. Transition to clean, Tier-1 residential solar with zero-down financing and take ownership of your energy production."
+          learnMorePath="/partners/powur-solar"
+          startNowUrl="/partners/powur-solar"
+          theme="gold"
+        />
+
+        {/* 6. Featured Application Spotlight */}
         <section className="py-24 relative overflow-hidden bg-[#0F172A] border-y border-white/10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,234,0,0.05),transparent_50%)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
@@ -132,7 +129,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. The Firehose */}
+        {/* 7. The Firehose */}
         <NewsFeed limit={12} title="All Articles" />
 
         <ProactiveBanner />

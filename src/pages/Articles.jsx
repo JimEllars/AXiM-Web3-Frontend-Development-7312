@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { fetchPosts } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
-import GlobalLoader from '../components/GlobalLoader';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import NewsFeed from '../components/NewsFeed';
-import WPImage from '../components/WPImage';
 import ArticleCard from '../components/ArticleCard';
 
 const SkeletonCard = ({ isHero = false }) => (
@@ -23,16 +21,14 @@ const SkeletonCard = ({ isHero = false }) => (
   </div>
 );
 
-
 export default function Articles() {
-  const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [], serviceSpotlight: [] });
+  const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const loadCategories = async () => {
       try {
-        // Helper to resolve slugs to IDs and fetch posts
         const fetchCat = async (slug, limit) => {
           const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
           const cats = await res.json();
@@ -42,12 +38,10 @@ export default function Articles() {
           return [];
         };
 
-        // Parallel fetch for maximum performance
-        const [dn, feat, app, svc] = await Promise.all([
+        const [dn, feat, app] = await Promise.all([
           fetchCat('daily-news', 3),
-          fetchCat('featured', 3),
-          fetchCat('app-software', 3),
-          fetchCat('service-spotlight', 3)
+          fetchCat('featured', 6),
+          fetchCat('app-software', 6)
         ]);
 
         if (isMounted) {
@@ -55,21 +49,20 @@ export default function Articles() {
 
           setCatData({
             dailyNews: dn || [],
-            featured: (feat || []).filter(post => !dailyNewsIds.has(post.id)),
-            appSpotlight: (app || []).filter(post => !dailyNewsIds.has(post.id)),
-            serviceSpotlight: (svc || []).filter(post => !dailyNewsIds.has(post.id))
+            // Prevent content contamination across grids by isolating collections via explicit Sets
+            featured: (feat || []).filter(post => !dailyNewsIds.has(post.id)).slice(0, 6),
+            appSpotlight: (app || []).filter(post => !dailyNewsIds.has(post.id)).slice(0, 6)
           });
           setIsLoading(false);
         }
       } catch (error) {
+        console.error("[WP_HUB] Fetch architecture error:", error);
         if (isMounted) setIsLoading(false);
       }
     };
     loadCategories();
     return () => { isMounted = false; };
   }, []);
-
-  // Removed GlobalLoader blocking return
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
@@ -115,26 +108,26 @@ export default function Articles() {
 
         {/* Section 1: Featured Articles */}
         <section>
-            <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {isLoading ? (
-                 <>
-                   <SkeletonCard isHero={true} />
-                   <SkeletonCard />
-                   <SkeletonCard />
-                 </>
-              ) : (
-                 catData.featured.map((article, idx) => (
-                   <ArticleCard key={article.id} article={article} isHero={idx === 0} />
-                 ))
-              )}
-            </div>
-          </section>
+          <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+            <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {isLoading ? (
+               <>
+                 <SkeletonCard isHero={true} />
+                 <SkeletonCard />
+                 <SkeletonCard />
+               </>
+            ) : (
+               catData.featured.map((article, idx) => (
+                 <ArticleCard key={article.id} article={article} isHero={idx === 0} />
+               ))
+            )}
+          </div>
+        </section>
 
-        {/* Section 2: App Spotlight */}
+        {/* Section 2: App Spotlight (Software Spotlight) */}
         {(!isLoading || catData.appSpotlight.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
@@ -156,37 +149,12 @@ export default function Articles() {
             </div>
           </section>
         )}
-
-        {/* Section 3: Service Spotlight */}
-        {(!isLoading || catData.serviceSpotlight.length > 0) && (
-          <section>
-            <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-[#DB2777]" />
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Service Spotlight</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {isLoading ? (
-                 <>
-                   <SkeletonCard />
-                   <SkeletonCard />
-                   <SkeletonCard />
-                 </>
-              ) : (
-                 catData.serviceSpotlight.map((article) => (
-                   <ArticleCard key={article.id} article={article} />
-                 ))
-              )}
-            </div>
-          </section>
-        )}
-
       </div>
 
-      {/* Section 4: All Articles (The Catch-All Firehose) */}
+      {/* Section 3: All Articles (The Catch-All Firehose) */}
       <div className="mt-12 bg-[#050505] border-t border-white/10 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
          <NewsFeed limit={9} title="All Articles" />
       </div>
-
     </div>
   );
 }
