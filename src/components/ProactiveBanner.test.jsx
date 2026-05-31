@@ -33,6 +33,15 @@ describe('ProactiveBanner Component', () => {
         status: 200,
       })
     );
+    // Explicitly override import.meta.env so it doesn't fall into the timeout block
+    global.import = {
+      meta: {
+        env: {
+          VITE_ONYX_WORKER_URL: 'http://test-worker',
+          VITE_AXIM_ONYX_SECRET: 'test-secret'
+        }
+      }
+    };
 
     render(<ProactiveBanner />);
 
@@ -45,7 +54,7 @@ describe('ProactiveBanner Component', () => {
         fireEvent.click(submitButton);
     });
 
-    assert.ok(screen.getByText(/Comms Secured/i));
+    assert.ok(screen.getByText(/Subscription Confirmed/i));
     assert.ok(screen.getByText(/You have been added to the secure list./i));
   });
 
@@ -53,6 +62,6 @@ describe('ProactiveBanner Component', () => {
       render(<ProactiveBanner />);
       const submitButton = screen.getByRole('button', { name: /Subscribe/i });
       fireEvent.click(submitButton);
-      assert.strictEqual(screen.queryByText(/Encrypting\.\.\./i), null);
+      assert.strictEqual(screen.queryByText(/Submitting\.\.\./i), null);
   });
 });
