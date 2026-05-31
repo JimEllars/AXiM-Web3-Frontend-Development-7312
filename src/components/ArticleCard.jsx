@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import DOMPurify from 'isomorphic-dompurify';
 import WPImage from './WPImage';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function ArticleCard({ article, isHero = false }) {
   // NEW UNIVERSAL FALLBACK THUMBNAIL
@@ -11,7 +12,7 @@ export default function ArticleCard({ article, isHero = false }) {
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
 
   return (
-    <Link to={`/article/${article.slug}`} className={`relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 shadow-lg rounded-sm ${isHero ? 'min-h-[450px] lg:col-span-2' : 'min-h-[300px]'}`}>
+    <Link onClick={() => logTelemetry('article_engagement', { id: article.id, slug: article.slug })} to={`/article/${article.slug}`} className={`relative block border border-white/10 bg-black overflow-hidden group hover:border-axim-purple/50 transition-colors flex flex-col justify-end p-8 shadow-lg rounded-sm ${isHero ? 'min-h-[450px] lg:col-span-2' : 'min-h-[300px]'}`}>
       <WPImage src={imageUrl} alt={article.title?.rendered || "Article"} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
 
       <div className="absolute inset-0 bg-gradient-to-b from-axim-purple/80 to-[#050505]/95 z-0 group-hover:opacity-0 transition-opacity duration-700" />

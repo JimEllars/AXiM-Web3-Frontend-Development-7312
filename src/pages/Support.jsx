@@ -3,6 +3,7 @@ import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function Support() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Standard', attachment: null });
@@ -18,6 +19,7 @@ export default function Support() {
     setErrorMsg(null);
 
     try {
+      logTelemetry('support_ticket_initiated', { priority: formData.priority, subject: formData.subject });
       const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
       const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
 
