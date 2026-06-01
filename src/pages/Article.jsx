@@ -64,6 +64,9 @@ export default function Article() {
       <SEO
         title={`${article.title?.rendered || 'Article'} | AXiM Systems`}
         description={article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || "AXiM Systems Intelligence Briefing"}
+        image={imageUrl}
+        type="article"
+        url={window.location.href}
       />
 
       {/* Hero Header with Multi-Color Overlay */}
