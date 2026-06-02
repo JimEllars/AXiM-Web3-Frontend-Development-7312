@@ -34,6 +34,7 @@ const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
 const MakeLanding = React.lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = React.lazy(() => import('./pages/partners/PowurSolarLanding'));
 const PowurJoinLanding = React.lazy(() => import('./pages/partners/PowurJoinLanding'));
+const ChatbaseLanding = React.lazy(() => import('./pages/partners/ChatbaseLanding'));
 
 function App() {
   const location = useLocation();
@@ -84,6 +85,7 @@ function App() {
             <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />
             <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
             <Route path="/partners/powur-join" element={<PageTransition><PowurJoinLanding /></PageTransition>} />
+            <Route path="/partners/chatbase" element={<PageTransition><ChatbaseLanding /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
