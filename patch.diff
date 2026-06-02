@@ -1,0 +1,22 @@
+--- src/pages/Partners.jsx
++++ src/pages/Partners.jsx
+@@ -153,6 +153,20 @@
+             </div>
+           </motion.div>
+
++          {/* Chatbase Master Grid Card Tile */}
++          <Link to="/partners/chatbase" className="group block bg-[#050505] border border-white/10 p-8 rounded-xl hover:border-[#DB2777]/50 transition-colors shadow-2xl relative overflow-hidden lg:col-span-12">
++            <div className="absolute top-0 right-0 w-32 h-32 bg-[#DB2777]/5 blur-[40px] pointer-events-none group-hover:bg-[#DB2777]/10 transition-colors" />
++            <div className="w-10 h-10 bg-gradient-to-br from-[#DB2777] to-pink-600 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500">
++              <SafeIcon icon={LuIcons.LuBot} className="w-5 h-5 text-white" />
++            </div>
++            <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2 flex items-center justify-between group-hover:text-[#DB2777] transition-colors">
++              Chatbase AI <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-4 h-4 opacity-30 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
++            </h3>
++            <p className="text-xs text-zinc-400 leading-relaxed">
++              Transform unstructured manuals and website endpoints into an intelligent chatbot interface built to automate lead capture and client support natively.
++            </p>
++          </Link>
++
+         </div>
+       </section>
