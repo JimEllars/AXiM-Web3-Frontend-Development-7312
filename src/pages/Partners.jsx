@@ -42,6 +42,17 @@ export default function Partners() {
       bgHover: "hover:border-[#DB2777]/30",
       btnClass: "bg-gradient-to-r from-[#9333EA] to-[#DB2777] text-white hover:scale-105 transition-transform",
       isExternal: false
+    },
+    {
+      title: "Chatbase AI Concierge",
+      desc: "Stop losing leads to slow response times. Deploy a custom ChatGPT agent trained exclusively on your business data. Embed it natively into your site or sync it with Slack, WhatsApp, and Zendesk for omnichannel triage.",
+      features: ["Custom data ingestion (PDF, URL, Notion)", "Omnichannel integration", "Autonomous lead capture", "Instant deployment"],
+      link: "/partners/chatbase",
+      icon: LuIcons.LuBot,
+      color: "text-[#DB2777]",
+      bgHover: "hover:border-[#DB2777]/30",
+      btnClass: "bg-[#DB2777] text-white hover:bg-white hover:text-black",
+      isExternal: false
     }
   ];
 
