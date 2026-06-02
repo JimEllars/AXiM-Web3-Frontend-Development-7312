@@ -13,6 +13,8 @@ import PageTransition from './components/PageTransition';
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
 import { logTelemetry } from './lib/telemetry';
+import ScrollToTop from './components/ScrollToTop';
+
 
 const Home = React.lazy(() => import('./pages/Home'));
 const Articles = React.lazy(() => import('./pages/Articles'));
@@ -66,6 +68,7 @@ function App() {
       */}
 
       <Chatbot />
+      <ScrollToTop />
       <Header />
       <SystemBreadcrumb />
       <main className="flex-grow pt-8 pb-20 relative z-10">
