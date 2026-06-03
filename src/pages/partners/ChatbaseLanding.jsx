@@ -47,7 +47,7 @@ export default function ChatbaseLanding() {
             Eliminate traditional client-support backlogs completely. Our deployment roadmap with Chatbase empowers enterprise operators to compile unstructured assets (PDF documentation, raw text parameters, nested site maps) and output a firewalled, custom-branded AI chatbot ready to safely capture user data vectors 24/7.
           </p>
           <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
-            Initialize AI Concierge <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
+            Initialize AI Concierge Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
       </section>
@@ -60,21 +60,21 @@ export default function ChatbaseLanding() {
             <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Ingestion Matrix Modalities</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-[#DB2777]/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-[#DB2777] text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuFileSpreadsheet} className="w-4 h-4" /> 01 // Unstructured Data
                </div>
                <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Document Processing</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Directly ingest raw internal text data. Upload operational guidelines, policy logs, and pricing data loops to construct explicit behavioral models without code parameters.</p>
              </div>
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-[#DB2777]/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-[#DB2777] text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuGlobe} className="w-4 h-4" /> 02 // Automated Scraping
                </div>
                <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Recursive URL Crawling</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Input your target domain path and let the system parse every public endpoint automatically. The chat architecture dynamically updates its reference map whenever your front-end content evolves.</p>
              </div>
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-[#DB2777]/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-[#DB2777] text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuSparkles} className="w-4 h-4" /> 03 // Conversion Framing
                </div>
