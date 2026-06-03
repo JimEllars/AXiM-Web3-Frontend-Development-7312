@@ -26,6 +26,20 @@ export default {
       borderColor: {
         'subtle': 'rgba(255, 255, 255, 0.1)',
         'active': 'rgba(255, 255, 255, 0.25)',
+      },
+      keyframes: {
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px) translateX(-50%)' },
+          '100%': { opacity: '1', transform: 'translateY(0) translateX(-50%)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        }
+      },
+      animation: {
+        'fade-in-up': 'fade-in-up 0.3s ease-out forwards',
+        'fade-in': 'fade-in 0.3s ease-out forwards',
       }
     },
   },
