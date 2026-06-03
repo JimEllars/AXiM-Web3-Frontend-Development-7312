@@ -50,22 +50,63 @@ export default function NdaGeneratorLanding() {
       </section>
 
       {/* Architecture Matrix */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto px-6 py-24">
         <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
           <SafeIcon icon={LuIcons.LuSettings} className="w-6 h-6 text-axim-purple" />
           <h2 className="text-2xl font-black uppercase tracking-tighter text-white">System Capabilities</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="bg-[#0F172A] border border-white/5 p-8 rounded-sm shadow-xl">
-             <SafeIcon icon={LuIcons.LuScale} className="w-6 h-6 text-zinc-400 mb-4" />
-             <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Symmetric Protection</h3>
-             <p className="text-xs text-zinc-400 leading-relaxed">Unlike predatory one-way NDAs, our generator structures clauses that equally protect both parties, facilitating faster trust and signature acquisition.</p>
+           <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
+               <SafeIcon icon={LuIcons.LuScale} className="w-4 h-4" /> 01 // Fairness Standard
+             </div>
+             <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Symmetric Protection</h3>
+             <p className="text-xs text-zinc-400 leading-relaxed">Unlike predatory one-way NDAs, our generator structures clauses that equally protect both parties, facilitating faster trust and signature acquisition during negotiations.</p>
            </div>
-           <div className="bg-[#0F172A] border border-white/5 p-8 rounded-sm shadow-xl">
-             <SafeIcon icon={LuIcons.LuFileCode2} className="w-6 h-6 text-zinc-400 mb-4" />
-             <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Instant Extraction</h3>
-             <p className="text-xs text-zinc-400 leading-relaxed">Input your entity parameters and instantly extract a legally formatted, print-ready document tailored to modern software interactions.</p>
+           <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
+               <SafeIcon icon={LuIcons.LuFileCode2} className="w-4 h-4" /> 02 // Rapid Deployment
+             </div>
+             <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Instant Extraction</h3>
+             <p className="text-xs text-zinc-400 leading-relaxed">Input your entity parameters and instantly extract a legally formatted, print-ready document tailored specifically to modern software and intellectual property interactions.</p>
            </div>
+        </div>
+      </section>
+
+      {/* Enterprise Use Cases */}
+      <section className="bg-[#0F172A] border-y border-white/10 py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-4">When To Use A Mutual NDA</h2>
+            <p className="text-zinc-400 max-w-2xl mx-auto text-sm">Common scenarios where reciprocal protection is mandatory.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="flex gap-6">
+               <SafeIcon icon={LuIcons.LuBriefcase} className="w-8 h-8 text-axim-purple shrink-0" />
+               <div>
+                 <h4 className="text-white font-black uppercase tracking-widest text-sm mb-2">Joint Ventures & Mergers</h4>
+                 <p className="text-zinc-400 text-xs leading-relaxed">Before sharing financial records, customer lists, or proprietary algorithms with a potential partner, ensure both sides are legally bound to absolute confidentiality.</p>
+               </div>
+            </div>
+            <div className="flex gap-6">
+               <SafeIcon icon={LuIcons.LuCode} className="w-8 h-8 text-axim-purple shrink-0" />
+               <div>
+                 <h4 className="text-white font-black uppercase tracking-widest text-sm mb-2">Contractor Onboarding</h4>
+                 <p className="text-zinc-400 text-xs leading-relaxed">When hiring external development teams or marketing agencies, protect your trade secrets while simultaneously giving them the confidence that their bespoke strategies are safe with you.</p>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final Conversion Block */}
+      <section className="py-24 relative overflow-hidden bg-black text-center">
+        <div className="max-w-3xl mx-auto px-6 relative z-10">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Secure Your Data. <br/>Move Faster.</h2>
+          <p className="text-zinc-400 text-sm mb-10">Don't let legal friction slow down your deals. Generate a standard, fair agreement in under 60 seconds.</p>
+          <button className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+            Initialize Document <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
+          </button>
         </div>
       </section>
     </div>
