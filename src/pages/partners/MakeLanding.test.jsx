@@ -17,6 +17,6 @@ describe('MakeLanding Component', () => {
         </MemoryRouter>
       </HelmetProvider>
     );
-    expect(screen.getByText(/Scale Operations/i)).toBeInTheDocument();
+    expect(screen.getByText(/Infinite Logic Loop/i)).toBeInTheDocument();
   });
 });
