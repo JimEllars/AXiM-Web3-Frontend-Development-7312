@@ -89,7 +89,7 @@ export default function PayStubLanding() {
                </div>
             </div>
             <div className="flex gap-6">
-               <SafeIcon icon={LuIcons.LuUserCircle} className="w-8 h-8 text-[#DB2777] shrink-0" />
+               <SafeIcon icon={LuIcons.LuUser} className="w-8 h-8 text-[#DB2777] shrink-0" />
                <div>
                  <h4 className="text-white font-black uppercase tracking-widest text-sm mb-2">Independent Contractors</h4>
                  <p className="text-zinc-400 text-xs leading-relaxed">Freelancers and 1099 contractors often need to verify their income when securing housing or applying for loans. Synthesize your scattered invoices into a single, standardized proof-of-income document.</p>

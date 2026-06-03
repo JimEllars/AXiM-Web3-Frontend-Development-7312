@@ -29,16 +29,17 @@ export default function Header() {
       name: 'Partners',
       path: '/partners',
       dropdown: [
+        // Prioritized Layout: Make -> Chatbase -> Powur Solar -> Powur Agency (Hidden from main nav per strategy)
         { name: 'Make.com Automation', path: '/partners/make', icon: LuIcons.LuCpu, color: 'text-axim-purple' },
         { name: 'Chatbase AI', path: '/partners/chatbase', icon: LuIcons.LuBot, color: 'text-[#DB2777]' },
-        { name: 'Powur Solar (Home)', path: '/partners/powur-solar', icon: LuIcons.LuSun, color: 'text-axim-gold' },
-        { name: 'Powur Agency (B2B)', path: '/partners/powur-join', icon: LuIcons.LuBriefcase, color: 'text-axim-purple' }
+        { name: 'Powur Solar (Home)', path: '/partners/powur-solar', icon: LuIcons.LuSun, color: 'text-axim-gold' }
       ]
     },
     {
       name: 'Tools',
       path: '/tools',
       dropdown: [
+        // Prioritized Layout: Demand Letter / NDA -> Pay Stub
         { name: 'Mutual NDA Generator', path: '/tools/nda', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
         { name: 'Pay Stub System', path: '/tools/paystub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
       ]
@@ -58,14 +59,13 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
 
-        {/* Brand Logo */}
+        {/* Brand Logo Integration */}
         <Link to="/" className="flex items-center gap-3 group z-50">
-          <div className="w-8 h-8 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded-sm flex items-center justify-center shadow-[0_0_15px_rgba(147,51,234,0.5)] group-hover:scale-105 transition-transform duration-300">
-            <SafeIcon icon={LuIcons.LuHexagon} className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-black text-white tracking-tighter uppercase">
-            AXiM <span className="text-zinc-500 font-normal">Systems</span>
-          </span>
+          <img
+            src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+            alt="AXiM Systems"
+            className="h-8 w-auto object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -91,7 +91,7 @@ export default function Header() {
 
               {/* Desktop Dropdown Mega-Menu */}
               {link.dropdown && activeDropdown === link.name && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-64 animate-\[fade-in-up_0.3s_ease-out_forwards\]">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-64 animate-fade-in-up">
                   <div className="bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl p-2 flex flex-col gap-1 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-axim-purple/5 blur-[30px] pointer-events-none" />
 
