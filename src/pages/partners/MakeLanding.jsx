@@ -46,7 +46,7 @@ export default function MakeLanding() {
             Accelerate system development by bypassing legacy code constraints. Our prioritized integration with Make.com allows operators to link external tools, handle webhooks natively, and deploy recursive micro-service arrays through an intuitive, production-ready drag-and-drop canvas.
           </p>
           <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
-            Deploy Automation Engine <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
+            Deploy Automation Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
       </section>
@@ -59,21 +59,21 @@ export default function MakeLanding() {
             <h2 className="text-2xl font-black uppercase tracking-tighter text-white">System Layout Vectors</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuActivity} className="w-4 h-4" /> 01 // Real-Time Routing
                </div>
                <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Asynchronous Webhooks</h3>
-               <p className="text-xs text-zinc-400 leading-relaxed">Catch data envelopes instantly via native HTTP post triggers. Distribute structural data across custom internal tracking endpoints with sub-second latency constraints.</p>
+               <p className="text-xs text-zinc-400 leading-relaxed">Catch data envelopes instantly via instant HTTP post triggers. Distribute structural data across custom internal tracking endpoints with sub-second latency constraints.</p>
              </div>
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuBinary} className="w-4 h-4" /> 02 // Logic Branching
                </div>
                <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Deterministic Routing</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Establish strict logic controls using inline variable assessment. Transform strings, calculate math structures, and execute alternate pathways flawlessly on the fly.</p>
              </div>
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl">
                <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4" /> 03 // Fault Resistance
                </div>
