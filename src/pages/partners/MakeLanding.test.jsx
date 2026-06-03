@@ -17,6 +17,6 @@ describe('MakeLanding Component', () => {
         </MemoryRouter>
       </HelmetProvider>
     );
-    expect(screen.getByText(/Infinite Logic Loop/i)).toBeInTheDocument();
+    expect(screen.getByText(/Why Make Outperforms The Competition/i)).toBeInTheDocument();
   });
 });
