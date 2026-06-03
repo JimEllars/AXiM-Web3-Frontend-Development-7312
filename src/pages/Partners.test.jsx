@@ -25,26 +25,27 @@ describe('Partners Page Component', () => {
       </MemoryRouter>
     );
 
-    // Assert main headings and texts from the new collage
-    expect(screen.getAllByText(/Curated by AXiM/i)).toBeTruthy();
-    expect(screen.getAllByText(/World-Class/i)).toBeTruthy();
-    expect(screen.getAllByText(/Solutions./i)).toBeTruthy();
+    // Assert main headings and texts from the new structure
+    expect(screen.getAllByText(/The AXiM/i)).toBeTruthy();
+    expect(screen.getAllByText(/Network./i)).toBeTruthy();
 
     // Make.com
-    expect(screen.getAllByText(/Automate Everything./i)).toBeTruthy();
-    expect(screen.getAllByText(/No Coding Required./i)).toBeTruthy();
+    expect(screen.getAllByText(/Make.com Automation/i)).toBeTruthy();
 
     // Powur Solar
-    expect(screen.getAllByText(/Powur Solar/i)).toBeTruthy();
-    expect(screen.getAllByText(/Decentralize Your/i)).toBeTruthy();
+    expect(screen.getAllByText(/Powur Residential Solar/i)).toBeTruthy();
 
     // Powur Agency
-    expect(screen.getAllByText(/Powur Agency/i)).toBeTruthy();
-    expect(screen.getAllByText(/Scale A Cloud/i)).toBeTruthy();
+    expect(screen.getAllByText(/Powur Agency Partnership/i)).toBeTruthy();
 
     // Verify Links
-    expect(screen.getByRole('link', { name: /Explore Make/i }).getAttribute('href')).toBe('/partners/make');
-    expect(screen.getByRole('link', { name: /Calculate Savings/i }).getAttribute('href')).toBe('/partners/powur-solar');
-    expect(screen.getByRole('link', { name: /Start Selling/i }).getAttribute('href')).toBe('/partners/powur-join');
+    const links = screen.getAllByRole('link');
+    const makeLinks = links.filter(l => l.getAttribute('href') === '/partners/make');
+    const powurSolarLinks = links.filter(l => l.getAttribute('href') === '/partners/powur-solar');
+    const powurAgencyLinks = links.filter(l => l.getAttribute('href') === '/partners/powur-join');
+
+    expect(makeLinks.length).toBeGreaterThan(0);
+    expect(powurSolarLinks.length).toBeGreaterThan(0);
+    expect(powurAgencyLinks.length).toBeGreaterThan(0);
   });
 });
