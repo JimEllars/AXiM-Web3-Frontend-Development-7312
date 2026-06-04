@@ -43,6 +43,43 @@ export default function Article() {
     };
 
     loadContent();
+
+  // Fallback image string if article lacks a featured image
+  const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+
+  // Extract clean text from excerpt for schema descriptions
+  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || "AXiM Systems Intelligence Briefing";
+
+  // Construct rigorous AIO/SEO NewsArticle Schema
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": window.location.href
+    },
+    "headline": article.title?.rendered || "AXiM Systems Article",
+    "description": cleanExcerpt,
+    "image": [
+      imageUrl || defaultImage
+    ],
+    "datePublished": article.date,
+    "dateModified": article.modified || article.date,
+    "author": {
+      "@type": "Organization",
+      "name": "AXiM Systems Editorial",
+      "url": "https://axim.us.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AXiM Systems",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+      }
+    }
+  };
+
     return () => { isMounted = false; };
   }, [slug]);
 
@@ -63,10 +100,11 @@ export default function Article() {
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
         title={`${article.title?.rendered || 'Article'} | AXiM Systems`}
-        description={article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || "AXiM Systems Intelligence Briefing"}
-        image={imageUrl}
+        description={cleanExcerpt}
+        image={imageUrl || defaultImage}
         type="article"
         url={window.location.href}
+        customSchema={[articleSchema]}
       />
 
       {/* Hero Header with Multi-Color Overlay */}
