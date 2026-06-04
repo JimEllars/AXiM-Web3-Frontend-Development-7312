@@ -29,7 +29,7 @@ export default function Header() {
       name: 'Tools',
       path: '/tools',
       dropdown: [
-        { name: 'Mutual NDA Generator', path: '/tools/nda', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
+        { name: 'Quick Demand Letter', path: '/tools/nda', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
         { name: 'Pay Stub System', path: '/tools/paystub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
       ]
     },

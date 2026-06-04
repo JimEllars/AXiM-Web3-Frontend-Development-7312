@@ -44,6 +44,23 @@ export default function Article() {
 
     loadContent();
 
+    return () => { isMounted = false; };
+  }, [slug]);
+
+  if (isLoading) return <GlobalLoader />;
+
+  // EMERGENCY SHIELD: Prevent fatal TypeError by intercepting null state during async fetch
+  if (!article) {
+    return (
+      <div className="min-h-screen bg-bg-void pt-32 px-6 flex justify-center items-start">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="w-12 h-12 border-4 border-[#004040]/30 border-t-[#004040] rounded-full animate-spin"></div>
+          <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">Decrypting Protocol...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Fallback image string if article lacks a featured image
   const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
 
@@ -79,18 +96,6 @@ export default function Article() {
       }
     }
   };
-
-    return () => { isMounted = false; };
-  }, [slug]);
-
-  if (isLoading) return <GlobalLoader />;
-  if (!article) return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-void text-white font-mono">
-      <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-6 h-6 text-axim-purple mr-3" />
-      Signal Lost // Article not found.
-    </div>
-  );
-
   const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
