@@ -29,7 +29,7 @@ export default function Header() {
       name: 'Tools',
       path: '/tools',
       dropdown: [
-        { name: 'Quick Demand Letter', path: '/tools/nda', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
+        { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
         { name: 'Pay Stub System', path: '/tools/paystub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
       ]
     },
@@ -101,14 +101,27 @@ export default function Header() {
 
                     {/* Deep-Dive Funnel Links */}
                     {link.dropdown.map((subLink) => (
-                      <Link
-                        key={subLink.name}
-                        to={subLink.path}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-sm transition-colors group/sub"
-                      >
-                        <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color} opacity-70 group-hover/sub:opacity-100 transition-opacity`} />
-                        <span className="text-xs font-bold text-zinc-300 group-hover/sub:text-white transition-colors">{subLink.name}</span>
-                      </Link>
+                      subLink.path.startsWith('http') ? (
+                        <a
+                          key={subLink.name}
+                          href={subLink.path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-sm transition-colors group/sub"
+                        >
+                          <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color} opacity-70 group-hover/sub:opacity-100 transition-opacity`} />
+                          <span className="text-xs font-bold text-zinc-300 group-hover/sub:text-white transition-colors">{subLink.name}</span>
+                        </a>
+                      ) : (
+                        <Link
+                          key={subLink.name}
+                          to={subLink.path}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-sm transition-colors group/sub"
+                        >
+                          <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color} opacity-70 group-hover/sub:opacity-100 transition-opacity`} />
+                          <span className="text-xs font-bold text-zinc-300 group-hover/sub:text-white transition-colors">{subLink.name}</span>
+                        </Link>
+                      )
                     ))}
                   </div>
                 </div>
@@ -154,14 +167,27 @@ export default function Header() {
                   {link.dropdown && activeDropdown === link.name && (
                     <div className="mt-4 flex flex-col gap-3 pl-4 border-l border-[#004040]/50">
                       {link.dropdown.map((subLink) => (
-                        <Link
-                          key={subLink.name}
-                          to={subLink.path}
-                          className="flex items-center gap-3 py-2"
-                        >
-                          <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color}`} />
-                          <span className="text-sm font-bold text-zinc-400 active:text-white">{subLink.name}</span>
-                        </Link>
+                        subLink.path.startsWith('http') ? (
+                          <a
+                            key={subLink.name}
+                            href={subLink.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 py-2"
+                          >
+                            <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color}`} />
+                            <span className="text-sm font-bold text-zinc-400 active:text-white">{subLink.name}</span>
+                          </a>
+                        ) : (
+                          <Link
+                            key={subLink.name}
+                            to={subLink.path}
+                            className="flex items-center gap-3 py-2"
+                          >
+                            <SafeIcon icon={subLink.icon} className={`w-4 h-4 ${subLink.color}`} />
+                            <span className="text-sm font-bold text-zinc-400 active:text-white">{subLink.name}</span>
+                          </Link>
+                        )
                       ))}
                     </div>
                   )}
