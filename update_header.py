@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+with open('src/components/Header.jsx', 'w') as f:
+    f.write("""import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -177,3 +178,4 @@ export default function Header() {
     </header>
   );
 }
+""")
