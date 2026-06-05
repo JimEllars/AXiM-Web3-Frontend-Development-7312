@@ -108,6 +108,28 @@ export default function MakeLanding() {
         </div>
       </section>
 
+      {/* Enterprise FAQ Matrix */}
+      <section className="max-w-4xl mx-auto px-6 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-4">Frequently Asked Questions</h2>
+          <div className="w-12 h-1 bg-axim-purple mx-auto rounded-full" />
+        </div>
+        <div className="space-y-6">
+          <div className="bg-[#050505] border border-white/5 p-6 md:p-8 rounded-sm">
+            <h3 className="text-white font-black text-lg uppercase tracking-tight mb-3 flex items-center gap-3">
+              <SafeIcon icon={LuIcons.LuCode} className="w-5 h-5 text-axim-purple" /> Do I need coding experience?
+            </h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">No. Make utilizes a visual drag-and-drop interface. While understanding basic logic (like IF/THEN statements) is helpful, you can build complex, enterprise-grade architectures without writing a single line of code.</p>
+          </div>
+          <div className="bg-[#050505] border border-white/5 p-6 md:p-8 rounded-sm">
+            <h3 className="text-white font-black text-lg uppercase tracking-tight mb-3 flex items-center gap-3">
+              <SafeIcon icon={LuIcons.LuLock} className="w-5 h-5 text-axim-purple" /> How secure is my transferred data?
+            </h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">Make operates under strict enterprise security protocols, including ISO 27001 and SOC 2 Type 2 compliance. Data in transit is secured using modern TLS encryption, ensuring your operational payloads remain isolated and protected.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Final Conversion Block */}
       <section className="py-24 relative overflow-hidden bg-black text-center">
         <div className="max-w-3xl mx-auto px-6 relative z-10">

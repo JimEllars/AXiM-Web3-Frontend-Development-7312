@@ -110,6 +110,28 @@ export default function ChatbaseLanding() {
         </div>
       </section>
 
+      {/* Enterprise FAQ Matrix */}
+      <section className="max-w-4xl mx-auto px-6 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-4">Frequently Asked Questions</h2>
+          <div className="w-12 h-1 bg-[#DB2777] mx-auto rounded-full" />
+        </div>
+        <div className="space-y-6">
+          <div className="bg-[#050505] border border-white/5 p-6 md:p-8 rounded-sm">
+            <h3 className="text-white font-black text-lg uppercase tracking-tight mb-3 flex items-center gap-3">
+              <SafeIcon icon={LuIcons.LuMessageSquareOff} className="w-5 h-5 text-[#DB2777]" /> Will the AI make up wrong answers?
+            </h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">No. Chatbase allows you to enforce strict "Base Prompts" and boundary guardrails. You can configure the agent to politely decline any queries that fall outside of your uploaded documentation, preventing hallucinations.</p>
+          </div>
+          <div className="bg-[#050505] border border-white/5 p-6 md:p-8 rounded-sm">
+            <h3 className="text-white font-black text-lg uppercase tracking-tight mb-3 flex items-center gap-3">
+              <SafeIcon icon={LuIcons.LuRefreshCw} className="w-5 h-5 text-[#DB2777]" /> How do I update its knowledge?
+            </h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">If you sync your agent to your website URL, it can be set to automatically re-crawl your domain periodically. If you use PDF manuals, simply upload the new version to the Chatbase dashboard and the AI's brain is instantly retrained.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Final Conversion Block */}
       <section className="py-24 relative overflow-hidden bg-black text-center">
         <div className="max-w-3xl mx-auto px-6 relative z-10">
