@@ -175,18 +175,27 @@ export default function Article() {
             </div>
           </div>
 
-          {/* Featured App Promo (Demand Letter) */}
-          <div className="bg-[#050505] border border-axim-gold/30 p-8 rounded-sm shadow-[0_0_30px_rgba(255,234,0,0.05)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-axim-gold/10 blur-[40px] pointer-events-none group-hover:bg-axim-gold/20 transition-colors" />
-            <div className="w-10 h-10 bg-gradient-to-br from-axim-gold to-yellow-600 rounded flex items-center justify-center shadow-[0_0_15px_rgba(255,234,0,0.3)] mb-4 relative z-10">
-               <SafeIcon icon={LuIcons.LuScale} className="w-5 h-5 text-black" />
-            </div>
-            <h3 className="text-lg font-black text-white uppercase tracking-tighter mb-2 relative z-10">Quick Demand Letter</h3>
-            <p className="text-[0.7rem] text-zinc-400 mb-6 leading-relaxed relative z-10 font-mono uppercase tracking-widest">Generate a structurally optimized, formal demand letter in seconds using our autonomous AI. No retainer required.</p>
-            <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="relative z-10 w-full inline-flex justify-center items-center px-4 py-3 bg-axim-gold text-black font-black uppercase tracking-widest text-[0.65rem] hover:bg-white transition-colors rounded-sm shadow-lg">
-               Generate For $4.00 <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
-            </a>
-          </div>
+          {/* Primary Conversion Funnel - Demand Letter Promo */}
+           <div className="bg-gradient-to-br from-[#050505] to-[#0A0A0A] border border-axim-purple/30 p-8 rounded-sm shadow-[0_10px_30px_rgba(147,51,234,0.1)] relative overflow-hidden group hover:border-axim-purple/60 transition-colors">
+             <div className="absolute -top-10 -right-10 w-32 h-32 bg-axim-purple/10 blur-[30px] pointer-events-none group-hover:bg-axim-purple/20 transition-all duration-500" />
+             <div className="flex items-center gap-3 mb-4 relative z-10">
+               <div className="w-8 h-8 bg-axim-purple/20 border border-axim-purple flex items-center justify-center rounded-sm">
+                  <SafeIcon icon={LuIcons.LuScale} className="w-4 h-4 text-axim-purple" />
+               </div>
+               <h3 className="text-white font-black uppercase tracking-widest text-sm">Protect Your Revenue</h3>
+             </div>
+             <p className="text-xs text-zinc-300 leading-relaxed mb-6 font-medium relative z-10">
+               Dealing with unpaid invoices, scope creep, or breach of contract? Skip the slow, expensive legal retainers. Generate a professionally formatted demand letter in minutes to command attention and resolve friction.
+             </p>
+             <a
+               href="https://quickdemandletter.com/start"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="relative z-10 flex items-center justify-center w-full py-4 px-4 bg-axim-purple text-white hover:bg-white hover:text-black text-xs font-black uppercase tracking-widest transition-all rounded-sm shadow-lg"
+             >
+               Start Demand Letter <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-4 h-4" />
+             </a>
+           </div>
 
           {/* Ecosystem Tools */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
