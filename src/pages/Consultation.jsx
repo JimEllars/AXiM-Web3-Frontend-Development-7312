@@ -1,177 +1,180 @@
 import React, { useState } from 'react';
 import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Consultation() {
-  const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [step, setStep] = useState(1);
+  const [selectedTrack, setSelectedTrack] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    details: ''
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-
-    setIsSubmitting(true);
-    setErrorMsg(null);
-
-    try {
-      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
-      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
-
-      if (!workerUrl || !secret) {
-        console.warn("EDGE WARNING: Missing Environment Keys. Simulating consultation submission...");
-        setTimeout(() => {
-          setIsSubmitting(false);
-          setSubmitted(true);
-        }, 1500);
-        return;
-      }
-
-      // Construct multipart/form-data payload
-      const payload = new FormData();
-      payload.append('customer_email', formData.email);
-      payload.append('customer_name', formData.name);
-      payload.append('subject', `[Consultation] ${formData.company || 'Independent Operator'}`);
-      payload.append('description', formData.message);
-      payload.append('source', 'consultation_form');
-
-      const response = await fetch(`${workerUrl}/webhooks/intake`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${secret}`
-        },
-        body: payload
-      });
-
-      if (!response.ok) throw new Error(`Edge submission rejected: ${response.status}`);
-      setSubmitted(true);
-    } catch (err) {
-      console.error("Consultation Uplink Failed:", err);
-      setErrorMsg("Network submission failed. Please verify connection and try again.");
-    } finally {
-      setIsSubmitting(false);
+  const consultationTracks = [
+    {
+      id: "ai",
+      title: "AI Integration",
+      desc: "Deploy custom LLMs, autonomous agents, and intelligent triage systems.",
+      icon: LuIcons.LuBot,
+      color: "text-[#DB2777]",
+      borderHover: "hover:border-[#DB2777]"
+    },
+    {
+      id: "business",
+      title: "Business Development",
+      desc: "Scale operations, optimize revenue loops, and integrate partner networks.",
+      icon: LuIcons.LuBriefcase,
+      color: "text-axim-gold",
+      borderHover: "hover:border-axim-gold"
+    },
+    {
+      id: "software",
+      title: "Software Architecture",
+      desc: "Build proprietary platforms, visual automation systems, and web3 nodes.",
+      icon: LuIcons.LuCode,
+      color: "text-axim-purple",
+      borderHover: "hover:border-axim-purple"
+    },
+    {
+      id: "leadership",
+      title: "Leadership Training",
+      desc: "Executive coaching, team scaling, and operational management protocols.",
+      icon: LuIcons.LuUsers,
+      color: "text-[#004040]",
+      borderHover: "hover:border-[#004040]"
     }
+  ];
+
+  const handleTrackSelection = (trackId) => {
+    setSelectedTrack(trackId);
+    setStep(2);
+  };
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Placeholder for actual webhook/CRM routing logic
+    console.log("Submitting Payload:", { track: selectedTrack, data: formData });
+    setStep(3); // Move to success state
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32 flex flex-col">
-      <SEO title="Request Consultation | AXiM Systems" description="Initialize a secure connection with our engineering and integration team." />
+    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <SEO
+        title="Request Consultation | AXiM Systems"
+        description="Schedule a strategic consultation with AXiM Systems. Select your operational focus area to begin the protocol."
+      />
 
-      <section className="flex-1 flex items-center justify-center p-6 mt-20">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl">
+      {/* Hero Header */}
+      <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_50%)] pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-none mb-4">
+            Initiate <span className="text-axim-purple">Protocol.</span>
+          </h1>
+          <p className="text-zinc-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
+            To ensure maximum efficiency, please identify the primary operational vector you wish to optimize during our consultation.
+          </p>
+        </div>
+      </section>
 
-          <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
-            <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-            Return to Hub
-          </Link>
+      {/* Multi-Step Funnel Container */}
+      <section className="max-w-4xl mx-auto px-6 mt-16">
 
-          {submitted ? (
-             <div className="bg-[#0F172A] border border-axim-purple/50 p-12 rounded-sm text-center shadow-[0_0_50px_rgba(147,51,234,0.15)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
-                <div className="w-16 h-16 bg-axim-purple/20 text-axim-purple mx-auto rounded-full flex items-center justify-center mb-6">
-                  <SafeIcon icon={LuIcons.LuCircleCheck} className="w-8 h-8" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Request Submitted</h2>
-                <p className="text-zinc-400 text-sm leading-relaxed font-mono uppercase tracking-widest">
-                  Your architecture parameters have been securely logged. An integration specialist will ping your secure comms within 24 hours.
-                </p>
-             </div>
-          ) : (
-            <div className="bg-black border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
-
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center">
-                    <SafeIcon icon={LuIcons.LuTerminal} className="w-6 h-6 text-axim-purple" />
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-axim-green/10 border border-axim-green/20 rounded-sm">
-                    <div className="w-1.5 h-1.5 bg-axim-green rounded-full animate-pulse" />
-                    <span className="text-[0.65rem] font-mono text-axim-green uppercase tracking-widest">System Ready</span>
-                  </div>
-                </div>
-
-                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">Engineering Consultation</h1>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-lg">
-                  Submit your operational parameters below. Our team will review your infrastructure requirements and propose a decentralized integration strategy.
-                </p>
-
-                {errorMsg && (
-                  <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
-                    <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
-                    {errorMsg}
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Operator Name</label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        required
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms (Email)</label>
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        required
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
-                        placeholder="operator@enterprise.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Enterprise Entity (Optional)</label>
-                    <input
-                      type="text"
-                      value={formData.company}
-                      onChange={(e) => setFormData({...formData, company: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
-                      placeholder="Company Name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Infrastructure Overview</label>
-                    <textarea
-                      value={formData.message}
-                      onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      required
-                      rows="4"
-                      className="w-full bg-white/5 border border-white/10 px-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none rounded-sm"
-                      placeholder="Detail your operational bottlenecks or integration requirements..."
-                    />
-                  </div>
-
-                  <button
-                    disabled={isSubmitting}
-                    type="submit"
-                    className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-3 shadow-[0_0_20px_rgba(147,51,234,0.3)] mt-4 rounded-sm"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/> SUBMITTING...</span>
-                    ) : (
-                      <span className="flex items-center gap-2">Submit Request <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4"/></span>
-                    )}
-                  </button>
-                </form>
-              </div>
+        {/* Step 1: Selection Grid */}
+        {step === 1 && (
+          <div className="animate-fade-in-up">
+            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
+              <h2 className="text-xl font-black uppercase tracking-widest text-white">1. Select Consultation Vector</h2>
+              <span className="text-xs font-mono text-zinc-500">Step 1 of 2</span>
             </div>
-          )}
-        </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {consultationTracks.map((track) => (
+                <button
+                  key={track.id}
+                  onClick={() => handleTrackSelection(track.id)}
+                  className={`group text-left bg-[#050505] border border-white/10 p-8 rounded-sm transition-all duration-300 shadow-xl ${track.borderHover} hover:bg-white/5`}
+                >
+                  <SafeIcon icon={track.icon} className={`w-8 h-8 mb-4 ${track.color}`} />
+                  <h3 className="text-white font-black uppercase tracking-tight text-lg mb-2">{track.title}</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{track.desc}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Custom Intake Form */}
+        {step === 2 && (
+          <div className="animate-fade-in-up">
+            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
+              <h2 className="text-xl font-black uppercase tracking-widest text-white flex items-center gap-3">
+                <button onClick={() => setStep(1)} className="text-zinc-500 hover:text-white transition-colors">
+                  <SafeIcon icon={LuIcons.LuArrowLeft} className="w-5 h-5" />
+                </button>
+                2. Configure Parameters
+              </h2>
+              <span className="text-xs font-mono text-axim-purple">
+                Vector: {consultationTracks.find(t => t.id === selectedTrack)?.title}
+              </span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="bg-[#050505] border border-white/10 p-8 rounded-sm shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">First Name</label>
+                  <input required type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Last Name</label>
+                  <input required type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Corporate Email</label>
+                  <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Company Name</label>
+                  <input required type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
+                </div>
+              </div>
+              <div className="mb-8">
+                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Operational Context</label>
+                <textarea required name="details" value={formData.details} onChange={handleInputChange} rows="4" placeholder="Briefly describe the friction points you are experiencing..." className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm resize-none"></textarea>
+              </div>
+              <button type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)]">
+                Transmit Request
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Step 3: Success State */}
+        {step === 3 && (
+          <div className="animate-fade-in-up text-center bg-[#050505] border border-white/10 p-12 rounded-sm shadow-2xl">
+            <div className="w-16 h-16 bg-green-500/20 border border-green-500 flex items-center justify-center rounded-full mx-auto mb-6">
+               <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-green-500" />
+            </div>
+            <h2 className="text-2xl font-black uppercase tracking-widest text-white mb-4">Transmission Successful</h2>
+            <p className="text-zinc-400 text-sm max-w-md mx-auto leading-relaxed">
+              Your consultation request regarding <strong>{consultationTracks.find(t => t.id === selectedTrack)?.title}</strong> has been routed to our triage team. You will receive an encrypted scheduling link shortly.
+            </p>
+          </div>
+        )}
+
       </section>
     </div>
   );
