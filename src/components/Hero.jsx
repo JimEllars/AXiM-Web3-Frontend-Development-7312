@@ -54,7 +54,7 @@ export default function Hero() {
         </div>
 
         <h1 className="text-[clamp(3rem,8vw,6.5rem)] leading-none font-black tracking-[-0.04em] mb-6 uppercase">
-          Smarter<br className="hidden md:block" />
+          Work Smarter<br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-purple to-[#DB2777]"> Systems</span>
         </h1>
 

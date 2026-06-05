@@ -45,7 +45,7 @@ describe('Home Page Component', () => {
     );
 
     // Verify Hero section
-    assert.ok(screen.queryAllByText(/Smarter/i).length > 0);
+    assert.ok(screen.queryAllByText(/Work Smarter/i).length > 0);
     assert.ok(screen.queryAllByText(/Systems/i).length > 0);
     assert.ok(screen.queryAllByText(/Access On-Demand Templates & Tools without Breaking the Bank/i).length > 0);
 

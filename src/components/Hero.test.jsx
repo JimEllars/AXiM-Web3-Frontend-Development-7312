@@ -32,7 +32,7 @@ describe('Hero Component', () => {
     );
 
     // Check main title
-    assert.ok(screen.getByText(/Smarter/));
+    assert.ok(screen.getByText(/Work Smarter/));
     assert.ok(screen.getAllByText(/Systems/)[0]);
 
     // Check description
