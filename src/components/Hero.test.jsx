@@ -38,7 +38,7 @@ describe('Hero Component', () => {
     assert.ok(screen.getAllByText(/Smarter/)[0]);
 
     // Check description paragraph
-    assert.ok(screen.getByText(/Architecting decentralized infrastructure/));
+    assert.ok(screen.getByText(/Articles, Ai Tools, & Learning Systems/));
 
     // Check CTA buttons exist
     assert.ok(screen.getByText(/Initiate Protocol/));

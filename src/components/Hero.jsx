@@ -25,8 +25,8 @@ export default function Hero() {
         </h1>
 
         {/* Subheadline */}
-        <p className="max-w-2xl text-sm md:text-base text-zinc-400 leading-relaxed mb-12 font-medium animate-fade-in-up animation-delay-200">
-          Architecting decentralized infrastructure, visual automation frameworks, and custom AI systems to eliminate operational friction and scale enterprise revenue.
+        <p className="max-w-2xl text-base md:text-lg text-zinc-400 leading-relaxed mb-12 font-medium animate-fade-in-up animation-delay-200 uppercase tracking-widest">
+          Articles, Ai Tools, & Learning Systems
         </p>
 
         {/* CTAs */}
