@@ -68,3 +68,9 @@ body {
 .animate-marquee {
   animation: aximScroll 40s linear infinite;
 }
+@layer utilities {
+  /* Enforce contrast for Phthalo Green text on dark backgrounds */
+  .text-\\[\\#004040\\] {
+    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4);
+  }
+}
