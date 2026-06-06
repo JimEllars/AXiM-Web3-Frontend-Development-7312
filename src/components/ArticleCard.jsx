@@ -17,32 +17,32 @@ export default function ArticleCard({ article, index = 0 }) {
   const rawExcerpt = article.excerpt?.rendered || "";
   const cleanExcerpt = rawExcerpt.replace(/<[^>]+>/g, '').split(' ').slice(0, 20).join(' ') + '...';
 
-  // Dynamic Tri-Color Overlay Logic
+  // Explicit static tailwind strings prevent JIT purging.
   // 0 = Dark Royal Blue, 1 = AXiM Purple, 2 = Phthalo Green
-  const colorCycle = index % 3;
-  let overlayGradient = "";
+  const overlayClasses = [
+    "from-[#1E3A8A] to-[#050505]",
+    "from-axim-purple to-[#050505]",
+    "from-[#004040] to-[#050505]"
+  ];
 
-  if (colorCycle === 0) {
-    overlayGradient = "from-[#1E3A8A]/80 to-transparent"; // Dark Royal Blue
-  } else if (colorCycle === 1) {
-    overlayGradient = "from-axim-purple/80 to-transparent"; // AXiM Purple
-  } else {
-    overlayGradient = "from-[#004040]/80 to-transparent"; // Phthalo Green
-  }
+  const activeOverlay = overlayClasses[index % 3];
 
   return (
     <article className="group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col h-full relative">
 
-      {/* Dynamic Image Overlay Container */}
-      <div className="relative w-full aspect-video overflow-hidden bg-zinc-900 border-b border-white/10">
+      {/* Image Container */}
+      <div className="relative w-full aspect-video overflow-hidden bg-[#050505] border-b border-white/10">
+
+        {/* Base Image (Grayscale applied natively) */}
         <img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
+          className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
           loading="lazy"
         />
-        {/* Tri-Color Gradient Overlay (Fixed Blend Mode) */}
-        <div className={`absolute inset-0 bg-gradient-to-t ${overlayGradient} opacity-60 group-hover:opacity-20 transition-opacity duration-500`} />
+
+        {/* Restored Vibrant Color Overlay (No Multiply Blend) */}
+        <div className={`absolute inset-0 bg-gradient-to-t ${activeOverlay} opacity-80 group-hover:opacity-10 transition-opacity duration-500`} />
 
         <div className="absolute top-4 left-4 z-10">
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm">
@@ -51,9 +51,9 @@ export default function ArticleCard({ article, index = 0 }) {
         </div>
       </div>
 
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col flex-grow relative z-10 bg-[#050505]">
         <h2
-          className="text-lg font-black uppercase tracking-tight text-white mb-3 line-clamp-2 group-hover:text-axim-purple transition-colors leading-tight"
+          className="text-lg font-black uppercase tracking-tight text-white mb-3 line-clamp-2 group-hover:text-white transition-colors leading-tight"
           dangerouslySetInnerHTML={{ __html: article.title?.rendered }}
         />
 
@@ -63,9 +63,9 @@ export default function ArticleCard({ article, index = 0 }) {
 
         <Link
           to={`/article/${article.slug}`}
-          className="mt-auto inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-white hover:text-axim-purple transition-colors pt-4 border-t border-white/5 w-full"
+          className="mt-auto inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors pt-4 border-t border-white/5 w-full group/link"
         >
-          Access Briefing <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1" />
+          Access Briefing <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3 transition-transform group-hover/link:translate-x-1" />
         </Link>
       </div>
     </article>
