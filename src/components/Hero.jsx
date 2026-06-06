@@ -6,28 +6,28 @@ import BackgroundEffects from './BackgroundEffects';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-bg-void pt-20 w-full">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-bg-void pt-20">
       <BackgroundEffects />
       
       {/* Absolute Centering Wrapper */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center">
 
         {/* Status Badge */}
-        <div className="inline-flex items-center justify-center space-x-2 px-4 py-1.5 bg-white/5 border border-white/10 text-[0.65rem] font-mono uppercase tracking-widest text-zinc-400 mb-8 rounded-sm backdrop-blur-sm animate-fade-in-up">
+        <div className="flex items-center justify-center space-x-2 px-4 py-1.5 bg-white/5 border border-white/10 text-[0.65rem] font-mono uppercase tracking-widest text-zinc-400 mb-8 rounded-sm backdrop-blur-sm animate-fade-in-up">
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
           <span>AXiM Network Active</span>
         </div>
 
-        {/* Main Headline - Strict Inline-Block Centering */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-[1.1] mb-6 animate-fade-in-up animation-delay-100 w-full text-center mx-auto">
-          Work<br/>
-          <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] mt-2 pb-2">
+        {/* Main Headline - Strict Flexbox Centering (No <br/> tags) */}
+        <h1 className="flex flex-col items-center justify-center w-full text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-[1.1] mb-6 animate-fade-in-up animation-delay-100">
+          <span className="block text-center w-full">Work</span>
+          <span className="block text-center w-full text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] mt-2 pb-2">
             Smarter.
           </span>
         </h1>
 
         {/* Subheadline */}
-        <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
+        <p className="flex justify-center w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
           Articles, Ai Tools, & Learning Systems
         </p>
 

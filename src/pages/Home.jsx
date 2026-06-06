@@ -69,7 +69,9 @@ export default function Home() {
         )}
 
         {/* 2. Featured Category (Safely isolated via parsed exclusion hooks) */}
-        <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
+        <section className="py-24 relative z-10 w-full">
+          <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
+        </section>
 
         {/* 3. Partner Break: Make */}
         <PartnerPromo
@@ -83,7 +85,9 @@ export default function Home() {
         />
 
         {/* 4. Spotlight Category (Strict isolation preventing Daily News leakage) */}
-        <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
+        <section className="py-24 relative z-10 w-full">
+          <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
+        </section>
 
         {/* 5. Partner Break: Powur */}
         <PartnerPromo
@@ -133,7 +137,13 @@ export default function Home() {
         </section>
 
         {/* 7. The Firehose */}
-        <NewsFeed limit={12} title="All Articles" />
+        <section className="py-24 relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
+            <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-white">All Articles</h2>
+          </div>
+          <NewsFeed limit={12} title="All Articles" />
+        </section>
 
         <ProactiveBanner />
         <EngagementGuard />
