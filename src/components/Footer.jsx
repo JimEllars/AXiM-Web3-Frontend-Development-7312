@@ -24,6 +24,17 @@ export default function Footer() {
             <p className="text-zinc-500 text-xs leading-relaxed max-w-xs mb-6 font-mono tracking-widest uppercase">
               Smarter Systems.<br/>Decentralized infrastructure & high-fidelity digital products.
             </p>
+            <div className="flex gap-4 mb-6">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-axim-purple hover:text-white transition-colors">
+                <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#004040] hover:text-white transition-colors">
+                <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
+              </a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#DB2777] hover:text-white transition-colors">
+                <SafeIcon icon={LuIcons.LuGithub} className="w-4 h-4" />
+              </a>
+            </div>
             <Link to="/status" className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-sm text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">
               <div className="w-2 h-2 bg-axim-green rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
               System: Optimal
