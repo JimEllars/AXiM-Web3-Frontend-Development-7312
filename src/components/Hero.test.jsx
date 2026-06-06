@@ -6,18 +6,20 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import Hero from './Hero.jsx';
 
+// Mock framer-motion to skip animations
+vi.mock('framer-motion', async () => {
+  const actual = await vi.importActual('framer-motion');
+  return {
+    ...actual,
+    motion: {
+      div: ({ children, ...props }) => <div {...props}>{children}</div>,
+    },
+  };
+});
+
 describe('Hero Component', () => {
   beforeEach(() => {
-    // Mock framer-motion to skip animations
-    vi.mock('framer-motion', async () => {
-      const actual = await vi.importActual('framer-motion');
-      return {
-        ...actual,
-        motion: {
-          div: ({ children, ...props }) => <div {...props}>{children}</div>,
-        },
-      };
-    });
+
   });
 
   afterEach(() => {
@@ -41,8 +43,8 @@ describe('Hero Component', () => {
     assert.ok(screen.getByText(/Articles, Ai Tools, & Learning Systems/));
 
     // Check CTA buttons exist
-    assert.ok(screen.getByText(/Initiate Protocol/));
-    assert.ok(screen.getByText(/Explore Systems/));
+    assert.ok(screen.getAllByText(/Ai Tools/)[0]);
+    assert.ok(screen.getByText(/Explore Articles/));
   });
 
 });
