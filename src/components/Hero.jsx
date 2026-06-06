@@ -9,7 +9,7 @@ export default function Hero() {
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-bg-void pt-20">
       <BackgroundEffects />
       
-      {/* Absolute Centering Wrapper */}
+      {/* Absolute Centering Wrapper - Strict w-full and flex-col */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center">
 
         {/* Status Badge */}
@@ -18,16 +18,18 @@ export default function Hero() {
           <span>AXiM Network Active</span>
         </div>
 
-        {/* Main Headline - Strict Flexbox Centering (No <br/> tags) */}
-        <h1 className="flex flex-col items-center justify-center w-full text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-[1.1] mb-6 animate-fade-in-up animation-delay-100">
-          <span className="block text-center w-full">Work</span>
-          <span className="block text-center w-full text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] mt-2 pb-2">
-            Smarter.
-          </span>
-        </h1>
+        {/* Bulletproof Centered Headline */}
+        <div className="w-full flex flex-col items-center justify-center text-center animate-fade-in-up animation-delay-100 mb-6">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] m-0 p-0 flex flex-col items-center justify-center w-full">
+            <span className="block text-white w-full text-center">Work</span>
+            <span className="block w-full text-center text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] pb-2">
+              Smarter.
+            </span>
+          </h1>
+        </div>
 
         {/* Subheadline */}
-        <p className="flex justify-center w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
+        <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
           Articles, Ai Tools, & Learning Systems
         </p>
 
