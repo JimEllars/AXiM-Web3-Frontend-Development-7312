@@ -17,15 +17,15 @@ export default function ArticleCard({ article, index = 0 }) {
   const rawExcerpt = article.excerpt?.rendered || "";
   const cleanExcerpt = rawExcerpt.replace(/<[^>]+>/g, '').split(' ').slice(0, 20).join(' ') + '...';
 
-  // Explicit static tailwind strings prevent JIT purging.
+  // JIT-Proof Inline CSS Gradients
   // 0 = Dark Royal Blue, 1 = AXiM Purple, 2 = Phthalo Green
-  const overlayClasses = [
-    "from-[#1E3A8A] to-[#050505]",
-    "from-axim-purple to-[#050505]",
-    "from-[#004040] to-[#050505]"
+  const overlayGradients = [
+    "linear-gradient(to top, rgba(30, 58, 138, 0.95), rgba(5, 5, 5, 0.1))",   // Royal Blue
+    "linear-gradient(to top, rgba(147, 51, 234, 0.95), rgba(5, 5, 5, 0.1))",  // Purple
+    "linear-gradient(to top, rgba(0, 64, 64, 0.95), rgba(5, 5, 5, 0.1))"      // Phthalo Green
   ];
 
-  const activeOverlay = overlayClasses[index % 3];
+  const activeGradient = overlayGradients[index % 3];
 
   return (
     <article className="group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col h-full relative">
@@ -41,11 +41,14 @@ export default function ArticleCard({ article, index = 0 }) {
           loading="lazy"
         />
 
-        {/* Restored Vibrant Color Overlay (No Multiply Blend) */}
-        <div className={`absolute inset-0 bg-gradient-to-t ${activeOverlay} opacity-80 group-hover:opacity-10 transition-opacity duration-500`} />
+        {/* JIT-Proof Color Overlay */}
+        <div
+          className="absolute inset-0 z-10 transition-opacity duration-500 opacity-90 group-hover:opacity-20"
+          style={{ backgroundImage: activeGradient }}
+        />
 
-        <div className="absolute top-4 left-4 z-10">
-          <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm">
+        <div className="absolute top-4 left-4 z-20">
+          <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
             {date}
           </span>
         </div>
