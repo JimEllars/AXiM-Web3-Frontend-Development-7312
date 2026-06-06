@@ -18,14 +18,17 @@ export default function Hero() {
           <span>AXiM Network Active</span>
         </div>
 
-        {/* Bulletproof Centered Headline */}
-        {/* Using w-fit on the children forces the bounding box to match the text, allowing items-center to work perfectly */}
-        <h1 className="flex flex-col items-center justify-center w-full text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] mb-6 animate-fade-in-up animation-delay-100 text-center">
-          <span className="w-fit text-white text-center">Work</span>
-          <span className="w-fit text-center text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] pb-2 mt-1">
-            Smarter.
-          </span>
-        </h1>
+        {/* Bulletproof Centered Headline - Animation Isolated from Flex Container */}
+        <div className="w-full flex flex-col items-center justify-center text-center mb-6">
+          <div className="animate-fade-in-up animation-delay-100 w-full flex flex-col items-center justify-center">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] m-0 p-0 text-center flex flex-col items-center">
+              <span className="block text-white text-center">Work</span>
+              <span className="block text-center text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] pb-2">
+                Smarter.
+              </span>
+            </h1>
+          </div>
+        </div>
 
         {/* Subheadline */}
         <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">

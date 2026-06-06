@@ -1,5 +1,5 @@
 import ProtectedRoute from './components/ProtectedRoute';
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import GlobalLoader from './components/GlobalLoader';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -16,25 +16,25 @@ import { logTelemetry } from './lib/telemetry';
 import ScrollToTop from './components/ScrollToTop';
 
 
-const Home = React.lazy(() => import('./pages/Home'));
-const Articles = React.lazy(() => import('./pages/Articles'));
-const Tools = React.lazy(() => import('./pages/Tools'));
-const Consultation = React.lazy(() => import('./pages/Consultation'));
-const Support = React.lazy(() => import('./pages/Support'));
-const Partners = React.lazy(() => import('./pages/Partners'));
-const EarlyAccess = React.lazy(() => import('./pages/EarlyAccess'));
-const Profile = React.lazy(() => import('./pages/Profile'));
-const Status = React.lazy(() => import('./pages/Status'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-const NdaGeneratorLanding = React.lazy(() => import('./pages/tools/NdaGeneratorLanding'));
-const Terms = React.lazy(() => import('./pages/Terms'));
-const NotFound = React.lazy(() => import('./pages/NotFound'));
-const Article = React.lazy(() => import('./pages/Article'));
-const PayStubLanding = React.lazy(() => import('./pages/tools/PayStubLanding'));
-const MakeLanding = React.lazy(() => import('./pages/partners/MakeLanding'));
-const PowurSolarLanding = React.lazy(() => import('./pages/partners/PowurSolarLanding'));
-const PowurJoinLanding = React.lazy(() => import('./pages/partners/PowurJoinLanding'));
-const ChatbaseLanding = React.lazy(() => import('./pages/partners/ChatbaseLanding'));
+const Home = lazy(() => import('./pages/Home'));
+const Articles = lazy(() => import('./pages/Articles'));
+const Tools = lazy(() => import('./pages/Tools'));
+const Consultation = lazy(() => import('./pages/Consultation'));
+const Support = lazy(() => import('./pages/Support'));
+const Partners = lazy(() => import('./pages/Partners'));
+const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Status = lazy(() => import('./pages/Status'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
+const Terms = lazy(() => import('./pages/Terms'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Article = lazy(() => import('./pages/Article'));
+const PayStubLanding = lazy(() => import('./pages/tools/PayStubLanding'));
+const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
+const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
+const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
+const ChatbaseLanding = lazy(() => import('./pages/partners/ChatbaseLanding'));
 
 function App() {
   const location = useLocation();
