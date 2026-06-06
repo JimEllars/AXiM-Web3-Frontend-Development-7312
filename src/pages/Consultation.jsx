@@ -89,12 +89,12 @@ export default function Consultation() {
       </section>
 
       {/* Multi-Step Funnel Container */}
-      <section className="max-w-4xl mx-auto px-6 mt-16 w-full flex flex-col items-center">
-        <div className="w-full max-w-3xl mx-auto">
+      <section className="w-full max-w-5xl mx-auto px-6 mt-16 flex flex-col items-center justify-center">
+        <div className="w-full max-w-3xl">
 
         {/* Step 1: Selection Grid */}
         {step === 1 && (
-          <div className="animate-fade-in-up">
+            <div className="animate-fade-in-up w-full">
             <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
               <h2 className="text-xl font-black uppercase tracking-widest text-white">1. Select Consultation Vector</h2>
               <span className="text-xs font-mono text-zinc-500">Step 1 of 2</span>
@@ -118,7 +118,7 @@ export default function Consultation() {
 
         {/* Step 2: Custom Intake Form */}
         {step === 2 && (
-          <div className="animate-fade-in-up">
+          <div className="animate-fade-in-up w-full">
             <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
               <h2 className="text-xl font-black uppercase tracking-widest text-white flex items-center gap-3">
                 <button onClick={() => setStep(1)} className="text-zinc-500 hover:text-white transition-colors">
@@ -165,7 +165,7 @@ export default function Consultation() {
 
         {/* Step 3: Success State */}
         {step === 3 && (
-          <div className="animate-fade-in-up text-center bg-[#050505] border border-white/10 p-12 rounded-sm shadow-2xl">
+          <div className="animate-fade-in-up text-center w-full bg-[#050505] border border-white/10 p-12 rounded-sm shadow-2xl">
             <div className="w-16 h-16 bg-green-500/20 border border-green-500 flex items-center justify-center rounded-full mx-auto mb-6">
                <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-green-500" />
             </div>
