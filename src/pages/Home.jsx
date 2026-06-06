@@ -43,9 +43,29 @@ export default function Home() {
   // Map primitive array indices explicitly to ensure down-stream compliance
   const excludeDailyNews = dailyNews.map(dn => dn.id);
 
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AXiM Systems",
+    "url": "https://axim.us.com/",
+    "description": "Articles, Ai Tools, & Learning Systems for enterprise operations.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "AXiM Systems",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+      }
+    }
+  };
+
   return (
-    <>
-      <SEO title="Smart Systems | AXiM" description="Products and services built to make your life easier without breaking the bank." url="https://axim.us.com/"/>
+    <div className="w-full min-h-screen bg-bg-void relative overflow-x-hidden selection:bg-axim-purple selection:text-white">
+      <SEO
+        title="AXiM Systems | Work Smarter"
+        description="Articles, Ai Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue."
+        customSchema={[homeSchema]}
+      />
       <div className="w-full">
         <Hero />
 
@@ -150,6 +170,6 @@ export default function Home() {
         <Ecosystem />
         <Reviews />
       </div>
-    </>
+    </div>
   );
 }
