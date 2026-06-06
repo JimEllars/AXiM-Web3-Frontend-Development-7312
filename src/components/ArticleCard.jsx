@@ -38,13 +38,13 @@ export default function ArticleCard({ article, index = 0 }) {
         <img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="w-full h-full object-cover grayscale opacity-60 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+          className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
           loading="lazy"
         />
-        {/* Tri-Color Gradient Overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t ${overlayGradient} mix-blend-multiply opacity-80 group-hover:opacity-40 transition-opacity duration-500`} />
+        {/* Tri-Color Gradient Overlay (Fixed Blend Mode) */}
+        <div className={`absolute inset-0 bg-gradient-to-t ${overlayGradient} opacity-60 group-hover:opacity-20 transition-opacity duration-500`} />
 
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 z-10">
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm">
             {date}
           </span>

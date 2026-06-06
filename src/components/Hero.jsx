@@ -17,8 +17,8 @@ export default function Hero() {
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-[0.9] mb-8 animate-fade-in-up animation-delay-100">
-          Work <br/>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-tight mb-8 animate-fade-in-up animation-delay-100 flex flex-col items-center justify-center text-center">
+          <span>Work</span>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777]">
             Smarter.
           </span>

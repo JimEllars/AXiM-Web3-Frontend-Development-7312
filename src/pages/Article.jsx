@@ -151,8 +151,23 @@ export default function Article() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         {/* Article Body */}
-        <article className="lg:col-span-8 prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-axim-purple hover:prose-a:text-white prose-a:transition-colors prose-img:rounded-sm prose-img:border prose-img:border-white/10">
-          <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.content?.rendered)}} />
+        <article className="lg:col-span-8">
+              {/* WordPress Core Content Render (Restored Typography) */}
+              <div
+                className="prose prose-invert prose-zinc max-w-none
+                           prose-headings:font-black prose-headings:tracking-tight
+                           prose-h1:text-white prose-h1:text-3xl md:prose-h1:text-4xl prose-h1:mb-8
+                           prose-h2:text-white prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:border-b prose-h2:border-white/10 prose-h2:pb-4
+                           prose-h3:text-white prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
+                           prose-p:text-zinc-300 prose-p:leading-[1.8] prose-p:text-base md:prose-p:text-lg prose-p:mb-8
+                           prose-a:text-axim-purple prose-a:no-underline prose-a:border-b prose-a:border-axim-purple/50 hover:prose-a:text-white hover:prose-a:border-white transition-colors
+                           prose-strong:text-white prose-strong:font-bold
+                           prose-ul:text-zinc-300 prose-ul:text-base md:prose-ul:text-lg prose-ul:leading-relaxed prose-li:my-3
+                           prose-ol:text-zinc-300 prose-ol:text-base md:prose-ol:text-lg prose-ol:leading-relaxed prose-li:my-3
+                           prose-img:rounded-md prose-img:shadow-2xl prose-img:my-10
+                           prose-blockquote:border-l-4 prose-blockquote:border-axim-purple prose-blockquote:bg-white/5 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-8 prose-blockquote:text-white prose-blockquote:font-medium prose-blockquote:italic prose-blockquote:rounded-r-sm"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content?.rendered || '') }}
+              />
         </article>
 
         {/* Dynamic High-Converting Sidebar */}
