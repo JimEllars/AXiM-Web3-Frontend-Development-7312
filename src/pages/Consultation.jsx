@@ -89,7 +89,8 @@ export default function Consultation() {
       </section>
 
       {/* Multi-Step Funnel Container */}
-      <section className="max-w-4xl mx-auto px-6 mt-16">
+      <section className="max-w-4xl mx-auto px-6 mt-16 w-full flex flex-col items-center">
+        <div className="w-full max-w-3xl mx-auto">
 
         {/* Step 1: Selection Grid */}
         {step === 1 && (
@@ -175,6 +176,7 @@ export default function Consultation() {
           </div>
         )}
 
+        </div>
       </section>
     </div>
   );
