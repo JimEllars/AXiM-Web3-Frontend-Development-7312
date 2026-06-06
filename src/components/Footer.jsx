@@ -30,16 +30,18 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Infrastructure Column */}
+                    {/* Solutions Column */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuCpu} className="text-axim-purple w-4 h-4"/> Offerings
-            </h4>
+            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6">System Ai Tools</h4>
             <ul className="space-y-4">
-              <li><Link to="/tools" className="text-zinc-400 hover:text-axim-purple text-sm transition-colors">Digital Software Suite</Link></li>
-              <li><a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-axim-gold text-sm transition-colors flex items-center gap-2">Demand Letter Engine <SafeIcon icon={LuIcons.LuExternalLink} className="w-3 h-3"/></a></li>
-              <li><Link to="/tools" className="text-zinc-400 hover:text-axim-purple text-sm transition-colors">Enterprise Academy</Link></li>
-              <li><Link to="/articles" className="text-zinc-400 hover:text-axim-purple text-sm transition-colors">Intelligence Briefings</Link></li>
+              <li>
+                <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-400 hover:text-axim-purple transition-colors flex items-center gap-2 group">
+                  Quick Demand Letter <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+              </li>
+              <li><Link to="/tools/nda" className="text-sm text-zinc-400 hover:text-white transition-colors">Mutual NDA Generator</Link></li>
+              <li><Link to="/tools/paystub" className="text-sm text-zinc-400 hover:text-white transition-colors">Pay Stub System</Link></li>
+              <li><Link to="/tools" className="text-sm text-zinc-400 hover:text-[#004040] transition-colors">View All Ai Tools</Link></li>
             </ul>
           </div>
 

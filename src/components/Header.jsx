@@ -23,10 +23,10 @@ export default function Header() {
     setActiveDropdown(null);
   }, [location.pathname]);
 
-  // STRICT ORDERING: Tools -> Articles -> Partners -> Support
+  // STRICT ORDERING: Ai Tools -> Articles -> Partners -> Support
   const navLinks = [
     {
-      name: 'Tools',
+      name: 'Ai Tools',
       path: '/tools',
       dropdown: [
         { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },

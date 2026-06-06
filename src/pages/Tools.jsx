@@ -63,7 +63,7 @@ export default function Tools() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Micro-Apps & Utilities | AXiM Systems"
+        title="Ai Tools & Utilities | AXiM Systems"
         description="Access AXiM's suite of proprietary business micro-apps. Generate legal documentation, standardize payroll, and accelerate your operations."
       />
 
@@ -72,7 +72,7 @@ export default function Tools() {
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
-            System <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-purple to-[#DB2777]">Utilities.</span>
+            System <span className="text-transparent bg-clip-text bg-gradient-to-r from-axim-purple to-[#DB2777]">Ai Tools.</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-10">
             A suite of standalone, proprietary micro-applications engineered to eliminate operational friction and standardize business documentation.
