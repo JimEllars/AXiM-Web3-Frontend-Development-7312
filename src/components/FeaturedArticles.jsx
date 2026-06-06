@@ -60,33 +60,15 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         {title}
       </h2>
 
-      {/* Primary Fibonacci 1+2 Layout Matrix Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-2 gap-4 mb-4">
-        {articles[0] && (
-          <div className="lg:col-span-7 lg:row-span-2 w-full">
-            <ArticleCard article={articles[0]} index={0} isHero={true} />
-          </div>
-        )}
-        {articles[1] && (
-          <div className="lg:col-span-5 lg:row-span-1 w-full">
-            <ArticleCard article={articles[1]} index={1} />
-          </div>
-        )}
-        {articles[2] && (
-          <div className="lg:col-span-5 lg:row-span-1 w-full">
-            <ArticleCard article={articles[2]} index={2} />
-          </div>
-        )}
+      {/* Grid Container */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+        {articles
+          .filter(article => article && article.title && article.title.rendered) // Defensive Null Check
+          .slice(0, 3) // Ensure max of 3 are rendered
+          .map((article, index) => (
+            <ArticleCard key={article.id || index} article={article} index={index} />
+        ))}
       </div>
-
-      {/* Secondary Companion Row */}
-      {articles.length > 3 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {articles.slice(3, 6).map((article, index) => (
-            <ArticleCard key={article.id} article={article} index={index + 3} />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

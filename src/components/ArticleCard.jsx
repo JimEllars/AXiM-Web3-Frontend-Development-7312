@@ -14,7 +14,8 @@ export default function ArticleCard({ article, index = 0 }) {
     year: 'numeric'
   });
 
-  const rawExcerpt = article.excerpt?.rendered || "";
+  // Bulletproof fallback string
+  const rawExcerpt = article.excerpt?.rendered || "AXiM Systems Internal Briefing Data. Secure payload initialized.";
   const cleanExcerpt = rawExcerpt.replace(/<[^>]+>/g, '').split(' ').slice(0, 20).join(' ') + '...';
 
   // JIT-Proof Inline CSS Gradients
@@ -30,14 +31,14 @@ export default function ArticleCard({ article, index = 0 }) {
   return (
     <article className="group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col h-full relative">
 
-      {/* Image Container */}
-      <div className="relative w-full aspect-video overflow-hidden bg-[#050505] border-b border-white/10">
+      {/* Image Container with Fallback Background color */}
+      <div className="relative w-full aspect-video overflow-hidden bg-zinc-800 border-b border-white/10">
 
-        {/* Base Image (Grayscale applied natively) */}
+        {/* Base Image with absolute positioning */}
         <img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+          className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 bg-[#0F172A]"
           loading="lazy"
         />
 
