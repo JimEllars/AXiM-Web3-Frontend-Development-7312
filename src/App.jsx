@@ -36,6 +36,23 @@ const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'
 const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
 const ChatbaseLanding = lazy(() => import('./pages/partners/ChatbaseLanding'));
 
+
+
+// --- NEW: Global Analytics Route Tracker ---
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', 'G-620C96FBF3', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   const location = useLocation();
   const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
@@ -61,6 +78,7 @@ function App() {
 
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
+      <AnalyticsTracker />
       <BackgroundEffects />
 
       {/* CRITICAL FIX:
