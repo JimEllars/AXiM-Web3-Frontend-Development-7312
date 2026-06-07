@@ -85,6 +85,7 @@ export default function Support() {
     }
   };
 
+
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="System Support | AXiM Systems" description="Access operational support, system documentation, and submit encrypted terminal tickets." />
@@ -116,8 +117,9 @@ export default function Support() {
           <div className="w-full bg-[#050505] border border-white/5 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#004040]/10 blur-[50px] pointer-events-none" />
 
+            {/* UPDATED: Changed from "Terminal Intake" to "Request Support" */}
             <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuSquareTerminal} className="w-6 h-6 text-[#004040]" /> Terminal Intake
+              <SafeIcon icon={LuIcons.LuSquareTerminal} className="w-6 h-6 text-[#004040]" /> Request Support
             </h2>
 
             {ticketState === 'error' && (
@@ -143,20 +145,23 @@ export default function Support() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleTicketSubmit} className="w-full space-y-6 animate-fade-in-up">
+              <form onSubmit={handleTicketSubmit} className="w-full space-y-6 animate-fade-in-up relative z-10">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="w-full">
-                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Registered Name</label>
+                    {/* UPDATED: "Registered Name" -> "Name" */}
+                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Name</label>
                     <input required type="text" name="customer_name" value={formData.customer_name} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm" />
                   </div>
                   <div className="w-full">
-                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Secure Email</label>
+                    {/* UPDATED: "Secure Email" -> "Email" */}
+                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Email</label>
                     <input required type="email" name="customer_email" value={formData.customer_email} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm" />
                   </div>
                 </div>
 
                 <div className="w-full">
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">System Sector</label>
+                  {/* UPDATED: "System Sector" -> "I need Help With:" */}
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">I need Help With:</label>
                   <select name="subject" value={formData.subject} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm appearance-none">
                     <option value="Demand Letter Generation">Quick Demand Letter</option>
                     <option value="Partner Auth Issue">Partner Integrations</option>
@@ -166,8 +171,26 @@ export default function Support() {
                 </div>
 
                 <div className="w-full">
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Diagnostic Log / Issue Description</label>
+                  {/* UPDATED: "Diagnostic Log / Issue Description" -> "Describe Your Problem:" */}
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Describe Your Problem:</label>
                   <textarea required name="description" value={formData.description} onChange={handleInputChange} rows="5" className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm resize-none"></textarea>
+                </div>
+
+                {/* NEW: Attachment Upload Field */}
+                <div className="w-full">
+                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2 flex items-center gap-2">
+                    <SafeIcon icon={LuIcons.LuPaperclip} className="w-3 h-3" /> Attach Documents (Optional)
+                  </label>
+                  <div className="w-full bg-[#0A0A0A] border border-dashed border-white/20 rounded-sm px-4 py-6 text-center hover:border-[#004040] transition-colors cursor-pointer relative">
+                    <input
+                      type="file"
+                      name="attachments"
+                      multiple
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={(e) => console.log("Files selected:", e.target.files)} // Placeholder for file handling logic
+                    />
+                    <p className="text-xs text-zinc-500 font-medium">Drag & drop files or click to browse</p>
+                  </div>
                 </div>
 
                 <button
