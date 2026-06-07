@@ -41,3 +41,15 @@ export function ensureSafeProtocol(url) {
 
   return '#';
 }
+
+/**
+ * Basic text input sanitization to strip HTML tags and prevent simple injection.
+ * For robust rich-text sanitization, use isomorphic-dompurify.
+ *
+ * @param {string} input - The raw text input.
+ * @returns {string} - The sanitized plain text.
+ */
+export function sanitizeInput(input) {
+  if (typeof input !== 'string') return '';
+  return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
