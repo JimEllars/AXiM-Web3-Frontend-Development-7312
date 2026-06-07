@@ -90,6 +90,7 @@ export default function Article() {
   const fallbackImage = defaultImage;
 
   // Construct rigorous AIO/SEO NewsArticle Schema
+  // Construct rigorous Google News Compliant JSON-LD Schema
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -99,15 +100,13 @@ export default function Article() {
     },
     "headline": article.title?.rendered || "AXiM Systems Article",
     "description": cleanExcerpt,
-    "image": [
-      imageUrl || defaultImage
-    ],
-    "datePublished": article.date,
-    "dateModified": article.modified || article.date,
+    "image": [imageUrl || defaultImage],
+    "datePublished": new Date(article.date).toISOString(),
+    "dateModified": article.modified ? new Date(article.modified).toISOString() : new Date(article.date).toISOString(),
     "author": {
       "@type": "Organization",
       "name": "AXiM Systems Editorial",
-      "url": "https://axim.us.com"
+      "url": "https://axim.us.com/"
     },
     "publisher": {
       "@type": "Organization",
@@ -116,7 +115,9 @@ export default function Article() {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
       }
-    }
+    },
+    "isAccessibleForFree": "True",
+    "articleSection": "Technology News"
   };
 
   return (
@@ -128,6 +129,7 @@ export default function Article() {
         type="article"
         url={window.location.href}
         customSchema={[articleSchema]}
+        publishedTime={new Date(article.date).toISOString()}
       />
 
       {/* Hero Header with Multi-Color Overlay */}
