@@ -11,7 +11,8 @@ export default function Consultation() {
     lastName: '',
     email: '',
     company: '',
-    details: ''
+    details: '',
+    _axim_trap: ''
   });
 
   const consultationTracks = [
@@ -63,6 +64,13 @@ export default function Consultation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // BOT TRAP: If the hidden field is filled out, silently abort but pretend to succeed
+    if (formData._axim_trap) {
+      console.warn("Automated payload detected. Nullifying transit.");
+      setStep(3); // Move to success state
+      return;
+    }
     // Placeholder for actual webhook/CRM routing logic
     console.log("Submitting Payload:", { track: selectedTrack, data: formData });
     setStep(3); // Move to success state
@@ -132,6 +140,12 @@ export default function Consultation() {
             </div>
 
             <form onSubmit={handleSubmit} className="bg-[#050505] border border-white/10 p-8 rounded-sm shadow-2xl">
+              {/* Anti-Bot Honeypot */}
+              <div className="opacity-0 absolute top-0 left-0 h-0 w-0 overflow-hidden pointer-events-none z-[-1]" aria-hidden="true">
+                <label htmlFor="_axim_trap">Do not fill this out if you are human</label>
+                <input type="text" id="_axim_trap" name="_axim_trap" value={formData._axim_trap} onChange={handleInputChange} tabIndex="-1" autoComplete="off" />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">First Name</label>
