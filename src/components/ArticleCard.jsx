@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
-export default function ArticleCard({ article, index = 0 }) {
+export default function ArticleCard({ article, index = 0, priority = false }) {
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const finalImage = imageUrl || defaultImage;
@@ -40,7 +40,8 @@ export default function ArticleCard({ article, index = 0 }) {
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
           className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchpriority={priority ? "high" : "auto"}
         />
 
         {/* Saturated Color Overlay */}

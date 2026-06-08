@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -35,6 +35,17 @@ export default function Support() {
   const [errorMessage, setErrorMessage] = useState('');
 
   // State matched exactly to the Ingress Schema
+  const [idempotencyKey, setIdempotencyKey] = useState('');
+
+  // Generate a unique transaction key when the component mounts
+  useEffect(() => {
+    if (window.crypto && window.crypto.randomUUID) {
+      setIdempotencyKey(window.crypto.randomUUID());
+    } else {
+      setIdempotencyKey(Date.now().toString(36) + Math.random().toString(36).substring(2));
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -73,8 +84,21 @@ export default function Support() {
 
       setTicketState('transmitting');
 
-      // 3. Simulated Edge Transmission (Proxy to Onyx Webhook)
-      await new Promise(resolve => setTimeout(resolve, 1200)); // Simulate latency
+      // 3. Edge Transmission (Proxy to Onyx Webhook)
+      const coreApiUrl = import.meta.env.VITE_CORE_API_URL || 'https://api.axim.us.com';
+      const response = await fetch(`${coreApiUrl}/v1/ingress/support`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Source-Origin': 'axim-public-hub',
+          'Idempotency-Key': idempotencyKey // INJECTED CRITICAL HEADER
+        },
+        body: JSON.stringify(encryptedEnvelope)
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
       setTicketState('success');
 
@@ -138,7 +162,15 @@ export default function Support() {
                   Your diagnostic log has been securely routed to our resolution queue. Standard response protocols mandate a 24-48 hour turnaround.
                 </p>
                 <button
-                  onClick={() => { setTicketState('idle'); setFormData({customer_name: '', customer_email: '', subject: 'Demand Letter Generation', description: ''}); }}
+                  onClick={() => {
+                  setTicketState('idle');
+                  setFormData({customer_name: '', customer_email: '', subject: 'Demand Letter Generation', description: ''});
+                  if (window.crypto && window.crypto.randomUUID) {
+                    setIdempotencyKey(window.crypto.randomUUID());
+                  } else {
+                    setIdempotencyKey(Date.now().toString(36) + Math.random().toString(36).substring(2));
+                  }
+                }}
                   className="px-6 py-3 border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm"
                 >
                   Submit Additional Log
