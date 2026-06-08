@@ -9,6 +9,7 @@ import Header from './components/Header';
 import SystemBreadcrumb from './components/SystemBreadcrumb';
 import BackgroundEffects from './components/BackgroundEffects';
 import PageTransition from './components/PageTransition';
+import CookieConsent from './components/CookieConsent';
 
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
@@ -80,6 +81,7 @@ function App() {
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
       <AnalyticsTracker />
       <BackgroundEffects />
+      <CookieConsent />
 
       {/* CRITICAL FIX:
         <ProactiveBanner /> and <EngagementGuard /> have been PURGED from this global root.

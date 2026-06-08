@@ -66,7 +66,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
           .filter(article => article && article.title && article.title.rendered) // Defensive Null Check
           .slice(0, 3) // Ensure max of 3 are rendered
           .map((article, index) => (
-            <ArticleCard key={article.id || index} article={article} index={index} />
+            <ArticleCard key={article.id || index} article={article} index={index} priority={index === 0} />
         ))}
       </div>
     </div>

@@ -75,12 +75,22 @@
 
       <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_CODE_HERE" />
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-620C96FBF3"></script>
     <script>
+      // Define the dataLayer and the gtag function
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
+      // Default Consent State: DENIED
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+      });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-620C96FBF3"></script>
+    <script>
+      gtag('js', new Date());
       gtag('config', 'G-620C96FBF3');
     </script>
   </head>
