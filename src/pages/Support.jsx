@@ -62,6 +62,13 @@ export default function Support() {
 
   const handleTicketSubmit = async (e) => {
     e.preventDefault();
+
+    // BOT TRAP: If the hidden field is filled out, silently abort but pretend to succeed
+    if (formData._axim_trap) {
+      console.warn("Automated payload detected. Nullifying transit.");
+      setTicketState('success');
+      return;
+    }
     setTicketState('encrypting');
     setErrorMessage('');
 
@@ -164,7 +171,11 @@ export default function Support() {
                 <button
                   onClick={() => {
                   setTicketState('idle');
-                  setFormData({customer_name: '', customer_email: '', subject: 'Demand Letter Generation', description: ''});
+                  setFormData({customer_name: '',
+    customer_email: '',
+    subject: 'Demand Letter Generation',
+    description: '',
+    _axim_trap: ''});
                   if (window.crypto && window.crypto.randomUUID) {
                     setIdempotencyKey(window.crypto.randomUUID());
                   } else {
@@ -178,6 +189,12 @@ export default function Support() {
               </div>
             ) : (
               <form onSubmit={handleTicketSubmit} className="w-full space-y-6 animate-fade-in-up relative z-10">
+                {/* Anti-Bot Honeypot */}
+                <div className="opacity-0 absolute top-0 left-0 h-0 w-0 overflow-hidden pointer-events-none z-[-1]" aria-hidden="true">
+                  <label htmlFor="_axim_trap">Do not fill this out if you are human</label>
+                  <input type="text" id="_axim_trap" name="_axim_trap" value={formData._axim_trap} onChange={handleInputChange} tabIndex="-1" autoComplete="off" />
+                </div>
+
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="w-full">
                     {/* UPDATED: "Registered Name" -> "Name" */}

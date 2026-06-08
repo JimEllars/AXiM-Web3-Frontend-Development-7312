@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useDebounce from '../hooks/useDebounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'isomorphic-dompurify';
@@ -28,6 +29,7 @@ export default function GlobalSearch() {
   const [isSynchronizing, setIsSynchronizing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const debouncedSearchTerm = useDebounce(query, 300);
   const [results, setResults] = useState([]);
 
   const [articleResults, setArticleResults] = useState([]);
@@ -75,27 +77,27 @@ export default function GlobalSearch() {
 
 
   useEffect(() => {
-    if (!query.trim()) {
+    if (!debouncedSearchTerm.trim()) {
       setResults([]);
       setArticleResults([]);
       return;
     }
 
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = debouncedSearchTerm.toLowerCase();
     const matches = STATIC_ROUTES.filter(route =>
       route.title.toLowerCase().includes(lowerQuery) || route.path.toLowerCase().includes(lowerQuery)
     );
     setResults(matches);
     setSelectedIndex(0);
 
-    if (query.trim().length > 2) {
+    if (debouncedSearchTerm.trim().length > 2) {
       setIsSearchingArticles(true);
-      const controller = new AbortController(); // 1. Instantiate AbortController
+      const controller = new AbortController();
 
-      const timer = setTimeout(async () => {
+      const fetchArticles = async () => {
         try {
-          const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?search=${encodeURIComponent(query)}&per_page=5`, {
-            signal: controller.signal // 2. Pass signal to fetch
+          const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?search=${encodeURIComponent(debouncedSearchTerm)}&per_page=5`, {
+            signal: controller.signal
           });
           if (res.ok) {
             const data = await res.json();
@@ -105,23 +107,23 @@ export default function GlobalSearch() {
             setArticleResults([]);
           }
         } catch (error) {
-          if (error.name !== 'AbortError') { // 3. Ignore aborted fetch errors
+          if (error.name !== 'AbortError') {
             setArticleResults([]);
           }
         } finally {
           setIsSearchingArticles(false);
         }
-      }, 300); // 300ms debounce
+      };
 
-      // 4. Cleanup: clear timer and abort stale request if user keeps typing
+      fetchArticles();
+
       return () => {
-        clearTimeout(timer);
         controller.abort();
       };
     } else {
       setArticleResults([]);
     }
-  }, [query]);
+  }, [debouncedSearchTerm]);
 
 
 
