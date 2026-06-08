@@ -3,44 +3,61 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import BackgroundEffects from '../components/BackgroundEffects';
 
 export default function NotFound() {
   return (
-    <div className="w-full min-h-screen bg-bg-void relative flex flex-col items-center justify-center overflow-hidden">
-      <SEO title="Signal Lost | AXiM Systems" description="The requested protocol could not be located." />
-      <BackgroundEffects />
+    <div className="w-full min-h-screen bg-bg-void relative z-10 flex items-center justify-center p-6">
+      <SEO title="Signal Lost | AXiM Systems" />
 
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center animate-fade-in-up">
-        <div className="w-20 h-20 bg-red-500/10 border border-red-500/30 flex items-center justify-center rounded-sm mx-auto mb-8 shadow-[0_0_40px_rgba(239,68,68,0.2)]">
-           <SafeIcon icon={LuIcons.LuTerminal} className="w-10 h-10 text-red-500" />
-        </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 
-        <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white leading-none mb-4">
-          Error <span className="text-red-500">404</span>
-        </h1>
-        <p className="text-zinc-400 font-mono text-sm uppercase tracking-widest mb-12">
-          [ Protocol Unreachable // Signal Lost ]
-        </p>
+      <div className="w-full max-w-2xl bg-[#050505] border border-white/10 p-12 text-center rounded-sm shadow-2xl relative z-10 overflow-hidden">
+         <div className="absolute top-0 right-0 w-32 h-32 bg-axim-purple/10 blur-[40px]" />
+         <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#DB2777]/10 blur-[40px]" />
 
-        <p className="text-zinc-500 text-sm max-w-xl mx-auto mb-12 leading-relaxed">
-          The routing node you are attempting to access does not exist or has been deprecated. Please return to the primary network grid or initialize a direct support protocol.
-        </p>
+         <SafeIcon icon={LuIcons.LuUnplug} className="w-16 h-16 text-zinc-500 mx-auto mb-6" />
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center px-8 py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm w-full sm:w-auto"
-          >
-            Return to Core <SafeIcon icon={LuIcons.LuArrowLeft} className="ml-3 w-4 h-4" />
-          </Link>
-          <a
-            href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm w-full sm:w-auto"
-          >
-            Quick Demand Letter <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
-          </a>
-        </div>
+         <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white mb-2">Signal <span className="text-axim-purple">Lost.</span></h1>
+         <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest mb-10">Error 404 // The requested trajectory does not exist.</p>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+            <Link to="/" className="group bg-[#0F172A] border border-white/5 p-4 rounded-sm hover:border-axim-purple/50 transition-colors flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-axim-purple transition-colors">
+                <SafeIcon icon={LuIcons.LuHome} className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="text-white text-xs font-bold uppercase tracking-widest mb-0.5">Return Home</div>
+                <div className="text-zinc-500 text-[0.6rem] font-mono uppercase">Master Console</div>
+              </div>
+            </Link>
+            <Link to="/partners/make" className="group bg-[#0F172A] border border-white/5 p-4 rounded-sm hover:border-axim-purple/50 transition-colors flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-axim-purple transition-colors">
+                <SafeIcon icon={LuIcons.LuWorkflow} className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="text-white text-xs font-bold uppercase tracking-widest mb-0.5">Automate</div>
+                <div className="text-zinc-500 text-[0.6rem] font-mono uppercase">Make.com Portal</div>
+              </div>
+            </Link>
+            <Link to="/partners/chatbase" className="group bg-[#0F172A] border border-white/5 p-4 rounded-sm hover:border-[#DB2777]/50 transition-colors flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-[#DB2777] transition-colors">
+                <SafeIcon icon={LuIcons.LuBot} className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="text-white text-xs font-bold uppercase tracking-widest mb-0.5">Deploy AI</div>
+                <div className="text-zinc-500 text-[0.6rem] font-mono uppercase">Chatbase Portal</div>
+              </div>
+            </Link>
+            <Link to="/articles" className="group bg-[#0F172A] border border-white/5 p-4 rounded-sm hover:border-axim-gold/50 transition-colors flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-axim-gold transition-colors">
+                <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="text-white text-xs font-bold uppercase tracking-widest mb-0.5">Intelligence</div>
+                <div className="text-zinc-500 text-[0.6rem] font-mono uppercase">Latest Articles</div>
+              </div>
+            </Link>
+         </div>
       </div>
     </div>
   );
