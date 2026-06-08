@@ -1,194 +1,71 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Consultation() {
-  const [step, setStep] = useState(1);
-  const [selectedTrack, setSelectedTrack] = useState(null);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    details: '',
-    _axim_trap: ''
-  });
-
-  const consultationTracks = [
-    {
-      id: "ai",
-      title: "AI Integration",
-      desc: "Deploy custom LLMs, autonomous agents, and intelligent triage systems.",
-      icon: LuIcons.LuBot,
-      color: "text-[#DB2777]",
-      borderHover: "hover:border-[#DB2777]"
-    },
-    {
-      id: "business",
-      title: "Business Development",
-      desc: "Scale operations, optimize revenue loops, and integrate partner networks.",
-      icon: LuIcons.LuBriefcase,
-      color: "text-axim-gold",
-      borderHover: "hover:border-axim-gold"
-    },
-    {
-      id: "software",
-      title: "Software Architecture",
-      desc: "Build proprietary platforms, visual automation systems, and web3 nodes.",
-      icon: LuIcons.LuCode,
-      color: "text-axim-purple",
-      borderHover: "hover:border-axim-purple"
-    },
-    {
-      id: "leadership",
-      title: "Leadership Training",
-      desc: "Executive coaching, team scaling, and operational management protocols.",
-      icon: LuIcons.LuUsers,
-      color: "text-[#004040]",
-      borderHover: "hover:border-[#004040]"
-    }
-  ];
-
-  const handleTrackSelection = (trackId) => {
-    setSelectedTrack(trackId);
-    setStep(2);
-  };
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // BOT TRAP: If the hidden field is filled out, silently abort but pretend to succeed
-    if (formData._axim_trap) {
-      console.warn("Automated payload detected. Nullifying transit.");
-      setStep(3); // Move to success state
-      return;
-    }
-    // Placeholder for actual webhook/CRM routing logic
-    console.log("Submitting Payload:", { track: selectedTrack, data: formData });
-    setStep(3); // Move to success state
-  };
-
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Request Consultation | AXiM Systems"
-        description="Schedule a strategic consultation with AXiM Systems. Select your operational focus area to begin the protocol."
+        title="Book A Consultation | AXiM Systems"
+        description="Schedule a technical strategy session with an AXiM systems architect to scale your decentralized infrastructure."
       />
 
-      {/* Hero Header */}
+      {/* Hero */}
       <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_50%)] pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-none mb-4">
-            Initiate <span className="text-axim-purple">Protocol.</span>
+        <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
+            System <span className="text-axim-purple">Strategy Call.</span>
           </h1>
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
-            To ensure maximum efficiency, please identify the primary operational vector you wish to optimize during our consultation.
+          <p className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
+            Schedule a dedicated session with an AXiM architect. We will audit your current workflows, identify latency bottlenecks, and map out a decentralized automation strategy.
           </p>
         </div>
       </section>
 
-      {/* Multi-Step Funnel Container */}
-      <section className="w-full max-w-5xl mx-auto px-6 mt-16 flex flex-col items-center justify-center">
-        <div className="w-full max-w-3xl">
+      {/* Split Form Layout */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+        <div className="flex flex-col lg:flex-row gap-16">
 
-        {/* Step 1: Selection Grid */}
-        {step === 1 && (
-            <div className="animate-fade-in-up w-full">
-            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
-              <h2 className="text-xl font-black uppercase tracking-widest text-white">1. Select Consultation Vector</h2>
-              <span className="text-xs font-mono text-zinc-500">Step 1 of 2</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {consultationTracks.map((track) => (
-                <button
-                  key={track.id}
-                  onClick={() => handleTrackSelection(track.id)}
-                  className={`group text-left bg-[#050505] border border-white/10 p-8 rounded-sm transition-all duration-300 shadow-xl ${track.borderHover} hover:bg-white/5`}
-                >
-                  <SafeIcon icon={track.icon} className={`w-8 h-8 mb-4 ${track.color}`} />
-                  <h3 className="text-white font-black uppercase tracking-tight text-lg mb-2">{track.title}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{track.desc}</p>
-                </button>
-              ))}
-            </div>
+          {/* Value Proposition Sidebar */}
+          <div className="lg:w-1/3 space-y-12">
+             <div>
+               <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-axim-purple mb-4" />
+               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Workflow Audits</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed">We break down your existing SaaS subscriptions and API limitations to find areas where Make.com logic loops can save manual labor.</p>
+             </div>
+             <div>
+               <SafeIcon icon={LuIcons.LuBot} className="w-6 h-6 text-[#DB2777] mb-4" />
+               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">AI Implementation</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed">Discover how proprietary, firewalled LLM models can be trained on your company data to triage leads and automate support vectors.</p>
+             </div>
+             <div>
+               <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6 text-axim-gold mb-4" />
+               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Security Briefing</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed">Ensure your data architecture remains completely insulated when connecting third-party decentralized applications.</p>
+             </div>
           </div>
-        )}
 
-        {/* Step 2: Custom Intake Form */}
-        {step === 2 && (
-          <div className="animate-fade-in-up w-full">
-            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
-              <h2 className="text-xl font-black uppercase tracking-widest text-white flex items-center gap-3">
-                <button onClick={() => setStep(1)} className="text-zinc-500 hover:text-white transition-colors">
-                  <SafeIcon icon={LuIcons.LuArrowLeft} className="w-5 h-5" />
-                </button>
-                2. Configure Parameters
-              </h2>
-              <span className="text-xs font-mono text-axim-purple">
-                Vector: {consultationTracks.find(t => t.id === selectedTrack)?.title}
-              </span>
-            </div>
+          {/* Booking Widget Container */}
+          <div className="lg:w-2/3">
+             <div className="bg-[#050505] border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[50px] pointer-events-none" />
 
-            <form onSubmit={handleSubmit} className="bg-[#050505] border border-white/10 p-8 rounded-sm shadow-2xl">
-              {/* Anti-Bot Honeypot */}
-              <div className="opacity-0 absolute top-0 left-0 h-0 w-0 overflow-hidden pointer-events-none z-[-1]" aria-hidden="true">
-                <label htmlFor="_axim_trap">Do not fill this out if you are human</label>
-                <input type="text" id="_axim_trap" name="_axim_trap" value={formData._axim_trap} onChange={handleInputChange} tabIndex="-1" autoComplete="off" />
-              </div>
+                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-6 relative z-10 flex items-center gap-3">
+                  <SafeIcon icon={LuIcons.LuCalendar} className="w-5 h-5 text-axim-purple" /> Select A Time
+                </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">First Name</label>
-                  <input required type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
+                <div className="w-full h-[600px] border border-white/5 bg-[#0A0A0A] rounded-sm flex flex-col items-center justify-center text-center relative z-10 p-6">
+                   {/* Placeholder for future Calendly/HubSpot booking iframe */}
+                   <SafeIcon icon={LuIcons.LuHourglass} className="w-8 h-8 text-zinc-500 mb-4 animate-pulse" />
+                   <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest mb-4">Awaiting Calendar Integration Module</p>
+                   <p className="text-zinc-500 text-[0.65rem] max-w-xs leading-relaxed">
+                     System architect calendar syncing is currently offline. Please utilize the Chatbase Concierge on the Support page for immediate triage.
+                   </p>
                 </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Last Name</label>
-                  <input required type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Corporate Email</label>
-                  <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
-                </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Company Name</label>
-                  <input required type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm" />
-                </div>
-              </div>
-              <div className="mb-8">
-                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Operational Context</label>
-                <textarea required name="details" value={formData.details} onChange={handleInputChange} rows="4" placeholder="Briefly describe the friction points you are experiencing..." className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-axim-purple transition-colors text-sm resize-none"></textarea>
-              </div>
-              <button type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)]">
-                Transmit Request
-              </button>
-            </form>
+             </div>
           </div>
-        )}
-
-        {/* Step 3: Success State */}
-        {step === 3 && (
-          <div className="animate-fade-in-up text-center w-full bg-[#050505] border border-white/10 p-12 rounded-sm shadow-2xl">
-            <div className="w-16 h-16 bg-green-500/20 border border-green-500 flex items-center justify-center rounded-full mx-auto mb-6">
-               <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-green-500" />
-            </div>
-            <h2 className="text-2xl font-black uppercase tracking-widest text-white mb-4">Transmission Successful</h2>
-            <p className="text-zinc-400 text-sm max-w-md mx-auto leading-relaxed">
-              Your consultation request regarding <strong>{consultationTracks.find(t => t.id === selectedTrack)?.title}</strong> has been routed to our triage team. You will receive an encrypted scheduling link shortly.
-            </p>
-          </div>
-        )}
 
         </div>
       </section>

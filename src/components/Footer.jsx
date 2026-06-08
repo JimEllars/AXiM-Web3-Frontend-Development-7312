@@ -7,90 +7,81 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-black border-t border-white/10 pt-20 pb-10 relative z-20 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+    <footer className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(147,51,234,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
-              <div className="w-8 h-8 bg-white text-black flex items-center justify-center font-black tracking-tighter text-xl group-hover:bg-axim-purple group-hover:text-white transition-colors shadow-[0_0_15px_rgba(125,0,255,0.3)]">
-                A
-              </div>
-              <span className="text-xl font-black text-white tracking-tighter">AXiM</span>
+            <Link to="/" className="inline-block mb-6 group">
+               <img
+                 src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+                 alt="AXiM Systems"
+                 className="h-8 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+               />
             </Link>
-            <p className="text-zinc-500 text-xs leading-relaxed max-w-xs mb-6 font-mono tracking-widest uppercase">
-              Smarter Systems.<br/>Decentralized infrastructure & high-fidelity digital products.
+            <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">
+              Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
             </p>
-            <div className="flex gap-4 mb-6">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-axim-purple hover:text-white transition-colors">
-                <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#004040] hover:text-white transition-colors">
-                <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
-              </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#DB2777] hover:text-white transition-colors">
-                <SafeIcon icon={LuIcons.LuGithub} className="w-4 h-4" />
-              </a>
+            <div className="flex gap-4">
+               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors">
+                 <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
+               </a>
+               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors">
+                 <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
+               </a>
             </div>
-            <Link to="/status" className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-sm text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">
-              <div className="w-2 h-2 bg-axim-green rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-              System: Optimal
-            </Link>
           </div>
 
-                    {/* Solutions Column */}
+          {/* Partner Funnels */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6">System Ai Tools</h4>
+            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Partner Grid
+            </h4>
             <ul className="space-y-4">
-              <li>
-                <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-400 hover:text-axim-purple transition-colors flex items-center gap-2 group">
-                  Quick Demand Letter <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              </li>
-              <li><Link to="/tools/nda" className="text-sm text-zinc-400 hover:text-white transition-colors">Mutual NDA Generator</Link></li>
-              <li><Link to="/tools/paystub" className="text-sm text-zinc-400 hover:text-white transition-colors">Pay Stub System</Link></li>
-              <li><Link to="/tools" className="text-sm text-zinc-400 hover:text-[#004040] transition-colors">View All Ai Tools</Link></li>
+              <li><Link to="/partners/make" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Make.com Automation</Link></li>
+              <li><Link to="/partners/chatbase" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Chatbase AI</Link></li>
+              <li><Link to="/partners/powur-solar" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Powur Solar</Link></li>
+              <li><Link to="/partners" className="text-axim-purple hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Partners →</Link></li>
             </ul>
           </div>
 
-          {/* Partner Network Column */}
+          {/* Proprietary Tools */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuNetwork} className="text-axim-purple w-4 h-4"/> Partner Network
+            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
             </h4>
             <ul className="space-y-4">
-              <li><Link to="/partners/make" className="text-zinc-400 hover:text-[#DB2777] text-sm transition-colors">Make.com Automation</Link></li>
-              <li><Link to="/partners/powur-solar" className="text-zinc-400 hover:text-axim-gold text-sm transition-colors">Powur Solar (Homeowners)</Link></li>
-              <li><Link to="/partners/powur-join" className="text-zinc-400 hover:text-axim-purple text-sm transition-colors">Powur Agency (B2B)</Link></li>
-              <li><Link to="/consultation" className="text-zinc-400 hover:text-white text-sm transition-colors">Propose Integration</Link></li>
+              <li><a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1">Demand Letter Engine <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3"/></a></li>
+              <li><Link to="/tools/nda" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Mutual NDA Generator</Link></li>
+              <li><Link to="/tools/paystub" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pay Stub System</Link></li>
+              <li><Link to="/tools" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Tools →</Link></li>
             </ul>
           </div>
 
-          {/* Secure Access Column */}
+          {/* Intelligence Hub */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuShieldCheck} className="text-axim-purple w-4 h-4"/> Access
+            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Intelligence
             </h4>
             <ul className="space-y-4">
-              <li><Link to="/profile" className="text-zinc-400 hover:text-white text-sm transition-colors">Operator Dashboard</Link></li>
-              <li><Link to="/support" className="text-zinc-400 hover:text-white text-sm transition-colors">Support Center</Link></li>
-              <li><Link to="/early-access" className="text-zinc-400 hover:text-white text-sm transition-colors">Newsletter & Updates</Link></li>
-              <li><a href="mailto:support@axim.us.com" className="text-zinc-400 hover:text-white text-sm transition-colors">support@axim.us.com</a></li>
+              <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Latest Articles</Link></li>
+              <li><Link to="/support" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">System Support Wiki</Link></li>
+              <li><Link to="/consultation" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Book Consultation</Link></li>
             </ul>
           </div>
 
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-zinc-600 text-xs font-mono uppercase tracking-widest text-center md:text-left">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
             &copy; {currentYear} AXiM Systems. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="/terms" className="text-zinc-600 hover:text-white text-xs font-mono uppercase tracking-widest transition-colors">Terms of Service</Link>
-            <Link to="/terms" className="text-zinc-600 hover:text-white text-xs font-mono uppercase tracking-widest transition-colors">Privacy Policy</Link>
+             <Link to="/terms" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
+             <Link to="/status" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">System Status</Link>
           </div>
         </div>
       </div>
