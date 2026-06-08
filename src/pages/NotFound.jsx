@@ -23,7 +23,7 @@ export default function NotFound() {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
             <Link to="/" className="group bg-[#0F172A] border border-white/5 p-4 rounded-sm hover:border-axim-purple/50 transition-colors flex items-center gap-4">
               <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-axim-purple transition-colors">
-                <SafeIcon icon={LuIcons.LuHome} className="w-4 h-4 text-white" />
+                <SafeIcon icon={LuIcons.LuHouse} className="w-4 h-4 text-white" />
               </div>
               <div>
                 <div className="text-white text-xs font-bold uppercase tracking-widest mb-0.5">Return Home</div>
