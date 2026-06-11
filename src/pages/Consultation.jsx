@@ -31,7 +31,7 @@ export default function Consultation() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate Supabase/Network Ingestion Delay
+    // Simulate Network Ingestion Delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // In a production environment, this payload is sent to Supabase or an Edge Worker
@@ -44,8 +44,8 @@ export default function Consultation() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Strategy Consultation | AXiM Systems"
-        description="Schedule a technical strategy session with an AXiM systems architect to scale your decentralized infrastructure."
+        title="Request a Consultation | AXiM Systems"
+        description="Schedule a strategy session with an AXiM systems architect to scale your decentralized infrastructure."
       />
 
       {/* Hero */}
@@ -53,10 +53,10 @@ export default function Consultation() {
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
-            System <span className="text-axim-purple">Strategy Call.</span>
+            Request A <span className="text-axim-purple">Consultation.</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
-            Initiate a direct connection with an AXiM architect. Please categorize your operational requirements below so we can route your request to the appropriate command node.
+            Connect directly with the AXiM team. Please categorize your request below so we can route you to the appropriate specialist for your business needs.
           </p>
         </div>
       </section>
@@ -69,8 +69,8 @@ export default function Consultation() {
           <div className="lg:w-1/3 space-y-12">
              <div>
                <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-axim-purple mb-4" />
-               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Architectural Audits</h3>
-               <p className="text-xs text-zinc-400 leading-relaxed">We deconstruct your existing SaaS stack to eliminate latency bottlenecks and map out a decentralized automation strategy.</p>
+               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Tech Audits</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed">We deconstruct your existing software stack to eliminate bottlenecks and map out a streamlined automation strategy.</p>
              </div>
              <div>
                <SafeIcon icon={LuIcons.LuBot} className="w-6 h-6 text-[#DB2777] mb-4" />
@@ -80,7 +80,7 @@ export default function Consultation() {
              <div>
                <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6 text-axim-gold mb-4" />
                <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Secure Routing</h3>
-               <p className="text-xs text-zinc-400 leading-relaxed">All inquiry forms are securely encrypted and routed directly to our internal triage channels for rapid evaluation.</p>
+               <p className="text-xs text-zinc-400 leading-relaxed">All inquiry forms are securely encrypted and routed directly to our internal channels for rapid evaluation.</p>
              </div>
           </div>
 
@@ -91,7 +91,7 @@ export default function Consultation() {
 
                 {/* Dynamic Header */}
                 <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 relative z-10">
-                  {isSuccess ? 'Transmission Secured' : step === 1 ? 'Step 1: Inquiry Parameter' : 'Step 2: Operational Data'}
+                  {isSuccess ? 'Request Received' : step === 1 ? 'Step 1: Inquiry Type' : 'Step 2: Contact Details'}
                 </h2>
                 {!isSuccess && (
                   <div className="flex gap-2 mb-8 relative z-10">
@@ -128,27 +128,27 @@ export default function Consultation() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Operator Name</label>
+                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Full Name</label>
                         <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="John Doe" />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Secure Email</label>
-                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="operator@domain.com" />
+                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Work Email</label>
+                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="email@company.com" />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Organization / Company</label>
+                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Company Name</label>
                       <input type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="Optional" />
                     </div>
 
                     <div className="space-y-2 flex-1">
-                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Operation Details</label>
-                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide context regarding your structural requirements..." />
+                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">How can we help you?</label>
+                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
                     </div>
 
                     <button disabled={isSubmitting} type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.2)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
-                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader2} className="w-4 h-4 animate-spin" /> Transmitting...</> : 'Initialize Triage Protocol'}
+                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader2} className="w-4 h-4 animate-spin" /> Processing...</> : 'Submit Consultation Request'}
                     </button>
                   </form>
                 )}
@@ -161,7 +161,7 @@ export default function Consultation() {
                     </div>
                     <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Request Logged.</h3>
                     <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8">
-                      Your inquiry parameters have been successfully encrypted and routed to <span className="text-white font-mono">James.Ellars@axim.us.com</span>. An architect will review your data and respond shortly.
+                      Your request has been successfully submitted to <span className="text-white font-mono">James.Ellars@axim.us.com</span>. Our team will review your details and respond shortly.
                     </p>
                     <button onClick={() => { setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
                       Submit Another Request
