@@ -1,30 +1,37 @@
-/**
- * @vitest-environment jsdom
- */
-import { describe, it } from 'vitest';
+import 'global-jsdom/register';
+import { test, describe, afterEach } from 'vitest';
+import assert from 'node:assert/strict';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import GlobalSearch from './GlobalSearch';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import GlobalSearch from './GlobalSearch.jsx';
 
 describe('GlobalSearch Component', () => {
-  it('renders search button and opens modal', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  test('renders search button and opens modal', async () => {
     render(
-      <BrowserRouter>
+      <MemoryRouter>
         <GlobalSearch />
-      </BrowserRouter>
+      </MemoryRouter>
     );
 
-    const openBtns = screen.getAllByRole('button');
-    const openBtn = openBtns[0];
+    // Find the button with text Search
+    const searchBtns = screen.getAllByRole('button');
+    const searchBtn = searchBtns[0];
 
-    fireEvent.click(openBtn);
+    fireEvent.click(searchBtn);
 
     const input = screen.getByPlaceholderText('Search Intelligence Hub & Offerings...');
+    assert.ok(input);
 
-    fireEvent.change(input, { target: { value: 'tools' } });
+    fireEvent.change(input, { target: { value: 'Tools' } });
 
-    // Tools should be visible in results
-    const toolsLink = screen.getByText('Tools');
+    await waitFor(() => {
+        const toolsResult = screen.getByText('Tools');
+        assert.ok(toolsResult);
+    });
   });
 });

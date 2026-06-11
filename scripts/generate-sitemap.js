@@ -53,10 +53,15 @@ async function generateSitemap() {
     '/tools/nda',
     '/tools/paystub',
     '/consultation',
+    '/support',
+    '/status',
+    '/terms',
+    '/profile',
     '/partners',
-    '/partners/make', // Added Make partner route
+    '/partners/make',
     '/partners/powur-solar',
     '/partners/powur-join',
+    '/partners/chatbase',
     '/early-access'
   ];
 
