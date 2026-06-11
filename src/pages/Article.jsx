@@ -46,6 +46,15 @@ export default function Article() {
     return () => { isMounted = false; };
   }, [slug]);
 
+  // FORCE DOM TITLE SYNC: Ensures the browser tab dynamically updates to the specific article title
+  useEffect(() => {
+    if (article && article.title?.rendered) {
+      // Strip WordPress HTML entities natively
+      const cleanTitle = article.title.rendered.replace(/<[^>]+>/g, '');
+      document.title = `${cleanTitle} | AXiM Systems`;
+    }
+  }, [article]);
+
   // 1. STRICT SHIELD: Handle Error State FIRST
   if (error) {
     return (

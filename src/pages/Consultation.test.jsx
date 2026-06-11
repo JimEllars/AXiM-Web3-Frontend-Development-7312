@@ -22,9 +22,8 @@ describe('Consultation Page Component', () => {
     );
 
     assert.ok(screen.getByRole('heading', { name: /System Strategy Call/i }));
-    assert.ok(screen.getByText('Workflow Audits'));
-    assert.ok(screen.getByText('AI Implementation'));
-    assert.ok(screen.getByText('Security Briefing'));
-    assert.ok(screen.getByText(/Request A Consultation/i));
+    assert.ok(screen.getByText('Architectural Audits'));
+    assert.ok(screen.getByText('Leadership Scaling'));
+    assert.ok(screen.getByText('Secure Routing'));
   });
 });
