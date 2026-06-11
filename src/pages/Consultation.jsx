@@ -121,7 +121,7 @@ export default function Consultation() {
                 {step === 2 && !isSuccess && (
                   <form onSubmit={handleSubmit} className="space-y-6 relative z-10 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-4 p-3 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">
-                       <SafeIcon icon={LuIcons.LuCheckCircle2} className="w-4 h-4 text-axim-purple" />
+                       <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4 text-axim-purple" />
                        <span className="text-[0.65rem] font-mono uppercase tracking-widest text-axim-purple">Selected: {formData.inquiryType}</span>
                        <button type="button" onClick={() => setStep(1)} className="ml-auto text-[0.6rem] uppercase tracking-widest text-zinc-500 hover:text-white underline">Change</button>
                     </div>
@@ -148,7 +148,7 @@ export default function Consultation() {
                     </div>
 
                     <button disabled={isSubmitting} type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.2)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
-                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader2} className="w-4 h-4 animate-spin" /> Processing...</> : 'Submit Consultation Request'}
+                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> Processing...</> : 'Submit Consultation Request'}
                     </button>
                   </form>
                 )}
