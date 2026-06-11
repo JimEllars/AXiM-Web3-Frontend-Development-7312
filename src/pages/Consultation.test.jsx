@@ -21,8 +21,8 @@ describe('Consultation Page Component', () => {
       </HelmetProvider>
     );
 
-    assert.ok(screen.getByRole('heading', { name: /System Strategy Call/i }));
-    assert.ok(screen.getByText('Architectural Audits'));
+    assert.ok(screen.getByRole('heading', { name: /Request A Consultation/i }));
+    assert.ok(screen.getByText('Tech Audits'));
     assert.ok(screen.getByText('Leadership Scaling'));
     assert.ok(screen.getByText('Secure Routing'));
   });
