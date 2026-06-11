@@ -42,7 +42,7 @@ export default function PowurJoinLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             You secure the contracts. Powur handles the engineering, permitting, and installation. Leverage a decentralized, cloud-based platform to scale your own national solar agency with zero upfront hardware overhead.
           </p>
-          <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Powur Join" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Initialize Agency Protocol <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>

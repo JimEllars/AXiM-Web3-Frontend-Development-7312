@@ -42,7 +42,7 @@ export default function PowurSolarLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             Stop leasing power from centralized utility monopolies. AXiM's partnership with the Powur fulfillment grid allows homeowners to transition to Tier-1 solar panels, advanced micro-inverters, and high-capacity battery storage with zero-down financing options.
           </p>
-          <a href={affiliateLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Powur Solar" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
             Calculate Energy Offsets <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>

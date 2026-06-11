@@ -43,7 +43,7 @@ export default function NdaGeneratorLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations.
           </p>
-          <button className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <button onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "launch_tool", { event_category: "conversion", event_label: "NDA Generator" }); }} className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Launch Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
@@ -104,7 +104,7 @@ export default function NdaGeneratorLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Secure Your Data. <br/>Move Faster.</h2>
           <p className="text-zinc-400 text-sm mb-10">Don't let legal friction slow down your deals. Generate a standard, fair agreement in under 60 seconds.</p>
-          <button className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <button onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "launch_tool", { event_category: "conversion", event_label: "NDA Generator" }); }} className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Initialize Document <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
