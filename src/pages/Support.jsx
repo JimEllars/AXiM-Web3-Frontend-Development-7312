@@ -1,277 +1,280 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import SEO from '../components/SEO';
+import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import { sanitizeInput } from '../lib/sanitize'; // Assume this exists per previous sprints
-
-// --- Cryptographic Utility Functions (Phase 1 Spec) ---
-const generateEncryptionKey = async () => {
-  return await window.crypto.subtle.generateKey(
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
-};
-
-const encryptPayload = async (data, key) => {
-  const encoder = new TextEncoder();
-  const encodedData = encoder.encode(JSON.stringify(data));
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
-
-  const encryptedContent = await window.crypto.subtle.encrypt(
-    { name: "AES-GCM", iv: iv },
-    key,
-    encodedData
-  );
-
-  return {
-    encrypted_payload: Array.from(new Uint8Array(encryptedContent)),
-    iv: Array.from(iv)
-  };
-};
+import { logTelemetry } from '../lib/telemetry';
 
 export default function Support() {
-  const [ticketState, setTicketState] = useState('idle'); // idle | encrypting | transmitting | success | error
-  const [errorMessage, setErrorMessage] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Standard', attachment: null });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  // State matched exactly to the Ingress Schema
-  const [idempotencyKey, setIdempotencyKey] = useState('');
-
-  // Generate a unique transaction key when the component mounts
-  useEffect(() => {
-    if (window.crypto && window.crypto.randomUUID) {
-      setIdempotencyKey(window.crypto.randomUUID());
-    } else {
-      setIdempotencyKey(Date.now().toString(36) + Math.random().toString(36).substring(2));
-    }
-  }, []);
-
-  const [formData, setFormData] = useState({
-    customer_name: '',
-    customer_email: '',
-    subject: 'Demand Letter Generation', // Acts as subject category
-    description: ''
-  });
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleTicketSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email || !formData.subject || !formData.issue) return;
 
-    // BOT TRAP: If the hidden field is filled out, silently abort but pretend to succeed
-    if (formData._axim_trap) {
-      console.warn("Automated payload detected. Nullifying transit.");
-      setTicketState('success');
-      return;
-    }
-    setTicketState('encrypting');
-    setErrorMessage('');
+    setIsSubmitting(true);
+    setErrorMsg(null);
 
     try {
-      // 1. Client-Side Sanitization
-      const cleanPayload = {
-        customer_name: sanitizeInput(formData.customer_name),
-        customer_email: sanitizeInput(formData.customer_email),
-        subject: sanitizeInput(formData.subject),
-        description: sanitizeInput(formData.description),
-        source: "website_support_form",
-        tags: ["public_web"]
-      };
+      logTelemetry('support_ticket_initiated', { priority: formData.priority, subject: formData.subject });
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
 
-      // 2. AES-256-GCM Payload Encryption
-      const key = await generateEncryptionKey();
-      const encryptedEnvelope = await encryptPayload(cleanPayload, key);
+      // Graceful local dev fallback if env vars are missing
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing VITE_ONYX_WORKER_URL or VITE_AXIM_ONYX_SECRET. Simulating submission...");
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 1500);
+        return;
+      }
 
-      console.log("[AXiM Core]: Payload Encrypted. Initiating Edge Transmission...", encryptedEnvelope);
+      // Construct multipart/form-data payload
+      const payload = new FormData();
+      payload.append('customer_email', formData.email);
+      if (formData.name) payload.append('customer_name', formData.name);
+      payload.append('subject', `[${formData.priority}] ${formData.subject}`);
+      payload.append('description', formData.issue);
+      payload.append('source', 'support_form');
+      if (formData.attachment) payload.append('attachment', formData.attachment);
 
-      setTicketState('transmitting');
-
-      // 3. Edge Transmission (Proxy to Onyx Webhook)
-      const coreApiUrl = import.meta.env.VITE_CORE_API_URL || 'https://api.axim.us.com';
-      const response = await fetch(`${coreApiUrl}/v1/ingress/support`, {
+      // Execute Secure Submission
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-Source-Origin': 'axim-public-hub',
-          'Idempotency-Key': idempotencyKey // INJECTED CRITICAL HEADER
+          'Authorization': `Bearer ${secret}`
         },
-        body: JSON.stringify(encryptedEnvelope)
+        body: payload
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`Edge submission rejected: ${response.status}`);
       }
 
-      setTicketState('success');
-
-    } catch (error) {
-      console.error("Transmission Error:", error);
-      setErrorMessage("Cryptographic handshake failed. Please check your connection and try again.");
-      setTicketState('error');
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Support Uplink Failed:", err);
+      setErrorMsg("Submission failed. Please verify your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        setErrorMsg("Attachment exceeds 5MB file limit.");
+        return;
+      }
+      setErrorMsg(null);
+      setFormData({ ...formData, attachment: file });
+    }
+  };
+
+  const faqs = [
+    { q: "How do I access my generated documents?", a: "Navigate to your Profile Dashboard. All parsed legal and financial documents are securely encrypted and available there for download." },
+    { q: "Are the generated documents legally binding?", a: "AXiM generators provide structural efficiency and standardized formatting. However, we always recommend consulting independent legal counsel to guarantee jurisdictional compliance." },
+    { q: "How do I request a custom integration?", a: "Enterprise scaling requires a dedicated strategy session. Submit a request via our Consultation page to speak directly with an architect." }
+  ];
+
+  const wikiCategories = [
+    { title: "User Guides", icon: LuIcons.LuBookOpen, desc: "Step-by-step tutorials for navigating the AXiM Hub." },
+    { title: "API Documentation", icon: LuIcons.LuCode, desc: "Endpoints and integration guides for developers." },
+    { title: "Billing & Subscriptions", icon: LuIcons.LuCreditCard, desc: "Manage your account settings and invoices." },
+    { title: "Security & Privacy", icon: LuIcons.LuShieldCheck, desc: "Overview of our encryption and data handling protocols." }
+  ];
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="System Support | AXiM Systems" description="Access operational support, system documentation, and submit encrypted terminal tickets." />
+      <SEO title="Help Center | AXiM Systems" description="Customer support, FAQs, and platform documentation." />
 
-      {/* Header */}
-      <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10 w-full flex flex-col items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,64,64,0.15),transparent_50%)] pointer-events-none w-full" />
-        <div className="w-full max-w-4xl mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 bg-[#004040]/20 border border-[#004040] rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_25px_rgba(0,64,64,0.3)]">
-            <SafeIcon icon={LuIcons.LuLifeBuoy} className="w-6 h-6 text-[#004040]" />
+      <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center">
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10 text-center w-full flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 bg-axim-purple/10 border border-axim-purple/30 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.2)]">
+            <SafeIcon icon={LuIcons.LuLifeBuoy} className="w-8 h-8 text-axim-purple" />
           </div>
-          <div className="w-full flex flex-col items-center justify-center mb-4">
-             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight flex flex-col items-center justify-center w-full m-0 p-0">
-               <span className="block w-full text-center">System</span>
-               <span className="block w-full text-center text-[#004040]" style={{ WebkitTextStroke: '0.5px rgba(255, 255, 255, 0.4)' }}>Support.</span>
-             </h1>
-          </div>
-          <p className="w-full text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed text-center">
-            Initialize a terminal ticket below to securely route your issue to our engineering and resolution queue.
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4 w-full flex flex-col items-center justify-center text-center">
+            Help <span className="text-axim-purple">Center.</span>
+          </h1>
+          <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+            Submit a support ticket, browse frequently asked questions, or access our comprehensive documentation library.
           </p>
         </div>
       </section>
 
-      {/* Grid Architecture */}
-      <section className="w-full max-w-5xl mx-auto px-6 py-24 flex flex-col lg:flex-row gap-12 items-start justify-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
 
-        {/* Support Intake Form (Primary Column) */}
-        <div className="w-full lg:w-2/3">
-          <div className="w-full bg-[#050505] border border-white/5 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#004040]/10 blur-[50px] pointer-events-none" />
-
-            {/* UPDATED: Changed from "Terminal Intake" to "Request Support" */}
-            <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuSquareTerminal} className="w-6 h-6 text-[#004040]" /> Request Support
-            </h2>
-
-            {ticketState === 'error' && (
-               <div className="w-full mb-6 p-4 border border-red-500/30 bg-red-500/10 text-xs font-mono text-red-400 uppercase tracking-widest rounded-sm text-center">
-                 {errorMessage}
-               </div>
-            )}
-
-            {ticketState === 'success' ? (
-              <div className="w-full py-16 text-center animate-fade-in-up flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-[#004040]/20 border border-[#004040] flex items-center justify-center rounded-full mx-auto mb-6">
-                   <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-[#004040]" />
-                </div>
-                <h3 className="w-full text-xl font-black uppercase tracking-widest text-white mb-4 text-center">Ticket Transmitted</h3>
-                <p className="w-full text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8 text-center">
-                  Your diagnostic log has been securely routed to our resolution queue. Standard response protocols mandate a 24-48 hour turnaround.
+        {/* Left Col: Support Form */}
+        <div className="lg:col-span-5">
+          {submitted ? (
+             <div className="bg-[#0F172A] border border-axim-purple/50 p-10 rounded-sm text-center shadow-[0_0_50px_rgba(147,51,234,0.15)] relative overflow-hidden h-full flex flex-col justify-center min-h-[400px]">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
+                <SafeIcon icon={LuIcons.LuCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
+                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Ticket Received</h2>
+                <p className="text-zinc-400 text-xs leading-relaxed font-mono tracking-widest uppercase">
+                  Our support team will review your request and respond shortly.
                 </p>
-                <button
-                  onClick={() => {
-                  setTicketState('idle');
-                  setFormData({customer_name: '',
-    customer_email: '',
-    subject: 'Demand Letter Generation',
-    description: '',
-    _axim_trap: ''});
-                  if (window.crypto && window.crypto.randomUUID) {
-                    setIdempotencyKey(window.crypto.randomUUID());
-                  } else {
-                    setIdempotencyKey(Date.now().toString(36) + Math.random().toString(36).substring(2));
-                  }
-                }}
-                  className="px-6 py-3 border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm"
-                >
-                  Submit Additional Log
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleTicketSubmit} className="w-full space-y-6 animate-fade-in-up relative z-10">
-                {/* Anti-Bot Honeypot */}
-                <div className="opacity-0 absolute top-0 left-0 h-0 w-0 overflow-hidden pointer-events-none z-[-1]" aria-hidden="true">
-                  <label htmlFor="_axim_trap">Do not fill this out if you are human</label>
-                  <input type="text" id="_axim_trap" name="_axim_trap" value={formData._axim_trap} onChange={handleInputChange} tabIndex="-1" autoComplete="off" />
-                </div>
+             </div>
+          ) : (
+            <div className="bg-black border border-white/10 p-8 rounded-sm shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
 
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="w-full">
-                    {/* UPDATED: "Registered Name" -> "Name" */}
-                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Name</label>
-                    <input required type="text" name="customer_name" value={formData.customer_name} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm" />
+              <div className="relative z-10">
+                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2 flex items-center gap-2">
+                  <SafeIcon icon={LuIcons.LuMail} className="w-5 h-5 text-axim-purple" /> Contact Support
+                </h3>
+                <p className="text-xs text-zinc-500 mb-6 leading-relaxed">Fill out the form below. Please include screenshots or files if it helps explain your request.</p>
+
+                {errorMsg && (
+                  <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
+                    <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+                    {errorMsg}
                   </div>
-                  <div className="w-full">
-                    {/* UPDATED: "Secure Email" -> "Email" */}
-                    <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Email</label>
-                    <input required type="email" name="customer_email" value={formData.customer_email} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm" />
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Full Name</label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="John Doe"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Email Address</label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        required
+                        placeholder="email@company.com"
+                        className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="w-full">
-                  {/* UPDATED: "System Sector" -> "I need Help With:" */}
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">I need Help With:</label>
-                  <select name="subject" value={formData.subject} onChange={handleInputChange} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm appearance-none">
-                    <option value="Demand Letter Generation">Quick Demand Letter</option>
-                    <option value="Partner Auth Issue">Partner Integrations</option>
-                    <option value="Billing Dispute">Billing & Subscription</option>
-                    <option value="General Infrastructure">General Infrastructure</option>
-                  </select>
-                </div>
-
-                <div className="w-full">
-                  {/* UPDATED: "Diagnostic Log / Issue Description" -> "Describe Your Problem:" */}
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Describe Your Problem:</label>
-                  <textarea required name="description" value={formData.description} onChange={handleInputChange} rows="5" className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#004040] transition-colors text-sm resize-none"></textarea>
-                </div>
-
-                {/* NEW: Attachment Upload Field */}
-                <div className="w-full">
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400 mb-2 flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuPaperclip} className="w-3 h-3" /> Attach Documents (Optional)
-                  </label>
-                  <div className="w-full bg-[#0A0A0A] border border-dashed border-white/20 rounded-sm px-4 py-6 text-center hover:border-[#004040] transition-colors cursor-pointer relative">
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Subject</label>
                     <input
-                      type="file"
-                      name="attachments"
-                      multiple
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) => console.log("Files selected:", e.target.files)} // Placeholder for file handling logic
+                      type="text"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                      required
+                      placeholder="Brief description of your issue"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                     />
-                    <p className="text-xs text-zinc-500 font-medium">Drag & drop files or click to browse</p>
                   </div>
-                </div>
 
-                <button
-                  type="submit"
-                  disabled={ticketState === 'submitting' || ticketState === 'encrypting'}
-                  className={`w-full py-4 text-white text-xs font-black uppercase tracking-widest transition-colors rounded-sm shadow-lg ${ticketState === 'submitting' || ticketState === 'encrypting' ? 'bg-[#004040]/50 cursor-not-allowed' : 'bg-[#004040] hover:bg-white hover:text-black shadow-[0_0_20px_rgba(0,64,64,0.4)]'}`}
-                >
-                  {ticketState === 'encrypting' ? 'Encrypting Payload...' : ticketState === 'submitting' ? 'Transmitting Data...' : 'Submit Ticket'}
-                </button>
-              </form>
-            )}
-          </div>
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Priority Level</label>
+                    <select
+                      value={formData.priority}
+                      onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm appearance-none cursor-pointer"
+                    >
+                      <option value="Standard" className="bg-[#0F172A]">Standard Question</option>
+                      <option value="High" className="bg-[#0F172A]">High (Bug / Error)</option>
+                      <option value="Critical" className="bg-[#0F172A]">Critical (Billing / Account Access)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Message Details</label>
+                    <textarea
+                      value={formData.issue}
+                      onChange={(e) => setFormData({...formData, issue: e.target.value})}
+                      required
+                      rows="4"
+                      placeholder="How can we help you today?"
+                      className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none rounded-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2 flex justify-between">
+                      <span>Attachments (Optional)</span>
+                      <span className="text-zinc-600">Max 5MB</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        onChange={handleFileChange}
+                        accept="image/*,.pdf,.txt"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <div className="w-full bg-white/5 border border-white/10 border-dashed px-4 py-3 text-zinc-400 text-xs font-mono uppercase tracking-widest flex items-center justify-center gap-2 rounded-sm group-hover:border-axim-purple transition-colors">
+                         <SafeIcon icon={LuIcons.LuPaperclip} className="w-4 h-4" />
+                         {formData.attachment ? formData.attachment.name : "Attach a File or Screenshot"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm shadow-lg mt-4"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"/> Processing...</span>
+                    ) : (
+                       <span className="flex items-center gap-2">Send Message <SafeIcon icon={LuIcons.LuSend} className="w-3 h-3"/></span>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Self-Serve FAQ Matrix (Sidebar Column) */}
-        <aside className="w-full lg:w-1/3 space-y-6">
-          <h3 className="text-white font-black uppercase tracking-widest text-sm border-b border-white/10 pb-4 mb-6 flex items-center gap-2">
-            <SafeIcon icon={LuIcons.LuSearch} className="w-4 h-4 text-zinc-500" /> Self-Serve Matrix
-          </h3>
+        {/* Right Col: FAQ & Wiki */}
+        <div className="lg:col-span-7 space-y-12">
 
-          <div className="bg-[#050505] border border-white/5 p-6 rounded-sm hover:border-[#004040]/30 transition-colors">
-            <h4 className="text-white font-bold text-xs uppercase tracking-tight mb-2">Demand Letter Access</h4>
-            <p className="text-xs text-zinc-400 leading-relaxed">Generated documents are instantly provided via secure PDF link and backed up to your registered email.</p>
-          </div>
+          {/* FAQ */}
+          <section>
+            <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+              <SafeIcon icon={LuIcons.LuInfo} className="w-5 h-5 text-axim-gold" />
+              <h2 className="text-xl font-black uppercase tracking-tighter text-white">Frequently Asked Questions</h2>
+            </div>
+            <div className="space-y-4">
+              {faqs.map((faq, idx) => (
+                <div key={idx} className="bg-black border border-white/10 p-6 rounded-sm hover:border-axim-gold/50 transition-colors shadow-lg">
+                  <h4 className="text-sm font-bold text-white mb-2">{faq.q}</h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          <div className="bg-[#050505] border border-white/5 p-6 rounded-sm hover:border-[#004040]/30 transition-colors">
-            <h4 className="text-white font-bold text-xs uppercase tracking-tight mb-2">Partner Integrations</h4>
-            <p className="text-xs text-zinc-400 leading-relaxed">To initialize AI or automation systems, navigate to the specific Partner Hub and deploy the connection parameters.</p>
-          </div>
-        </aside>
+          {/* Wiki */}
+          <section>
+            <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+              <SafeIcon icon={LuIcons.LuLibrary} className="w-5 h-5 text-axim-purple" />
+              <h2 className="text-xl font-black uppercase tracking-tighter text-white">Documentation & Guides</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {wikiCategories.map((wiki, idx) => (
+                <div key={idx} className="group cursor-pointer bg-[#0F172A] border border-white/5 p-6 rounded-sm hover:border-axim-purple/50 transition-colors shadow-lg relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-axim-purple/5 group-hover:bg-axim-purple/10 transition-colors blur-xl rounded-full" />
+                  <SafeIcon icon={wiki.icon} className="w-6 h-6 text-axim-purple mb-4" />
+                  <h4 className="text-sm font-bold text-white mb-2 group-hover:text-axim-purple transition-colors">{wiki.title}</h4>
+                  <p className="text-[0.65rem] text-zinc-500 uppercase tracking-widest font-mono">{wiki.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-      </section>
+        </div>
+      </div>
     </div>
   );
 }
