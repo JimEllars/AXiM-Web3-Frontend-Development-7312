@@ -1,0 +1,158 @@
+diff --git a/axim-web3-frontend@1.0.9 b/axim-web3-frontend@1.0.9
+new file mode 100644
+index 0000000..e69de29
+diff --git a/index.html b/index.html
+index dc651c7..4b437ce 100644
+--- a/index.html
++++ b/index.html
+@@ -3,27 +3,20 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <title>AXiM Systems | Enterprise Software Provider</title>
+-    <meta name="description" content="AXiM Systems is an enterprise software provider integrating energy infrastructure, mission-critical connectivity, and autonomous intelligence." />
+-    <meta name="keywords" content="AXiM, Web3, Smart Grids, Autonomous Intelligence, Energy Infrastructure" />
+-    <meta name="author" content="AXiM Systems" />
+-    <meta name="robots" content="index, follow" />
+-    <meta name="language" content="English" />
+-    <meta name="revisit-after" content="7 days" />
++    <title>AXiM Systems | Work Smarter</title>
++    <meta name="description" content="Decentralized business infrastructure, AI tools, and enterprise automation strategies." />
+
+-    <!-- Open Graph / Facebook -->
+     <meta property="og:type" content="website" />
+     <meta property="og:url" content="https://axim.us.com/" />
+-    <meta property="og:title" content="AXiM Systems | Enterprise Software Provider" />
+-    <meta property="og:description" content="Builders of A New Era. Integrating energy, connectivity, and intelligence." />
++    <meta property="og:title" content="AXiM Systems | Enterprise Infrastructure" />
++    <meta property="og:description" content="Decentralized business infrastructure, AI tools, and enterprise automation strategies." />
+     <meta property="og:image" content="https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp" />
+
+-    <!-- Twitter -->
+-    <meta name="twitter:card" content="summary_large_image" />
+-    <meta name="twitter:url" content="https://axim.us.com/" />
+-    <meta name="twitter:title" content="AXiM Systems | Enterprise Software Provider" />
+-    <meta name="twitter:description" content="Builders of A New Era. Integrating energy, connectivity, and intelligence." />
+-    <meta name="twitter:image" content="https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp" />
++    <meta property="twitter:card" content="summary_large_image" />
++    <meta property="twitter:url" content="https://axim.us.com/" />
++    <meta property="twitter:title" content="AXiM Systems | Enterprise Infrastructure" />
++    <meta property="twitter:description" content="Decentralized business infrastructure, AI tools, and enterprise automation strategies." />
++    <meta property="twitter:image" content="https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp" />
+
+     <link rel="canonical" href="https://axim.us.com/" />
+     <meta name="theme-color" content="#050505" />
+diff --git a/src/pages/Article.jsx b/src/pages/Article.jsx
+index 37811c7..ca2818b 100644
+--- a/src/pages/Article.jsx
++++ b/src/pages/Article.jsx
+@@ -85,21 +85,16 @@ export default function Article() {
+
+   // 3. SAFE EXECUTION: The component will ONLY reach this point if `article` is a fully loaded object.
+   // It is now safe to declare variables that rely on the article object.
+-  const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+-  const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+-  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || "AXiM Systems Intelligence Briefing";
++  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
++  const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
++  const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
++  const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
++
++  // Clean titles and excerpts for schema and meta tags
++  const cleanTitle = article.title?.rendered?.replace(/<[^>]+>/g, '') || 'Intelligence Briefing';
++  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems Intelligence Briefing';
+
+-  // Additional variables needed by the bottom part of the component
+-  const authorName = article._embedded?.author?.[0]?.name || 'AXiM Protocol';
+-  const formattedDate = new Date(article.date).toLocaleDateString('en-US', {
+-    year: 'numeric',
+-    month: 'long',
+-    day: 'numeric'
+-  });
+-  const fallbackImage = defaultImage;
+-
+-  // Construct rigorous AIO/SEO NewsArticle Schema
+-  // Construct rigorous Google News Compliant JSON-LD Schema
++  // Construct AIO/SEO Rich Snippet Schema
+   const articleSchema = {
+     "@context": "https://schema.org",
+     "@type": "NewsArticle",
+@@ -107,14 +102,13 @@ export default function Article() {
+       "@type": "WebPage",
+       "@id": window.location.href
+     },
+-    "headline": article.title?.rendered || "AXiM Systems Article",
+-    "description": cleanExcerpt,
+-    "image": [imageUrl || defaultImage],
+-    "datePublished": new Date(article.date).toISOString(),
+-    "dateModified": article.modified ? new Date(article.modified).toISOString() : new Date(article.date).toISOString(),
++    "headline": cleanTitle,
++    "image": [imageUrl],
++    "datePublished": article.date,
++    "dateModified": article.modified || article.date,
+     "author": {
+-      "@type": "Organization",
+-      "name": "AXiM Systems Editorial",
++      "@type": "Person",
++      "name": authorName,
+       "url": "https://axim.us.com/"
+     },
+     "publisher": {
+@@ -125,16 +119,15 @@ export default function Article() {
+         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+       }
+     },
+-    "isAccessibleForFree": "True",
+-    "articleSection": "Technology News"
++    "description": cleanExcerpt
+   };
+
+   return (
+     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+       <SEO
+-        title={`${article.title?.rendered || 'Article'} | AXiM Systems`}
++        title={`${cleanTitle} | AXiM Systems`}
+         description={cleanExcerpt}
+-        image={imageUrl || defaultImage}
++        image={imageUrl}
+         type="article"
+         url={window.location.href}
+         customSchema={[articleSchema]}
+diff --git a/src/pages/Articles.jsx b/src/pages/Articles.jsx
+index f040298..aa28f9e 100644
+--- a/src/pages/Articles.jsx
++++ b/src/pages/Articles.jsx
+@@ -64,9 +64,29 @@ export default function Articles() {
+     return () => { isMounted = false; };
+   }, []);
+
++  const blogSchema = {
++    "@context": "https://schema.org",
++    "@type": "Blog",
++    "name": "AXiM Intelligence Hub",
++    "description": "Latest intelligence briefings, system architecture updates, and decentralized enterprise automation strategies.",
++    "url": "https://axim.us.com/articles",
++    "publisher": {
++      "@type": "Organization",
++      "name": "AXiM Systems",
++      "logo": {
++        "@type": "ImageObject",
++        "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
++      }
++    }
++  };
++
+   return (
+     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+-      <SEO title="Articles | AXiM Systems" description="Strategic insights, software spotlights, and decentralized infrastructure updates." />
++      <SEO
++        title="Intelligence Hub | AXiM Systems"
++        description="Latest intelligence briefings, system architecture updates, and decentralized enterprise automation strategies."
++        customSchema={[blogSchema]}
++      />
+
+       {/* Hub Hero */}
+       <section className="pt-32 pb-16 relative overflow-hidden">
+diff --git a/vite b/vite
+new file mode 100644
+index 0000000..e69de29

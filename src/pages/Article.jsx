@@ -85,21 +85,16 @@ export default function Article() {
 
   // 3. SAFE EXECUTION: The component will ONLY reach this point if `article` is a fully loaded object.
   // It is now safe to declare variables that rely on the article object.
-  const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
-  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || "AXiM Systems Intelligence Briefing";
+  const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+  const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || fallbackImage;
+  const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
+  const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-  // Additional variables needed by the bottom part of the component
-  const authorName = article._embedded?.author?.[0]?.name || 'AXiM Protocol';
-  const formattedDate = new Date(article.date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-  const fallbackImage = defaultImage;
+  // Clean titles and excerpts for schema and meta tags
+  const cleanTitle = article.title?.rendered?.replace(/<[^>]+>/g, '') || 'Intelligence Briefing';
+  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems Intelligence Briefing';
 
-  // Construct rigorous AIO/SEO NewsArticle Schema
-  // Construct rigorous Google News Compliant JSON-LD Schema
+  // Construct AIO/SEO Rich Snippet Schema
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -107,14 +102,13 @@ export default function Article() {
       "@type": "WebPage",
       "@id": window.location.href
     },
-    "headline": article.title?.rendered || "AXiM Systems Article",
-    "description": cleanExcerpt,
-    "image": [imageUrl || defaultImage],
-    "datePublished": new Date(article.date).toISOString(),
-    "dateModified": article.modified ? new Date(article.modified).toISOString() : new Date(article.date).toISOString(),
+    "headline": cleanTitle,
+    "image": [imageUrl],
+    "datePublished": article.date,
+    "dateModified": article.modified || article.date,
     "author": {
-      "@type": "Organization",
-      "name": "AXiM Systems Editorial",
+      "@type": "Person",
+      "name": authorName,
       "url": "https://axim.us.com/"
     },
     "publisher": {
@@ -125,16 +119,15 @@ export default function Article() {
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
       }
     },
-    "isAccessibleForFree": "True",
-    "articleSection": "Technology News"
+    "description": cleanExcerpt
   };
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title={`${article.title?.rendered || 'Article'} | AXiM Systems`}
+        title={`${cleanTitle} | AXiM Systems`}
         description={cleanExcerpt}
-        image={imageUrl || defaultImage}
+        image={imageUrl}
         type="article"
         url={window.location.href}
         customSchema={[articleSchema]}

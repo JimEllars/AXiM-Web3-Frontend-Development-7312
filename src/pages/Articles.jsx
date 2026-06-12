@@ -64,9 +64,29 @@ export default function Articles() {
     return () => { isMounted = false; };
   }, []);
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "AXiM Intelligence Hub",
+    "description": "Latest intelligence briefings, system architecture updates, and decentralized enterprise automation strategies.",
+    "url": "https://axim.us.com/articles",
+    "publisher": {
+      "@type": "Organization",
+      "name": "AXiM Systems",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+      }
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Articles | AXiM Systems" description="Strategic insights, software spotlights, and decentralized infrastructure updates." />
+      <SEO
+        title="Intelligence Hub | AXiM Systems"
+        description="Latest intelligence briefings, system architecture updates, and decentralized enterprise automation strategies."
+        customSchema={[blogSchema]}
+      />
 
       {/* Hub Hero */}
       <section className="pt-32 pb-16 relative overflow-hidden">
