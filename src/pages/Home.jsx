@@ -16,20 +16,29 @@ import { logTelemetry } from '../lib/telemetry';
 
 export default function Home() {
   const [dailyNews, setDailyNews] = useState([]);
+  const [dailyNewsCategoryId, setDailyNewsCategoryId] = useState(null);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const fetchDailyNews = async () => {
       try {
+        // Step 1: Capture the exact ID for the Daily News category
         const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=daily-news`);
         const cats = await res.json();
+
         if (cats && cats.length > 0) {
-          const posts = await fetchPosts({ categories: cats[0].id, per_page: 3, _embed: 1 });
+          const catId = cats[0].id;
+          if (isMounted) setDailyNewsCategoryId(catId);
+
+          // Step 2: Fetch the top 3 posts for the Hero Feed
+          const posts = await fetchPosts({ categories: catId, per_page: 3, _embed: 1 });
           if (isMounted) {
             setDailyNews(posts || []);
             setIsNewsLoading(false);
           }
+        } else {
+          if (isMounted) setIsNewsLoading(false);
         }
       } catch (err) {
         console.error("Failed to load daily news", err);
@@ -40,8 +49,9 @@ export default function Home() {
     return () => { isMounted = false; };
   }, []);
 
-  // Map primitive array indices explicitly to ensure down-stream compliance
-  const excludeDailyNews = dailyNews.map(dn => dn.id);
+  // Isolate arrays dynamically to ensure strict bleed prevention
+  const excludeDailyNewsIds = dailyNews.map(dn => dn.id);
+  const strictCategoryExclusions = dailyNewsCategoryId ? [dailyNewsCategoryId] : [];
 
   const homeSchema = {
     "@context": "https://schema.org",
@@ -69,7 +79,7 @@ export default function Home() {
       <div className="w-full">
         <Hero />
 
-        {/* 1. Daily News Feed (Primary Top-Of-Funnel Sequence) */}
+        {/* 1. Daily News Feed */}
         {dailyNews.length > 0 && (
           <section className="py-16 relative overflow-hidden bg-bg-void">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
@@ -88,9 +98,15 @@ export default function Home() {
           </section>
         )}
 
-        {/* 2. Featured Category (Safely isolated via parsed exclusion hooks) */}
+        {/* 2. Featured Category (Strictly Isolated) */}
         <section className="py-24 relative z-10 w-full">
-          <FeaturedArticles title="Featured Articles" categorySlug="featured" limit={6} excludeIds={excludeDailyNews} />
+          <FeaturedArticles
+            title="Featured Articles"
+            categorySlug="featured"
+            limit={6}
+            excludeIds={excludeDailyNewsIds}
+            excludeCategories={strictCategoryExclusions}
+          />
         </section>
 
         {/* 3. Partner Break: Make */}
@@ -104,9 +120,15 @@ export default function Home() {
           onClick={() => logTelemetry('partner_click', { partner: 'make', zone: 'homepage_promo' })}
         />
 
-        {/* 4. Spotlight Category (Strict isolation preventing Daily News leakage) */}
+        {/* 4. Spotlight Category (Strictly Isolated) */}
         <section className="py-24 relative z-10 w-full">
-          <FeaturedArticles title="Software Spotlight" categorySlug="app-software" limit={6} excludeIds={excludeDailyNews} />
+          <FeaturedArticles
+            title="Software Spotlight"
+            categorySlug="app-software"
+            limit={6}
+            excludeIds={excludeDailyNewsIds}
+            excludeCategories={strictCategoryExclusions}
+          />
         </section>
 
         {/* 5. Partner Break: Powur */}
@@ -162,7 +184,7 @@ export default function Home() {
             <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
             <h2 className="text-3xl font-black uppercase tracking-tighter text-white">All Articles</h2>
           </div>
-          <NewsFeed limit={12} title="All Articles" />
+          <NewsFeed limit={12} />
         </section>
 
         <ProactiveBanner />
