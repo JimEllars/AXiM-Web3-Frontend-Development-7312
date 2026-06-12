@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { sanitizeInput } from '../lib/sanitize';
+import { logTelemetry } from '../lib/telemetry';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
+
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -7,6 +11,7 @@ export default function Consultation() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [networkFault, setNetworkFault] = useState(false);
   const [formData, setFormData] = useState({
     inquiryType: '',
     name: '',
@@ -30,19 +35,64 @@ export default function Consultation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setNetworkFault(false);
 
-    // Simulate Network Ingestion Delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // 1. Client-Side Sanitation
+      const cleanName = sanitizeInput(formData.name);
+      const cleanEmail = sanitizeInput(formData.email);
+      const cleanCompany = sanitizeInput(formData.company);
+      const cleanDetails = sanitizeInput(formData.details);
 
-    // In a production environment, this payload is sent to Supabase or an Edge Worker
-    console.info(`[AXiM_INTAKE] New Lead captured and routed to James.Ellars@axim.us.com`, formData);
+      // 2. Telemetry Sync
+      logTelemetry('consultation_requested', { category: formData.inquiryType });
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing Integration Keys. Simulating secure payload drop...");
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        return;
+      }
+
+      const payload = new FormData();
+      payload.append('customer_email', cleanEmail);
+      payload.append('customer_name', cleanName);
+      payload.append('subject', `[Consultation: ${formData.inquiryType}] ${cleanCompany || 'Independent'}`);
+      payload.append('description', cleanDetails);
+      payload.append('source', 'consultation_form');
+
+      // 3. Cryptographic Envelope Transmission (TLS + Bearer)
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${secret}` },
+        body: payload
+      });
+
+      if (!response.ok) throw new Error(`Edge Proxy Rejected: ${response.status}`);
+
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    } catch (err) {
+      console.error("[AXiM_INTAKE] Transmission Failure:", err);
+      setIsSubmitting(false);
+      setNetworkFault(true); // Triggers graceful degradation UI
+    }
   };
+
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+
+      {networkFault && (
+         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
+            <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+         </div>
+      )}
+
       <SEO
         title="Request a Consultation | AXiM Systems"
         description="Schedule a strategy session with an AXiM systems architect to scale your decentralized infrastructure."
