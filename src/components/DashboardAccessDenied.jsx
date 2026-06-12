@@ -1,30 +1,35 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-
-const { LuShield } = LuIcons;
+import SEO from './SEO';
 
 export default function DashboardAccessDenied() {
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center relative z-10">
-      <div className="relative mb-12">
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.4, ease: "circOut",
-                  repeat: Infinity ,
-                }} className="w-32 h-32 border border-red-500/20 rounded-full flex items-center justify-center" >
-          <div className="w-24 h-24 border border-red-500/40 rounded-full border-dashed" />
-        </motion.div>
-        <SafeIcon icon={LuShield} className="w-12 h-12 text-red-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-      </div>
-      <h2 className="text-2xl font-black uppercase mb-4 tracking-tight">Access Denied</h2>
-      <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs uppercase tracking-[0.2em]">Admin Access Only. Valid @axim.us.com identity required.</p>
+    <div className="w-full min-h-screen bg-bg-void relative flex items-center justify-center p-6 z-10">
+      <SEO title="Access Restricted | AXiM" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.05),transparent_50%)] pointer-events-none" />
 
-      <div className="flex justify-center scale-110 origin-center mb-8">
+      <div className="w-full max-w-lg bg-[#050505] border border-red-500/20 p-10 rounded-sm text-center shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
 
-      </div>
+        <div className="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
+          <SafeIcon icon={LuIcons.LuLock} className="w-6 h-6 text-red-500" />
+        </div>
 
-      <div className="p-4 bg-white/5 border border-white/10 font-mono text-[10px] text-zinc-600 uppercase mt-4">
-        Status: Await_Handshake // Error: 0xAUTH_REQ
+        <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Clearance Required</h2>
+        <p className="text-zinc-400 font-mono text-[0.65rem] uppercase tracking-widest leading-relaxed mb-8">
+          The requested operational vault requires an active authentication token. Please log in or return to the public network grid.
+        </p>
+
+        <div className="flex flex-col gap-3">
+          <button className="w-full py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-colors rounded-sm flex items-center justify-center gap-2">
+            <SafeIcon icon={LuIcons.LuKey} className="w-4 h-4" /> Authenticate
+          </button>
+          <Link to="/" className="w-full py-4 bg-transparent border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white/5 transition-colors rounded-sm">
+            Return to Public Hub
+          </Link>
+        </div>
       </div>
     </div>
   );
