@@ -25,6 +25,7 @@ const Support = lazy(() => import('./pages/Support'));
 const Partners = lazy(() => import('./pages/Partners'));
 const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Profile = lazy(() => import('./pages/Profile'));
+const AuthGateway = lazy(() => import('./pages/AuthGateway'));
 const Status = lazy(() => import('./pages/Status'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
@@ -108,6 +109,7 @@ function App() {
             <Route path="/partners/chatbase" element={<PageTransition><ChatbaseLanding /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
+            <Route path="/auth" element={<PageTransition><AuthGateway /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
