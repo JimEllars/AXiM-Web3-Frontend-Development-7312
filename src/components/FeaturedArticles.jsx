@@ -3,8 +3,10 @@ import DOMPurify from 'isomorphic-dompurify';
 import WPImage from './WPImage';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import ArticleCard from './ArticleCard';
+import SafeIcon from '../common/SafeIcon';
+import * as LuIcons from 'react-icons/lu';
 
-export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6, excludeIds = [] }) {
+export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6, excludeIds = [], excludeCategories = [] }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -18,9 +20,14 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         const params = { per_page: limit };
         if (categoryId) params.categories = categoryId;
 
-        // API-Level Exclusion: If IDs are supplied to prevent overlap, append them to the request parameters
+        // Post ID Exclusion
         if (excludeIds && excludeIds.length > 0) {
           params.exclude = excludeIds.join(',');
+        }
+
+        // Strict Category Exclusion (Prevents Feed Bleed)
+        if (excludeCategories && excludeCategories.length > 0) {
+          params.categories_exclude = excludeCategories.join(',');
         }
 
         const data = await fetchPosts(params);
@@ -36,7 +43,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
 
     loadArticles();
     return () => { isMounted = false; };
-  }, [categorySlug, limit, JSON.stringify(excludeIds)]);
+  }, [categorySlug, limit, JSON.stringify(excludeIds), JSON.stringify(excludeCategories)]);
 
   if (isLoading) {
     return (
