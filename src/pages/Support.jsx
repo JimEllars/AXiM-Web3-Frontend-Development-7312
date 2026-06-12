@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sanitizeInput } from '../lib/sanitize';
+import { encryptPayload } from '../lib/crypto';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 
 import SEO from '../components/SEO';
@@ -46,28 +47,33 @@ export default function Support() {
         return;
       }
 
-      const payload = new FormData();
-      const cleanEmail = sanitizeInput(formData.email);
-      const cleanName = sanitizeInput(formData.name);
-      const cleanSubject = sanitizeInput(formData.subject);
-      const cleanIssue = sanitizeInput(formData.issue);
+      // Client-Side Sanitation
+      const cleanData = {
+        name: sanitizeInput(formData.name),
+        email: sanitizeInput(formData.email),
+        subject: sanitizeInput(formData.subject),
+        issue: sanitizeInput(formData.issue)
+      };
 
-      payload.append('customer_email', cleanEmail);
-      if (cleanName) payload.append('customer_name', cleanName);
-      payload.append('subject', `[${formData.priority}] ${cleanSubject}`);
-      payload.append('description', cleanIssue);
-      payload.append('source', 'website_support_form');
+      const payloadSchema = {
+        customer_email: cleanData.email,
+        customer_name: cleanData.name,
+        subject: `[${formData.priority}] ${cleanData.subject}`,
+        description: cleanData.issue,
+        source: 'support_form'
+      };
 
-      if (formData.attachment) {
-        payload.append('attachment', formData.attachment);
-      }
+      const { ciphertext, iv } = await encryptPayload(payloadSchema, secret);
+
+      const secureFormData = new FormData();
+      secureFormData.append('payload', ciphertext);
+      secureFormData.append('iv', iv);
+      if (formData.attachment) secureFormData.append('attachment', formData.attachment);
 
       const response = await fetch(`${workerUrl}/webhooks/intake`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${secret}`
-        },
-        body: payload
+        headers: { 'Authorization': `Bearer ${secret}` },
+        body: secureFormData
       });
 
       if (!response.ok) {
@@ -99,6 +105,12 @@ const faqs = [
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+
+      {networkFault && (
+         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
+            <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+         </div>
+      )}
 
       {networkFault && (
          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
