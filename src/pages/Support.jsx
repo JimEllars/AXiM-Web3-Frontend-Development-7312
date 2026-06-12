@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { sanitizeInput } from '../lib/sanitize';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
+
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
@@ -10,59 +13,8 @@ export default function Support() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.subject || !formData.issue) return;
-
-    setIsSubmitting(true);
-    setErrorMsg(null);
-
-    try {
-      logTelemetry('support_ticket_initiated', { priority: formData.priority, subject: formData.subject });
-      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
-      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
-
-      // Graceful local dev fallback if env vars are missing
-      if (!workerUrl || !secret) {
-        console.warn("EDGE WARNING: Missing VITE_ONYX_WORKER_URL or VITE_AXIM_ONYX_SECRET. Simulating submission...");
-        setTimeout(() => {
-          setIsSubmitting(false);
-          setSubmitted(true);
-        }, 1500);
-        return;
-      }
-
-      // Construct multipart/form-data payload
-      const payload = new FormData();
-      payload.append('customer_email', formData.email);
-      if (formData.name) payload.append('customer_name', formData.name);
-      payload.append('subject', `[${formData.priority}] ${formData.subject}`);
-      payload.append('description', formData.issue);
-      payload.append('source', 'support_form');
-      if (formData.attachment) payload.append('attachment', formData.attachment);
-
-      // Execute Secure Submission
-      const response = await fetch(`${workerUrl}/webhooks/intake`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${secret}`
-        },
-        body: payload
-      });
-
-      if (!response.ok) {
-        throw new Error(`Edge submission rejected: ${response.status}`);
-      }
-
-      setSubmitted(true);
-    } catch (err) {
-      console.error("Support Uplink Failed:", err);
-      setErrorMsg("Submission failed. Please verify your connection and try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const [networkFault, setNetworkFault] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -76,7 +28,63 @@ export default function Support() {
     }
   };
 
-  const faqs = [
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMsg('');
+    setNetworkFault(false);
+
+    try {
+      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
+      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+
+      if (!workerUrl || !secret) {
+        console.warn("EDGE WARNING: Missing Integration Keys. Simulating payload drop...");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setIsSubmitting(false);
+        setSubmitted(true);
+        return;
+      }
+
+      const payload = new FormData();
+      const cleanEmail = sanitizeInput(formData.email);
+      const cleanName = sanitizeInput(formData.name);
+      const cleanSubject = sanitizeInput(formData.subject);
+      const cleanIssue = sanitizeInput(formData.issue);
+
+      payload.append('customer_email', cleanEmail);
+      if (cleanName) payload.append('customer_name', cleanName);
+      payload.append('subject', `[${formData.priority}] ${cleanSubject}`);
+      payload.append('description', cleanIssue);
+      payload.append('source', 'website_support_form');
+
+      if (formData.attachment) {
+        payload.append('attachment', formData.attachment);
+      }
+
+      const response = await fetch(`${workerUrl}/webhooks/intake`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${secret}`
+        },
+        body: payload
+      });
+
+      if (!response.ok) {
+        throw new Error(`Edge Proxy Rejected: ${response.status}`);
+      }
+
+      setIsSubmitting(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Support Uplink Failed:", err);
+      setIsSubmitting(false);
+      setNetworkFault(true);
+    }
+  };
+
+
+const faqs = [
     { q: "How do I access my generated documents?", a: "Navigate to your Profile Dashboard. All parsed legal and financial documents are securely encrypted and available there for download." },
     { q: "Are the generated documents legally binding?", a: "AXiM generators provide structural efficiency and standardized formatting. However, we always recommend consulting independent legal counsel to guarantee jurisdictional compliance." },
     { q: "How do I request a custom integration?", a: "Enterprise scaling requires a dedicated strategy session. Submit a request via our Consultation page to speak directly with an architect." }
@@ -91,6 +99,13 @@ export default function Support() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+
+      {networkFault && (
+         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
+            <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+         </div>
+      )}
+
       <SEO title="Help Center | AXiM Systems" description="Customer support, FAQs, and platform documentation." />
 
       <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center">

@@ -1,3 +1,5 @@
+import DOMPurify from 'isomorphic-dompurify';
+
 /**
  * AXiM Security - Sanitization Utility
  *
@@ -43,13 +45,14 @@ export function ensureSafeProtocol(url) {
 }
 
 /**
- * Basic text input sanitization to strip HTML tags and prevent simple injection.
- * For robust rich-text sanitization, use isomorphic-dompurify.
+ * Strips all HTML entities and executable scripts from user input.
+ * Utilized by public intake forms (Consultation, Support) prior to payload encryption.
  *
- * @param {string} input - The raw text input.
+ * @param {string} text - The raw text input.
  * @returns {string} - The sanitized plain text.
  */
-export function sanitizeInput(input) {
-  if (typeof input !== 'string') return '';
-  return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+export const sanitizeInput = (text) => {
+  if (!text) return '';
+  // STRICT MODE: No HTML tags or attributes allowed whatsoever
+  return DOMPurify.sanitize(text.trim(), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+};
