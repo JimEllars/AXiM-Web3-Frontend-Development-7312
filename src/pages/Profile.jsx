@@ -1,147 +1,131 @@
-import React from 'react';
-import { useAximAuth } from '../hooks/useAximAuth';
-import { useAximStore } from '../store/useAximStore';
-import { useShallow } from 'zustand/react/shallow';
-import * as LuIcons from 'react-icons/lu';
-const { LuUser } = LuIcons;
-import SafeIcon from '../common/SafeIcon';
-import VaultedRecords from '../components/VaultedRecords';
+import React, { useState } from 'react';
 import SEO from '../components/SEO';
-import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-
-
+import SafeIcon from '../common/SafeIcon';
+import * as LuIcons from 'react-icons/lu';
+import { useAximAuth } from '../hooks/useAximAuth';
+import DashboardAccessDenied from '../components/DashboardAccessDenied';
 
 export default function Profile() {
-  const { session, profile, loading } = useAximAuth();
-  const { userSession, isSessionLoading: passportLoading } = useAximStore(
-    useShallow((state) => ({
-      userSession: state.userSession,
-      isSessionLoading: state.isSessionLoading
-    }))
-  );
+  const { session, user } = useAximAuth();
+  const [activeTab, setActiveTab] = useState('vault');
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/';
+  // Strict Authentication Gate
+  if (!session) {
+    return <DashboardAccessDenied />;
   }
 
-  const [isSyncing, setIsSyncing] = React.useState(false);
-    const [syncMessage, setSyncMessage] = React.useState('');
+  // Mock Vault Data (To be replaced by Supabase Asset Fetching in Phase 2)
+  const vaultedAssets = [
+    { id: 'AX-NDA-8932', type: 'Mutual NDA', date: '2026-06-11', status: 'Encrypted', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
+    { id: 'AX-PAY-1104', type: 'Pay Stub Ledger', date: '2026-06-01', status: 'Ready', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
+  ];
 
-
-
-
-  const handleSyncLicenses = () => {
-    setIsSyncing(true);
-    setTimeout(() => {
-      setIsSyncing(false);
-      setSyncMessage('LICENSES_SYNCHRONIZED');
-      setTimeout(() => setSyncMessage(''), 3000);
-    }, 1000);
-  };
-
-    const user = session?.user || userSession;
-
-  if (loading || passportLoading) return (
-    <div className="min-h-screen flex flex-col gap-4 items-center justify-center font-mono text-axim-gold">
-      <SafeIcon icon={LuUser} className="w-8 h-8 animate-pulse" />
-      <span>INITIALIZING_PROFILE...</span>
-    </div>
-  );
-
-  if (!session && !userSession) {
-    return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6">
-        <div className="w-24 h-24 bg-axim-gold/10 border border-axim-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <SafeIcon icon={LuUser} className="w-10 h-10 text-axim-gold opacity-50" />
-        </div>
-        <h2 className="text-2xl font-black uppercase mb-4 text-white">Identity Required</h2>
-        <p className="text-zinc-500 max-w-md mb-8 font-mono text-xs">Sign in to access secure profile data.</p>
-        <div className="flex justify-center scale-110 origin-center mb-8">
-
-        </div>
-        <div className="p-4 bg-white/5 border border-white/10 font-mono text-[10px] text-zinc-600 uppercase">
-          Status: Await_Handshake // Error: 0xAUTH_REQ
-        </div>
-      </div>
-    );
-  }
+  const activeTickets = [
+    { id: 'TRG-9921', subject: 'System Architecture Audit', status: 'Awaiting Architect', priority: 'High', date: '2026-06-10' }
+  ];
 
   return (
-    <div className="w-full relative z-10 bg-bg-void min-h-screen pb-32">
-      <SEO title="Operator Vault | AXiM Systems" description="Secure dashboard and generated digital products." noindex={true} />
+    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <SEO title="Operator Vault | AXiM Systems" />
 
-      <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-axim-purple/5 blur-[120px] pointer-events-none" />
+      {/* Vault Header */}
+      <section className="pt-32 pb-12 relative overflow-hidden bg-black border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(147,51,234,0.1),transparent_50%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-axim-green/10 border border-axim-green/20 text-[0.65rem] font-mono uppercase tracking-widest text-axim-green mb-4 rounded-sm">
-              <SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-axim-green/10 border border-axim-green/30 text-[0.65rem] font-mono uppercase tracking-widest text-axim-green mb-4 rounded-sm">
+              <SafeIcon icon={LuIcons.LuLock} className="w-3 h-3" />
               <span>Connection Secure</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-tight">
+            <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white leading-tight">
               Operator <span className="text-axim-purple">Vault.</span>
             </h1>
-            <p className="text-zinc-400 text-sm font-mono tracking-widest mt-2 uppercase">ID: {user?.id?.substring(0, 12) || 'ANONYMOUS_NODE'}...</p>
+            <p className="text-zinc-400 text-sm font-mono mt-2 uppercase tracking-widest">
+              ID: {user?.email || 'AXIM_GUEST_OP'}
+            </p>
           </div>
 
-          {user && (
-             <button onClick={signOut} className="inline-flex items-center px-6 py-3 border border-white/10 bg-white/5 text-zinc-400 font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm cursor-pointer">
-               Sever Connection <SafeIcon icon={LuIcons.LuLogOut} className="ml-2 w-4 h-4" />
-             </button>
-          )}
+          <div className="flex gap-2">
+            <button className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
+              Settings
+            </button>
+            <button className="px-6 py-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-colors rounded-sm flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuLogOut} className="w-3 h-3" /> Terminate
+            </button>
+          </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-          {/* Identity & Status Sidebar */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-             <div className="bg-[#0F172A] border border-axim-purple/30 p-8 rounded-sm shadow-[0_0_30px_rgba(147,51,234,0.05)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-axim-purple" />
-                <h3 className="text-white font-black uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-                  <SafeIcon icon={LuIcons.LuUser} className="w-4 h-4 text-axim-purple" /> Active Identity
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Email Address</label>
-                    <div className="text-sm text-white font-medium break-all">{user?.email || 'N/A'}</div>
-                  </div>
-                  <div>
-                    <label className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Clearance Level</label>
-                    <div className="text-sm text-white font-medium">Standard Operator</div>
-                  </div>
-                </div>
-             </div>
-
-             <div className="bg-black border border-white/10 p-8 rounded-sm">
-               <h3 className="text-white font-black uppercase tracking-widest mb-4 text-sm">Need Infrastructure?</h3>
-               <p className="text-xs text-zinc-400 leading-relaxed mb-6">If you require enterprise-grade system integrations, initialize a consultation protocol with our engineering team.</p>
-               <Link to="/consultation" className="w-full inline-flex justify-center items-center px-4 py-3 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-[0.65rem] hover:bg-axim-purple hover:border-axim-purple transition-colors">
-                  Request Consult
-               </Link>
-             </div>
-          </div>
-
-          {/* The Vault (Action Queue) */}
-          <div className="lg:col-span-8">
-             <div className="bg-black border border-white/10 rounded-sm overflow-hidden min-h-[400px]">
-               <div className="bg-white/5 border-b border-white/10 p-6 flex items-center justify-between">
-                 <h2 className="text-lg font-black text-white uppercase tracking-tighter flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuArchive} className="w-5 h-5 text-axim-purple" /> Digital Products
-                 </h2>
-                 <span className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Encrypted Storage</span>
-               </div>
-
-               <div className="p-6">
-                 <VaultedRecords />
-               </div>
-             </div>
-          </div>
-
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 mt-12">
+        {/* Navigation Tabs */}
+        <div className="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setActiveTab('vault')}
+            className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'vault' ? 'text-axim-purple border-b-2 border-axim-purple' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
+          >
+            Digital Assets
+          </button>
+          <button
+            onClick={() => setActiveTab('tickets')}
+            className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'tickets' ? 'text-[#DB2777] border-b-2 border-[#DB2777]' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
+          >
+            Active Consultations
+          </button>
         </div>
+
+        {/* Tab 1: Vaulted Assets */}
+        {activeTab === 'vault' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
+            {vaultedAssets.map((asset, idx) => (
+              <div key={idx} className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group relative overflow-hidden flex flex-col justify-between min-h-[200px]">
+                <div className={`absolute top-0 right-0 w-32 h-32 opacity-5 blur-[40px] pointer-events-none group-hover:opacity-10 transition-opacity ${asset.color.replace('text-', 'bg-')}`} />
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <SafeIcon icon={asset.icon} className={`w-8 h-8 ${asset.color}`} />
+                    <span className="text-[0.6rem] font-mono uppercase tracking-widest text-zinc-500 bg-white/5 px-2 py-1 rounded-sm border border-white/10">
+                      {asset.date}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{asset.type}</h3>
+                  <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest">ID: {asset.id}</p>
+                </div>
+                <div className="mt-8 flex justify-between items-center border-t border-white/5 pt-4">
+                  <span className="text-xs font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
+                    <SafeIcon icon={LuIcons.LuCircleCheck} className="w-3 h-3" /> {asset.status}
+                  </span>
+                  <button className={`text-[0.65rem] font-black uppercase tracking-widest transition-colors flex items-center gap-2 ${asset.color} hover:text-white`}>
+                    Extract <SafeIcon icon={LuIcons.LuDownload} className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Tab 2: Tickets */}
+        {activeTab === 'tickets' && (
+          <div className="space-y-4 animate-fade-in">
+            {activeTickets.map((ticket, idx) => (
+              <div key={idx} className="bg-[#0F172A] border border-white/5 p-6 rounded-sm shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded-sm">{ticket.id}</span>
+                    <span className={`text-[0.6rem] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm ${ticket.priority === 'High' ? 'bg-red-500/10 text-red-500 border border-red-500/30' : 'bg-white/5 text-zinc-400'}`}>
+                      {ticket.priority} Priority
+                    </span>
+                  </div>
+                  <h4 className="text-base font-black text-white uppercase tracking-wider">{ticket.subject}</h4>
+                </div>
+                <div className="flex flex-col md:items-end">
+                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1">{ticket.date}</span>
+                  <span className="text-[0.65rem] font-bold text-axim-gold uppercase tracking-widest flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-axim-gold animate-pulse" /> {ticket.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
