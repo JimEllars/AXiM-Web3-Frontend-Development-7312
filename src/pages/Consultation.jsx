@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { sanitizeInput } from '../lib/sanitize';
-import { logTelemetry } from '../lib/telemetry';
-import DatabaseUplinkError from '../common/DatabaseUplinkError';
-
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
+import { sanitizeInput } from '../lib/sanitize';
+import { encryptPayload } from '../lib/crypto';
 
 export default function Consultation() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [networkFault, setNetworkFault] = useState(false);
-  const [formData, setFormData] = useState({
-    inquiryType: '',
-    name: '',
-    email: '',
-    company: '',
-    details: ''
-  });
+  const [formData, setFormData] = useState({ inquiryType: '', name: '', email: '', company: '', details: '' });
 
   const inquiryCategories = [
     { id: 'Tech Infrastructure', icon: LuIcons.LuNetwork, desc: 'Decentralized systems, automation, and AI integrations.' },
@@ -38,75 +34,85 @@ export default function Consultation() {
     setNetworkFault(false);
 
     try {
-      // 1. Client-Side Sanitation
-      const cleanName = sanitizeInput(formData.name);
-      const cleanEmail = sanitizeInput(formData.email);
-      const cleanCompany = sanitizeInput(formData.company);
-      const cleanDetails = sanitizeInput(formData.details);
+      // 1. Sanitize Data
+      const cleanData = {
+        name: sanitizeInput(formData.name),
+        email: sanitizeInput(formData.email),
+        company: sanitizeInput(formData.company),
+        details: sanitizeInput(formData.details),
+        inquiryType: sanitizeInput(formData.inquiryType)
+      };
 
-      // 2. Telemetry Sync
-      logTelemetry('consultation_requested', { category: formData.inquiryType });
+      // 2. Async Telemetry (Non-Blocking)
+      logTelemetry('consultation_requested', { category: cleanData.inquiryType });
 
       const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
       const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
 
       if (!workerUrl || !secret) {
-        console.warn("EDGE WARNING: Missing Integration Keys. Simulating secure payload drop...");
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        console.warn("EDGE WARNING: Missing Keys. Simulating secure submission.");
+        await new Promise(res => setTimeout(res, 1500));
         setIsSubmitting(false);
         setIsSuccess(true);
         return;
       }
 
-      const payload = new FormData();
-      payload.append('customer_email', cleanEmail);
-      payload.append('customer_name', cleanName);
-      payload.append('subject', `[Consultation: ${formData.inquiryType}] ${cleanCompany || 'Independent'}`);
-      payload.append('description', cleanDetails);
-      payload.append('source', 'consultation_form');
+      // 3. Cryptographic Envelope Generation
+      const payloadSchema = {
+        customer_email: cleanData.email,
+        customer_name: cleanData.name,
+        subject: `[Consultation: ${cleanData.inquiryType}] ${cleanData.company || 'Independent'}`,
+        description: cleanData.details,
+        source: 'consultation_form'
+      };
 
-      // 3. Cryptographic Envelope Transmission (TLS + Bearer)
+      const { ciphertext, iv } = await encryptPayload(payloadSchema, secret);
+      const secureFormData = new FormData();
+      secureFormData.append('payload', ciphertext);
+      secureFormData.append('iv', iv);
+
+      // 4. Edge Handoff
       const response = await fetch(`${workerUrl}/webhooks/intake`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${secret}` },
-        body: payload
+        body: secureFormData
       });
 
-      if (!response.ok) throw new Error(`Edge Proxy Rejected: ${response.status}`);
+      if (!response.ok) throw new Error(`Proxy Reject: ${response.status}`);
 
       setIsSubmitting(false);
       setIsSuccess(true);
     } catch (err) {
-      console.error("[AXiM_INTAKE] Transmission Failure:", err);
+      console.error("[AXiM_INTAKE] Transmission Failed:", err);
       setIsSubmitting(false);
-      setNetworkFault(true); // Triggers graceful degradation UI
+      setNetworkFault(true);
     }
   };
 
-
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <SEO title="Request a Consultation | AXiM Systems" description="Schedule a strategy session with an AXiM systems architect." />
 
+      {/* Graceful Degradation Trap */}
       {networkFault && (
-         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
-            <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
-         </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-6">
+           <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+        </div>
       )}
-
-      <SEO
-        title="Request a Consultation | AXiM Systems"
-        description="Schedule a strategy session with an AXiM systems architect to scale your decentralized infrastructure."
-      />
 
       {/* Hero */}
       <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
+            <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+            Return to Hub
+          </Link>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
             Request A <span className="text-axim-purple">Consultation.</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
-            Connect directly with the AXiM team. Please categorize your request below so we can route you to the appropriate specialist for your business needs.
+            Connect directly with the AXiM team. Please categorize your request below so we can route you to the appropriate specialist.
           </p>
         </div>
       </section>
@@ -115,7 +121,6 @@ export default function Consultation() {
       <section className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
         <div className="flex flex-col lg:flex-row gap-16">
 
-          {/* Value Proposition Sidebar */}
           <div className="lg:w-1/3 space-y-12">
              <div>
                <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-axim-purple mb-4" />
@@ -129,17 +134,15 @@ export default function Consultation() {
              </div>
              <div>
                <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6 text-axim-gold mb-4" />
-               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Secure Routing</h3>
-               <p className="text-xs text-zinc-400 leading-relaxed">All inquiry forms are securely encrypted and routed directly to our internal channels for rapid evaluation.</p>
+               <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">AES-256 Encryption</h3>
+               <p className="text-xs text-zinc-400 leading-relaxed">Your data is locked within a cryptographic envelope locally before transmission, ensuring absolute B2B confidentiality.</p>
              </div>
           </div>
 
-          {/* Dynamic Intake Triage Interface */}
-          <div className="lg:w-2/3">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:w-2/3">
              <div className="bg-[#050505] border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden min-h-[500px] flex flex-col">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[50px] pointer-events-none" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
 
-                {/* Dynamic Header */}
                 <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 relative z-10">
                   {isSuccess ? 'Request Received' : step === 1 ? 'Step 1: Inquiry Type' : 'Step 2: Contact Details'}
                 </h2>
@@ -150,15 +153,10 @@ export default function Consultation() {
                   </div>
                 )}
 
-                {/* State 1: Category Selection */}
                 {step === 1 && !isSuccess && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 flex-1">
                     {inquiryCategories.map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => handleCategorySelect(cat.id)}
-                        className="flex flex-col items-start p-6 bg-[#0A0A0A] border border-white/5 hover:border-axim-purple/50 rounded-sm transition-colors text-left group"
-                      >
+                      <button key={cat.id} onClick={() => handleCategorySelect(cat.id)} className="flex flex-col items-start p-6 bg-[#0A0A0A] border border-white/5 hover:border-axim-purple/50 rounded-sm transition-colors text-left group">
                         <SafeIcon icon={cat.icon} className="w-6 h-6 text-zinc-500 group-hover:text-axim-purple mb-4 transition-colors" />
                         <h4 className="text-white font-black text-sm uppercase tracking-widest mb-2">{cat.id}</h4>
                         <p className="text-[0.65rem] text-zinc-500 leading-relaxed">{cat.desc}</p>
@@ -167,7 +165,6 @@ export default function Consultation() {
                   </div>
                 )}
 
-                {/* State 2: Data Ingestion */}
                 {step === 2 && !isSuccess && (
                   <form onSubmit={handleSubmit} className="space-y-6 relative z-10 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-4 p-3 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">
@@ -177,41 +174,40 @@ export default function Consultation() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Full Name</label>
-                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="John Doe" />
+                      <div>
+                        <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Full Name</label>
+                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="John Doe" />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Work Email</label>
-                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="email@company.com" />
+                      <div>
+                        <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Work Email</label>
+                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="email@company.com" />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Company Name</label>
-                      <input type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="Optional" />
+                    <div>
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Company Name</label>
+                      <input type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="Optional" />
                     </div>
 
-                    <div className="space-y-2 flex-1">
-                      <label className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">How can we help you?</label>
-                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
+                    <div className="flex-1">
+                      <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">How can we help you?</label>
+                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
                     </div>
 
-                    <button disabled={isSubmitting} type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.2)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
-                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> Processing...</> : 'Submit Consultation Request'}
+                    <button disabled={isSubmitting} type="submit" className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
+                      {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> ENCRYPTING PAYLOAD...</> : 'Submit Consultation Request'}
                     </button>
                   </form>
                 )}
 
-                {/* State 3: Success Confirmation */}
                 {isSuccess && (
                   <div className="flex-1 flex flex-col items-center justify-center text-center relative z-10 animate-fade-in">
-                    <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mb-6">
-                      <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-green-500" />
+                    <div className="w-16 h-16 rounded-full bg-axim-purple/10 border border-axim-purple/30 flex items-center justify-center mb-6">
+                      <SafeIcon icon={LuIcons.LuCheck} className="w-8 h-8 text-axim-purple" />
                     </div>
                     <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Request Logged.</h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8">
-                      Your request has been successfully submitted to <span className="text-white font-mono">James.Ellars@axim.us.com</span>. Our team will review your details and respond shortly.
+                    <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8 font-mono uppercase tracking-widest">
+                      Your architecture parameters have been securely encrypted and routed. An integration specialist will reach out within 24 hours.
                     </p>
                     <button onClick={() => { setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
                       Submit Another Request
@@ -219,7 +215,7 @@ export default function Consultation() {
                   </div>
                 )}
              </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
