@@ -27,7 +27,6 @@ const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AuthGateway = lazy(() => import('./pages/AuthGateway'));
 const Status = lazy(() => import('./pages/Status'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
 const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -114,7 +113,6 @@ function App() {
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
-            <Route path="/dashboard" element={<ProtectedRoute><PageTransition><Dashboard /></PageTransition></ProtectedRoute>} />
             <Route path="/article/:slug" element={<PageTransition><Article /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>

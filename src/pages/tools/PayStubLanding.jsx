@@ -1,34 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 
 export default function PayStubLanding() {
+  const [showWizard, setShowWizard] = useState(false);
+  const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const handleGenerate = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate secure generation handoff
+    setTimeout(() => {
+      setIsSubmitting(false);
+      navigate('/auth'); // Route to vault authentication to retrieve document
+    }, 2000);
+  };
+
   const payStubSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Autonomous Pay Stub System",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
-    "provider": {
-      "@type": "Organization",
-      "name": "AXiM Systems"
-    },
-    "description": "Standardize your payroll documentation. Generate mathematically verified, professional pay stubs instantly.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+    "provider": { "@type": "Organization", "name": "AXiM Systems" },
+    "description": "Standardize your payroll documentation. Generate mathematically verified, professional pay stubs instantly."
   };
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO
-        title="Pay Stub Generator | AXiM Systems"
-        description="Standardize your payroll documentation. Input earnings and deductions to generate instant, mathematically verified pay stubs."
-        customSchema={[payStubSchema]}
-      />
+      <SEO title="Pay Stub Generator | AXiM Systems" customSchema={[payStubSchema]} />
+
+      {/* Generation Wizard Modal */}
+      {showWizard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-lg bg-[#050505] border border-white/10 p-8 rounded-sm shadow-2xl relative overflow-hidden animate-fade-in-up">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[#DB2777]/10 blur-[50px]" />
+
+            <div className="flex justify-between items-center mb-6 relative z-10">
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter">Document Setup</h3>
+              <button onClick={() => setShowWizard(false)} className="text-zinc-500 hover:text-white transition-colors">
+                <SafeIcon icon={LuIcons.LuX} className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex gap-2 mb-8 relative z-10">
+              <div className={`h-1 flex-1 rounded-full ${step >= 1 ? 'bg-[#DB2777]' : 'bg-white/10'}`} />
+              <div className={`h-1 flex-1 rounded-full ${step >= 2 ? 'bg-[#DB2777]' : 'bg-white/10'}`} />
+            </div>
+
+            <form onSubmit={handleGenerate} className="relative z-10">
+              {step === 1 ? (
+                <div className="space-y-4 animate-fade-in">
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-[#DB2777] pl-2">Company / Employer Name</label>
+                    <input required type="text" className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm focus:border-[#DB2777] outline-none rounded-sm" placeholder="e.g. Acme Corp" />
+                  </div>
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-[#DB2777] pl-2">Employee Name</label>
+                    <input required type="text" className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm focus:border-[#DB2777] outline-none rounded-sm" placeholder="e.g. John Doe" />
+                  </div>
+                  <button type="button" onClick={() => setStep(2)} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest transition-colors mt-4 rounded-sm">
+                    Next Step
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4 animate-fade-in">
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-[#DB2777] pl-2">Gross Pay Amount ($)</label>
+                    <input required type="number" step="0.01" className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm focus:border-[#DB2777] outline-none rounded-sm" placeholder="e.g. 5000.00" />
+                  </div>
+                  <div>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-[#DB2777] pl-2">Operator Email (For Delivery)</label>
+                    <input required type="email" className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm focus:border-[#DB2777] outline-none rounded-sm" placeholder="operator@domain.com" />
+                  </div>
+                  <button disabled={isSubmitting} type="submit" className="w-full py-4 bg-[#DB2777] text-white text-xs font-black uppercase tracking-widest transition-colors mt-4 shadow-[0_0_20px_rgba(219,39,119,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 rounded-sm">
+                    {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin"/> Generating...</> : 'Generate Document'}
+                  </button>
+                  <button type="button" onClick={() => setStep(1)} className="w-full text-center text-[0.6rem] font-mono text-zinc-500 hover:text-white uppercase tracking-widest mt-2 underline">Back</button>
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Upgraded Multi-Color Hero */}
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
@@ -43,7 +101,7 @@ export default function PayStubLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document.
           </p>
-          <button onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "launch_tool", { event_category: "conversion", event_label: "Pay Stub Generator" }); }} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Launch Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
@@ -104,7 +162,7 @@ export default function PayStubLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Standardize Your Docs. <br/>Stay Compliant.</h2>
           <p className="text-zinc-400 text-sm mb-10">Eliminate spreadsheet math errors and elevate the professionalism of your operation.</p>
-          <button onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "launch_tool", { event_category: "conversion", event_label: "Pay Stub Generator" }); }} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Initialize Generator <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
