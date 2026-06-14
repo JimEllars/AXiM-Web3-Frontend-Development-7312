@@ -4,25 +4,19 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Profile() {
   const { session, user } = useAximAuth();
   const [activeTab, setActiveTab] = useState('vault');
 
+  const vaultedAssets = useAximStore((state) => state.assets);
+  const activeTickets = useAximStore((state) => state.tickets);
+
   // Strict Authentication Gate
   if (!session) {
     return <DashboardAccessDenied />;
   }
-
-  // Mock Vault Data (To be replaced by Supabase Asset Fetching in Phase 2)
-  const vaultedAssets = [
-    { id: 'AX-NDA-8932', type: 'Mutual NDA', date: '2026-06-11', status: 'Encrypted', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
-    { id: 'AX-PAY-1104', type: 'Pay Stub Ledger', date: '2026-06-01', status: 'Ready', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
-  ];
-
-  const activeTickets = [
-    { id: 'TRG-9921', subject: 'System Architecture Audit', status: 'Awaiting Architect', priority: 'High', date: '2026-06-10' }
-  ];
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
@@ -76,7 +70,11 @@ export default function Profile() {
         {/* Tab 1: Vaulted Assets */}
         {activeTab === 'vault' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-            {vaultedAssets.map((asset, idx) => (
+            {vaultedAssets.length === 0 ? (
+              <div className="bg-[#050505] border border-white/10 p-12 rounded-sm text-center text-zinc-500 font-mono text-sm uppercase tracking-widest col-span-1 md:col-span-2">
+                No encrypted assets detected in this vault.
+              </div>
+            ) : vaultedAssets.map((asset, idx) => (
               <div key={idx} className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group relative overflow-hidden flex flex-col justify-between min-h-[200px]">
                 <div className={`absolute top-0 right-0 w-32 h-32 opacity-5 blur-[40px] pointer-events-none group-hover:opacity-10 transition-opacity ${asset.color.replace('text-', 'bg-')}`} />
                 <div>
@@ -105,7 +103,11 @@ export default function Profile() {
         {/* Tab 2: Tickets */}
         {activeTab === 'tickets' && (
           <div className="space-y-4 animate-fade-in">
-            {activeTickets.map((ticket, idx) => (
+            {activeTickets.length === 0 ? (
+              <div className="bg-[#050505] border border-white/10 p-12 rounded-sm text-center text-zinc-500 font-mono text-sm uppercase tracking-widest col-span-1 md:col-span-2">
+                No active consultations.
+              </div>
+            ) : activeTickets.map((ticket, idx) => (
               <div key={idx} className="bg-[#0F172A] border border-white/5 p-6 rounded-sm shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
