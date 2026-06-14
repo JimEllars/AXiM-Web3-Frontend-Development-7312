@@ -23,6 +23,9 @@ export const useAximStore = create(
   isGuardEngaged: false,
   setGuardEngaged: (status) => set({ isGuardEngaged: status }),
 
+  assets: [],
+  tickets: [],
+  addAsset: (asset) => set((state) => ({ assets: [...state.assets, asset] })),
   vaultedArtifacts: [
     { id: 1, name: "Generated_NDA_v1.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
     { id: 2, name: "CORE_COGNITION_APRIL.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }

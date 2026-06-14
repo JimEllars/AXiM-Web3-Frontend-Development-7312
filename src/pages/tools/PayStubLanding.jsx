@@ -3,6 +3,7 @@ import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
+import { useAximStore } from '../../store/useAximStore';
 
 export default function PayStubLanding() {
   const [showWizard, setShowWizard] = useState(false);
@@ -10,13 +11,26 @@ export default function PayStubLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+    const addAsset = useAximStore((state) => state.addAsset);
+
   const handleGenerate = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate secure generation handoff
+
+    // Construct the generated asset payload
+    const newAsset = {
+      id: `AX-PAY-${Math.floor(Math.random() * 10000)}`,
+      type: 'Pay Stub Ledger',
+      date: new Date().toISOString().split('T')[0],
+      status: 'Ready',
+      icon: LuIcons.LuFileText,
+      color: 'text-[#DB2777]'
+    };
+
     setTimeout(() => {
+      addAsset(newAsset); // Push to global state
       setIsSubmitting(false);
-      navigate('/auth'); // Route to vault authentication to retrieve document
+      navigate('/auth'); // Route to vault
     }, 2000);
   };
 
