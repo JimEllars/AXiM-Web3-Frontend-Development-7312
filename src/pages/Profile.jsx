@@ -126,7 +126,7 @@ export default function Profile() {
 
                       <div className="mt-8 flex justify-between items-center border-t border-white/5 pt-4 relative z-10">
                         <span className="text-xs font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
-                          <SafeIcon icon={LuIcons.LuCheckCircle2} className="w-3 h-3" /> {isExtracted ? 'Decrypted' : asset.status}
+                          <SafeIcon icon={LuIcons.LuCircleCheck} className="w-3 h-3" /> {isExtracted ? 'Decrypted' : asset.status}
                         </span>
 
                         <button
