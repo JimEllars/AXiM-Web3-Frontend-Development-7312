@@ -25,7 +25,9 @@ export const useAximStore = create(
 
   assets: [],
   tickets: [],
-  addAsset: (asset) => set((state) => ({ assets: [...state.assets, asset] })),
+  addAsset: (asset) => set((state) => ({ assets: [asset, ...state.assets] })),
+  addTicket: (ticket) => set((state) => ({ tickets: [ticket, ...state.tickets] })),
+  clearStore: () => set({ assets: [], tickets: [] }),
   vaultedArtifacts: [
     { id: 1, name: "Generated_NDA_v1.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
     { id: 2, name: "CORE_COGNITION_APRIL.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
