@@ -40,12 +40,31 @@ export default function Tools() {
       btnClass: "bg-[#DB2777] text-white hover:bg-white hover:text-black"
     }
   ];
+  const toolsSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Demand Letter Engine",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "provider": { "@type": "Organization", "name": "AXiM Systems" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Mutual NDA Generator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "provider": { "@type": "Organization", "name": "AXiM Systems" }
+    }
+  ];
+
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
         title="Infrastructure Tools | AXiM Systems"
-        description="Access AXiM's suite of proprietary business infrastructure tools, including automated legal generation and payroll documentation systems."
+        description="Access AXiM's suite of proprietary business infrastructure tools, including automated legal generation and payroll documentation systems." customSchema={toolsSchema}
       />
 
       {/* Hero Header */}
