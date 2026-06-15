@@ -99,8 +99,8 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
-            <Route path="/tools/nda" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
-            <Route path="/tools/paystub" element={<PageTransition><PayStubLanding /></PageTransition>} />
+            <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
+            <Route path="/tools/pay-stub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />
             <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
@@ -111,7 +111,11 @@ function App() {
             <Route path="/auth" element={<PageTransition><AuthGateway /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
-            <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <PageTransition><Profile /></PageTransition>
+              </ProtectedRoute>
+            } />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
             <Route path="/article/:slug" element={<PageTransition><Article /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
