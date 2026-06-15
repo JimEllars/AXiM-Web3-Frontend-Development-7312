@@ -103,6 +103,20 @@ const faqs = [
     { title: "Security & Privacy", icon: LuIcons.LuShieldCheck, desc: "Overview of our encryption and data handling protocols." }
   ];
 
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.a
+      }
+    }))
+  };
+
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
 
@@ -118,7 +132,7 @@ const faqs = [
          </div>
       )}
 
-      <SEO title="Help Center | AXiM Systems" description="Customer support, FAQs, and platform documentation." />
+      <SEO title="Help Center | AXiM Systems" description="Customer support, FAQs, and platform documentation." customSchema={[faqSchema]} />
 
       <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
