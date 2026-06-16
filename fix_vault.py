@@ -1,33 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import SafeIcon from '../common/SafeIcon';
-import * as LuIcons from 'react-icons/lu';
-import { useAximStore } from '../store/useAximStore';
+import re
 
-const { LuLock } = LuIcons;
+with open("src/components/VaultedRecords.jsx", "r") as f:
+    content = f.read()
 
-export default function VaultedRecords() {
-  const vaultedArtifacts = useAximStore((state) => state.vaultedArtifacts);
-  const removeAction = useAximStore((state) => state.removeAction);
-  const [fetching, setFetching] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setFetching(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-
-
-  return (
-    <>
-        {fetching ? (
-          <div className="flex-1 flex items-center justify-center opacity-30 animate-pulse flex-col gap-4 py-8">
-            <SafeIcon icon={LuLock} className="w-8 h-8 text-axim-purple" />
-            <div className="uppercase text-[0.6rem] text-white tracking-widest font-mono">Querying_Secure_Vault...</div>
-          </div>
-        ) : vaultedArtifacts && vaultedArtifacts.length > 0 ? (
+# Replace the conditional logic after `fetching`
+new_content = re.sub(
+    r'vaultedArtifacts && vaultedArtifacts\.length > 0 \? \(.*\) : \(.*?\)',
+    '''vaultedArtifacts && vaultedArtifacts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {vaultedArtifacts.map((record) => (
               <div key={record.id} className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
@@ -63,7 +42,10 @@ export default function VaultedRecords() {
           <div className="text-zinc-500 text-sm font-mono border border-white/5 p-8 text-center rounded-sm">
             NO CRYPTOGRAPHIC RECORDS FOUND. ACCESS THE TOOLS HUB TO GENERATE NEW ASSETS.
           </div>
-        )}
-    </>
-  );
-}
+        )''',
+    content,
+    flags=re.DOTALL
+)
+
+with open("src/components/VaultedRecords.jsx", "w") as f:
+    f.write(new_content)
