@@ -17,6 +17,21 @@ export const useAximStore = create(
       },
       clearQueue: () => set({ pendingActions: [] }),
 
+  // Web3 Identity State
+  walletAddress: sessionStorage.getItem('axim_wallet_session') || null,
+  isWeb3Authenticated: !!sessionStorage.getItem('axim_wallet_session'),
+
+  loginWeb3Wallet: (address) => {
+    sessionStorage.setItem('axim_wallet_session', address);
+    set({ walletAddress: address, isWeb3Authenticated: true });
+  },
+
+  logoutWeb3Wallet: () => {
+    sessionStorage.removeItem('axim_wallet_session');
+    set({ walletAddress: null, isWeb3Authenticated: false });
+  },
+
+
   // Telemetry state
   telemetryStatus: 'STABLE',
 

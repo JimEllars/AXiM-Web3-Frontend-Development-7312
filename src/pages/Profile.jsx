@@ -11,7 +11,9 @@ export default function Profile() {
   const { session, user, signOut } = useAximAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const web3Address = location.state?.web3Auth;
+  const walletAddress = useAximStore((state) => state.walletAddress);
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const logoutWeb3Wallet = useAximStore((state) => state.logoutWeb3Wallet);
   const [activeTab, setActiveTab] = useState('vault');
   const [extractingId, setExtractingId] = useState(null);
   const [extractedAssets, setExtractedAssets] = useState([]);
@@ -22,7 +24,7 @@ export default function Profile() {
   const clearStore = useAximStore((state) => state.clearStore);
 
   // Strict Authentication Gate
-  if (!session && !web3Address) {
+  if (!session && !isWeb3Authenticated) {
     return <DashboardAccessDenied />;
   }
 
@@ -31,6 +33,7 @@ export default function Profile() {
     try {
       if (signOut) await signOut();
       clearStore(); // Wipe PII from local state
+      logoutWeb3Wallet();
       navigate('/'); // Return to public grid
     } catch (error) {
       console.error("[AXiM_SEC] Termination failed:", error);
@@ -61,13 +64,13 @@ export default function Profile() {
               <SafeIcon icon={LuIcons.LuLock} className="w-3 h-3" />
               <span>Connection Secure</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white leading-tight">
-              Operator <span className="text-axim-purple">Vault.</span>
-            </h1>
+            <h2 className="text-xl md:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+              {isWeb3Authenticated ? "Cryptographic Operator Profile" : "Standard System Profile"}
+            </h2>
             <p className="text-zinc-400 text-sm font-mono mt-2 uppercase tracking-widest flex items-center gap-2">
-              ID: {web3Address ? (
-                <span className="text-axim-gold flex items-center gap-1">
-                   <SafeIcon icon={LuIcons.LuWallet} className="w-3 h-3" /> {web3Address}
+              ID: {isWeb3Authenticated ? (
+                <span className="text-axim-gold flex items-center gap-1 font-bold">
+                  <SafeIcon icon={LuIcons.LuWallet} className="w-3 h-3" /> {walletAddress}
                 </span>
               ) : (
                 user?.email || 'AXIM_OP_001'
