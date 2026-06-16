@@ -4,12 +4,14 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 
 export default function Profile() {
   const { session, user, signOut } = useAximAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const web3Address = location.state?.web3Auth;
   const [activeTab, setActiveTab] = useState('vault');
   const [extractingId, setExtractingId] = useState(null);
   const [extractedAssets, setExtractedAssets] = useState([]);
@@ -20,7 +22,7 @@ export default function Profile() {
   const clearStore = useAximStore((state) => state.clearStore);
 
   // Strict Authentication Gate
-  if (!session) {
+  if (!session && !web3Address) {
     return <DashboardAccessDenied />;
   }
 
@@ -62,8 +64,14 @@ export default function Profile() {
             <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white leading-tight">
               Operator <span className="text-axim-purple">Vault.</span>
             </h1>
-            <p className="text-zinc-400 text-sm font-mono mt-2 uppercase tracking-widest">
-              ID: {user?.email || 'AXIM_OP_001'}
+            <p className="text-zinc-400 text-sm font-mono mt-2 uppercase tracking-widest flex items-center gap-2">
+              ID: {web3Address ? (
+                <span className="text-axim-gold flex items-center gap-1">
+                   <SafeIcon icon={LuIcons.LuWallet} className="w-3 h-3" /> {web3Address}
+                </span>
+              ) : (
+                user?.email || 'AXIM_OP_001'
+              )}
             </p>
           </div>
 
