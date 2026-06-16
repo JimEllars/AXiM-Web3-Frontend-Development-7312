@@ -120,6 +120,29 @@ export default function AuthGateway() {
             </button>
           </form>
 
+          {/* NEW: Web3 Authentication Bridge */}
+          <div className="relative flex items-center justify-center mt-8 mb-6 z-10">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
+            <span className="relative px-4 bg-[#050505] text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Or connect via Web3</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsProcessing(true);
+              // Simulated Web3 Handshake (To be mapped to thirdweb hooks)
+              setTimeout(() => {
+                setIsProcessing(false);
+                navigate('/profile', { state: { web3Auth: '0x71C...89A4' } });
+              }, 1500);
+            }}
+            disabled={isProcessing}
+            className="relative z-10 w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+             <SafeIcon icon={LuIcons.LuWallet} className="w-4 h-4" />
+             Authenticate with Wallet
+          </button>
+
           <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
             <button type="button" onClick={() => { setIsLogin(!isLogin); setErrorMsg(null); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
               {isLogin ? "Need clearance? Request an account." : "Already have clearance? Authenticate here."}
