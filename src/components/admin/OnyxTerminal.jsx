@@ -1,203 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { LuTerminal, LuX, LuChevronUp, LuChevronDown, LuSend } from 'react-icons/lu';
+import React, { useState } from 'react';
 import SafeIcon from '../../common/SafeIcon';
-import { useAximStore } from '../../store/useAximStore';
-import { useAximAuth } from '../../hooks/useAximAuth';
-import { useOnyxStream } from '../../hooks/useOnyxStream';
+import * as LuIcons from 'react-icons/lu';
 
 export default function OnyxTerminal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [input, setInput] = useState('');
-  const [history, setHistory] = useState([
-    { type: 'system', text: 'ONYX SWARM TERMINAL v3.0 // AWAITING COMMAND...' }
-  ]);
+  const [kvKey, setKvKey] = useState('seo_override_/articles');
+  const [kvValue, setKvValue] = useState('{\n  "title": "AXiM Intel",\n  "description": "Dynamic Edge Injection"\n}');
+  const [isTransmitting, setIsTransmitting] = useState(false);
+  const [responseLog, setResponseLog] = useState(null);
 
-  const terminalEndRef = useRef(null);
-  const { executeOnyxCommand, isStreaming } = useOnyxStream();
-  const { wpDiagnosticError, nodeStatuses, historicalHealth } = useAximStore((state) => ({
-    wpDiagnosticError: state.wpDiagnosticError,
-    nodeStatuses: state.nodeStatuses,
-    historicalHealth: state.historicalHealth
-  }));
-
-
-  useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [history]);
-
-  const handleSubmit = async (e) => {
+  const handleKvWrite = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isStreaming) return;
+    setIsTransmitting(true);
+    setResponseLog(null);
 
-    const command = input.trim();
+    try {
+      // Parse to ensure valid JSON before transmission
+      const parsedConfig = JSON.parse(kvValue);
 
-    // Inject system context
-    const recentLatency = historicalHealth?.[0]?.latency || 'N/A';
-    const wpStatus = wpDiagnosticError ? 'ERROR: ' + wpDiagnosticError : 'OK';
-    const contextPrefix = `[SYSTEM CONTEXT: WP_STATUS: ${wpStatus}, RECENT_LATENCY: ${recentLatency}ms] USER PROMPT: `;
-    const backendPayload = contextPrefix + command;
-    setInput('');
-    setHistory(prev => [...prev, { type: 'user', text: `> ${command}` }]);
-
-    // Add an empty AI message that we will update
-    setHistory(prev => [...prev, { type: 'ai', text: '' }]);
-
-    const response = await executeOnyxCommand(backendPayload);
-
-    if (response) {
-      setHistory(prev => {
-        const newHistory = [...prev];
-        newHistory[newHistory.length - 1].text = response;
-        return newHistory;
+      const res = await fetch('/api/admin/kv-write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: kvKey, config: parsedConfig })
       });
-    } else {
-      setHistory(prev => {
-        const newHistory = [...prev];
-        // Replace empty AI message with error
-        newHistory[newHistory.length - 1] = { type: 'error', text: `[SYSTEM ERROR]: Command failed` };
-        return newHistory;
-      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setResponseLog(`[SUCCESS] ${data.message}`);
+      } else {
+        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'}`);
+      }
+    } catch (err) {
+      setResponseLog(`[PARSE ERROR] Invalid JSON payload or network failure.`);
+    } finally {
+      setIsTransmitting(false);
     }
   };
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-axim-purple hover:bg-axim-purple/20 transition-colors shadow-[0_0_20px_125,0,255,0.2)] z-50"
-      >
-        <SafeIcon icon={LuTerminal} className="w-6 h-6" />
-      </button>
-    );
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      className={`fixed right-6 bottom-6 w-[400px] bg-black/95 backdrop-blur-2xl border border-white/20 rounded-sm shadow-2xl z-50 flex flex-col ${isMinimized ? 'h-[50px]' : 'h-[500px]'}`}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5 cursor-pointer" onClick={() => setIsMinimized(!isMinimized)}>
-        <div className="flex items-center gap-2">
-          <SafeIcon icon={LuTerminal} className="w-4 h-4 text-axim-purple" />
-          <span className="font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs uppercase text-white tracking-widest font-bold">Onyx Command Terminal</span>
+    <div className="p-8 h-full flex flex-col gap-8">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <h2 className="text-xl font-black text-white uppercase tracking-widest">Onyx Terminal</h2>
+          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Direct Edge KV Configurator</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="text-zinc-500 hover:text-white transition-colors">
-            <SafeIcon icon={isMinimized ? LuChevronUp : LuChevronDown} className="w-4 h-4" />
-          </button>
-          <button
-            className="text-zinc-500 hover:text-red-500 transition-colors"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(false);
-            }}
-          >
-            <SafeIcon icon={LuX} className="w-4 h-4" />
-          </button>
-        </div>
+        <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />
       </div>
 
-      {/* Terminal Body */}
-      {!isMinimized && (
-        <>
-          <div className="flex-grow p-4 overflow-y-auto font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs custom-scrollbar space-y-2">
-            {history.map((line, i) => (
-              <div
-                key={i}
-                className={`
-                  ${line.type === 'system' ? 'text-axim-purple opacity-80' : ''}
-                  ${line.type === 'user' ? 'text-white font-bold' : ''}
-                  ${line.type === 'ai' ? 'text-axim-purple' : ''}
-                  ${line.type === 'error' ? 'text-red-500' : ''}
-                  whitespace-pre-wrap break-words
-                `}
-              >
-                <div dangerouslySetInnerHTML={{ __html: line.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
-              </div>
-            ))}
-            {isStreaming && (
-              <div className="flex items-center gap-2 text-axim-purple/50">
-                <div className="w-2 h-2 bg-axim-purple rounded-full animate-ping"></div>
-                Processing...
-              </div>
-            )}
-            <div ref={terminalEndRef} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
+        {/* KV Form */}
+        <form onSubmit={handleKvWrite} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2">Target KV Key</label>
+            <input
+              type="text"
+              value={kvKey}
+              onChange={(e) => setKvKey(e.target.value)}
+              className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm font-mono focus:border-axim-purple outline-none rounded-sm"
+            />
+          </div>
+          <div className="flex-1 flex flex-col">
+            <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2">JSON Configuration Payload</label>
+            <textarea
+              value={kvValue}
+              onChange={(e) => setKvValue(e.target.value)}
+              className="w-full flex-1 min-h-[250px] bg-[#0A0A0A] border border-white/10 p-3 text-axim-gold text-xs font-mono focus:border-axim-purple outline-none rounded-sm resize-none"
+            />
+          </div>
+          <button
+            disabled={isTransmitting}
+            type="submit"
+            className="w-full py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:bg-white hover:text-black disabled:opacity-50 flex items-center justify-center gap-2 rounded-sm"
+          >
+            {isTransmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin"/> Transmitting to Edge...</> : 'Deploy to Cloudflare KV'}
+          </button>
+        </form>
+
+        {/* Console Output */}
+        <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-axim-purple via-[#DB2777] to-transparent opacity-50" />
+          <div className="text-zinc-600 mb-4 uppercase tracking-widest border-b border-white/5 pb-2 flex items-center gap-2">
+            <SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log
           </div>
 
-          {/* Input Area */}
-
-          {/* Quick Actions */}
-
-          {/* Emergency Actions */}
-          <div className="px-3 py-1 bg-black flex gap-2 border-t border-white/10">
-            <span className="text-[0.6rem] text-red-500 font-mono font-bold uppercase tracking-widest my-auto mr-2">Emergency Actions:</span>
-            <button
-              onClick={(e) => {
-                const cmd = '[SYSTEM OVERRIDE] Initiate edge cache purge and verify node routing.';
-                setInput(cmd);
-                // We use setTimeout to allow state update before trigger submit
-                setTimeout(() => {
-                  handleSubmit({ preventDefault: () => {} });
-                }, 0);
-              }}
-              className="whitespace-nowrap px-2 py-1 bg-red-500/10 border border-red-500/50 text-red-400 hover:text-axim-gold hover:border-axim-gold text-[0.6rem] font-mono uppercase transition-colors rounded-sm shadow-[0_0_10px_rgba(239,68,68,0.2)]"
-              disabled={isStreaming}
-            >
-              Purge Edge Cache
-            </button>
+          <div className="flex-1 text-zinc-400 space-y-2">
+             <div>{`> INITIALIZING TERMINAL UPLINK... OK`}</div>
+             <div>{`> AWAITING OPERATOR INPUT...`}</div>
+             {responseLog && (
+               <div className={`mt-4 ${responseLog.includes('SUCCESS') ? 'text-axim-green' : 'text-red-500'}`}>
+                 {`> ${responseLog}`}
+               </div>
+             )}
           </div>
-<div className="px-3 pb-2 pt-1 border-t border-white/10 bg-black flex gap-2 overflow-x-auto custom-scrollbar">
-            <button
-              onClick={() => setInput('Analyze Infrastructure')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
-              disabled={isStreaming}
-            >
-              Analyze Infrastructure
-            </button>
-            <button
-              onClick={() => setInput('Run Security Audit')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
-              disabled={isStreaming}
-            >
-              Run Security Audit
-            </button>
-            <button
-              onClick={() => setInput('Check PDF Generation Queue')}
-              className="whitespace-nowrap px-2 py-1 bg-white/5 border border-white/10 text-axim-purple text-[0.6rem] font-mono uppercase hover:bg-axim-purple/20 transition-colors rounded-sm"
-              disabled={isStreaming}
-            >
-              Check PDF Queue
-            </button>
-          </div>
-
-          <div className="p-3 border-t border-white/10 bg-black">
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
-              <span className="text-axim-purple font-mono font-[Fira_Code,JetBrains_Mono,monospace] font-bold">{'>'}</span>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-grow bg-transparent border-none outline-none font-mono font-[Fira_Code,JetBrains_Mono,monospace] text-xs text-white placeholder:text-zinc-600"
-                placeholder="Enter command..."
-                disabled={isStreaming}
-              />
-              <button
-                type="submit"
-                disabled={isStreaming || !input.trim()}
-                className="text-axim-purple hover:text-white disabled:opacity-50 transition-colors"
-              >
-                <SafeIcon icon={LuSend} className="w-4 h-4" />
-              </button>
-            </form>
-          </div>
-        </>
-      )}
-    </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }

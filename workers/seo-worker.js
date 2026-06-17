@@ -15,6 +15,27 @@ export default {
 
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // --- NEW: Admin KV Write API ---
+    if (request.method === "POST" && url.pathname === "/api/admin/kv-write") {
+      try {
+        // Note: In strict production, validate a Bearer token or Admin Auth Header here
+        const reqData = await request.json();
+        const { key, config } = reqData;
+
+        if (env.AXIM_CONFIG && key && config) {
+          await env.AXIM_CONFIG.put(key, JSON.stringify(config));
+          return new Response(JSON.stringify({ success: true, message: `KV Target [${key}] Updated` }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          });
+        } else {
+          return new Response(JSON.stringify({ error: "Missing KV binding or malformed payload." }), { status: 400 });
+        }
+      } catch (error) {
+        return new Response(JSON.stringify({ error: "KV Write Execution Failed" }), { status: 500 });
+      }
+    }
     const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
 
     // Determine if the request is from a social media crawler

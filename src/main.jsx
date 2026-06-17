@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App.jsx';
+import { ThirdwebProvider } from 'thirdweb/react';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './index.css';
 
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')).render(
               <QueryClientProvider client={new QueryClient()}>
         <HelmetProvider>
           <BrowserRouter>
-          <App />
+          <ThirdwebProvider>
+            <App />
+          </ThirdwebProvider>
         </BrowserRouter>
         </HelmetProvider>
       </QueryClientProvider>

@@ -6,6 +6,10 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { supabase } from '../lib/supabase';
+import { ConnectButton, useActiveAccount } from 'thirdweb/react';
+import { client } from '../lib/thirdweb-client';
+import { useAximStore } from '../store/useAximStore';
+import { useEffect } from 'react';
 
 export default function AuthGateway() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,6 +21,15 @@ export default function AuthGateway() {
   // Note: Assuming useAximAuth provides standard Supabase wrappers. Adjust as needed.
   const { signIn, signUp } = useAximAuth();
   const navigate = useNavigate();
+  const loginWeb3Wallet = useAximStore(state => state.loginWeb3Wallet);
+  const activeAccount = useActiveAccount();
+
+  useEffect(() => {
+    if (activeAccount?.address) {
+      loginWeb3Wallet(activeAccount.address);
+      navigate("/profile", { state: { web3Auth: activeAccount.address } });
+    }
+  }, [activeAccount, loginWeb3Wallet, navigate]);
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -127,22 +140,16 @@ export default function AuthGateway() {
             <span className="relative px-4 bg-[#050505] text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest">Or connect via Web3</span>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsProcessing(true);
-              // Simulated Web3 Handshake (To be mapped to thirdweb hooks)
-              setTimeout(() => {
-                setIsProcessing(false);
-                navigate('/profile', { state: { web3Auth: '0x71C...89A4' } });
-              }, 1500);
-            }}
-            disabled={isProcessing}
-            className="relative z-10 w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50"
-          >
-             <SafeIcon icon={LuIcons.LuWallet} className="w-4 h-4" />
-             Authenticate with Wallet
-          </button>
+          <div className="flex justify-center relative z-10 w-full">
+            <ConnectButton
+              client={client}
+              theme="dark"
+              connectButton={{
+                label: "Authenticate with Wallet",
+                className: "w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50 !bg-transparent !border !border-axim-purple/50 !text-axim-purple hover:!bg-axim-purple hover:!text-white",
+              }}
+            />
+          </div>
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
             <button type="button" onClick={() => { setIsLogin(!isLogin); setErrorMsg(null); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">

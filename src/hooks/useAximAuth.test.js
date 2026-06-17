@@ -17,7 +17,7 @@ vi.mock('thirdweb/react', () => ({
 vi.mock('../lib/supabase.js', () => ({
   supabase: {
     auth: {
-      getSession: vi.fn(),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
       getUser: vi.fn(),
       signInWithPassword: vi.fn(),
       signUp: vi.fn(),
