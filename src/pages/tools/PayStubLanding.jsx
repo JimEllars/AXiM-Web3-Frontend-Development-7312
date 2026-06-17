@@ -4,6 +4,7 @@ import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useAximStore } from '../../store/useAximStore';
+import { supabase } from '../../lib/supabase';
 
 export default function PayStubLanding() {
   const [showWizard, setShowWizard] = useState(false);
@@ -13,25 +14,41 @@ export default function PayStubLanding() {
 
     const addAsset = useAximStore((state) => state.addAsset);
 
-  const handleGenerate = (e) => {
+  const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Construct the generated asset payload
+    const inputsText = document.querySelectorAll('input[type="text"]');
+    const inputNumber = document.querySelector('input[type="number"]');
+    const inputEmail = document.querySelector('input[type="email"]');
+
+    const companyName = inputsText[0]?.value;
+    const employeeName = inputsText[1]?.value;
+    const grossPay = inputNumber?.value;
+    const operatorEmail = inputEmail?.value;
+
     const newAsset = {
       id: `AX-PAY-${Math.floor(Math.random() * 10000)}`,
       type: 'Pay Stub Ledger',
       date: new Date().toISOString().split('T')[0],
       status: 'Ready',
-      icon: LuIcons.LuFileText,
-      color: 'text-[#DB2777]'
+      icon_ref: 'LuFileText',
+      color: 'text-[#DB2777]',
+      payload: { companyName, employeeName, grossPay, email: operatorEmail }
     };
 
-    setTimeout(() => {
-      addAsset(newAsset); // Push to global state
+    try {
+      const { error } = await supabase.from('generated_assets').insert([newAsset]);
+      if (error) console.error("Database Uplink Failed:", error);
+
+      addAsset({ ...newAsset, icon: LuIcons.LuFileText });
+
+      navigate('/auth');
+    } catch (err) {
+      console.error("Encryption cycle failed.", err);
+    } finally {
       setIsSubmitting(false);
-      navigate('/auth'); // Route to vault
-    }, 2000);
+    }
   };
 
   const payStubSchema = {

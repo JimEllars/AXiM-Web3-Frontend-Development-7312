@@ -40,11 +40,12 @@ export default {
           // Use HTMLRewriter to inject the accurate metadata in-flight
           return new HTMLRewriter()
             .on('title', { element(e) { e.setInnerContent(cleanTitle); } })
+            .on('meta[name="description"]', { element(e) { e.setAttribute('content', cleanDesc); } })
             .on('meta[property="og:title"]', { element(e) { e.setAttribute('content', cleanTitle); } })
-            .on('meta[name="twitter:title"]', { element(e) { e.setAttribute('content', cleanTitle); } })
             .on('meta[property="og:description"]', { element(e) { e.setAttribute('content', cleanDesc); } })
             .on('meta[property="og:image"]', { element(e) { e.setAttribute('content', imageUrl); } })
-            .on('meta[name="twitter:image"]', { element(e) { e.setAttribute('content', imageUrl); } })
+            .on('meta[property="twitter:title"]', { element(e) { e.setAttribute('content', cleanTitle); } })
+            .on('meta[property="twitter:image"]', { element(e) { e.setAttribute('content', imageUrl); } })
             .transform(rawResponse);
         }
       } catch (err) {

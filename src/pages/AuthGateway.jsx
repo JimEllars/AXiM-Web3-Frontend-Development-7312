@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
+import { supabase } from '../lib/supabase';
 
 export default function AuthGateway() {
   const [isLogin, setIsLogin] = useState(true);
@@ -24,21 +25,21 @@ export default function AuthGateway() {
 
     try {
       if (isLogin) {
-        // Authenticate existing operator
-        if (signIn) {
-          await signIn({ email, password });
-        } else {
-          // Fallback simulation if hook isn't fully wired yet
-          await new Promise(r => setTimeout(r, 1200));
-        }
+        // Real Supabase Login
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+        if (error) throw error;
       } else {
-        // Register new operator
-        if (signUp) {
-          await signUp({ email, password });
-        } else {
-          await new Promise(r => setTimeout(r, 1200));
-        }
+        // Real Supabase Registration
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+        });
+        if (error) throw error;
       }
+
       // Route directly to the Operator Vault on success
       navigate('/profile');
     } catch (err) {
