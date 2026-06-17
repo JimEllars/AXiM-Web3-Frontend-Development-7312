@@ -4,6 +4,7 @@ import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useAximStore } from '../../store/useAximStore';
+import { supabase } from '../../lib/supabase';
 
 export default function NdaGeneratorLanding() {
   const [showWizard, setShowWizard] = useState(false);
@@ -13,25 +14,40 @@ export default function NdaGeneratorLanding() {
 
     const addAsset = useAximStore((state) => state.addAsset);
 
-  const handleGenerate = (e) => {
+  const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Construct the generated asset payload
+    const operatorEmail = document.querySelector('input[type="email"]')?.value;
+    const inputs = document.querySelectorAll('input[type="text"]');
+    const partyA = inputs[0]?.value;
+    const partyB = inputs[1]?.value;
+    const jurisdiction = inputs[2]?.value;
+
     const newAsset = {
       id: `AX-NDA-${Math.floor(Math.random() * 10000)}`,
       type: 'Mutual NDA',
       date: new Date().toISOString().split('T')[0],
       status: 'Encrypted',
-      icon: LuIcons.LuShieldCheck,
-      color: 'text-axim-purple'
+      icon_ref: 'LuShieldCheck',
+      color: 'text-axim-purple',
+      payload: { email: operatorEmail, partyA, partyB, jurisdiction }
     };
 
-    setTimeout(() => {
-      addAsset(newAsset); // Push to global state
+    try {
+      // 1. Push to remote database
+      const { error } = await supabase.from('generated_assets').insert([newAsset]);
+      if (error) console.error("Database Uplink Failed:", error);
+
+      // 2. Push to local UI state for immediate rendering
+      addAsset({ ...newAsset, icon: LuIcons.LuShieldCheck });
+
+      navigate('/auth');
+    } catch (err) {
+      console.error("Encryption cycle failed.", err);
+    } finally {
       setIsSubmitting(false);
-      navigate('/auth'); // Route to vault
-    }, 2000);
+    }
   };
 
   const ndaSchema = {
