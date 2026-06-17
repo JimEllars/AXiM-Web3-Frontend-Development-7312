@@ -93,3 +93,23 @@ export default {
   }
 };
 ```
+
+## 3. Cloudflare KV Edge Integration
+
+To enable dynamic configuration and SEO overrides at the edge without redeploying the worker, we utilize Cloudflare KV.
+
+1. **Create the KV Namespace**:
+   Run the following command via Wrangler to create the namespace:
+   ```bash
+   wrangler kv:namespace create "AXIM_CONFIG"
+   ```
+
+2. **Bind the Namespace in `wrangler.toml`**:
+   Take the output from the previous command (which includes the namespace ID) and append it to your `wrangler.toml` file:
+   ```toml
+   # wrangler.toml
+
+   [[kv_namespaces]]
+   binding = "AXIM_CONFIG"
+   id = "<YOUR_NAMESPACE_ID_HERE>"
+   ```

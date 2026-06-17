@@ -63,7 +63,7 @@ export default function Tools() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Premium Asset Generators | AXiM Systems"
+        title="Premium Asset Generators | AXiM Hub"
         description="Access enterprise-grade document creation and digital products at a fraction of the traditional cost." customSchema={toolsSchema}
       />
 

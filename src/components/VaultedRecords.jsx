@@ -5,6 +5,24 @@ import { useAximStore } from '../store/useAximStore';
 
 const { LuLock } = LuIcons;
 
+
+const handleExport = (record) => {
+  try {
+    const fileData = JSON.stringify(record.data || record, null, 2);
+    const blob = new Blob([fileData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `AXiM_Vault_${record.type || 'DOCUMENT'}_${record.id || Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Export generation failed:', error);
+  }
+};
+
 export default function VaultedRecords() {
   const vaultedArtifacts = useAximStore((state) => state.vaultedArtifacts);
   const removeAction = useAximStore((state) => state.removeAction);
@@ -48,7 +66,7 @@ export default function VaultedRecords() {
 
                   <div className="mt-auto">
                     <button
-                      onClick={() => alert(`Exporting ${record.type || 'DOCUMENT'} pipeline initialization...`)}
+                      onClick={() => handleExport(record)}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />

@@ -12,12 +12,28 @@ const BOT_AGENTS = [
 ];
 
 export default {
+
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
 
     // Determine if the request is from a social media crawler
     const isBot = BOT_AGENTS.some(bot => userAgent.includes(bot));
+
+    let dynamicTitle = null;
+    let dynamicDesc = null;
+
+    if (env && env.AXIM_CONFIG) {
+      try {
+        const kvData = await env.AXIM_CONFIG.get(`seo_override_${url.pathname}`, { type: "json" });
+        if (kvData) {
+          dynamicTitle = kvData.title;
+          dynamicDesc = kvData.description;
+        }
+      } catch (e) {
+        console.error("KV Read Error:", e);
+      }
+    }
 
     // Only intercept Bot traffic hitting an Article route
     if (isBot && url.pathname.startsWith('/article/')) {
@@ -30,8 +46,8 @@ export default {
 
         if (wpData && wpData.length > 0) {
           const article = wpData[0];
-          const cleanTitle = article.title.rendered.replace(/<[^>]+>/g, '') + " | AXiM Systems";
-          const cleanDesc = article.excerpt.rendered.replace(/<[^>]+>/g, '').substring(0, 160) + "...";
+          const cleanTitle = dynamicTitle || (article.title.rendered.replace(/<[^>]+>/g, '') + " | AXiM Systems");
+          const cleanDesc = dynamicDesc || (article.excerpt.rendered.replace(/<[^>]+>/g, '').substring(0, 160) + "...");
           const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp';
 
           // Fetch the raw SPA index.html
@@ -53,7 +69,24 @@ export default {
       }
     }
 
-    // If human or non-article route, pass through normally
-    return fetch(request);
+    // If human or non-article route, pass through normally but rewrite if KV has data
+    const rawResponse = await fetch(request);
+
+    if (dynamicTitle || dynamicDesc) {
+        let rewriter = new HTMLRewriter();
+        if (dynamicTitle) {
+            rewriter = rewriter.on('title', { element(e) { e.setInnerContent(dynamicTitle); } })
+                               .on('meta[property="og:title"]', { element(e) { e.setAttribute('content', dynamicTitle); } })
+                               .on('meta[property="twitter:title"]', { element(e) { e.setAttribute('content', dynamicTitle); } });
+        }
+        if (dynamicDesc) {
+            rewriter = rewriter.on('meta[name="description"]', { element(e) { e.setAttribute('content', dynamicDesc); } })
+                               .on('meta[property="og:description"]', { element(e) { e.setAttribute('content', dynamicDesc); } });
+        }
+        return rewriter.transform(rawResponse);
+    }
+
+    return rawResponse;
   }
+
 };
