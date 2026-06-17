@@ -25,6 +25,7 @@ const Support = lazy(() => import('./pages/Support'));
 const Partners = lazy(() => import('./pages/Partners'));
 const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Profile = lazy(() => import('./pages/Profile'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AuthGateway = lazy(() => import('./pages/AuthGateway'));
 const Status = lazy(() => import('./pages/Status'));
 const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
@@ -114,6 +115,11 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <PageTransition><Profile /></PageTransition>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <PageTransition><AdminDashboard /></PageTransition>
               </ProtectedRoute>
             } />
             <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
