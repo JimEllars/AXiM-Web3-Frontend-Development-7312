@@ -8,16 +8,58 @@ const { LuLock } = LuIcons;
 
 const handleExport = (record) => {
   try {
-    const fileData = JSON.stringify(record.data || record, null, 2);
-    const blob = new Blob([fileData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `AXiM_Vault_${record.type || 'DOCUMENT'}_${record.id || Date.now()}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    // Create a formatted HTML string based on the record type
+    let htmlContent = `
+      <html>
+        <head>
+          <title>${record.title}</title>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
+            h1 { font-size: 24px; text-transform: uppercase; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; }
+            .meta { font-family: monospace; font-size: 12px; color: #666; margin-bottom: 40px; }
+            .section { margin-bottom: 20px; }
+            .label { font-weight: bold; text-transform: uppercase; font-size: 12px; color: #444; }
+            .value { font-size: 16px; margin-top: 4px; }
+            .legal-text { margin-top: 40px; font-size: 11px; color: #555; text-align: justify; }
+          </style>
+        </head>
+        <body>
+          <h1>${record.type === 'NDA' ? 'Mutual Non-Disclosure Agreement' : 'Official Earnings Statement'}</h1>
+          <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.timestamp).toUTCString()}</div>
+    `;
+
+    // Dynamically map all properties captured during the wizard
+    Object.entries(record.data || {}).forEach(([key, value]) => {
+       const cleanLabel = key.replace(/([A-Z])/g, ' $1').toUpperCase();
+       htmlContent += `
+         <div class="section">
+           <div class="label">${cleanLabel}</div>
+           <div class="value">${value}</div>
+         </div>
+       `;
+    });
+
+    htmlContent += `
+          <div class="legal-text">
+             This document was autonomously generated via the AXiM Systems Infrastructure on behalf of the cryptographic operator.
+             This cryptographic hash serves as a timestamped verification of intent.
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Open a hidden print window, write the HTML, and trigger the native PDF/Print dialog
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+    printWindow.focus();
+
+    // Delay slightly to ensure browser renders the DOM before invoking print
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+
   } catch (error) {
     console.error('Export generation failed:', error);
   }
