@@ -16,7 +16,7 @@ export function logTelemetry(type, payload) {
   }
 
   // Optional: Dispatch a custom event so UI components can re-render if needed
-    try {
+  try {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new window.CustomEvent('axim-telemetry-update', { detail: event }));
     }
