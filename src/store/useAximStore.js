@@ -6,6 +6,11 @@ export const useAximStore = create(
   persist(
     (set, get) => ({
   toast: null,
+  notification: null,
+  setNotification: (message) => {
+    set({ notification: message });
+    setTimeout(() => set({ notification: null }), 3000);
+  },
   showToast: (message, type = "info") => {
     set({ toast: { message, type } });
     setTimeout(() => {

@@ -1,105 +1,48 @@
-import DOMPurify from 'isomorphic-dompurify';
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { fetchPostsByCategory } from '../../lib/wp-fetch';
+import React, { useState, useEffect } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-
-const { LuFileText, LuTrendingUp, LuEye, LuMousePointerClick } = LuIcons;
+import { telemetryStore } from '../../lib/telemetry';
 
 export default function ContentAnalytics() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [logs, setLogs] = useState([...telemetryStore]);
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const posts = await fetchPostsByCategory('featured', 5);
-        if (posts && posts.length > 0) {
-          // If the 'featured' category fetch doesn't return enough, it'll fallback to recent posts
-          setArticles(posts.slice(0, 5));
-        }
-      } catch (error) { /* ignore */ } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
+    const handleUpdate = () => setLogs([...telemetryStore]);
+    window.addEventListener('axim-telemetry-update', handleUpdate);
+    return () => window.removeEventListener('axim-telemetry-update', handleUpdate);
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "circOut",
-                  delay: 0.15  ,
-                }}
-      className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm flex flex-col w-full h-full"
-    >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-axim-purple/10 border border-axim-purple/30 flex items-center justify-center rounded-sm text-axim-purple">
-          <SafeIcon icon={LuFileText} className="w-4 h-4" />
+    <div className="p-8 h-full flex flex-col gap-6">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <h2 className="text-xl font-black text-white uppercase tracking-widest">System Telemetry</h2>
+          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Live Event Stream</p>
         </div>
-        <h3 className="text-lg font-black uppercase text-white tracking-widest">Content Funnel Analytics</h3>
+        <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
       </div>
 
-      <div className="flex-grow space-y-4">
-        {loading ? (
-          <div className="w-full flex items-center justify-center p-8">
-            <div className="w-6 h-6 border-2 border-axim-purple border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : articles.length === 0 ? (
-          <div className="text-center py-8 text-zinc-600 text-xs font-mono uppercase tracking-widest">
-            SECURE_ARCHIVE_SYNC_PENDING...
+      <div className="flex-1 bg-[#0A0A0A] border border-white/5 rounded-sm p-4 overflow-y-auto no-scrollbar">
+        {logs.length === 0 ? (
+          <div className="h-full flex items-center justify-center text-zinc-600 font-mono text-xs uppercase tracking-widest">
+            Waiting for system events...
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {articles.map((article, index) => {
-              // Simulated metrics for visual display
-              const views = Math.floor(Math.random() * 5000) + 1000;
-              const conversions = Math.floor(views * (Math.random() * 0.05 + 0.01)); // 1-6% conversion
-
-              return (
-                <div key={article.id || index} className="p-4 bg-black/40 border border-white/10 rounded-sm hover:border-axim-purple/30 transition-colors group">
-                  <div className="mb-3 line-clamp-2">
-                    <a
-                      href={article.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-bold text-white group-hover:text-axim-purple transition-colors"
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.title || 'Untitled Article') }}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
-                      <div className="flex items-center gap-1.5">
-                        <SafeIcon icon={LuEye} className="w-3.5 h-3.5" />
-                        <span>Active Views</span>
-                      </div>
-                      <span className="text-white">{views.toLocaleString()}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
-                      <div className="flex items-center gap-1.5 text-axim-purple">
-                        <SafeIcon icon={LuMousePointerClick} className="w-3.5 h-3.5" />
-                        <span>Conversions</span>
-                      </div>
-                      <span className="text-axim-purple font-bold">+{conversions}</span>
-                    </div>
-
-                    <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden mt-2">
-                      <div
-                        className="h-full bg-axim-purple"
-                        style={{ width: `${Math.min((conversions / views) * 1000, 100)}%` }}
-                      />
-                    </div>
-                  </div>
+          <div className="flex flex-col gap-2">
+            {logs.map(log => (
+              <div key={log.id} className="p-3 border border-white/5 bg-black rounded-sm flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-axim-purple font-mono text-[0.65rem] font-bold uppercase tracking-widest">{log.type}</span>
+                  <span className="text-zinc-400 text-xs font-mono">{JSON.stringify(log.payload)}</span>
                 </div>
-              );
-            })}
+                <span className="text-zinc-600 text-[0.60rem] font-mono whitespace-nowrap">
+                  {new Date(log.timestamp).toLocaleTimeString()}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

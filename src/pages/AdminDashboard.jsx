@@ -45,12 +45,12 @@ export default function AdminDashboard() {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mt-8">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar border-b border-white/10 pb-4 mb-8">
+        <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar no-scrollbar border-b border-white/10 pb-4 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest rounded-sm transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest rounded-sm transition-colors whitespace-nowrap snap-start ${
                 activeTab === tab.id
                   ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]'
                   : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'

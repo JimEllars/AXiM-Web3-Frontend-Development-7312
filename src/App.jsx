@@ -94,6 +94,7 @@ function App() {
 
 
   const toast = useAximStore((state) => state.toast);
+  const notification = useAximStore((state) => state.notification);
 
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
@@ -110,6 +111,15 @@ function App() {
           >
             <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
             {toast.message}
+          </div>
+        </div>
+      )}
+
+      {notification && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-fade-in-up">
+          <div className="px-6 py-4 rounded-sm border border-axim-purple shadow-2xl font-mono text-xs uppercase tracking-widest backdrop-blur-md flex items-center gap-3 bg-axim-purple/20 text-white">
+            <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+            {notification}
           </div>
         </div>
       )}

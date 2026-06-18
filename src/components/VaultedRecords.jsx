@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
+import { logTelemetry } from '../lib/telemetry';
 
 const { LuLock } = LuIcons;
 
@@ -57,6 +58,11 @@ const handleExport = (record) => {
     // Delay slightly to ensure browser renders the DOM before invoking print
     setTimeout(() => {
       printWindow.print();
+
+      // Notify and track export
+      useAximStore.getState().setNotification('PDF successfully generated.');
+      logTelemetry('EXPORT_GENERATED', { type: record.type });
+
       printWindow.close();
     }, 250);
 

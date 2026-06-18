@@ -24,11 +24,13 @@ export default function AuthGateway() {
   const { signIn, signUp } = useAximAuth();
   const navigate = useNavigate();
   const loginWeb3Wallet = useAximStore(state => state.loginWeb3Wallet);
+  const setNotification = useAximStore(state => state.setNotification);
   const activeAccount = useActiveAccount();
 
   useEffect(() => {
     if (activeAccount?.address) {
       loginWeb3Wallet(activeAccount.address);
+      setNotification('Authentication successful.');
       navigate("/profile", { state: { web3Auth: activeAccount.address } });
     }
   }, [activeAccount, loginWeb3Wallet, navigate]);
@@ -57,6 +59,7 @@ export default function AuthGateway() {
       }
 
       // Route directly to the Operator Vault on success
+      setNotification('Authentication successful.');
       navigate('/profile');
     } catch (err) {
       console.error("[AXiM_AUTH] Clearance rejected:", err);
