@@ -10,6 +10,8 @@ import { ConnectButton, useActiveAccount } from 'thirdweb/react';
 import { client } from '../lib/thirdweb-client';
 import { useAximStore } from '../store/useAximStore';
 import { useEffect } from 'react';
+import { sanitizeInput } from '../lib/sanitize';
+
 
 export default function AuthGateway() {
   const [isLogin, setIsLogin] = useState(true);
@@ -37,17 +39,18 @@ export default function AuthGateway() {
     setErrorMsg(null);
 
     try {
+      const cleanEmail = sanitizeInput(email);
       if (isLogin) {
         // Real Supabase Login
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
+          email: cleanEmail,
           password: password,
         });
         if (error) throw error;
       } else {
         // Real Supabase Registration
         const { data, error } = await supabase.auth.signUp({
-          email: email,
+          email: cleanEmail,
           password: password,
         });
         if (error) throw error;

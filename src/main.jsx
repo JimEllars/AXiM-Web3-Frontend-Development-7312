@@ -7,12 +7,24 @@ import App from './App.jsx';
 import { ThirdwebProvider } from 'thirdweb/react';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './index.css';
+import { logTelemetry } from './lib/telemetry.js';
+
 
 // Explicitly import emotion to ensure resolution during build
 import '@emotion/react';
 import '@emotion/styled';
 
+
+window.addEventListener('unhandledrejection', (event) => {
+  logTelemetry('UNHANDLED_PROMISE', { reason: event.reason?.message || 'Unknown Promise Rejection' });
+});
+
+window.addEventListener('error', (event) => {
+  logTelemetry('GLOBAL_ERROR', { message: event.message, source: event.filename, line: event.lineno });
+});
+
 createRoot(document.getElementById('root')).render(
+
   <StrictMode>
     <ErrorBoundary>
               <QueryClientProvider client={new QueryClient()}>

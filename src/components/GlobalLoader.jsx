@@ -4,7 +4,7 @@ import * as LuIcons from 'react-icons/lu';
 
 export default function GlobalLoader() {
   return (
-    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] relative z-[100]">
       <div className="absolute inset-0 bg-[radial-gradient(rgba(147,51,234,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
 
       <div className="relative z-10 flex flex-col items-center">
