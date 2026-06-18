@@ -4,6 +4,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
+import { supabase } from '../lib/supabase';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 
@@ -32,10 +33,13 @@ export default function Profile() {
   const handleTerminate = async () => {
     try {
       if (signOut) await signOut();
+      await supabase.auth.signOut();
       clearStore(); // Wipe PII from local state
       logoutWeb3Wallet();
-      navigate('/'); // Return to public grid
+      useAximStore.getState().showToast('Operator connection severed. Session closed.', 'success');
+      navigate('/auth');
     } catch (error) {
+      useAximStore.getState().showToast('Error closing session.', 'error');
       console.error("[AXiM_SEC] Termination failed:", error);
     }
   };
