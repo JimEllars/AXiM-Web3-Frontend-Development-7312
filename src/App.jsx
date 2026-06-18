@@ -13,6 +13,7 @@ import CookieConsent from './components/CookieConsent';
 
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
+import { supabase } from './lib/supabase';
 import { logTelemetry } from './lib/telemetry';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -60,6 +61,19 @@ function App() {
   const startTelemetryPolling = useAximStore((state) => state.startTelemetryPolling);
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      useAximStore.getState().setUserSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      useAximStore.getState().setUserSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+
+  useEffect(() => {
     startTelemetryPolling();
   }, []);
 
@@ -78,11 +92,27 @@ function App() {
     };
   }, [location.pathname]);
 
+
+  const toast = useAximStore((state) => state.toast);
+
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
       <AnalyticsTracker />
       <BackgroundEffects />
       <CookieConsent />
+
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up">
+          <div className={`px-6 py-4 rounded-sm border shadow-2xl font-mono text-xs uppercase tracking-widest backdrop-blur-md flex items-center gap-3
+            ${toast.type === 'error' ? 'bg-red-950/80 border-red-500 text-red-200' :
+              toast.type === 'success' ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200' :
+              'bg-axim-purple/20 border-axim-purple text-white'}`}
+          >
+            <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+            {toast.message}
+          </div>
+        </div>
+      )}
 
       {/* CRITICAL FIX:
         <ProactiveBanner /> and <EngagementGuard /> have been PURGED from this global root.

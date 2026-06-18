@@ -13,6 +13,7 @@ export default function NdaGeneratorLanding() {
   const navigate = useNavigate();
 
     const addAsset = useAximStore((state) => state.addAsset);
+    const showToast = useAximStore((state) => state.showToast);
 
   const handleGenerate = async (e) => {
     e.preventDefault();
@@ -42,8 +43,10 @@ export default function NdaGeneratorLanding() {
       // 2. Push to local UI state for immediate rendering
       addAsset({ ...newAsset, icon: LuIcons.LuShieldCheck });
 
+      showToast('Asset encrypted and synchronized to vault.', 'success');
       navigate('/auth');
     } catch (err) {
+      showToast('Encryption cycle failed. Please retry.', 'error');
       console.error("Encryption cycle failed.", err);
     } finally {
       setIsSubmitting(false);

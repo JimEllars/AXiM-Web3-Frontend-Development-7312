@@ -5,6 +5,15 @@ import { supabase } from '../lib/supabase.js';
 export const useAximStore = create(
   persist(
     (set, get) => ({
+  toast: null,
+  showToast: (message, type = "info") => {
+    set({ toast: { message, type } });
+    setTimeout(() => {
+      set({ toast: null });
+    }, 4000);
+  },
+  clearToast: () => set({ toast: null }),
+
       // --- AUTONOMOUS ACTION QUEUE ---
       pendingActions: [],
       enqueueAction: (action) => {
