@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { sanitizeInput } from '../../lib/sanitize';
+
 import { useNavigate } from 'react-router-dom';
 import { useAximStore } from '../../store/useAximStore';
 import { supabase } from '../../lib/supabase';
@@ -23,10 +25,10 @@ export default function PayStubLanding() {
     const inputNumber = document.querySelector('input[type="number"]');
     const inputEmail = document.querySelector('input[type="email"]');
 
-    const companyName = inputsText[0]?.value;
-    const employeeName = inputsText[1]?.value;
-    const grossPay = inputNumber?.value;
-    const operatorEmail = inputEmail?.value;
+    const companyName = sanitizeInput(inputsText[0]?.value || '');
+    const employeeName = sanitizeInput(inputsText[1]?.value || '');
+    const grossPay = sanitizeInput(inputNumber?.value || '');
+    const operatorEmail = sanitizeInput(inputEmail?.value || '');
 
     const newAsset = {
       id: `AX-PAY-${Math.floor(Math.random() * 10000)}`,

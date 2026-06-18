@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import React, { Suspense, useEffect } from 'react';
+import GlobalLoader from './GlobalLoader';
 
 const pageVariants = {
   initial: { opacity: 0, y: 15, filter: 'blur(4px)' },
@@ -32,7 +34,9 @@ export default function PageTransition({ children }) {
       transition={pageTransition}
       className="w-full h-full"
     >
-      {children}
+      <Suspense fallback={<GlobalLoader />}>
+        {children}
+      </Suspense>
     </motion.div>
   );
 }

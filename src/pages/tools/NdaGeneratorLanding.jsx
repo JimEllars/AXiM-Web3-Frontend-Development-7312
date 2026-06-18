@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { sanitizeInput } from '../../lib/sanitize';
+
 import { useNavigate } from 'react-router-dom';
 import { useAximStore } from '../../store/useAximStore';
 import { supabase } from '../../lib/supabase';
@@ -19,11 +21,16 @@ export default function NdaGeneratorLanding() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const operatorEmail = document.querySelector('input[type="email"]')?.value;
+    const rawOperatorEmail = document.querySelector('input[type="email"]')?.value;
     const inputs = document.querySelectorAll('input[type="text"]');
-    const partyA = inputs[0]?.value;
-    const partyB = inputs[1]?.value;
-    const jurisdiction = inputs[2]?.value;
+    const rawPartyA = inputs[0]?.value;
+    const rawPartyB = inputs[1]?.value;
+    const rawJurisdiction = inputs[2]?.value;
+
+    const operatorEmail = sanitizeInput(rawOperatorEmail || '');
+    const partyA = sanitizeInput(rawPartyA || '');
+    const partyB = sanitizeInput(rawPartyB || '');
+    const jurisdiction = sanitizeInput(rawJurisdiction || '');
 
     const newAsset = {
       id: `AX-NDA-${Math.floor(Math.random() * 10000)}`,

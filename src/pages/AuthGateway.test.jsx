@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { ThirdwebProvider } from 'thirdweb/react';
 import AuthGateway from './AuthGateway';
 import { useAximAuth } from '../hooks/useAximAuth';
 
@@ -16,11 +17,13 @@ describe('AuthGateway Component', () => {
     useAximAuth.mockReturnValue({ signIn: vi.fn(), signUp: vi.fn() });
 
     render(
-      <HelmetProvider>
-        <MemoryRouter>
-          <AuthGateway />
-        </MemoryRouter>
-      </HelmetProvider>
+      <ThirdwebProvider>
+        <HelmetProvider>
+          <MemoryRouter>
+            <AuthGateway />
+          </MemoryRouter>
+        </HelmetProvider>
+      </ThirdwebProvider>
     );
 
     expect(screen.getAllByText(/System/i).length).toBeGreaterThan(0);

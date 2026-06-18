@@ -227,8 +227,11 @@ export const useAximStore = create(
   }
     }),
     {
-      name: 'axim-autonomous-storage',
-      partialize: (state) => ({ pendingActions: state.pendingActions }),
+      name: 'axim-operator-storage',
+      partialize: (state) => ({
+        assets: state.assets,
+        session: state.session
+      }),
     }
   )
 );
