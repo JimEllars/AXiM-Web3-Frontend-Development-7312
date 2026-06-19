@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function DatabaseUplinkError({ onRetry }) {
+  useEffect(() => {
+    logTelemetry('SYSTEM_FAULT', {
+      component: 'DatabaseUplinkError',
+      trace: 'Network Timeout or Uplink Failure'
+    });
+  }, []);
+
   return (
     <section className="py-16 relative z-10">
       <div className="max-w-[1200px] mx-auto px-6 text-center">

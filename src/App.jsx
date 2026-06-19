@@ -103,7 +103,7 @@ function App() {
       <CookieConsent />
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up">
+        <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up" role="status" aria-live="polite">
           <div className={`px-6 py-4 rounded-sm border shadow-2xl font-mono text-xs uppercase tracking-widest backdrop-blur-md flex items-center gap-3
             ${toast.type === 'error' ? 'bg-red-950/80 border-red-500 text-red-200' :
               toast.type === 'success' ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200' :
@@ -116,7 +116,7 @@ function App() {
       )}
 
       {notification && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-fade-in-up">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-fade-in-up" role="status" aria-live="polite">
           <div className="px-6 py-4 rounded-sm border border-axim-purple shadow-2xl font-mono text-xs uppercase tracking-widest backdrop-blur-md flex items-center gap-3 bg-axim-purple/20 text-white">
             <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
             {notification}

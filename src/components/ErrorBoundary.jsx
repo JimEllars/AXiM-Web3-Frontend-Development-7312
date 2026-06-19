@@ -14,9 +14,9 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    logTelemetry('CRITICAL_ERROR', {
-      error: error.toString(),
-      stack: errorInfo.componentStack
+    logTelemetry('SYSTEM_FAULT', {
+      component: 'ErrorBoundary',
+      trace: error.toString()
     });
   }
 
@@ -29,16 +29,11 @@ export default class ErrorBoundary extends React.Component {
           <p className="max-w-md mb-8 text-xs leading-relaxed uppercase tracking-widest">
             A critical error has occurred in the UI or Web3 RPC layer. Please refresh the page to re-establish connection.
           </p>
-          {this.state.error && (
-            <div className="bg-white/5 border border-white/10 p-4 mb-8 text-[0.6rem] text-left overflow-auto max-w-2xl w-full text-red-400">
-              {this.state.error.toString()}
-            </div>
-          )}
           <button
-            onClick={() => { window.location.href = "/dashboard"; }}
-            className="px-8 py-4 bg-axim-gold text-black font-black uppercase text-xs tracking-widest hover:bg-white transition-colors"
+            onClick={() => window.location.reload()}
+            className="px-8 py-3 bg-white/5 border border-white/10 text-white font-mono uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm"
           >
-            Return to Dashboard
+            Restart Uplink
           </button>
         </div>
       );
