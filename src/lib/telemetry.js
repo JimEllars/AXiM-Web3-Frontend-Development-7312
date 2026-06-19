@@ -1,4 +1,5 @@
 export const telemetryStore = [];
+let isFlushing = false;
 
 export function logTelemetry(type, payload) {
   const event = {
@@ -24,4 +25,41 @@ export function logTelemetry(type, payload) {
 
 
   console.log(`[TELEMETRY: ${type}]`, payload);
+}
+
+export async function flushTelemetry() {
+  if (isFlushing || telemetryStore.length === 0) return;
+  isFlushing = true;
+
+  try {
+    const payload = JSON.stringify(telemetryStore);
+
+    // Use navigator.sendBeacon if available
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      navigator.sendBeacon('/api/telemetry/sync', payload);
+    } else if (typeof window !== 'undefined' && window.fetch) {
+      // Fallback to fetch
+      await fetch('/api/telemetry/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true,
+      });
+    }
+  } catch (err) {
+    // Fail silently
+  } finally {
+    isFlushing = false;
+  }
+}
+
+// Setup background sync
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    flushTelemetry();
+  }, 60000); // 60 seconds
+
+  window.addEventListener('beforeunload', () => {
+    flushTelemetry();
+  });
 }
