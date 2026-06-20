@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Support() {
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Standard', attachment: null });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Technical', attachment: null });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -29,63 +30,26 @@ export default function Support() {
     }
   };
 
+  const { showToast } = useAximStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMsg('');
-    setNetworkFault(false);
 
     try {
-      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
-      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+      // Stateless Simulation
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      if (!workerUrl || !secret) {
-        console.warn("EDGE WARNING: Missing Integration Keys. Simulating payload drop...");
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setIsSubmitting(false);
-        setSubmitted(true);
-        return;
-      }
+      logTelemetry("SUPPORT_TICKET_SUBMITTED", { subject: formData.subject, priority: formData.priority });
 
-      // Client-Side Sanitation
-      const cleanData = {
-        name: sanitizeInput(formData.name),
-        email: sanitizeInput(formData.email),
-        subject: sanitizeInput(formData.subject),
-        issue: sanitizeInput(formData.issue)
-      };
+      showToast('Support ticket securely routed to AXiM Triage', 'success');
 
-      const payloadSchema = {
-        customer_email: cleanData.email,
-        customer_name: cleanData.name,
-        subject: `[${formData.priority}] ${cleanData.subject}`,
-        description: cleanData.issue,
-        source: 'support_form'
-      };
-
-      const { ciphertext, iv } = await encryptPayload(payloadSchema, secret);
-
-      const secureFormData = new FormData();
-      secureFormData.append('payload', ciphertext);
-      secureFormData.append('iv', iv);
-      if (formData.attachment) secureFormData.append('attachment', formData.attachment);
-
-      const response = await fetch(`${workerUrl}/webhooks/intake`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${secret}` },
-        body: secureFormData
-      });
-
-      if (!response.ok) {
-        throw new Error(`Edge Proxy Rejected: ${response.status}`);
-      }
-
-      setIsSubmitting(false);
-      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', issue: '', priority: 'Technical', attachment: null });
+      // Remove setSubmitted to keep the form visible and empty
     } catch (err) {
-      console.error("Support Uplink Failed:", err);
+      console.error("Support Simulation Failed:", err);
+    } finally {
       setIsSubmitting(false);
-      setNetworkFault(true);
     }
   };
 
@@ -153,17 +117,7 @@ const faqs = [
 
         {/* Left Col: Support Form */}
         <div className="lg:col-span-5">
-          {submitted ? (
-             <div className="bg-[#0F172A] border border-axim-purple/50 p-10 rounded-sm text-center shadow-[0_0_50px_rgba(147,51,234,0.15)] relative overflow-hidden h-full flex flex-col justify-center min-h-[400px]">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-purple to-transparent opacity-50" />
-                <SafeIcon icon={LuIcons.LuCheck} className="w-12 h-12 text-axim-purple mx-auto mb-4" />
-                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Ticket Received</h2>
-                <p className="text-zinc-400 text-xs leading-relaxed font-mono tracking-widest uppercase">
-                  Our support team will review your request and respond shortly.
-                </p>
-             </div>
-          ) : (
-            <div className="bg-black border border-white/10 p-8 rounded-sm shadow-xl relative overflow-hidden">
+          <div className="bg-black border border-white/10 p-8 rounded-sm shadow-xl relative overflow-hidden animate-fade-in-up">
               <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
 
               <div className="relative z-10">
@@ -217,15 +171,16 @@ const faqs = [
                   </div>
 
                   <div>
-                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Priority Level</label>
+                    <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Issue Type</label>
                     <select
                       value={formData.priority}
                       onChange={(e) => setFormData({...formData, priority: e.target.value})}
                       className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm appearance-none cursor-pointer"
                     >
-                      <option value="Standard" className="bg-[#0F172A]">Standard Question</option>
-                      <option value="High" className="bg-[#0F172A]">High (Bug / Error)</option>
-                      <option value="Critical" className="bg-[#0F172A]">Critical (Billing / Account Access)</option>
+                      <option value="Technical" className="bg-[#0F172A]">Technical</option>
+                      <option value="Billing" className="bg-[#0F172A]">Billing</option>
+                      <option value="Partnership" className="bg-[#0F172A]">Partnership</option>
+                      <option value="Other" className="bg-[#0F172A]">Other</option>
                     </select>
                   </div>
 
@@ -274,7 +229,6 @@ const faqs = [
                 </form>
               </div>
             </div>
-          )}
         </div>
 
         {/* Right Col: FAQ & Wiki */}

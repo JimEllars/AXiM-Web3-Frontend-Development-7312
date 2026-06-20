@@ -11,7 +11,6 @@ const { LuSearch, LuX } = LuIcons;
 
 const STATIC_ROUTES = [
   { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
-  { title: "System Status", path: "/status", category: "Main Menu" },
   { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
   { title: "Tools", path: "/tools", category: "Our Tools" },
