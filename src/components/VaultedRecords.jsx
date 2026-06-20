@@ -73,7 +73,7 @@ const handleExport = (record) => {
 
 export default function VaultedRecords() {
   const vaultedArtifacts = useAximStore((state) => state.vaultedArtifacts);
-  const removeAction = useAximStore((state) => state.removeAction);
+  const removeVaultedArtifact = useAximStore((state) => state.removeVaultedArtifact);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function VaultedRecords() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {vaultedArtifacts.map((record) => (
               <div key={record.id} className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
-                <button onClick={() => removeAction(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
+                <button onClick={() => removeVaultedArtifact(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
                   <SafeIcon icon={LuIcons.LuTrash2} className="w-4 h-4" />
                 </button>
                 <div className="flex flex-col h-full">

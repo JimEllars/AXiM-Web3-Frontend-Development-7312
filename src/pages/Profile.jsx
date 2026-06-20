@@ -5,8 +5,9 @@ import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
 import { supabase } from '../lib/supabase';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
+import VaultedRecords from '../components/VaultedRecords';
 
 export default function Profile() {
   const { session, user, signOut } = useAximAuth();
@@ -94,6 +95,7 @@ export default function Profile() {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mt-12">
+
         {/* Navigation Tabs */}
         <div className="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
           <button
@@ -110,61 +112,38 @@ export default function Profile() {
           </button>
         </div>
 
+        {/* Premium Tools Section */}
+        <div className="mb-12 animate-fade-in">
+          <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+            <SafeIcon icon={LuIcons.LuZap} className="w-5 h-5 text-axim-gold" />
+            <h3 className="text-xl font-black uppercase tracking-tighter text-white">Premium Tools</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link to="/tools/nda-generator" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group flex items-start gap-4">
+              <div className="p-3 bg-axim-purple/10 text-axim-purple rounded-sm">
+                <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-white font-black uppercase tracking-tight mb-1">NDA Generator</h4>
+                <p className="text-xs text-zinc-500 leading-relaxed">Generate a balanced, two-way non-disclosure agreement optimized for tech collaborations.</p>
+              </div>
+            </Link>
+            <Link to="/tools/pay-stub" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-[#DB2777]/50 transition-colors group flex items-start gap-4">
+              <div className="p-3 bg-[#DB2777]/10 text-[#DB2777] rounded-sm">
+                <SafeIcon icon={LuIcons.LuFileText} className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-white font-black uppercase tracking-tight mb-1">Pay Stub System</h4>
+                <p className="text-xs text-zinc-500 leading-relaxed">Standardize independent payroll documentation with mathematical accuracy.</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
         {/* Tab 1: Vaulted Assets */}
         {activeTab === 'vault' && (
           <div className="animate-fade-in">
-            {vaultedAssets.length === 0 ? (
-              <div className="bg-[#050505] border border-white/10 p-12 rounded-sm text-center shadow-xl">
-                 <SafeIcon icon={LuIcons.LuFolderSearch} className="w-10 h-10 text-zinc-600 mx-auto mb-4" />
-                 <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Vault Empty</h3>
-                 <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">No encrypted assets detected for this operator.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {vaultedAssets.map((asset, idx) => {
-                  const isExtracting = extractingId === asset.id;
-                  const isExtracted = extractedAssets.includes(asset.id);
-
-                  return (
-                    <div key={idx} className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group relative overflow-hidden flex flex-col justify-between min-h-[200px]">
-                      <div className={`absolute top-0 right-0 w-32 h-32 opacity-5 blur-[40px] pointer-events-none group-hover:opacity-10 transition-opacity ${asset.color.replace('text-', 'bg-')}`} />
-                      <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <SafeIcon icon={asset.icon} className={`w-8 h-8 ${asset.color}`} />
-                          <span className="text-[0.6rem] font-mono uppercase tracking-widest text-zinc-500 bg-white/5 px-2 py-1 rounded-sm border border-white/10">
-                            {asset.date}
-                          </span>
-                        </div>
-                        <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{asset.type}</h3>
-                        <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest">ID: {asset.id}</p>
-                      </div>
-
-                      <div className="mt-8 flex justify-between items-center border-t border-white/5 pt-4 relative z-10">
-                        <span className="text-xs font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
-                          <SafeIcon icon={LuIcons.LuCircleCheck} className="w-3 h-3" /> {isExtracted ? 'Decrypted' : asset.status}
-                        </span>
-
-                        <button
-                          onClick={() => !isExtracted && handleExtract(asset.id)}
-                          disabled={isExtracting || isExtracted}
-                          className={`text-[0.65rem] font-black uppercase tracking-widest transition-colors flex items-center gap-2 ${
-                            isExtracted ? 'text-zinc-500 cursor-not-allowed' : `${asset.color} hover:text-white`
-                          }`}
-                        >
-                          {isExtracting ? (
-                            <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> Decrypting...</>
-                          ) : isExtracted ? (
-                            <><SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" /> Downloaded</>
-                          ) : (
-                            <>Extract <SafeIcon icon={LuIcons.LuDownload} className="w-4 h-4" /></>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+             <VaultedRecords />
           </div>
         )}
 
