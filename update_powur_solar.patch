@@ -1,0 +1,11 @@
+--- src/pages/partners/PowurSolarLanding.jsx
++++ src/pages/partners/PowurSolarLanding.jsx
+@@ -85,8 +85,8 @@
+         <div className="flex flex-col">
+           <span className="text-white font-black text-xs uppercase tracking-widest">Powur Solar</span>
+           <span className="text-axim-gold text-[0.65rem] font-mono uppercase tracking-widest">Zero Down</span>
+         </div>
+         <a
+           href={affiliateLink}
+           onClick={() => handleOutboundClick('sticky_mobile')}
+           target="_blank"

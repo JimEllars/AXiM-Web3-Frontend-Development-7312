@@ -1,0 +1,11 @@
+--- src/pages/partners/PowurJoinLanding.jsx
++++ src/pages/partners/PowurJoinLanding.jsx
+@@ -83,8 +83,8 @@
+         <div className="flex flex-col">
+           <span className="text-white font-black text-xs uppercase tracking-widest">Powur Partner</span>
+           <span className="text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest">Launch Agency</span>
+         </div>
+         <a
+           href={affiliateLink}
+           onClick={() => handleOutboundClick('sticky_mobile')}
+           target="_blank"
