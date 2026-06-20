@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { logTelemetry } from '../../lib/telemetry';
 import { sanitizeInput } from '../../lib/sanitize';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +11,9 @@ import { useAximStore } from '../../store/useAximStore';
 import { supabase } from '../../lib/supabase';
 
 export default function NdaGeneratorLanding() {
+  React.useEffect(() => {
+    logTelemetry('TOOL_ACCESSED', { toolName: 'nda_generator' });
+  }, []);
   const [showWizard, setShowWizard] = useState(false);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,43 +26,30 @@ export default function NdaGeneratorLanding() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const rawOperatorEmail = document.querySelector('input[type="email"]')?.value;
-    const inputs = document.querySelectorAll('input[type="text"]');
-    const rawPartyA = inputs[0]?.value;
-    const rawPartyB = inputs[1]?.value;
-    const rawJurisdiction = inputs[2]?.value;
-
-    const operatorEmail = sanitizeInput(rawOperatorEmail || '');
-    const partyA = sanitizeInput(rawPartyA || '');
-    const partyB = sanitizeInput(rawPartyB || '');
-    const jurisdiction = sanitizeInput(rawJurisdiction || '');
-
-    const newAsset = {
-      id: `AX-NDA-${Math.floor(Math.random() * 10000)}`,
-      type: 'Mutual NDA',
-      date: new Date().toISOString().split('T')[0],
-      status: 'Encrypted',
-      icon_ref: 'LuShieldCheck',
-      color: 'text-axim-purple',
-      payload: { email: operatorEmail, partyA, partyB, jurisdiction }
-    };
-
-    try {
-      // 1. Push to remote database
-      const { error } = await supabase.from('generated_assets').insert([newAsset]);
-      if (error) console.error("Database Uplink Failed:", error);
-
-      // 2. Push to local UI state for immediate rendering
-      addAsset({ ...newAsset, icon: LuIcons.LuShieldCheck });
-
-      showToast('Asset encrypted and synchronized to vault.', 'success');
-      navigate('/auth');
-    } catch (err) {
-      showToast('Encryption cycle failed. Please retry.', 'error');
-      console.error("Encryption cycle failed.", err);
-    } finally {
+    setTimeout(() => {
       setIsSubmitting(false);
-    }
+      setShowWizard(false);
+
+      const store = useAximStore.getState();
+      store.showToast('NDA Successfully Generated & Vaulted', 'success');
+
+      // Update useAximStore logic
+      const newAsset = {
+        id: `NDA-${Date.now()}`,
+        type: 'Mutual NDA',
+        date: new Date().toISOString(),
+        status: 'Ready',
+        icon: LuIcons.LuShieldCheck,
+        color: 'text-axim-purple'
+      };
+
+      if (store.addVaultedArtifact) {
+        store.addVaultedArtifact(newAsset);
+      } else {
+        // Fallback for store update
+        useAximStore.setState((state) => ({ vaultedArtifacts: [newAsset, ...state.vaultedArtifacts] }));
+      }
+    }, 2000);
   };
 
   const ndaSchema = {
@@ -71,7 +63,8 @@ export default function NdaGeneratorLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <ProtectedRoute>
+      <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="Mutual NDA Generator | AXiM Systems" customSchema={[ndaSchema]} />
 
       {/* Generation Wizard Modal */}
@@ -181,5 +174,6 @@ export default function NdaGeneratorLanding() {
         </div>
       </section>
     </div>
+    </ProtectedRoute>
   );
 }

@@ -61,6 +61,9 @@ export const useAximStore = create(
     { id: 1, name: "Generated_NDA_v1.pdf", type: "pdf", size: "124 KB", date: new Date().toISOString(), status: "Verified" },
     { id: 2, name: "CORE_COGNITION_APRIL.enc", type: "enc", size: "4 KB", date: new Date(Date.now() - 172800000).toISOString(), status: "Encrypted" }
   ],
+  addVaultedArtifact: (artifact) => set((state) => ({ vaultedArtifacts: [artifact, ...state.vaultedArtifacts] })),
+  removeVaultedArtifact: (id) => set((state) => ({ vaultedArtifacts: state.vaultedArtifacts.filter(a => a.id !== id) })),
+
   wpDiagnosticError: null,
 
   nodeStatuses: null,
@@ -235,6 +238,7 @@ export const useAximStore = create(
       name: 'axim-operator-storage',
       partialize: (state) => ({
         assets: state.assets,
+        vaultedArtifacts: state.vaultedArtifacts,
         session: state.session
       }),
     }

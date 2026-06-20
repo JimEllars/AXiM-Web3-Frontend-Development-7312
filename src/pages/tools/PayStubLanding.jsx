@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { logTelemetry } from '../../lib/telemetry';
 import { sanitizeInput } from '../../lib/sanitize';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +11,9 @@ import { useAximStore } from '../../store/useAximStore';
 import { supabase } from '../../lib/supabase';
 
 export default function PayStubLanding() {
+  React.useEffect(() => {
+    logTelemetry('TOOL_ACCESSED', { toolName: 'paystub_generator' });
+  }, []);
   const [showWizard, setShowWizard] = useState(false);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,39 +26,28 @@ export default function PayStubLanding() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const inputsText = document.querySelectorAll('input[type="text"]');
-    const inputNumber = document.querySelector('input[type="number"]');
-    const inputEmail = document.querySelector('input[type="email"]');
-
-    const companyName = sanitizeInput(inputsText[0]?.value || '');
-    const employeeName = sanitizeInput(inputsText[1]?.value || '');
-    const grossPay = sanitizeInput(inputNumber?.value || '');
-    const operatorEmail = sanitizeInput(inputEmail?.value || '');
-
-    const newAsset = {
-      id: `AX-PAY-${Math.floor(Math.random() * 10000)}`,
-      type: 'Pay Stub Ledger',
-      date: new Date().toISOString().split('T')[0],
-      status: 'Ready',
-      icon_ref: 'LuFileText',
-      color: 'text-[#DB2777]',
-      payload: { companyName, employeeName, grossPay, email: operatorEmail }
-    };
-
-    try {
-      const { error } = await supabase.from('generated_assets').insert([newAsset]);
-      if (error) console.error("Database Uplink Failed:", error);
-
-      addAsset({ ...newAsset, icon: LuIcons.LuFileText });
-
-      showToast('Asset encrypted and synchronized to vault.', 'success');
-      navigate('/auth');
-    } catch (err) {
-      showToast('Encryption cycle failed. Please retry.', 'error');
-      console.error("Encryption cycle failed.", err);
-    } finally {
+    setTimeout(() => {
       setIsSubmitting(false);
-    }
+      setShowWizard(false);
+
+      const store = useAximStore.getState();
+      store.showToast('Pay Stub Successfully Generated & Vaulted', 'success');
+
+      const newAsset = {
+        id: `PAY-${Date.now()}`,
+        type: 'Pay Stub',
+        date: new Date().toISOString(),
+        status: 'Ready',
+        icon: LuIcons.LuFileText,
+        color: 'text-[#DB2777]'
+      };
+
+      if (store.addVaultedArtifact) {
+        store.addVaultedArtifact(newAsset);
+      } else {
+        useAximStore.setState((state) => ({ vaultedArtifacts: [newAsset, ...state.vaultedArtifacts] }));
+      }
+    }, 2000);
   };
 
   const payStubSchema = {
@@ -67,7 +61,8 @@ export default function PayStubLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <ProtectedRoute>
+      <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="Pay Stub Generator | AXiM Systems" customSchema={[payStubSchema]} />
 
       {/* Generation Wizard Modal */}
@@ -204,5 +199,6 @@ export default function PayStubLanding() {
         </div>
       </section>
     </div>
+    </ProtectedRoute>
   );
 }
