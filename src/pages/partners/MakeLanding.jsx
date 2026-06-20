@@ -1,3 +1,4 @@
+import { logTelemetry } from '../../lib/telemetry';
 import React from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
@@ -5,6 +6,19 @@ import * as LuIcons from 'react-icons/lu';
 
 export default function MakeLanding() {
   const affiliateLink = "https://www.make.com/en/register?pc=aximpartner";
+
+  const handleOutboundClick = (placement) => {
+    // 1. Log to AXiM internal telemetry
+    logTelemetry('AFFILIATE_CLICK', { partner: 'make', placement });
+
+    // 2. Log to external Google Analytics
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "outbound_partner_click", {
+        event_category: "conversion",
+        event_label: "Make.com"
+      });
+    }
+  };
 
   const makeAppSchema = {
     "@context": "https://schema.org",
@@ -40,14 +54,27 @@ export default function MakeLanding() {
             <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-none mb-6">
-            Automate Your Business. <br/><span className="text-axim-purple">Without Writing Code.</span>
+            The Visual AI Automation<br/><span className="text-axim-purple">Platform.</span>
           </h1>
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
-            Stop wasting your team's time on repetitive, manual data entry. AXiM's preferred integration with Make.com allows anyone to visually connect thousands of popular apps, instantly syncing data and triggering complex workflows 24/7.
+            Stop wasting your team's time on repetitive, manual data entry. AXiM's preferred integration with Make.com allows anyone to visually connect data sources, AI models, and thousands of popular apps to build agentic workflows 24/7.
           </p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Make.com" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => handleOutboundClick('hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Start Automating for Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
+        </div>
+      </section>
+
+      {/* Trusted By Section */}
+      <section className="py-8 bg-[#050505] border-b border-white/5">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <p className="text-xs text-zinc-500 font-mono uppercase tracking-widest mb-4">Trusted by innovators at</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 text-zinc-600 font-black text-sm md:text-base uppercase tracking-wider grayscale opacity-70">
+            <span>BambooHR</span>
+            <span>BNY</span>
+            <span>Bolt</span>
+            <span>& More</span>
+          </div>
         </div>
       </section>
 
@@ -125,7 +152,7 @@ export default function MakeLanding() {
             <h3 className="text-white font-black text-lg uppercase tracking-tight mb-3 flex items-center gap-3">
               <SafeIcon icon={LuIcons.LuLock} className="w-5 h-5 text-axim-purple" /> How secure is my transferred data?
             </h3>
-            <p className="text-sm text-zinc-400 leading-relaxed">Make operates under strict enterprise security protocols, including ISO 27001 and SOC 2 Type 2 compliance. Data in transit is secured using modern TLS encryption, ensuring your operational payloads remain isolated and protected.</p>
+            <p className="text-sm text-zinc-400 leading-relaxed">Make operates under strict enterprise security protocols, including GDPR, SOC 3, and SOC 2 Type II compliance. Data in transit is secured using modern TLS encryption, ensuring your operational payloads remain isolated and protected.</p>
           </div>
         </div>
       </section>
@@ -135,11 +162,27 @@ export default function MakeLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Reclaim Your Time. <br/>Scale Your Impact.</h2>
           <p className="text-zinc-400 text-sm mb-10">Join thousands of operators building robust, automated businesses without the massive overhead of hiring a development team.</p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Make.com" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => handleOutboundClick('footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Create Your Free Account <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
       </section>
+      {/* Sticky Mobile CTA */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-[#050505] border-t border-white/10 p-4 z-50 flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-white font-black text-xs uppercase tracking-widest">Make.com</span>
+          <span className="text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest">Free Account</span>
+        </div>
+        <a
+          href={affiliateLink}
+          onClick={() => handleOutboundClick('sticky_mobile')}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
+        >
+          Start Free
+        </a>
+      </div>
     </div>
   );
 }
