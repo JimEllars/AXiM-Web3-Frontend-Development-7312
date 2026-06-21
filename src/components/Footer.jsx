@@ -81,7 +81,6 @@ export default function Footer() {
           </p>
           <div className="flex gap-6">
              <Link to="/terms" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
-             <Link to="/status" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">System Status</Link>
           </div>
         </div>
       </div>
