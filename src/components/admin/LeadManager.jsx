@@ -16,8 +16,22 @@ export default function LeadManager() {
   const [activeLeadId, setActiveLeadId] = useState(null);
   const [partnerLeads, setPartnerLeads] = useState([]);
 
-  const [dismissedLeadIds, setDismissedLeadIds] = useState([]);
+  const [dismissedLeadIds, setDismissedLeadIds] = useState(() => {
+    if (typeof window !== 'undefined' && sessionStorage) {
+      try {
+        const cached = sessionStorage.getItem('axim_dismissed_leads');
+        if (cached) return JSON.parse(cached);
+      } catch (e) { console.error(e); }
+    }
+    return [];
+  });
 
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage) {
+      sessionStorage.setItem('axim_dismissed_leads', JSON.stringify(dismissedLeadIds));
+    }
+  }, [dismissedLeadIds]);
 
   useEffect(() => {
     const filterLeads = () => {
@@ -83,6 +97,12 @@ export default function LeadManager() {
           </div>
           <h3 className="text-lg font-black uppercase text-white tracking-widest">Recent Partner Inquiries</h3>
         </div>
+        <button
+          onClick={() => { setDismissedLeadIds([]); useAximStore.getState().showToast('Restored dismissed cards.', 'success'); }}
+          className="flex items-center gap-2 px-3 py-2 border border-axim-purple/50 text-axim-purple hover:bg-axim-purple/10 transition-colors rounded-sm text-[0.65rem] font-mono uppercase tracking-widest mr-2"
+        >
+          Restore Dismissed Cards
+        </button>
         <button
           onClick={handleExportCSV}
           className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white/10 transition-colors rounded-sm text-[0.65rem] font-mono uppercase tracking-widest"

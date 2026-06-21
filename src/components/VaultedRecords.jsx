@@ -111,7 +111,15 @@ export default function VaultedRecords() {
                   </p>
                   <div className="mt-auto">
                     <button
-                      onClick={() => { useAximStore.getState().setGlobalLoading(true, 'Decrypting Vaulted Document...'); setTimeout(() => { useAximStore.getState().setGlobalLoading(false); useAximStore.getState().showToast('Mock download was successful.', 'success'); }, 1500); }}
+                      onClick={() => {
+                        const fileType = "NDA";
+                        useAximStore.getState().setGlobalLoading(true, `Accessing IPFS Gateway for ${fileType}...`);
+                        setTimeout(() => {
+                          useAximStore.getState().setGlobalLoading(false);
+                          useAximStore.getState().showToast('Mock download was successful.', 'success');
+                          logTelemetry('MOCK_EXPORT_GENERATED', { type: fileType });
+                        }, 1800);
+                      }}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
@@ -136,7 +144,15 @@ export default function VaultedRecords() {
                   </p>
                   <div className="mt-auto">
                     <button
-                      onClick={() => { useAximStore.getState().setGlobalLoading(true, 'Decrypting Vaulted Document...'); setTimeout(() => { useAximStore.getState().setGlobalLoading(false); useAximStore.getState().showToast('Mock download was successful.', 'success'); }, 1500); }}
+                      onClick={() => {
+                        const fileType = "PAY STUB";
+                        useAximStore.getState().setGlobalLoading(true, `Decrypting AXiM Secure Storage for ${fileType}...`);
+                        setTimeout(() => {
+                          useAximStore.getState().setGlobalLoading(false);
+                          useAximStore.getState().showToast('Mock download was successful.', 'success');
+                          logTelemetry('MOCK_EXPORT_GENERATED', { type: fileType });
+                        }, 1800);
+                      }}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
