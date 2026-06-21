@@ -95,11 +95,33 @@ function App() {
   const toast = useAximStore((state) => state.toast);
   const notification = useAximStore((state) => state.notification);
 
+  const globalLoading = useAximStore((state) => state.globalLoading);
+  const globalLoadingMessage = useAximStore((state) => state.globalLoadingMessage);
+
+
   return (
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
       <AnalyticsTracker />
       <BackgroundEffects />
       <CookieConsent />
+
+      {globalLoading && (
+        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="relative w-16 h-16 flex items-center justify-center mb-6">
+              <div className="absolute inset-0 border-2 border-white/5 border-t-axim-purple rounded-full animate-spin" />
+              <div className="w-6 h-6 text-axim-purple animate-pulse flex items-center justify-center">
+                <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+              </div>
+            </div>
+            <div className="font-mono text-[0.65rem] text-axim-purple uppercase tracking-widest animate-pulse flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-axim-purple rounded-full" />
+              {globalLoadingMessage || 'Processing...'}
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {toast && (
         <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up" role="status" aria-live="polite">
