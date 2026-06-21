@@ -14,9 +14,9 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    logTelemetry('SYSTEM_FAULT', {
-      component: 'ErrorBoundary',
-      trace: error.toString()
+    logTelemetry('CRITICAL_UI_FAULT', {
+      error: error.message,
+      componentStack: errorInfo.componentStack
     });
   }
 
@@ -27,14 +27,22 @@ export default class ErrorBoundary extends React.Component {
           <SafeIcon icon={FiIcons.FiAlertTriangle} className="w-16 h-16 text-red-500 mb-6" />
           <h1 className="text-3xl font-black uppercase text-white mb-4 tracking-tighter">System Malfunction</h1>
           <p className="max-w-md mb-8 text-xs leading-relaxed uppercase tracking-widest">
-            A critical error has occurred in the UI or Web3 RPC layer. Please refresh the page to re-establish connection.
+            A minor anomaly occurred. Our Onyx swarm has been notified.
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-8 py-3 bg-white/5 border border-white/10 text-white font-mono uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm"
-          >
-            Restart Uplink
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-8 py-3 bg-white/5 border border-white/10 text-white font-mono uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm"
+            >
+              Restart Uplink
+            </button>
+            <button
+              onClick={() => window.location.href = '/'}
+              className="px-8 py-3 bg-axim-purple border border-axim-purple text-white font-mono uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm"
+            >
+              Return Home
+            </button>
+          </div>
         </div>
       );
     }
