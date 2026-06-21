@@ -16,8 +16,8 @@ export default function ProactiveBanner() {
     setErrorMsg(null);
 
     try {
-      const workerUrl = import.meta.env.VITE_ONYX_WORKER_URL;
-      const secret = import.meta.env.VITE_AXIM_ONYX_SECRET;
+      const workerUrl = import.meta.env.VITE_AXIM_CORE_API_URL;
+      const secret = import.meta.env.VITE_AXIM_CORE_ANON_KEY;
 
       if (!workerUrl || !secret) {
         console.warn("EDGE WARNING: Missing Environment Keys. Simulating subscription...");
