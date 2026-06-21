@@ -5,6 +5,11 @@ import { supabase } from '../lib/supabase.js';
 export const useAximStore = create(
   persist(
     (set, get) => ({
+
+  globalLoading: false,
+  globalLoadingMessage: '',
+  setGlobalLoading: (isLoading, message = '') => set({ globalLoading: isLoading, globalLoadingMessage: message }),
+
   toast: null,
   notification: null,
   setNotification: (message) => {

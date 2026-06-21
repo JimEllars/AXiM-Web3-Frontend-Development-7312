@@ -16,6 +16,9 @@ export default function LeadManager() {
   const [activeLeadId, setActiveLeadId] = useState(null);
   const [partnerLeads, setPartnerLeads] = useState([]);
 
+  const [dismissedLeadIds, setDismissedLeadIds] = useState([]);
+
+
   useEffect(() => {
     const filterLeads = () => {
       const leads = telemetryStore.filter(event =>
@@ -92,7 +95,7 @@ export default function LeadManager() {
       <div className="overflow-x-auto">
         {partnerLeads && partnerLeads.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partnerLeads.map((lead) => {
+            {partnerLeads.filter(lead => !dismissedLeadIds.includes(lead.id)).map((lead) => {
               const isAffiliate = lead.type === 'AFFILIATE_CLICK';
               const borderClass = isAffiliate ? 'border-axim-purple/30 hover:border-axim-purple/70' : 'border-axim-gold/30 hover:border-axim-gold/70';
               const bgGradient = isAffiliate ? 'bg-gradient-to-br from-axim-purple/5 to-transparent' : 'bg-gradient-to-br from-axim-gold/5 to-transparent';
@@ -145,9 +148,7 @@ export default function LeadManager() {
                          ↓
                        </button>
                        <button
-                         onClick={() => {
-                            useAximStore.getState().showToast('Lead dismissed from triage board.', 'info');
-                         }}
+                         onClick={() => { setDismissedLeadIds(prev => [...prev, lead.id]); useAximStore.getState().showToast('Lead dismissed from triage board.', 'info'); }}
                          className="p-1.5 bg-red-500/10 border border-red-500/20 hover:bg-red-500/30 hover:text-red-300 text-red-500/70 rounded-sm transition-colors text-[0.6rem] uppercase tracking-widest"
                          title="Dismiss Lead"
                        >

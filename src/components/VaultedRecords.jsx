@@ -111,7 +111,7 @@ export default function VaultedRecords() {
                   </p>
                   <div className="mt-auto">
                     <button
-                      onClick={() => useAximStore.getState().showToast('Simulating mock document download...', 'info')}
+                      onClick={() => { useAximStore.getState().setGlobalLoading(true, 'Decrypting Vaulted Document...'); setTimeout(() => { useAximStore.getState().setGlobalLoading(false); useAximStore.getState().showToast('Mock download was successful.', 'success'); }, 1500); }}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
@@ -136,7 +136,7 @@ export default function VaultedRecords() {
                   </p>
                   <div className="mt-auto">
                     <button
-                      onClick={() => useAximStore.getState().showToast('Simulating mock document download...', 'info')}
+                      onClick={() => { useAximStore.getState().setGlobalLoading(true, 'Decrypting Vaulted Document...'); setTimeout(() => { useAximStore.getState().setGlobalLoading(false); useAximStore.getState().showToast('Mock download was successful.', 'success'); }, 1500); }}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
                       <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
