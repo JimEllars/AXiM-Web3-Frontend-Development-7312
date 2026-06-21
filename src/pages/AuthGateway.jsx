@@ -6,11 +6,10 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { supabase } from '../lib/supabase';
-import { ConnectButton, useActiveAccount } from 'thirdweb/react';
-import { client } from '../lib/thirdweb-client';
 import { useAximStore } from '../store/useAximStore';
 import { useEffect } from 'react';
 import { sanitizeInput } from '../lib/sanitize';
+import { logTelemetry } from '../lib/telemetry';
 
 
 export default function AuthGateway() {
@@ -25,15 +24,28 @@ export default function AuthGateway() {
   const navigate = useNavigate();
   const loginWeb3Wallet = useAximStore(state => state.loginWeb3Wallet);
   const setNotification = useAximStore(state => state.setNotification);
-  const activeAccount = useActiveAccount();
+  const [isWeb3Connecting, setIsWeb3Connecting] = useState(false);
 
-  useEffect(() => {
-    if (activeAccount?.address) {
-      loginWeb3Wallet(activeAccount.address);
+  const handleMockWeb3Login = () => {
+    setIsWeb3Connecting(true);
+    setErrorMsg(null);
+    setEmail('');
+    setPassword('');
+
+    setTimeout(() => {
+      const mockAddress = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+
+      logTelemetry('AUTH_WEB3_LOGIN_SUCCESS', {
+        address: mockAddress,
+        method: 'mock_wallet_connect'
+      });
+
+      loginWeb3Wallet(mockAddress);
       setNotification('Authentication successful.');
-      navigate("/profile", { state: { web3Auth: activeAccount.address } });
-    }
-  }, [activeAccount, loginWeb3Wallet, navigate]);
+      setIsWeb3Connecting(false);
+      navigate("/admin", { state: { web3Auth: mockAddress } });
+    }, 2000);
+  };
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -60,7 +72,7 @@ export default function AuthGateway() {
 
       // Route directly to the Operator Vault on success
       setNotification('Authentication successful.');
-      navigate('/profile');
+      navigate('/admin');
     } catch (err) {
       console.error("[AXiM_AUTH] Clearance rejected:", err);
       setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
@@ -147,18 +159,25 @@ export default function AuthGateway() {
           </div>
 
           <div className="flex justify-center relative z-10 w-full">
-            <ConnectButton
-              client={client}
-              theme="dark"
-              connectButton={{
-                label: "Authenticate with Wallet",
-                className: "w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50 !bg-transparent !border !border-axim-purple/50 !text-axim-purple hover:!bg-axim-purple hover:!text-white",
-              }}
-            />
+            <button
+              type="button"
+              onClick={handleMockWeb3Login}
+              disabled={isWeb3Connecting || isProcessing}
+              className="w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50"
+            >
+              {isWeb3Connecting ? (
+                <>
+                  <SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" />
+                  Awaiting Wallet Signature...
+                </>
+              ) : (
+                'Authenticate with Wallet'
+              )}
+            </button>
           </div>
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
-            <button type="button" onClick={() => { setIsLogin(!isLogin); setErrorMsg(null); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
+            <button type="button" onClick={() => { setIsLogin(!isLogin); setErrorMsg(null); setEmail(''); setPassword(''); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
               {isLogin ? "Need clearance? Request an account." : "Already have clearance? Authenticate here."}
             </button>
           </div>
