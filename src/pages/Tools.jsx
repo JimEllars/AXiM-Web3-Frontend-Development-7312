@@ -63,8 +63,8 @@ export default function Tools() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Premium Asset Generators | AXiM Hub"
-        description="Access enterprise-grade document creation and digital products at a fraction of the traditional cost." customSchema={toolsSchema}
+        title="Internal Product Suite | AXiM Hub"
+        description="Access our exclusive enterprise app directory for token-gated and partner-access workflows powered by AXiM internal infrastructure." customSchema={toolsSchema}
       />
 
       {/* Hero Header */}
@@ -73,10 +73,10 @@ export default function Tools() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4">
-              Premium Asset <span className="text-axim-purple">Generators</span>
+              Internal <span className="text-axim-purple">Apps & Tools</span>
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
-              Access enterprise-grade document creation and digital products at a fraction of the traditional cost. Our intelligent generators provide fast, accurate, and secure assets instantly.
+              Secure, internal systems powered by AXiM's infrastructure. Access our exclusive enterprise app directory for token-gated and partner-access workflows.
             </p>
           </div>
         </div>
@@ -122,11 +122,11 @@ export default function Tools() {
 
                {tool.isExternal ? (
                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
-                   Initialize Tool <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
+                   Launch Application <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
                  </a>
                ) : (
                  <Link to={tool.link} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
-                   Initialize Tool <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
+                   Launch Application <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
                  </Link>
                )}
             </div>

@@ -24,7 +24,7 @@ export default function PowurSolarLanding() {
   };
 
   const handleOutboundClick = (placement) => {
-    logTelemetry('AFFILIATE_CLICK', { partner: 'powursolar', placement });
+    logTelemetry('PARTNER_FUNNEL_CLICK', { partner: 'powursolar', placement });
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "outbound_partner_click", {
         event_category: "conversion",
@@ -54,7 +54,7 @@ export default function PowurSolarLanding() {
           <div className="w-14 h-14 bg-gradient-to-br from-axim-gold to-yellow-600 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_25px_rgba(255,234,0,0.4)]">
             <SafeIcon icon={LuIcons.LuSun} className="w-6 h-6 text-black" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-none mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-white leading-none mb-6">
             Decentralized Home <br/><span className="text-axim-gold">Energy Infrastructure.</span>
           </h1>
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">

@@ -13,10 +13,10 @@ const STATIC_ROUTES = [
   { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
   { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
-  { title: "Tools", path: "/tools", category: "Our Tools" },
-  { title: "Launch NDA Generator", path: "/tools/nda", category: "Our Tools" },
-  { title: "Demand Letter Generator", path: "/tools", category: "Our Tools" },
-  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Our Tools" },
+  { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
+  { title: "Launch NDA Generator", path: "/tools/nda", category: "Apps & Tools" },
+  { title: "Demand Letter Generator", path: "/tools", category: "Apps & Tools" },
+  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Apps & Tools" },
 
   { title: "My Account", path: "/profile", category: "My Account" },
   { title: "Asset Licenses", path: "/profile", category: "My Account" },
@@ -205,7 +205,7 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Main Menu', 'Our Tools', 'My Account'].map(category => {
+                        {['Main Menu', 'Apps & Tools', 'My Account'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (
@@ -262,7 +262,7 @@ export default function GlobalSearch() {
                 ) : (
                   <div className="text-center text-zinc-600 font-mono text-xs uppercase flex flex-col items-center justify-center h-full gap-2">
                     <SafeIcon icon={LuSearch} className="w-6 h-6 opacity-50" />
-                    <span>Search for tools, documents, and resources</span>
+                    <span>Search for apps, tools, documents, and resources</span>
                   </div>
                 )}
               </div>

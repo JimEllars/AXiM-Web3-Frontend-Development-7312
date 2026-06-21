@@ -40,13 +40,13 @@ export default function ChatbaseLanding() {
           <div className="w-14 h-14 bg-gradient-to-br from-[#DB2777] to-pink-600 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_25px_rgba(219,39,119,0.4)]">
             <SafeIcon icon={LuIcons.LuBot} className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-none mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-white leading-none mb-6">
             Your Dedicated 24/7 <br/><span className="text-[#DB2777]">AI Support Agent.</span>
           </h1>
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             Stop losing leads and frustrating customers with slow email responses. AXiM's partnership with Chatbase empowers you to build a custom ChatGPT agent trained exclusively on your own business documents and website. Deploy it in minutes to answer questions and capture new clients around the clock.
           </p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Build Your Agent for Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
@@ -137,7 +137,7 @@ export default function ChatbaseLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Automate Your Support. <br/>Capture Every Lead.</h2>
           <p className="text-zinc-400 text-sm mb-10">Give your customers the instant, accurate answers they demand while freeing up your team to focus on growing the business.</p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Build Your Agent Free <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </div>

@@ -12,7 +12,7 @@ import { supabase } from '../../lib/supabase';
 
 export default function NdaGeneratorLanding() {
   React.useEffect(() => {
-    logTelemetry('TOOL_ACCESSED', { toolName: 'nda_generator' });
+    logTelemetry('APP_TOOL_ACCESSED', { toolName: 'nda_generator' });
   }, []);
   const [showWizard, setShowWizard] = useState(false);
   const [step, setStep] = useState(1);
@@ -125,9 +125,11 @@ export default function NdaGeneratorLanding() {
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">Enterprise-Grade Security | Powered by AXiM Internal Infrastructure</span></div></div>
           <div className="w-16 h-16 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.3)]">
             <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-white" />
           </div>
+          <div className="mb-4 inline-flex items-center gap-2 px-2 py-1 bg-axim-gold/10 border border-axim-gold/30 rounded-sm"><SafeIcon icon={LuIcons.LuLock} className="w-3 h-3 text-axim-gold" /><span className="text-[0.6rem] font-bold text-axim-gold uppercase tracking-widest">Token-Gated / Partner Access Required</span></div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-6">
             Mutual NDA <br/><span className="text-axim-purple">Generator.</span>
           </h1>
