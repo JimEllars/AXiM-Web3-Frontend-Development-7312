@@ -20,7 +20,8 @@ const STATIC_ROUTES = [
 
   { title: "My Account", path: "/profile", category: "My Account" },
   { title: "Asset Licenses", path: "/profile", category: "My Account" },
-  { title: "Security Settings", path: "/profile", category: "My Account" }
+  { title: "Security Settings", path: "/profile", category: "My Account" },
+  { title: "⚠️ Developer: Hard Reset State", action: "hard_reset", category: "Developer Utilities" }
 ];
 
 export default function GlobalSearch() {
@@ -129,6 +130,12 @@ export default function GlobalSearch() {
   const handleSelect = (item) => {
     setIsSynchronizing(true);
     setTimeout(() => {
+      if (item.action === 'hard_reset') {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.reload();
+        return;
+      }
       if (item.path) {
         navigate(item.path);
       } else if (item.slug) {
@@ -205,7 +212,7 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Main Menu', 'Apps & Tools', 'My Account'].map(category => {
+                        {['Main Menu', 'Apps & Tools', 'My Account', 'Developer Utilities'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (
