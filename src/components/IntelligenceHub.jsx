@@ -1,63 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import * as LuIcons from 'react-icons/lu';
-import SafeIcon from '../common/SafeIcon';
-
-const { LuArrowRight } = LuIcons;
 
 export default function IntelligenceHub() {
-  const briefs = [
-    {
-      id: "[BRIEF_001]",
-      title: "Circular Ecosystems",
-      desc: "Re-investing operational yield into autonomous infrastructure growth."
-    },
-    {
-      id: "[SPEC_042]",
-      title: "Legal Automation ROI",
-      desc: "How AXiM document extraction logic speeds up settlement timelines by 85%."
-    },
-    {
-      id: "[INFRA_009]",
-      title: "Grid Resilience",
-      desc: "Optimizing commercial solar dispatch via unified data monitoring."
-    }
-  ];
-
   return (
-    <section className="py-24 relative z-10">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section className="relative z-10 w-full min-h-[80vh] flex flex-col pt-16">
+      <div className="w-full mx-auto px-0 md:px-6 flex-grow flex flex-col h-full max-w-[1200px]">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <span className="section-label">Digital Hub</span>
-          <h2 className="section-title !mb-0">Intelligence Briefs</h2>
+          <h2 className="section-title !mb-0">Intelligence Briefs & AI Triage</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {briefs.map((brief, idx) => (
-            <motion.div 
-              key={brief.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, ease: "circOut",
-                  delay: idx * 0.1 ,
-                }}
-              className="bg-glass backdrop-blur-xl saturate-150 border border-subtle p-10 flex flex-col h-full hover:-translate-y-2 hover:bg-glass-hover hover:border-active transition duration-300 group"
-            >
-              <span className="font-mono text-[0.7rem] opacity-50 text-axim-purple mb-4 block">{brief.id}</span>
-              <h3 className="text-[1.5rem] font-bold uppercase mb-4">{brief.title}</h3>
-              <p className="text-zinc-400 leading-[1.7] flex-grow mb-8">{brief.desc}</p>
-              <a href="https://axim.us.com/reports" className="font-mono text-[0.8rem] font-bold uppercase inline-flex items-center gap-3 text-white group-hover:text-axim-gold transition-colors">
-                Access Brief <SafeIcon icon={LuArrowRight} />
-              </a>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "circOut" }}
+          className="w-full flex-grow flex flex-col bg-glass backdrop-blur-xl saturate-150 border border-subtle hover:border-active transition duration-300 group rounded-sm overflow-hidden min-h-[600px] shadow-2xl relative"
+        >
+          {/* Chatbase Iframe Embed */}
+          <iframe
+            src="https://www.chatbase.co/chatbot-iframe/xYiQ2yI2XeGmRLzRUkNvP"
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            className="flex-grow min-h-[600px]"
+            title="AXiM Systems Intelligence AI"
+          ></iframe>
+        </motion.div>
       </div>
     </section>
   );

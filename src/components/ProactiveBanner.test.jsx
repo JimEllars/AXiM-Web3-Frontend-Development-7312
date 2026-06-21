@@ -37,8 +37,8 @@ describe('ProactiveBanner Component', () => {
     global.import = {
       meta: {
         env: {
-          VITE_ONYX_WORKER_URL: 'http://test-worker',
-          VITE_AXIM_ONYX_SECRET: 'test-secret'
+          VITE_AXIM_CORE_API_URL: 'http://test-worker',
+          VITE_AXIM_CORE_ANON_KEY: 'test-secret'
         }
       }
     };

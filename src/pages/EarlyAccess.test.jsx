@@ -40,8 +40,8 @@ describe('EarlyAccess Component', () => {
 
     it('handles form submission successfully with mock delay', async () => {
     vi.useRealTimers();
-    const oldEnv = import.meta.env.VITE_ONYX_WORKER_URL;
-    import.meta.env.VITE_ONYX_WORKER_URL = '';
+    const oldEnv = import.meta.env.VITE_AXIM_CORE_API_URL;
+    import.meta.env.VITE_AXIM_CORE_API_URL = '';
     // mock fetch to avoid real network call during fake timers
     global.fetch = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve({}) }));
     render(
@@ -72,7 +72,7 @@ describe('EarlyAccess Component', () => {
     await waitFor(() => {
         assert(screen.getAllByText(/Subscription Confirmed/i).length > 0);
     }, { timeout: 2000 });
-    import.meta.env.VITE_ONYX_WORKER_URL = oldEnv;
+    import.meta.env.VITE_AXIM_CORE_API_URL = oldEnv;
   });
 
   it('handles successful subscription', async () => {
@@ -83,7 +83,8 @@ describe('EarlyAccess Component', () => {
         json: () => Promise.resolve({ success: true }),
       })
     );
-    import.meta.env.VITE_ONYX_WORKER_URL = 'http://test.url';
+    import.meta.env.VITE_AXIM_CORE_API_URL = 'http://test.url';
+    import.meta.env.VITE_AXIM_CORE_ANON_KEY = 'test-secret';
 
     render(
       <HelmetProvider>
@@ -111,7 +112,8 @@ describe('EarlyAccess Component', () => {
         ok: false,
       })
     );
-    import.meta.env.VITE_ONYX_WORKER_URL = 'http://test.url';
+    import.meta.env.VITE_AXIM_CORE_API_URL = 'http://test.url';
+    import.meta.env.VITE_AXIM_CORE_ANON_KEY = 'test-secret';
 
     render(
       <HelmetProvider>
