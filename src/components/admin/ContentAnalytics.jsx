@@ -9,6 +9,17 @@ export default function ContentAnalytics() {
   const totalAffiliateClicks = useMemo(() => logs.filter(log => log.type === 'AFFILIATE_CLICK').length, [logs]);
   const totalLeadsCaptured = useMemo(() => logs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [logs]);
 
+  const conversionRate = useMemo(() => {
+    if (totalAffiliateClicks === 0) return 0;
+    return (totalLeadsCaptured / totalAffiliateClicks) * 100;
+  }, [totalAffiliateClicks, totalLeadsCaptured]);
+
+  const conversionColor = useMemo(() => {
+    if (conversionRate > 15) return 'text-green-500';
+    if (conversionRate >= 5) return 'text-amber-500';
+    return 'text-red-500';
+  }, [conversionRate]);
+
 
   useEffect(() => {
     const handleUpdate = () => setLogs([...telemetryStore]);
@@ -28,7 +39,7 @@ export default function ContentAnalytics() {
 
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
         <div className="p-6 bg-[#0A0A0A] border border-axim-purple/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent z-0"></div>
           <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Affiliate Clicks</h3>
@@ -38,6 +49,13 @@ export default function ContentAnalytics() {
           <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent z-0"></div>
           <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Leads Captured</h3>
           <p className="text-4xl font-black text-white tracking-wider relative z-10">{totalLeadsCaptured}</p>
+        </div>
+        <div className="p-6 bg-[#0A0A0A] border border-white/20 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0"></div>
+          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Conversion Rate</h3>
+          <p className={`text-4xl font-black tracking-wider relative z-10 ${conversionColor}`}>
+            {conversionRate.toFixed(1)}%
+          </p>
         </div>
       </div>
 
