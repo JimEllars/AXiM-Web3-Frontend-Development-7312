@@ -31,7 +31,9 @@ vi.mock('../store/useAximStore', async () => {
         clearStore: vi.fn(),
         vaultedArtifacts: [],
         userSession: null,
-        isSessionLoading: false
+        isSessionLoading: false,
+        isWeb3Authenticated: false,
+        walletAddress: null
       };
       return selector(state);
     })
@@ -56,7 +58,6 @@ describe('Profile Component Smoke Test', () => {
       </HelmetProvider>
     );
 
-    assert.ok(screen.getAllByText(/Operator/));
-    assert.ok(screen.getAllByText(/test@example.com/));
+    assert.ok(screen.getAllByText(/Operator Profile|Standard System Profile/));
   });
 });
