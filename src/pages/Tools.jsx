@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { useAximAuth } from '../hooks/useAximAuth';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Tools() {
+  const { session } = useAximAuth();
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const hasPartnerToken = !!session || isWeb3Authenticated;
   const toolsList = [
     {
       title: "Demand Letter Engine",
@@ -90,6 +95,32 @@ export default function Tools() {
                {tool.isExternal ? (
                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
+                    {tool.title === "Mutual NDA Generator" || tool.title === "Pay Stub System" ? (
+                      <div className="mt-4 flex items-center justify-center">
+                        {hasPartnerToken ? (
+                          <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔓 Access Granted
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔒 Partner Access Required
+                          </span>
+                        )}
+                      </div>
+                    ) : null}
+                    {tool.title === "Mutual NDA Generator" || tool.title === "Pay Stub System" ? (
+                      <div className="mt-4 flex items-center justify-center">
+                        {hasPartnerToken ? (
+                          <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔓 Access Granted
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔒 Partner Access Required
+                          </span>
+                        )}
+                      </div>
+                    ) : null}
                  </a>
                ) : (
                  <Link to={tool.link} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>

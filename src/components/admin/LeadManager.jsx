@@ -4,15 +4,35 @@ import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../../store/useAximStore';
 import { useOnyxStream } from '../../hooks/useOnyxStream';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const { LuMail, LuDownload } = LuIcons;
+import { telemetryStore } from '../../lib/telemetry';
 
 export default function LeadManager() {
-  const partnerLeads = useAximStore((state) => state.partnerLeads);
+  // partnerLeads is now managed via local state below
   const updateLeadStatus = useAximStore((state) => state.updateLeadStatus);
   const { executeOnyxCommand, streamResponse, isStreaming } = useOnyxStream();
   const [activeLeadId, setActiveLeadId] = useState(null);
+  const [partnerLeads, setPartnerLeads] = useState([]);
+
+  useEffect(() => {
+    const filterLeads = () => {
+      const leads = telemetryStore.filter(event =>
+        event.type === 'AFFILIATE_CLICK' || event.type === 'PARTNER_LEAD_SUBMITTED'
+      );
+      setPartnerLeads(leads);
+    };
+
+    filterLeads();
+
+    const handleTelemetryUpdate = () => {
+      filterLeads();
+    };
+
+    window.addEventListener('axim-telemetry-update', handleTelemetryUpdate);
+    return () => window.removeEventListener('axim-telemetry-update', handleTelemetryUpdate);
+  }, []);
 
   const handleDeployOnyx = async (lead) => {
     setActiveLeadId(lead.id);
@@ -23,16 +43,14 @@ export default function LeadManager() {
   const handleExportCSV = () => {
     if (!partnerLeads || partnerLeads.length === 0) return;
 
-    const headers = ['Date', 'Company', 'Vertical', 'Contact', 'Email', 'Status'];
+    const headers = ['Date', 'Event Type', 'Partner Source', 'Details'];
     const csvContent = [
       headers.join(','),
       ...partnerLeads.map(lead => [
         new Date(lead.timestamp).toLocaleDateString(),
-        `"${(lead.companyName || '').replace(/"/g, '""')}"`,
-        `"${(lead.serviceInterest || '').replace(/"/g, '""')}"`,
-        `"${(lead.primaryContact || '').replace(/"/g, '""')}"`,
-        `"${(lead.emailAddress || '').replace(/"/g, '""')}"`,
-        `"${(lead.status || '').replace(/"/g, '""')}"`
+        `"${lead.type}"`,
+        `"${(lead.payload?.partner || lead.payload?.source || '').replace(/"/g, '""')}"`,
+        `"${JSON.stringify(lead.payload || {}).replace(/"/g, '""')}"`
       ].join(','))
     ].join('\n');
 
@@ -77,9 +95,8 @@ export default function LeadManager() {
             <thead>
               <tr className="border-b border-white/10">
                 <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Date</th>
-                <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Company</th>
-                <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Vertical</th>
-                <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Contact</th>
+                <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Partner Source</th>
+                <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal">Payload Details</th>
                 <th className="py-3 px-4 font-mono uppercase tracking-widest text-[0.65rem] text-zinc-500 font-normal text-right">Action</th>
               </tr>
             </thead>
@@ -89,25 +106,16 @@ export default function LeadManager() {
                 <tr className="border-b border-white/10 hover:bg-white/[0.02] transition-colors">
 
                   <td className="py-4 px-4 text-xs font-mono text-zinc-400">
-                    {new Date(lead.timestamp).toLocaleDateString()}
+                    {new Date(lead.timestamp).toLocaleString()}
                   </td>
                   <td className="py-4 px-4">
-                    <div className="font-bold text-white uppercase tracking-wider text-sm">{lead.companyName}</div>
+                    <div className="font-bold text-white uppercase tracking-wider text-sm">{lead.payload?.partner || lead.payload?.source || 'Unknown Partner'}</div>
+                    <div className="text-[0.65rem] font-mono text-axim-purple tracking-widest uppercase">{lead.type.replace(/_/g, ' ')}</div>
                   </td>
                   <td className="py-4 px-4">
-                    {lead.serviceInterest && (
-                      <span className={`text-[0.55rem] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${
-                        lead.serviceInterest === 'Fiber Connectivity' ? 'border-axim-purple/30 bg-axim-purple/10 text-axim-purple' :
-                        lead.serviceInterest === 'Solar Infrastructure' ? 'border-axim-gold/30 bg-axim-gold/10 text-axim-gold' :
-                        'border-zinc-500/30 bg-zinc-500/10 text-zinc-400'
-                      }`}>
-                        {lead.serviceInterest}
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="text-xs font-mono text-zinc-300">{lead.primaryContact}</div>
-                    <div className="text-[0.65rem] font-mono text-zinc-500">{lead.emailAddress}</div>
+                    <div className="text-xs font-mono text-zinc-300 max-w-xs truncate" title={JSON.stringify(lead.payload)}>
+                      {lead.payload?.buttonClicked ? `Clicked: ${lead.payload.buttonClicked}` : lead.payload?.email ? `Lead Email: ${lead.payload.email}` : JSON.stringify(lead.payload)}
+                    </div>
                   </td>
                   <td className="py-4 px-4 text-right flex flex-col items-end gap-2">
                     <select
@@ -119,13 +127,7 @@ export default function LeadManager() {
                       <option value="In Progress">In Progress</option>
                       <option value="Closed">Closed</option>
                     </select>
-                    <button
-                      onClick={() => handleDeployOnyx(lead)}
-                      disabled={isStreaming && activeLeadId === lead.id}
-                      className="px-2 py-1 text-[0.55rem] font-mono uppercase tracking-widest bg-axim-purple/10 border border-axim-purple/30 text-axim-purple hover:bg-axim-purple/20 transition-colors rounded-sm shadow-[0_0_8px_125,0,255,0.2)] disabled:opacity-50"
-                    >
-                      {isStreaming && activeLeadId === lead.id ? 'Drafting...' : 'Deploy Onyx Engagement'}
-                    </button>
+
                   </td>
 
                 </tr>
@@ -152,7 +154,7 @@ export default function LeadManager() {
           <div className="text-center py-12 text-zinc-600 text-xs font-mono uppercase tracking-widest border border-dashed border-white/10 bg-black/20 rounded-sm">
             <div className="flex flex-col items-center gap-3">
               <SafeIcon icon={LuMail} className="w-8 h-8 text-white/5" />
-              <span className="opacity-50">No active leads</span>
+              <span className="opacity-50">Awaiting Inbound Partner Traffic...</span>
             </div>
           </div>
         )}
