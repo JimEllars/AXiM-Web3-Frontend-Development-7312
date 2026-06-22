@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function SEO({
   title = "AXiM Systems | Work Smarter",
-  description = "Articles, Ai Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue.",
+  description = "Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue.",
   image = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp",
   type = "website",
   url,

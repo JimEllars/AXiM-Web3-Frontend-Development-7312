@@ -21,11 +21,21 @@ export default function Chatbot() {
     const handleMessage = (event) => {
       // Look for message post events from Chatbase
       if (event.data && typeof event.data === 'string') {
+        if (event.data === 'chatbase-widget-closed') {
+          logTelemetry('SUPPORT_INQUIRY_FIRED', {
+            platform: 'chatbase',
+            queryCharCount: 0,
+            event: 'widget_closed'
+          });
+        }
+
         try {
           const data = JSON.parse(event.data);
           // Only track when user sends message
           if (data && data.type === 'chatbase_message_sent') {
             logTelemetry('SUPPORT_INQUIRY_FIRED', {
+               platform: 'chatbase',
+               queryCharCount: data.message?.length || 0,
                source: 'chatbase_widget',
                messageLength: data.message?.length || 0
             });
@@ -35,6 +45,8 @@ export default function Chatbot() {
           // Alternatively if they send an object
           if (event.data.type === 'chatbase_message_sent' || event.data.event === 'chatbase_message_sent') {
              logTelemetry('SUPPORT_INQUIRY_FIRED', {
+               platform: 'chatbase',
+               queryCharCount: event.data.message?.length || 0,
                source: 'chatbase_widget',
                messageLength: event.data.message?.length || 0
             });

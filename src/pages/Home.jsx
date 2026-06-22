@@ -58,7 +58,7 @@ export default function Home() {
     "@type": "WebSite",
     "name": "AXiM Systems",
     "url": "https://axim.us.com/",
-    "description": "Articles, Ai Tools, & Learning Systems for enterprise operations.",
+    "description": "Articles, AXiM Apps & Tools, & Learning Systems for enterprise operations.",
     "publisher": {
       "@type": "Organization",
       "name": "AXiM Systems",
@@ -73,7 +73,7 @@ export default function Home() {
     <div className="w-full min-h-screen bg-bg-void relative overflow-x-hidden selection:bg-axim-purple selection:text-white">
       <SEO
         title="AXiM Systems | Work Smarter"
-        description="Articles, Ai Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue."
+        description="Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue."
         customSchema={[homeSchema]}
       />
       <div className="w-full">

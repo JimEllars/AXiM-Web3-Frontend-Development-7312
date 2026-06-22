@@ -7,14 +7,20 @@ export default function ContentAnalytics() {
   const [logs, setLogs] = useState([...telemetryStore]);
   const [selectedChannel, setSelectedChannel] = useState('All Channels');
 
-  const channels = ['All Channels', 'Powur', 'Chatbase', 'Make.com'];
+  const channels = ['All Channels', 'Powur Solar', 'Chatbase Support', 'Make.com'];
 
   const filteredLogs = useMemo(() => {
     if (selectedChannel === 'All Channels') return logs;
-    const searchString = selectedChannel.toLowerCase().replace('.com', '');
-    return logs.filter(log =>
-      JSON.stringify(log.payload).toLowerCase().includes(searchString)
-    );
+
+    return logs.filter(log => {
+      if (!log.payload) return false;
+      const partner = log.payload.partner || log.payload.source || '';
+
+      if (selectedChannel === 'Powur Solar' && partner.toLowerCase().includes('powur')) return true;
+      if (selectedChannel === 'Chatbase Support' && partner.toLowerCase().includes('chatbase')) return true;
+      if (selectedChannel === 'Make.com' && partner.toLowerCase().includes('make')) return true;
+      return false;
+    });
   }, [logs, selectedChannel]);
 
   const totalAffiliateClicks = useMemo(() => filteredLogs.filter(log => log.type === 'AFFILIATE_CLICK' || log.type === 'PARTNER_FUNNEL_CLICK' || log.type === 'partner_click').length, [filteredLogs]);

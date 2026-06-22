@@ -78,10 +78,10 @@ export default function Tools() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4">
-              Internal <span className="text-axim-purple">Apps & Tools</span>
+              Internal <span className="text-axim-purple">AXiM Apps & Tools</span>
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
-              Secure, internal systems powered by AXiM's infrastructure. Access our exclusive enterprise app directory for token-gated and partner-access workflows.
+              These tool matrices are engineered natively to run statelessly on top of secure network nodes. Access our exclusive enterprise app directory for token-gated and partner-access workflows.
             </p>
           </div>
         </div>

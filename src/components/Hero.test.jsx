@@ -40,10 +40,10 @@ describe('Hero Component', () => {
     assert.ok(screen.getAllByText(/Smarter/)[0]);
 
     // Check description paragraph
-    assert.ok(screen.getByText(/Articles, Ai Tools, & Learning Systems/));
+    assert.ok(screen.getByText(/Articles, AXiM Apps & Tools, & Learning Systems/));
 
     // Check CTA buttons exist
-    assert.ok(screen.getAllByText(/Ai Tools/)[0]);
+    assert.ok(screen.getAllByText(/AXiM Apps & Tools/)[0]);
     assert.ok(screen.getByText(/Explore Articles/));
   });
 
