@@ -9,6 +9,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        'onyx': {
+          500: '#1c1c1e'
+        },
         'axim-purple': '#7D00FF',
         'axim-gold': '#F0FF00',
         'axim-green': '#00FF00',

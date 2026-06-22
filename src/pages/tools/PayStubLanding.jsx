@@ -123,7 +123,7 @@ export default function PayStubLanding() {
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#DB2777]/20 via-transparent to-[#DB2777]/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">Enterprise-Grade Security | Powered by AXiM Internal Infrastructure</span></div></div>
+          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">An official utility within the AXiM Apps & Tools suite</span></div></div>
           <div className="w-16 h-16 bg-gradient-to-br from-[#DB2777] to-red-600 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(219,39,119,0.3)]">
             <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-white" />
           </div>
@@ -147,14 +147,14 @@ export default function PayStubLanding() {
           <h2 className="text-2xl font-black uppercase tracking-tighter text-white">System Capabilities</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-[#DB2777]/30 transition-colors">
+           <div className="bg-[#050505]/80 backdrop-blur-md border border-onyx-500/20 p-8 rounded-sm shadow-xl hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:border-[#DB2777]/30 transition-all duration-300">
              <div className="text-[#DB2777] text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                <SafeIcon icon={LuIcons.LuCalculator} className="w-4 h-4" /> 01 // Computational Accuracy
              </div>
              <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Automated Routing</h3>
              <p className="text-xs text-zinc-400 leading-relaxed">Our engine automatically computes complex deduction algorithms based on your gross inputs, ensuring mathematical accuracy across the document without manual spreadsheet errors.</p>
            </div>
-           <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-[#DB2777]/30 transition-colors">
+           <div className="bg-[#050505]/80 backdrop-blur-md border border-onyx-500/20 p-8 rounded-sm shadow-xl hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:border-[#DB2777]/30 transition-all duration-300">
              <div className="text-[#DB2777] text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                <SafeIcon icon={LuIcons.LuPrinter} className="w-4 h-4" /> 02 // Document Compliance
              </div>

@@ -15,6 +15,15 @@ export default function NdaGeneratorLanding() {
     logTelemetry('APP_TOOL_ACCESSED', { toolName: 'nda_generator' });
   }, []);
   const [showWizard, setShowWizard] = useState(false);
+  const NDA_PRODUCTION_TARGET = 'https://quickndacontract.com/';
+
+  const handleOutboundClick = (e) => {
+    e.preventDefault();
+    logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools' });
+    setTimeout(() => {
+      window.location.href = NDA_PRODUCTION_TARGET;
+    }, 150);
+  };
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -125,7 +134,7 @@ export default function NdaGeneratorLanding() {
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">Enterprise-Grade Security | Powered by AXiM Internal Infrastructure</span></div></div>
+          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">An official utility within the AXiM Apps & Tools suite</span></div></div>
           <div className="w-16 h-16 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.3)]">
             <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-white" />
           </div>
@@ -136,7 +145,7 @@ export default function NdaGeneratorLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations.
           </p>
-          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Launch Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
@@ -149,14 +158,14 @@ export default function NdaGeneratorLanding() {
             <h2 className="text-2xl font-black uppercase tracking-tighter text-white">System Capabilities</h2>
          </div>
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="bg-[#050505]/80 backdrop-blur-md border border-onyx-500/20 p-8 rounded-sm shadow-xl hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:border-axim-purple/30 transition-all duration-300">
                <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuScale} className="w-4 h-4" /> 01 // Fairness Standard
                </div>
                <h3 className="text-white font-black text-lg uppercase tracking-tight mb-2">Symmetric Protection</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Unlike predatory one-way NDAs, our generator structures clauses that equally protect both parties, facilitating faster trust and signature acquisition during negotiations.</p>
              </div>
-             <div className="bg-[#050505] border border-white/5 p-8 rounded-sm shadow-xl hover:border-axim-purple/30 transition-colors">
+             <div className="bg-[#050505]/80 backdrop-blur-md border border-onyx-500/20 p-8 rounded-sm shadow-xl hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:border-axim-purple/30 transition-all duration-300">
                <div className="text-axim-purple text-xs font-mono uppercase tracking-widest mb-3 flex items-center gap-2">
                  <SafeIcon icon={LuIcons.LuFileCode2} className="w-4 h-4" /> 02 // Rapid Deployment
                </div>
@@ -170,7 +179,7 @@ export default function NdaGeneratorLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Secure Your Data. <br/>Move Faster.</h2>
           <p className="text-zinc-400 text-sm mb-10">Don't let legal friction slow down your deals. Generate a standard, fair agreement in under 60 seconds.</p>
-          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Initialize Document <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
