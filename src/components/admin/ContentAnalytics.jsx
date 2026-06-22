@@ -5,9 +5,20 @@ import { telemetryStore } from '../../lib/telemetry';
 
 export default function ContentAnalytics() {
   const [logs, setLogs] = useState([...telemetryStore]);
+  const [selectedChannel, setSelectedChannel] = useState('All Channels');
 
-  const totalAffiliateClicks = useMemo(() => logs.filter(log => log.type === 'AFFILIATE_CLICK').length, [logs]);
-  const totalLeadsCaptured = useMemo(() => logs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [logs]);
+  const channels = ['All Channels', 'Powur', 'Chatbase', 'Make.com'];
+
+  const filteredLogs = useMemo(() => {
+    if (selectedChannel === 'All Channels') return logs;
+    const searchString = selectedChannel.toLowerCase().replace('.com', '');
+    return logs.filter(log =>
+      JSON.stringify(log.payload).toLowerCase().includes(searchString)
+    );
+  }, [logs, selectedChannel]);
+
+  const totalAffiliateClicks = useMemo(() => filteredLogs.filter(log => log.type === 'AFFILIATE_CLICK' || log.type === 'PARTNER_FUNNEL_CLICK' || log.type === 'partner_click').length, [filteredLogs]);
+  const totalLeadsCaptured = useMemo(() => filteredLogs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [filteredLogs]);
 
   const conversionRate = useMemo(() => {
     if (totalAffiliateClicks === 0) return 0;
@@ -34,7 +45,18 @@ export default function ContentAnalytics() {
           <h2 className="text-xl font-black text-white uppercase tracking-widest">System Telemetry</h2>
           <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Live Event Stream</p>
         </div>
-        <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
+        <div className="flex items-center gap-4">
+          <select
+            value={selectedChannel}
+            onChange={(e) => setSelectedChannel(e.target.value)}
+            className="bg-[#0A0A0A] border border-white/10 p-2 text-white text-xs font-mono focus:border-axim-purple outline-none rounded-sm uppercase tracking-widest cursor-pointer"
+          >
+            {channels.map(channel => (
+              <option key={channel} value={channel}>{channel}</option>
+            ))}
+          </select>
+          <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
+        </div>
       </div>
 
 
@@ -60,13 +82,13 @@ export default function ContentAnalytics() {
       </div>
 
       <div className="flex-1 bg-[#0A0A0A] border border-white/5 rounded-sm p-4 overflow-y-auto no-scrollbar">
-        {logs.length === 0 ? (
+        {filteredLogs.length === 0 ? (
           <div className="h-full flex items-center justify-center text-zinc-600 font-mono text-xs uppercase tracking-widest">
             Waiting for system events...
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            {logs.map(log => (
+            {filteredLogs.map(log => (
               <div key={log.id} className="p-3 border border-white/5 bg-black rounded-sm flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-1">
                   <span className="text-axim-purple font-mono text-[0.65rem] font-bold uppercase tracking-widest">{log.type}</span>
