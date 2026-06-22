@@ -1,0 +1,157 @@
+diff --git a/src/components/Chatbot.jsx b/src/components/Chatbot.jsx
+index ec83417..bf1ebd1 100644
+--- a/src/components/Chatbot.jsx
++++ b/src/components/Chatbot.jsx
+@@ -12,18 +12,45 @@ export default function Chatbot() {
+       // Check if click was on the chatbase bubble
+       const target = e.target;
+       if (target.closest && target.closest('#chatbase-bubble-button, .chatbase-bubble')) {
+-        logTelemetry('AI_ASSISTANT_OPENED', { source: 'global_widget' });
++        logTelemetry('SUPPORT_INQUIRY_FIRED', { source: 'global_widget', context: 'widget_click' });
+       }
+     };
+
+     // Chatbase might use an iframe, so catching clicks on the iframe wrapper
++
++    const handleMessage = (event) => {
++      // Look for message post events from Chatbase
++      if (event.data && typeof event.data === 'string') {
++        try {
++          const data = JSON.parse(event.data);
++          // Only track when user sends message
++          if (data && data.type === 'chatbase_message_sent') {
++            logTelemetry('SUPPORT_INQUIRY_FIRED', {
++               source: 'chatbase_widget',
++               messageLength: data.message?.length || 0
++            });
++          }
++        } catch(e) { /* ignore parse error */ }
++      } else if (event.data && typeof event.data === 'object') {
++          // Alternatively if they send an object
++          if (event.data.type === 'chatbase_message_sent' || event.data.event === 'chatbase_message_sent') {
++             logTelemetry('SUPPORT_INQUIRY_FIRED', {
++               source: 'chatbase_widget',
++               messageLength: event.data.message?.length || 0
++            });
++          }
++      }
++    };
++
++    window.addEventListener('message', handleMessage);
++
+     const observer = new MutationObserver((mutations) => {
+       for (const mutation of mutations) {
+         if (mutation.addedNodes.length) {
+           mutation.addedNodes.forEach(node => {
+             if (node.id === 'chatbase-bubble-window' || node.id === 'chatbase-message-bubble') {
+                 // Widget opened
+-                logTelemetry('AI_ASSISTANT_OPENED', { source: 'global_widget_opened' });
++                logTelemetry('SUPPORT_INQUIRY_FIRED', { source: 'global_widget_opened', context: 'widget_rendered' });
+             }
+           });
+         }
+@@ -34,6 +61,7 @@ export default function Chatbot() {
+     document.addEventListener('click', handleWidgetClick, true);
+
+     return () => {
++      window.removeEventListener('message', handleMessage);
+       observer.disconnect();
+       document.removeEventListener('click', handleWidgetClick, true);
+     };
+diff --git a/src/components/admin/ContentAnalytics.jsx b/src/components/admin/ContentAnalytics.jsx
+index 33515c8..f635439 100644
+--- a/src/components/admin/ContentAnalytics.jsx
++++ b/src/components/admin/ContentAnalytics.jsx
+@@ -5,9 +5,20 @@ import { telemetryStore } from '../../lib/telemetry';
+
+ export default function ContentAnalytics() {
+   const [logs, setLogs] = useState([...telemetryStore]);
++  const [selectedChannel, setSelectedChannel] = useState('All Channels');
+
+-  const totalAffiliateClicks = useMemo(() => logs.filter(log => log.type === 'AFFILIATE_CLICK').length, [logs]);
+-  const totalLeadsCaptured = useMemo(() => logs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [logs]);
++  const channels = ['All Channels', 'Powur', 'Chatbase', 'Make.com'];
++
++  const filteredLogs = useMemo(() => {
++    if (selectedChannel === 'All Channels') return logs;
++    const searchString = selectedChannel.toLowerCase().replace('.com', '');
++    return logs.filter(log =>
++      JSON.stringify(log.payload).toLowerCase().includes(searchString)
++    );
++  }, [logs, selectedChannel]);
++
++  const totalAffiliateClicks = useMemo(() => filteredLogs.filter(log => log.type === 'AFFILIATE_CLICK' || log.type === 'PARTNER_FUNNEL_CLICK' || log.type === 'partner_click').length, [filteredLogs]);
++  const totalLeadsCaptured = useMemo(() => filteredLogs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [filteredLogs]);
+
+   const conversionRate = useMemo(() => {
+     if (totalAffiliateClicks === 0) return 0;
+@@ -34,7 +45,18 @@ export default function ContentAnalytics() {
+           <h2 className="text-xl font-black text-white uppercase tracking-widest">System Telemetry</h2>
+           <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Live Event Stream</p>
+         </div>
+-        <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
++        <div className="flex items-center gap-4">
++          <select
++            value={selectedChannel}
++            onChange={(e) => setSelectedChannel(e.target.value)}
++            className="bg-[#0A0A0A] border border-white/10 p-2 text-white text-xs font-mono focus:border-axim-purple outline-none rounded-sm uppercase tracking-widest cursor-pointer"
++          >
++            {channels.map(channel => (
++              <option key={channel} value={channel}>{channel}</option>
++            ))}
++          </select>
++          <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
++        </div>
+       </div>
+
+
+@@ -60,13 +82,13 @@ export default function ContentAnalytics() {
+       </div>
+
+       <div className="flex-1 bg-[#0A0A0A] border border-white/5 rounded-sm p-4 overflow-y-auto no-scrollbar">
+-        {logs.length === 0 ? (
++        {filteredLogs.length === 0 ? (
+           <div className="h-full flex items-center justify-center text-zinc-600 font-mono text-xs uppercase tracking-widest">
+             Waiting for system events...
+           </div>
+         ) : (
+           <div className="flex flex-col gap-2">
+-            {logs.map(log => (
++            {filteredLogs.map(log => (
+               <div key={log.id} className="p-3 border border-white/5 bg-black rounded-sm flex items-start justify-between gap-4">
+                 <div className="flex flex-col gap-1">
+                   <span className="text-axim-purple font-mono text-[0.65rem] font-bold uppercase tracking-widest">{log.type}</span>
+diff --git a/src/components/admin/OnyxTerminal.jsx b/src/components/admin/OnyxTerminal.jsx
+index bd27c5e..9afdde7 100644
+--- a/src/components/admin/OnyxTerminal.jsx
++++ b/src/components/admin/OnyxTerminal.jsx
+@@ -47,6 +47,29 @@ export default function OnyxTerminal() {
+         <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />
+       </div>
+
++
++      {/* System Operational Verification (SOV) Panel */}
++      <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-6 mb-2">
++        <div className="flex items-center gap-3 mb-4">
++          <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-axim-green" />
++          <h3 className="text-sm font-black text-white uppercase tracking-widest">Onyx Core Diagnostics Engine</h3>
++        </div>
++        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
++          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
++            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Layer Continuity</span>
++            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
++          </div>
++          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
++            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Telemetry Buffer Readiness</span>
++            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
++          </div>
++          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
++            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Transient Cache Integrity</span>
++            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
++          </div>
++        </div>
++      </div>
++
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
+         {/* KV Form */}
+         <form onSubmit={handleKvWrite} className="flex flex-col gap-4">

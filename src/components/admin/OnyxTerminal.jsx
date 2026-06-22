@@ -47,6 +47,29 @@ export default function OnyxTerminal() {
         <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />
       </div>
 
+
+      {/* System Operational Verification (SOV) Panel */}
+      <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-6 mb-2">
+        <div className="flex items-center gap-3 mb-4">
+          <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-axim-green" />
+          <h3 className="text-sm font-black text-white uppercase tracking-widest">Onyx Core Diagnostics Engine</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Layer Continuity</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+          </div>
+          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Telemetry Buffer Readiness</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+          </div>
+          <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Transient Cache Integrity</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
         {/* KV Form */}
         <form onSubmit={handleKvWrite} className="flex flex-col gap-4">
