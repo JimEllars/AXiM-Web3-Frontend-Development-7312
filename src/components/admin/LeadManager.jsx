@@ -15,6 +15,7 @@ export default function LeadManager() {
   const { executeOnyxCommand, streamResponse, isStreaming } = useOnyxStream();
   const [activeLeadId, setActiveLeadId] = useState(null);
   const [partnerLeads, setPartnerLeads] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All Inquiries');
 
   const [dismissedLeadIds, setDismissedLeadIds] = useState(() => {
     if (typeof window !== 'undefined' && sessionStorage) {
@@ -112,17 +113,44 @@ export default function LeadManager() {
         </button>
       </div>
 
+
+      <div className="flex items-center gap-2 mb-6">
+        {['All Inquiries', 'Affiliate Clicks', 'Form Submissions'].map(cat => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-4 py-1.5 rounded-sm text-xs font-mono uppercase tracking-widest transition-colors ${
+              selectedCategory === cat
+                ? 'bg-axim-purple text-white'
+                : 'bg-[#0A0A0A] border border-white/10 text-zinc-500 hover:text-white hover:border-axim-purple/50'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
       <div className="overflow-x-auto">
         {partnerLeads && partnerLeads.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partnerLeads.filter(lead => !dismissedLeadIds.includes(lead.id)).map((lead) => {
+            {partnerLeads
+              .filter(lead => !dismissedLeadIds.includes(lead.id))
+              .filter(lead => {
+                if (selectedCategory === 'All Inquiries') return true;
+                if (selectedCategory === 'Affiliate Clicks') return lead.type === 'AFFILIATE_CLICK';
+                if (selectedCategory === 'Form Submissions') return lead.type === 'PARTNER_LEAD_SUBMITTED';
+                return true;
+              })
+              .map((lead) => {
               const isAffiliate = lead.type === 'AFFILIATE_CLICK';
               const borderClass = isAffiliate ? 'border-axim-purple/30 hover:border-axim-purple/70' : 'border-axim-gold/30 hover:border-axim-gold/70';
               const bgGradient = isAffiliate ? 'bg-gradient-to-br from-axim-purple/5 to-transparent' : 'bg-gradient-to-br from-axim-gold/5 to-transparent';
               const badgeClass = isAffiliate ? 'bg-axim-purple/10 text-axim-purple' : 'bg-axim-gold/10 text-axim-gold';
 
               return (
-                <div key={lead.id} className={`flex flex-col p-5 bg-[#0A0A0A] border ${borderClass} ${bgGradient} rounded-sm transition-colors relative group shadow-lg`}>
+                <motion.div key={lead.id} className={`flex flex-col p-5 bg-[#0A0A0A] border ${borderClass} ${bgGradient} rounded-sm transition-colors relative group shadow-lg`}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}>
 
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -193,7 +221,7 @@ export default function LeadManager() {
                     </div>
                   )}
 
-                </div>
+                </motion.div>
               );
             })}
           </div>

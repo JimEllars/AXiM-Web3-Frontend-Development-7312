@@ -32,7 +32,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
-          Articles, Ai Tools, & Learning Systems
+          Articles, AXiM Apps & Tools, & Learning Systems
         </p>
 
         {/* Updated CTAs */}

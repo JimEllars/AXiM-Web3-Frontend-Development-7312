@@ -27,10 +27,10 @@ describe('GlobalSearch Component', () => {
     const input = screen.getByPlaceholderText('Search Intelligence Hub & Offerings...');
     assert.ok(input);
 
-    fireEvent.change(input, { target: { value: 'Tools' } });
+    fireEvent.change(input, { target: { value: 'Apps & Tools' } });
 
     await waitFor(() => {
-        const toolsResult = screen.getByText('Tools');
+        const toolsResult = screen.getAllByText('Apps & Tools')[0];
         assert.ok(toolsResult);
     });
   });

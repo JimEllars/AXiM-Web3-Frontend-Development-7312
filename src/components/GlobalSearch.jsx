@@ -85,7 +85,7 @@ export default function GlobalSearch() {
 
     const lowerQuery = debouncedSearchTerm.toLowerCase();
     const matches = STATIC_ROUTES.filter(route =>
-      route.title.toLowerCase().includes(lowerQuery) || route.path.toLowerCase().includes(lowerQuery)
+      (route.title && route.title.toLowerCase().includes(lowerQuery)) || (route.path && route.path.toLowerCase().includes(lowerQuery))
     );
     setResults(matches);
     setSelectedIndex(0);

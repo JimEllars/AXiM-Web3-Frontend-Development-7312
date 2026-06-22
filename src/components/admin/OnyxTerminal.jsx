@@ -56,15 +56,15 @@ export default function OnyxTerminal() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Layer Continuity</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Gateway Layer</span>
             <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Telemetry Buffer Readiness</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Edge Data Buffer</span>
             <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Transient Cache Integrity</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Onyx Swarm Uplink</span>
             <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
           </div>
         </div>
