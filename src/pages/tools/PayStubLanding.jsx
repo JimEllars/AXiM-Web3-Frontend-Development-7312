@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import ProtectedRoute from '../../components/ProtectedRoute';
+
 import { logTelemetry } from '../../lib/telemetry';
 import { sanitizeInput } from '../../lib/sanitize';
 
@@ -15,6 +15,17 @@ export default function PayStubLanding() {
     logTelemetry('APP_TOOL_ACCESSED', { toolName: 'paystub_generator' });
   }, []);
   const [showWizard, setShowWizard] = useState(false);
+
+  const PAYSTUB_PRODUCTION_TARGET = 'https://quickpaystub.com/?via=axim_apps_and_tools';
+
+  const handleOutboundClick = (e) => {
+    e.preventDefault();
+    logTelemetry('PAYSTUB_FUNNEL_REDIRECT', { destination: 'quickpaystub_production', origin: 'axim_apps_and_tools' });
+    setTimeout(() => {
+      window.location.href = PAYSTUB_PRODUCTION_TARGET;
+    }, 150);
+  };
+
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -61,7 +72,7 @@ export default function PayStubLanding() {
   };
 
   return (
-    <ProtectedRoute>
+
       <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="Pay Stub Generator | AXiM Systems" customSchema={[payStubSchema]} />
 
@@ -134,7 +145,7 @@ export default function PayStubLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document.
           </p>
-          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Launch Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
@@ -195,12 +206,12 @@ export default function PayStubLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Standardize Your Docs. <br/>Stay Compliant.</h2>
           <p className="text-zinc-400 text-sm mb-10">Eliminate spreadsheet math errors and elevate the professionalism of your operation.</p>
-          <button onClick={() => setShowWizard(true)} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Initialize Generator <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
       </section>
     </div>
-    </ProtectedRoute>
+
   );
 }

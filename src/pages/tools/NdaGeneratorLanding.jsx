@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import ProtectedRoute from '../../components/ProtectedRoute';
+
 import { logTelemetry } from '../../lib/telemetry';
 import { sanitizeInput } from '../../lib/sanitize';
 
@@ -15,7 +15,7 @@ export default function NdaGeneratorLanding() {
     logTelemetry('APP_TOOL_ACCESSED', { toolName: 'nda_generator' });
   }, []);
   const [showWizard, setShowWizard] = useState(false);
-  const NDA_PRODUCTION_TARGET = 'https://quickndacontract.com/';
+  const NDA_PRODUCTION_TARGET = 'https://quickndacontract.com/?via=axim_apps_and_tools';
 
   const handleOutboundClick = (e) => {
     e.preventDefault();
@@ -72,7 +72,7 @@ export default function NdaGeneratorLanding() {
   };
 
   return (
-    <ProtectedRoute>
+
       <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="Mutual NDA Generator | AXiM Systems" customSchema={[ndaSchema]} />
 
@@ -185,6 +185,6 @@ export default function NdaGeneratorLanding() {
         </div>
       </section>
     </div>
-    </ProtectedRoute>
+
   );
 }

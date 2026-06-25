@@ -3,7 +3,15 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
+import { useLocation } from 'react-router-dom';
+
 export default function Footer() {
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const isExternalTrackingActive = queryParams.has('via') || queryParams.has('utm_source');
+
+  if (isExternalTrackingActive) return null;
   const currentYear = new Date().getFullYear();
 
   return (
