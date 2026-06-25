@@ -50,8 +50,6 @@ async function generateSitemap() {
     '/',
     '/articles',
     '/tools',
-    '/tools/nda',
-    '/tools/paystub',
     '/consultation',
     '/support',
     '/status',

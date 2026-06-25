@@ -58,7 +58,7 @@ export default function Profile() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Operator Vault | AXiM Systems" />
+      <SEO title="Operator Vault | AXiM Systems" noindex={true} />
 
       {/* Vault Header */}
       <section className="pt-32 pb-12 relative overflow-hidden bg-black border-b border-white/10">

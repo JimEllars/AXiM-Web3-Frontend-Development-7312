@@ -9,6 +9,7 @@ import { logTelemetry } from '../lib/telemetry';
 import { sanitizeInput } from '../lib/sanitize';
 import { encryptPayload } from '../lib/crypto';
 
+
 export default function Consultation() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,7 +92,7 @@ export default function Consultation() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Request a Consultation | AXiM Systems" description="Schedule a strategy session with an AXiM systems architect." />
+      <SEO title="Web3 Infrastructure Consulting | AXiM Solutions" description="Connect directly with the AXiM team for Web3 and enterprise software consulting." />
 
       {/* Graceful Degradation Trap */}
       {networkFault && (

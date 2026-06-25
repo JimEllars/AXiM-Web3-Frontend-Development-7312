@@ -57,7 +57,7 @@ export default function EarlyAccess() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32 flex flex-col">
-      <SEO title="Subscribe to Updates | AXiM Systems" description="Subscribe to the AXiM network for strategic blueprints, promos, and new software tool drops." />
+      <SEO title="Onyx Phase 1 Access | AXiM Systems" description="Get early access to Onyx Phase 1 and decentralized network updates." />
 
       <section className="flex-1 flex items-center justify-center p-6 mt-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl">
