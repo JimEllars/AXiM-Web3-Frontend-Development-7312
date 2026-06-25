@@ -74,7 +74,7 @@ export default function PayStubLanding() {
   return (
 
       <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Pay Stub Generator | AXiM Systems" customSchema={[payStubSchema]} />
+      <SEO title="Web3 Income Verification | AXiM Apps & Tools" description="Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document." customSchema={[payStubSchema]} />
 
       {/* Generation Wizard Modal */}
       {showWizard && (

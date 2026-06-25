@@ -72,8 +72,8 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative overflow-x-hidden selection:bg-axim-purple selection:text-white">
       <SEO
-        title="AXiM Systems | Work Smarter"
-        description="Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue."
+        title="AXiM Hub | Enterprise Web3 Infrastructure"
+        description="Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue. Build your decentralized future today."
         customSchema={[homeSchema]}
       />
       <div className="w-full">
