@@ -19,7 +19,9 @@ export default function NdaGeneratorLanding() {
 
   const handleOutboundClick = (e) => {
     e.preventDefault();
-    logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools' });
+    const user = useAximStore.getState().userSession?.user;
+    const attAddress = user?.walletAddress || "0x000_GUEST";
+    logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools', attAddress });
     setTimeout(() => {
       window.location.href = NDA_PRODUCTION_TARGET;
     }, 150);

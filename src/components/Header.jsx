@@ -29,6 +29,7 @@ export default function Header() {
       name: 'Apps & Tools',
       path: '/tools',
       dropdown: [
+        { name: 'Mutual NDA Generator', path: 'https://quickndacontract.com/', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
         { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
         { name: 'Pay Stub System', path: '/tools/paystub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
       ]

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { logTelemetry } from '../lib/telemetry';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -26,8 +27,8 @@ export default function Tools() {
       title: "Mutual NDA Generator",
       desc: "Protect your intellectual property and operational blueprints before entering B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for tech collaborations.",
       features: ["Symmetric protection clauses", "Instant print-ready extraction", "Software/IP specific", "Free to use"],
-      link: "/tools/nda",
-      isExternal: false,
+      link: "https://quickndacontract.com/",
+      isExternal: true,
       icon: LuIcons.LuShieldCheck,
       color: "text-axim-purple",
       bgHover: "hover:border-axim-purple/30",
@@ -93,7 +94,15 @@ export default function Tools() {
           {toolsList.map((tool, idx) => (
              <div key={idx} className="h-full">
                {tool.isExternal ? (
-                 <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
+                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={(e) => {
+                     if (tool.title === "Mutual NDA Generator") {
+                         e.preventDefault();
+                         logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools' });
+                         setTimeout(() => {
+                             window.open(tool.link, '_blank');
+                         }, 150);
+                     }
+                 }} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
                     {tool.title === "Mutual NDA Generator" || tool.title === "Pay Stub System" ? (
                       <div className="mt-4 flex items-center justify-center">
@@ -108,23 +117,25 @@ export default function Tools() {
                         )}
                       </div>
                     ) : null}
-                    {tool.title === "Mutual NDA Generator" || tool.title === "Pay Stub System" ? (
-                      <div className="mt-4 flex items-center justify-center">
-                        {hasPartnerToken ? (
-                          <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
-                            🔓 Access Granted
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
-                            🔒 Partner Access Required
-                          </span>
-                        )}
-                      </div>
-                    ) : null}
-                 </a>
+
+                    </a>
                ) : (
                  <Link to={tool.link} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
+                    {tool.title === "Mutual NDA Generator" || tool.title === "Pay Stub System" ? (
+                      <div className="mt-4 flex items-center justify-center">
+                        {hasPartnerToken ? (
+                          <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔓 Access Granted
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest flex items-center gap-2">
+                            🔒 Partner Access Required
+                          </span>
+                        )}
+                      </div>
+                    ) : null}
+
                  </Link>
                )}
              </div>
@@ -152,7 +163,15 @@ export default function Tools() {
                </ul>
 
                {tool.isExternal ? (
-                 <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={(e) => {
+                     if (tool.title === "Mutual NDA Generator") {
+                         e.preventDefault();
+                         logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools' });
+                         setTimeout(() => {
+                             window.open(tool.link, '_blank');
+                         }, 150);
+                     }
+                 }} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
                    Launch Application <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
                  </a>
                ) : (

@@ -20,8 +20,8 @@ export default function SystemBreadcrumb() {
     { name: 'AXM_CORE', path: '/dashboard' },
     ...pathnames.map((value, index) => {
       const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-      return { name: value.toUpperCase(), path: to };
-    })
+      return { name: (value || 'UNKNOWN').toUpperCase(), path: to };
+    }).filter(crumb => crumb.name !== 'UNKNOWN' && crumb.name.trim() !== '')
   ];
 
   return (
