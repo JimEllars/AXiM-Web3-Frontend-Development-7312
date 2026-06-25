@@ -10,7 +10,7 @@ import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import VaultedRecords from '../components/VaultedRecords';
 
 export default function Profile() {
-  const { session, user, signOut } = useAximAuth();
+  const { session, user, signOut, profile } = useAximAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const walletAddress = useAximStore((state) => state.walletAddress);
@@ -110,6 +110,14 @@ export default function Profile() {
           >
             Active Consultations
           </button>
+          {isWeb3Authenticated && (
+            <button
+              onClick={() => setActiveTab('activity')}
+              className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'activity' ? 'text-axim-green border-b-2 border-axim-green' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
+            >
+              Recent On-Chain Activity
+            </button>
+          )}
         </div>
 
         {/* Premium Tools Section */}
@@ -179,6 +187,32 @@ export default function Profile() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Tab 3: On-Chain Activity */}
+        {activeTab === 'activity' && isWeb3Authenticated && (
+          <div className="animate-fade-in">
+            <div className="space-y-4">
+              {profile?.transactions?.map((tx, idx) => (
+                <div key={idx} className="bg-[#0F172A] border border-white/5 p-6 rounded-sm shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded-sm">{tx.type}</span>
+                    </div>
+                    <h4 className="text-base font-black text-white uppercase tracking-wider font-mono">
+                      <a href="#" className="hover:text-axim-green transition-colors">{tx.hash}</a>
+                    </h4>
+                  </div>
+                  <div className="flex flex-col md:items-end">
+                    <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1">{tx.timestamp}</span>
+                    <span className="text-[0.65rem] font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" /> Verified
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </section>

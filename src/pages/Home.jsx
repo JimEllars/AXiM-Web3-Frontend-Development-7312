@@ -73,7 +73,8 @@ export default function Home() {
     <div className="w-full min-h-screen bg-bg-void relative overflow-x-hidden selection:bg-axim-purple selection:text-white">
       <SEO
         title="AXiM Hub | Enterprise Web3 Infrastructure"
-        description="Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue. Build your decentralized future today."
+        description="AXiM Systems provides enterprise Web3 infrastructure, powerful decentralized tools, and critical intelligence to scale your operations securely."
+        image="https://axim-web3.com/og-home.jpg"
         customSchema={[homeSchema]}
       />
       <div className="w-full">

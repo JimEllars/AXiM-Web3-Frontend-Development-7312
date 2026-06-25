@@ -76,7 +76,12 @@ export default function NdaGeneratorLanding() {
   return (
 
       <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Web3 NDA Generator | AXiM Apps & Tools" description="Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations." customSchema={[ndaSchema]} />
+      <SEO
+        title="Web3 NDA Generator | AXiM Apps & Tools"
+        description="Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations."
+        image="https://axim-web3.com/og-nda.jpg"
+        customSchema={[ndaSchema]}
+      />
 
       {/* Generation Wizard Modal */}
       {showWizard && (
