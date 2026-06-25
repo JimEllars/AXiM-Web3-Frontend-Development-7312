@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { logTelemetry } from '../lib/telemetry';
 import DOMPurify from 'isomorphic-dompurify';
 
 import * as LuIcons from 'react-icons/lu';
@@ -14,7 +15,7 @@ const STATIC_ROUTES = [
   { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
   { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
-  { title: "Launch NDA Generator", path: "/tools/nda", category: "Apps & Tools" },
+  { title: "Launch NDA Generator", path: "https://quickndacontract.com/", category: "Apps & Tools" },
   { title: "Demand Letter Generator", path: "/tools", category: "Apps & Tools" },
   { title: "Pay Stub Generator", path: "/tools/paystub", category: "Apps & Tools" },
 
@@ -127,7 +128,7 @@ export default function GlobalSearch() {
 
 
 
-  const handleSelect = (item) => {
+    const handleSelect = (item) => {
     setIsSynchronizing(true);
     setTimeout(() => {
       if (item.action === 'hard_reset') {
@@ -137,7 +138,16 @@ export default function GlobalSearch() {
         return;
       }
       if (item.path) {
-        navigate(item.path);
+        if (item.path.startsWith('http')) {
+          let url = item.path;
+          if (item.path === 'https://quickndacontract.com/') {
+            url = 'https://quickndacontract.com/?via=axim_cmd_palette';
+            logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_cmd_palette' });
+          }
+          window.open(url, '_blank');
+        } else {
+          navigate(item.path);
+        }
       } else if (item.slug) {
         window.open(`https://wp.axim.us.com/article/${item.slug}`, '_blank');
       }
