@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 
+const MOCK_ON_CHAIN_ACTIVITY = [
+  { hash: "0x1a2b...3c4d", type: "Contract Interaction", timestamp: "2 mins ago" },
+  { hash: "0x9f8e...7d6c", type: "Asset Transfer", timestamp: "1 hour ago" },
+  { hash: "0x5a4b...3c2d", type: "Protocol Upgrade", timestamp: "1 day ago" }
+];
+
 export function useAximAuth() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +34,7 @@ export function useAximAuth() {
         if (isValid) {
           setSession(currentSession);
           if (currentSession) {
-             setProfile({ email: currentSession.user.email, clearance_level: 1 });
+             setProfile({ email: currentSession.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
           }
         }
         setLoading(false);
@@ -41,7 +47,7 @@ export function useAximAuth() {
         if (isValid) {
           setSession(currentSession);
           if (currentSession) {
-              setProfile({ email: currentSession.user.email, clearance_level: 1 });
+              setProfile({ email: currentSession.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
           } else {
               setProfile(null);
           }

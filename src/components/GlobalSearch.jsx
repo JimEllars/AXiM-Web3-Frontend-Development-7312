@@ -17,7 +17,7 @@ const STATIC_ROUTES = [
   { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
   { title: "Launch NDA Generator", path: "https://quickndacontract.com/", category: "Apps & Tools" },
   { title: "Demand Letter Generator", path: "/tools", category: "Apps & Tools" },
-  { title: "Pay Stub Generator", path: "/tools/paystub", category: "Apps & Tools" },
+  { title: "Pay Stub Generator", path: "/tools/pay-stub", category: "Apps & Tools" },
 
   { title: "My Account", path: "/profile", category: "My Account" },
   { title: "Asset Licenses", path: "/profile", category: "My Account" },

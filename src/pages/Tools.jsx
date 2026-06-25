@@ -38,7 +38,7 @@ export default function Tools() {
       title: "Pay Stub System",
       desc: "Standardize your independent payroll documentation. Input earnings and deductions into our computational node to generate an instant, mathematically verified pay stub.",
       features: ["Automated deduction routing", "Standardized accounting layouts", "Instant PDF extraction", "Free to use"],
-      link: "/tools/paystub",
+      link: "/tools/pay-stub",
       isExternal: false,
       icon: LuIcons.LuFileText,
       color: "text-[#DB2777]",
