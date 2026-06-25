@@ -2,10 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
+const DEFAULT_SOCIAL_IMAGE = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+
 export default function SEO({
   title = "AXiM Systems | Work Smarter",
   description = "Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue.",
-  image = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp",
+  image,
   type = "website",
   url,
   customSchema = [],
@@ -14,6 +16,7 @@ export default function SEO({
 }) {
   const location = useLocation();
   const currentUrl = url || `https://axim.us.com${location.pathname}`;
+  const metaImage = image || DEFAULT_SOCIAL_IMAGE;
 
   return (
     <Helmet>
@@ -29,7 +32,7 @@ export default function SEO({
       <meta property="og:url" content={currentUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={metaImage} />
       <meta property="og:site_name" content="AXiM Systems" />
 
       {/* Conditional News/Article Tags */}
@@ -45,7 +48,7 @@ export default function SEO({
       <meta name="twitter:url" content={currentUrl} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={metaImage} />
 
       {/* Custom JSON-LD Schema Injection */}
       {customSchema.map((schema, index) => (
