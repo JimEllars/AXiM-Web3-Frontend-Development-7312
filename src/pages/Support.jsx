@@ -10,6 +10,7 @@ import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
 
+
 export default function Support() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', issue: '', priority: 'Technical', attachment: null });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,6 +84,7 @@ const faqs = [
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <SEO title="Decentralized Customer Support | AXiM Systems" description="Get help with your AXiM tools, manage tickets, and access documentation." customSchema={[faqSchema]} />
 
       {networkFault && (
          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
@@ -96,7 +98,7 @@ const faqs = [
          </div>
       )}
 
-      <SEO title="Help Center | AXiM Systems" description="Customer support, FAQs, and platform documentation." customSchema={[faqSchema]} />
+
 
       <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />

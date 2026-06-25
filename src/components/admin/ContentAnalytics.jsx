@@ -1,7 +1,35 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { telemetryStore } from '../../lib/telemetry';
+
+
+function AnimatedCounter({ value, prefix = '', suffix = '' }) {
+  const nodeRef = React.useRef(null);
+  const motionValue = useMotionValue(0);
+
+  useEffect(() => {
+    const controls = animate(motionValue, value, {
+      duration: 1,
+      ease: "easeOut",
+      onUpdate(latest) {
+        if (nodeRef.current) {
+          // If value has decimal point, we format it as fixed to 1 decimal point, otherwise integer
+          if (value % 1 !== 0) {
+            nodeRef.current.textContent = prefix + latest.toFixed(1) + suffix;
+          } else {
+             nodeRef.current.textContent = prefix + Math.round(latest) + suffix;
+          }
+        }
+      }
+    });
+
+    return () => controls.stop();
+  }, [value, prefix, suffix, motionValue]);
+
+  return <span ref={nodeRef}>{prefix}0{suffix}</span>;
+}
 
 export default function ContentAnalytics() {
   const [logs, setLogs] = useState([...telemetryStore]);
@@ -71,19 +99,17 @@ export default function ContentAnalytics() {
         <div className="p-6 bg-[#0A0A0A] border border-axim-purple/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent z-0"></div>
           <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Affiliate Clicks</h3>
-          <p className="text-4xl font-black text-white tracking-wider relative z-10">{totalAffiliateClicks}</p>
+          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={totalAffiliateClicks} /></p>
         </div>
         <div className="p-6 bg-[#0A0A0A] border border-axim-gold/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent z-0"></div>
           <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Leads Captured</h3>
-          <p className="text-4xl font-black text-white tracking-wider relative z-10">{totalLeadsCaptured}</p>
+          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={totalLeadsCaptured} /></p>
         </div>
         <div className="p-6 bg-[#0A0A0A] border border-white/20 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0"></div>
           <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Conversion Rate</h3>
-          <p className={`text-4xl font-black tracking-wider relative z-10 ${conversionColor}`}>
-            {conversionRate.toFixed(1)}%
-          </p>
+          <p className={`text-4xl font-black tracking-wider relative z-10 ${conversionColor}`}><AnimatedCounter value={conversionRate} suffix="%" /></p>
         </div>
       </div>
 
