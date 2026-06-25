@@ -6,10 +6,15 @@ import SafeIcon from '../common/SafeIcon';
 const { LuChevronRight } = LuIcons;
 
 export default function SystemBreadcrumb() {
+
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const isExternalTrackingActive = queryParams.has('via') || queryParams.has('utm_source');
+
   const pathnames = location.pathname.split('/').filter((x) => x);
 
-  if (pathnames.length === 0) return null;
+  if (pathnames.length === 0 || isExternalTrackingActive) return null;
+
 
   const breadcrumbs = [
     { name: 'AXM_CORE', path: '/dashboard' },
