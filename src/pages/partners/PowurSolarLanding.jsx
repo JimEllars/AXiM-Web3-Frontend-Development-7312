@@ -35,7 +35,7 @@ export default function PowurSolarLanding() {
     }
 
     setTimeout(() => {
-      window.location.href = affiliateLink;
+      window.open(affiliateLink, '_blank', 'noopener,noreferrer');
     }, 150);
   };
 

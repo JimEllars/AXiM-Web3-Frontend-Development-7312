@@ -77,6 +77,45 @@ function App() {
   }, []);
 
   useEffect(() => {
+    let timeoutId;
+    const sessionTimeout = useAximStore.getState().sessionTimeout;
+
+    const resetTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(async () => {
+        const store = useAximStore.getState();
+        const { userSession, isWeb3Authenticated, logoutWeb3Wallet, setUserSession, showToast } = store;
+
+        if (userSession || isWeb3Authenticated) {
+          if (userSession) {
+            await supabase.auth.signOut();
+            setUserSession(null);
+          }
+          if (isWeb3Authenticated) {
+            logoutWeb3Wallet();
+          }
+          showToast("Session expired due to inactivity", "warning");
+        }
+      }, sessionTimeout);
+    };
+
+    resetTimer();
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    events.forEach(event => {
+      window.addEventListener(event, resetTimer, { passive: true });
+    });
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      events.forEach(event => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     const clickRankAi = document.createElement("script");
     clickRankAi.src = "https://js.clickrank.ai/seo/a53a59e0-cc42-4ec5-995e-d44d7177f1b3/script?" + new Date().getTime();
     clickRankAi.async = true;

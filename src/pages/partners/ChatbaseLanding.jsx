@@ -14,7 +14,7 @@ export default function ChatbaseLanding() {
       window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" });
     }
     setTimeout(() => {
-      window.location.href = affiliateLink;
+      window.open(affiliateLink, '_blank', 'noopener,noreferrer');
     }, 150);
   };
 

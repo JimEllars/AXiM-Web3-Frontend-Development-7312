@@ -38,10 +38,10 @@ export default function Hero() {
         {/* Updated CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full animate-fade-in-up animation-delay-300">
           <Link
-            to="/consultation"
+            to="/tools"
             className="inline-flex items-center justify-center px-10 py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_30px_rgba(147,51,234,0.3)] w-full sm:w-auto text-center"
           >
-            Book a Consultation <SafeIcon icon={LuIcons.LuCalendar} className="ml-3 w-4 h-4" />
+            Explore Tools <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
           <Link
             to="/articles"
