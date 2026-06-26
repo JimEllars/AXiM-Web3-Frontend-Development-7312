@@ -8,67 +8,74 @@ const { LuLock } = LuIcons;
 
 
 const handleExport = (record) => {
-  try {
-    // Create a formatted HTML string based on the record type
-    let htmlContent = `
-      <html>
-        <head>
-          <title>${record.title}</title>
-          <style>
-            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
-            h1 { font-size: 24px; text-transform: uppercase; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; }
-            .meta { font-family: monospace; font-size: 12px; color: #666; margin-bottom: 40px; }
-            .section { margin-bottom: 20px; }
-            .label { font-weight: bold; text-transform: uppercase; font-size: 12px; color: #444; }
-            .value { font-size: 16px; margin-top: 4px; }
-            .legal-text { margin-top: 40px; font-size: 11px; color: #555; text-align: justify; }
-          </style>
-        </head>
-        <body>
-          <h1>${record.type === 'NDA' ? 'Mutual Non-Disclosure Agreement' : 'Official Earnings Statement'}</h1>
-          <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.timestamp).toUTCString()}</div>
-    `;
+  useAximStore.getState().setGlobalLoading(true, "Decrypting Vaulted Document...");
 
-    // Dynamically map all properties captured during the wizard
-    Object.entries(record.data || {}).forEach(([key, value]) => {
-       const cleanLabel = key.replace(/([A-Z])/g, ' $1').toUpperCase();
-       htmlContent += `
-         <div class="section">
-           <div class="label">${cleanLabel}</div>
-           <div class="value">${value}</div>
-         </div>
-       `;
-    });
+  setTimeout(() => {
+    useAximStore.getState().setGlobalLoading(false);
+    useAximStore.getState().showToast('Vault decryption successful.', 'success');
 
-    htmlContent += `
-          <div class="legal-text">
-             This document was autonomously generated via the AXiM Systems Infrastructure on behalf of the cryptographic operator.
-             This cryptographic hash serves as a timestamped verification of intent.
-          </div>
-        </body>
-      </html>
-    `;
+    try {
+      // Create a formatted HTML string based on the record type
+      let htmlContent = `
+        <html>
+          <head>
+            <title>${record.title}</title>
+            <style>
+              body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
+              h1 { font-size: 24px; text-transform: uppercase; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; }
+              .meta { font-family: monospace; font-size: 12px; color: #666; margin-bottom: 40px; }
+              .section { margin-bottom: 20px; }
+              .label { font-weight: bold; text-transform: uppercase; font-size: 12px; color: #444; }
+              .value { font-size: 16px; margin-top: 4px; }
+              .legal-text { margin-top: 40px; font-size: 11px; color: #555; text-align: justify; }
+            </style>
+          </head>
+          <body>
+            <h1>${record.type === 'NDA' ? 'Mutual Non-Disclosure Agreement' : 'Official Earnings Statement'}</h1>
+            <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.timestamp).toUTCString()}</div>
+      `;
 
-    // Open a hidden print window, write the HTML, and trigger the native PDF/Print dialog
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
-    printWindow.focus();
+      // Dynamically map all properties captured during the wizard
+      Object.entries(record.data || {}).forEach(([key, value]) => {
+         const cleanLabel = key.replace(/([A-Z])/g, ' $1').toUpperCase();
+         htmlContent += `
+           <div class="section">
+             <div class="label">${cleanLabel}</div>
+             <div class="value">${value}</div>
+           </div>
+         `;
+      });
 
-    // Delay slightly to ensure browser renders the DOM before invoking print
-    setTimeout(() => {
-      printWindow.print();
+      htmlContent += `
+            <div class="legal-text">
+               This document was autonomously generated via the AXiM Systems Infrastructure on behalf of the cryptographic operator.
+               This cryptographic hash serves as a timestamped verification of intent.
+            </div>
+          </body>
+        </html>
+      `;
 
-      // Notify and track export
-      useAximStore.getState().setNotification('PDF successfully generated.');
-      logTelemetry('EXPORT_GENERATED', { type: record.type });
+      // Open a hidden print window, write the HTML, and trigger the native PDF/Print dialog
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
 
-      printWindow.close();
-    }, 250);
+      // Delay slightly to ensure browser renders the DOM before invoking print
+      setTimeout(() => {
+        printWindow.print();
 
-  } catch (error) {
-    console.error('Export generation failed:', error);
-  }
+        // Notify and track export
+        useAximStore.getState().setNotification('PDF successfully generated.');
+        logTelemetry('EXPORT_GENERATED', { type: record.type });
+
+        printWindow.close();
+      }, 250);
+
+    } catch (error) {
+      console.error('Export generation failed:', error);
+    }
+  }, 1500);
 };
 
 export default function VaultedRecords() {

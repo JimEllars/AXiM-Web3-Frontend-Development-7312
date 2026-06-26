@@ -75,7 +75,7 @@ export default function PayStubLanding() {
 
       <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Web3 Income Verification | AXiM Apps & Tools"
+        title="Web3 Income Verification | Cryptographic Proofs | AXiM Apps & Tools"
         description="Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document."
         image="https://axim-web3.com/og-paystub.jpg"
         customSchema={[payStubSchema]}
