@@ -6,7 +6,7 @@ import * as LuIcons from 'react-icons/lu';
 import { motion } from 'framer-motion';
 
 export default function PowurSolarLanding() {
-  const affiliateLink = "https://powur.com/axim/solar";
+  const affiliateLink = "https://powur.com/axim/solar?via=axim_hub";
 
   const solarSchema = {
     "@context": "https://schema.org",
@@ -23,14 +23,20 @@ export default function PowurSolarLanding() {
     }
   };
 
-  const handleOutboundClick = (placement) => {
-    logTelemetry('PARTNER_FUNNEL_CLICK', { partner: 'powursolar', placement });
+  const handleOutboundClick = (e, placement) => {
+    e.preventDefault();
+    // 1. Log to AXiM internal telemetry
+    logTelemetry('PARTNER_FUNNEL_REDIRECT', { destination: 'powursolar', origin: 'axim_hub', placement });
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "outbound_partner_click", {
         event_category: "conversion",
         event_label: "Powur Solar"
       });
     }
+
+    setTimeout(() => {
+      window.location.href = affiliateLink;
+    }, 150);
   };
 
   return (
@@ -60,7 +66,7 @@ export default function PowurSolarLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             Stop leasing power from centralized utility monopolies. AXiM's partnership with the Powur fulfillment grid allows homeowners to transition to Tier-1 solar panels, advanced micro-inverters, and high-capacity battery storage with zero-down enterprise financing options.
           </p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
             Calculate Energy Offsets <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </motion.div>
@@ -134,7 +140,7 @@ export default function PowurSolarLanding() {
         >
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Own Your Energy. <br/>Lock In Your Rate.</h2>
           <p className="text-zinc-400 text-sm mb-10">Protect your household from indefinite utility rate hikes with a decentralized solar array.</p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_30px_rgba(255,234,0,0.3)] rounded-sm">
             Calculate Savings <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </motion.div>
@@ -148,7 +154,7 @@ export default function PowurSolarLanding() {
         </div>
         <a
           href={affiliateLink}
-          onClick={() => handleOutboundClick('sticky_mobile')}
+          onClick={(e) => handleOutboundClick(e, 'sticky_mobile')}
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 bg-axim-gold text-black font-black uppercase tracking-widest text-[0.65rem] hover:bg-white transition-colors rounded-sm shadow-[0_0_15px_rgba(255,234,0,0.3)]"

@@ -6,7 +6,7 @@ import * as LuIcons from 'react-icons/lu';
 import { motion } from 'framer-motion';
 
 export default function PowurJoinLanding() {
-  const affiliateLink = "https://powur.com/axim/join";
+  const affiliateLink = "https://powur.com/axim/join?via=axim_hub";
 
   const agencySchema = {
     "@context": "https://schema.org",
@@ -23,8 +23,10 @@ export default function PowurJoinLanding() {
     }
   };
 
-  const handleOutboundClick = (placement) => {
-    logTelemetry('PARTNER_FUNNEL_CLICK', { partner: 'powur', placement });
+  const handleOutboundClick = (e, placement) => {
+    e.preventDefault();
+    // 1. Log to AXiM internal telemetry
+    logTelemetry('PARTNER_FUNNEL_REDIRECT', { destination: 'powur', origin: 'axim_hub', placement });
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "outbound_partner_click", {
         event_category: "conversion",
@@ -60,7 +62,7 @@ export default function PowurJoinLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             You secure the contracts. Powur handles the engineering, permitting, and installation. Leverage a decentralized, enterprise-grade cloud platform to scale your own national solar agency with zero upfront hardware overhead and maximum margin control.
           </p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Initialize Agency Protocol <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </motion.div>
@@ -134,7 +136,7 @@ export default function PowurJoinLanding() {
         >
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Scale Your Enterprise. <br/>Control Your Future.</h2>
           <p className="text-zinc-400 text-sm mb-10">Join the fastest-growing decentralized energy platform and build an agency that generates wealth without the operational overhead.</p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Start Your Agency <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </motion.div>
@@ -148,7 +150,7 @@ export default function PowurJoinLanding() {
         </div>
         <a
           href={affiliateLink}
-          onClick={() => handleOutboundClick('sticky_mobile')}
+          onClick={(e) => handleOutboundClick(e, 'sticky_mobile')}
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"

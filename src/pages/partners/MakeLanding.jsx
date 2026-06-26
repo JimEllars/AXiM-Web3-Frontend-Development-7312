@@ -5,11 +5,12 @@ import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function MakeLanding() {
-  const affiliateLink = "https://www.make.com/en/register?pc=aximpartner";
+  const affiliateLink = "https://www.make.com/en/register?pc=aximpartner&via=axim_hub";
 
-  const handleOutboundClick = (placement) => {
+  const handleOutboundClick = (e, placement) => {
+    e.preventDefault();
     // 1. Log to AXiM internal telemetry
-    logTelemetry('PARTNER_FUNNEL_CLICK', { partner: 'make', placement });
+    logTelemetry('PARTNER_FUNNEL_REDIRECT', { destination: 'make', origin: 'axim_hub', placement });
 
     // 2. Log to external Google Analytics
     if (typeof window !== "undefined" && window.gtag) {
@@ -18,6 +19,10 @@ export default function MakeLanding() {
         event_label: "Make.com"
       });
     }
+
+    setTimeout(() => {
+      window.location.href = affiliateLink;
+    }, 150);
   };
 
   const makeAppSchema = {
@@ -59,7 +64,7 @@ export default function MakeLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             Stop wasting your team's time on repetitive, manual data entry. AXiM's preferred integration with Make.com allows anyone to visually connect data sources, AI models, and thousands of popular apps to build agentic workflows 24/7.
           </p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'hero_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Start Automating for Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
@@ -162,7 +167,7 @@ export default function MakeLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Reclaim Your Time. <br/>Scale Your Impact.</h2>
           <p className="text-zinc-400 text-sm mb-10">Join thousands of operators building robust, automated businesses without the massive overhead of hiring a development team.</p>
-          <a href={affiliateLink} onClick={() => handleOutboundClick('footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'footer_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Create Your Free Account <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
@@ -175,7 +180,7 @@ export default function MakeLanding() {
         </div>
         <a
           href={affiliateLink}
-          onClick={() => handleOutboundClick('sticky_mobile')}
+          onClick={(e) => handleOutboundClick(e, 'sticky_mobile')}
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 bg-axim-purple text-white font-black uppercase tracking-widest text-[0.65rem] hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
