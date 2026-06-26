@@ -1,10 +1,22 @@
 import React from 'react';
+import { logTelemetry } from '../../lib/telemetry';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function ChatbaseLanding() {
-  const affiliateLink = "https://link.chatbase.co/jrellars";
+  const affiliateLink = "https://link.chatbase.co/jrellars?via=axim_hub";
+
+  const handleOutboundClick = (e, placement) => {
+    e.preventDefault();
+    logTelemetry('PARTNER_FUNNEL_REDIRECT', { destination: 'chatbase', origin: 'axim_hub', placement });
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" });
+    }
+    setTimeout(() => {
+      window.location.href = affiliateLink;
+    }, 150);
+  };
 
   const chatbaseAppSchema = {
     "@context": "https://schema.org",
@@ -46,7 +58,7 @@ export default function ChatbaseLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-3xl mx-auto leading-relaxed mb-12">
             Stop losing leads and frustrating customers with slow email responses. AXiM's partnership with Chatbase empowers you to build a custom ChatGPT agent trained exclusively on your own business documents and website. Deploy it in minutes to answer questions and capture new clients around the clock.
           </p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'conversion_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Build Your Agent for Free <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </a>
         </div>
@@ -137,7 +149,7 @@ export default function ChatbaseLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Automate Your Support. <br/>Capture Every Lead.</h2>
           <p className="text-zinc-400 text-sm mb-10">Give your customers the instant, accurate answers they demand while freeing up your team to focus on growing the business.</p>
-          <a href={affiliateLink} onClick={() => { if(typeof window !== "undefined" && window.gtag) window.gtag("event", "outbound_partner_click", { event_category: "conversion", event_label: "Chatbase" }); }} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={affiliateLink} onClick={(e) => handleOutboundClick(e, 'conversion_button')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black hover:shadow-[0_0_40px_currentColor]  transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Build Your Agent Free <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </a>
         </div>

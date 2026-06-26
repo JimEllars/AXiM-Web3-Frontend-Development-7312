@@ -30,7 +30,20 @@ export default function NdaGeneratorLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-    const addAsset = useAximStore((state) => state.addAsset);
+
+  const handleShareClick = (e) => {
+    e.preventDefault();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        useAximStore.getState().showToast('Link copied to clipboard!', 'success');
+        logTelemetry('ORGANIC_SHARE_INTENT', { path: window.location.pathname });
+      }).catch((err) => {
+        console.error('Failed to copy link', err);
+      });
+    }
+  };
+
+  const addAsset = useAximStore((state) => state.addAsset);
     const showToast = useAximStore((state) => state.showToast);
 
   const handleGenerate = async (e) => {
@@ -146,6 +159,12 @@ export default function NdaGeneratorLanding() {
             <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-white" />
           </div>
           <div className="mb-4 inline-flex items-center gap-2 px-2 py-1 bg-axim-gold/10 border border-axim-gold/30 rounded-sm"><SafeIcon icon={LuIcons.LuLock} className="w-3 h-3 text-axim-gold" /><span className="text-[0.6rem] font-bold text-axim-gold uppercase tracking-widest">Token-Gated / Partner Access Required</span></div>
+
+          <div className="flex justify-center mb-6">
+            <button onClick={handleShareClick} className="px-4 py-2 bg-[#050505] border border-white/10 text-white hover:bg-white hover:text-black transition-colors rounded-sm shadow-md font-mono uppercase tracking-widest text-[0.65rem] flex items-center gap-2">
+              <SafeIcon icon={LuIcons.LuShare2} className="w-3.5 h-3.5" /> Share Tool
+            </button>
+          </div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-6">
             Mutual NDA <br/><span className="text-axim-purple">Generator.</span>
           </h1>

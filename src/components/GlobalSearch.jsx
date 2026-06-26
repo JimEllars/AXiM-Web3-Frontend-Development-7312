@@ -14,7 +14,11 @@ const STATIC_ROUTES = [
   { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
   { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
-  { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
+    { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
+  { title: "Make.com Automation", path: "/partners/make", category: "Partners" },
+  { title: "Chatbase AI", path: "/partners/chatbase", category: "Partners" },
+  { title: "Powur Solar", path: "/partners/powur-solar", category: "Partners" },
+  { title: "Powur Agency", path: "/partners/powur-join", category: "Partners" },
   { title: "Launch NDA Generator", path: "https://quickndacontract.com/", category: "Apps & Tools" },
   { title: "Demand Letter Generator", path: "/tools", category: "Apps & Tools" },
   { title: "Pay Stub Generator", path: "/tools/pay-stub", category: "Apps & Tools" },

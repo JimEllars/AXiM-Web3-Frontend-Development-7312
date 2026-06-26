@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
@@ -26,6 +28,22 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
 
   const activeGradient = overlayGradients[index % 3] || overlayGradients[1];
 
+
+  const handleShareClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = `${window.location.origin}/article/${article.slug}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        useAximStore.getState().showToast('Link copied to clipboard!', 'success');
+        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}` });
+      }).catch((err) => {
+        console.error('Failed to copy link', err);
+      });
+    }
+  };
+
+
   return (
     <Link
       to={`/article/${article.slug}`}
@@ -49,6 +67,13 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
           className="absolute inset-0 z-10 transition-opacity duration-500 opacity-100 group-hover:opacity-60 mix-blend-multiply"
           style={{ backgroundImage: activeGradient }}
         />
+
+
+        <div className="absolute top-4 right-4 z-20">
+          <button onClick={handleShareClick} className="p-2 bg-black/80 backdrop-blur-sm border border-white/10 text-white rounded-sm shadow-lg hover:bg-white hover:text-black transition-colors" title="Copy Link">
+            <SafeIcon icon={LuIcons.LuShare2} className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
         <div className="absolute top-4 left-4 z-20">
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
