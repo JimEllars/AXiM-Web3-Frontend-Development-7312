@@ -21,7 +21,7 @@ export default function MakeLanding() {
     }
 
     setTimeout(() => {
-      window.location.href = affiliateLink;
+      window.open(affiliateLink, '_blank', 'noopener,noreferrer');
     }, 150);
   };
 

@@ -23,7 +23,7 @@ export default function NdaGeneratorLanding() {
     const attAddress = user?.walletAddress || "0x000_GUEST";
     logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_apps_and_tools', attAddress });
     setTimeout(() => {
-      window.location.href = NDA_PRODUCTION_TARGET;
+      window.open(NDA_PRODUCTION_TARGET, '_blank', 'noopener,noreferrer');
     }, 150);
   };
   const [step, setStep] = useState(1);

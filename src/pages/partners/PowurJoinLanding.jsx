@@ -33,6 +33,10 @@ export default function PowurJoinLanding() {
         event_label: "Powur Join"
       });
     }
+
+    setTimeout(() => {
+      window.open(affiliateLink, "_blank", "noopener,noreferrer");
+    }, 150);
   };
 
   return (

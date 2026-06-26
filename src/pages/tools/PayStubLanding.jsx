@@ -22,7 +22,7 @@ export default function PayStubLanding() {
     e.preventDefault();
     logTelemetry('PAYSTUB_FUNNEL_REDIRECT', { destination: 'quickpaystub_production', origin: 'axim_apps_and_tools' });
     setTimeout(() => {
-      window.location.href = PAYSTUB_PRODUCTION_TARGET;
+      window.open(PAYSTUB_PRODUCTION_TARGET, '_blank', 'noopener,noreferrer');
     }, 150);
   };
 
