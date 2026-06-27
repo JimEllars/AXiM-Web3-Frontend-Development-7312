@@ -7,6 +7,7 @@ export default function OnyxTerminal() {
   const [kvValue, setKvValue] = useState('{\n  "title": "AXiM Intel",\n  "description": "Dynamic Edge Injection"\n}');
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [responseLog, setResponseLog] = useState(null);
+  const [replaySpeed, setReplaySpeed] = useState(1);
 
   const handleKvWrite = async (e) => {
     e.preventDefault();
@@ -71,6 +72,43 @@ export default function OnyxTerminal() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
+
+      {/* Telemetry Replay Controller */}
+      <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-6 mb-2">
+        <div className="flex items-center gap-3 mb-4">
+          <SafeIcon icon={LuIcons.LuFastForward} className="w-5 h-5 text-axim-purple" />
+          <h3 className="text-sm font-black text-white uppercase tracking-widest">Telemetry Replay Controller</h3>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Playback Matrix Speed</span>
+             <span className="px-2 py-1 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">{replaySpeed}x</span>
+          </div>
+          <input
+             type="range"
+             min="1"
+             max="4"
+             step="1"
+             value={replaySpeed}
+             onChange={(e) => {
+               const val = Number(e.target.value);
+               const allowed = [1, 2, 4];
+               if (allowed.includes(val) || val === 3) {
+                 const speed = val === 3 ? 4 : val;
+                 setReplaySpeed(speed);
+                 setResponseLog(`[ SIMULATING DATA STREAM: REPLAYING AT ${speed}x ]`);
+               }
+             }}
+             className="w-full accent-axim-purple"
+          />
+          <div className="flex justify-between text-[0.55rem] font-mono text-zinc-600 uppercase">
+             <span>1x</span>
+             <span>2x</span>
+             <span>4x</span>
+          </div>
+        </div>
+      </div>
+
         {/* KV Form */}
         <form onSubmit={handleKvWrite} className="flex flex-col gap-4">
           <div>

@@ -1,22 +1,10 @@
-
-let initialStore = [];
-if (typeof window !== 'undefined' && sessionStorage) {
-  try {
-    const cached = sessionStorage.getItem('axim_telemetry_cache');
-    if (cached) {
-      initialStore = JSON.parse(cached);
-    }
-  } catch(e) {
-    console.error("Telemetry cache parse error", e);
-  }
-}
-export const telemetryStore = initialStore;
-
-export function getTelemetryStore() {
-  return [...telemetryStore];
-}
+import { useAximStore } from '../store/useAximStore';
 
 let isFlushing = false;
+
+export function getTelemetryStore() {
+  return [...useAximStore.getState().telemetryCollection];
+}
 
 export function logTelemetry(type, payload) {
   const event = {
@@ -26,21 +14,7 @@ export function logTelemetry(type, payload) {
     payload,
   };
 
-  telemetryStore.unshift(event);
-
-  // Hard cap telemetry memory at 100 events
-  if (telemetryStore.length > 100) {
-    telemetryStore.length = 100;
-  }
-
-  // Sync to sessionStorage
-  if (typeof window !== 'undefined' && sessionStorage) {
-    try {
-      sessionStorage.setItem('axim_telemetry_cache', JSON.stringify(telemetryStore));
-    } catch(e) {
-      console.error("Telemetry cache write error", e);
-    }
-  }
+  useAximStore.getState().logTelemetryEvent(event);
 
   // Optional: Dispatch a custom event so UI components can re-render if needed
   try {
@@ -54,6 +28,7 @@ export function logTelemetry(type, payload) {
 }
 
 export async function flushTelemetry() {
+  const telemetryStore = useAximStore.getState().telemetryCollection;
   if (isFlushing || telemetryStore.length === 0) return;
   isFlushing = true;
 

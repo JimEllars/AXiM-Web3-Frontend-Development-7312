@@ -20,7 +20,8 @@ export default function PayStubLanding() {
 
   const handleOutboundClick = (e) => {
     e.preventDefault();
-    logTelemetry('PAYSTUB_FUNNEL_REDIRECT', { destination: 'quickpaystub_production', origin: 'axim_apps_and_tools' });
+    const activeSessionOwner = useAximStore.getState().userSession?.user?.walletAddress || "GUEST_ANONYMOUS";
+    logTelemetry('PAYSTUB_FUNNEL_REDIRECT', { destination: 'quickpaystub_production', origin: 'axim_apps_and_tools', activeSessionOwner });
     setTimeout(() => {
       window.open(PAYSTUB_PRODUCTION_TARGET, '_blank', 'noopener,noreferrer');
     }, 150);
