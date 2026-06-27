@@ -17,9 +17,9 @@ export default function DashboardAccessDenied() {
           <SafeIcon icon={LuIcons.LuLock} className="w-6 h-6 text-red-500" />
         </div>
 
-        <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Clearance Required</h2>
+        <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Restricted Node</h2>
         <p className="text-zinc-400 font-mono text-[0.65rem] uppercase tracking-widest leading-relaxed mb-8">
-          The requested operational vault requires an active authentication token. Please log in or return to the public network grid.
+          Onyx administrative clearance required.
         </p>
 
         <div className="flex flex-col gap-3">

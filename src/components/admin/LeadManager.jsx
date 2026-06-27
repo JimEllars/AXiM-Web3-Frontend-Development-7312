@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { logTelemetry, getTelemetryStore } from '../../lib/telemetry';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../../store/useAximStore';
@@ -58,6 +59,36 @@ export default function LeadManager() {
     await executeOnyxCommand(prompt);
   };
 
+
+  const handleExportTelemetryCSV = () => {
+    const telemetryLogs = getTelemetryStore();
+    if (!telemetryLogs || telemetryLogs.length === 0) {
+      useAximStore.getState().showToast('No telemetry data to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Timestamp', 'Type', 'Payload'];
+    const csvContent = [
+      headers.join(','),
+      ...telemetryLogs.map(log => [
+        `"${log.id}"`,
+        `"${log.timestamp}"`,
+        `"${log.type}"`,
+        `"${JSON.stringify(log.payload || {}).replace(/"/g, '""')}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'axim_telemetry_export.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleExportCSV = () => {
     if (!partnerLeads || partnerLeads.length === 0) return;
 
@@ -104,8 +135,17 @@ export default function LeadManager() {
         >
           Restore Dismissed Cards
         </button>
+
+        <button
+          onClick={handleExportTelemetryCSV}
+          className="flex items-center gap-2 px-3 py-2 border border-axim-purple/20 text-axim-purple hover:bg-axim-purple/10 transition-colors rounded-sm text-[0.65rem] font-mono uppercase tracking-widest mr-2"
+        >
+          <SafeIcon icon={LuDownload} className="w-3 h-3" />
+          Export Telemetry Log
+        </button>
         <button
           onClick={handleExportCSV}
+
           className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white/10 transition-colors rounded-sm text-[0.65rem] font-mono uppercase tracking-widest"
         >
           <SafeIcon icon={LuDownload} className="w-3 h-3" />

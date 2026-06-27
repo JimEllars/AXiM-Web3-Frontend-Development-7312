@@ -12,6 +12,10 @@ if (typeof window !== 'undefined' && sessionStorage) {
 }
 export const telemetryStore = initialStore;
 
+export function getTelemetryStore() {
+  return [...telemetryStore];
+}
+
 let isFlushing = false;
 
 export function logTelemetry(type, payload) {

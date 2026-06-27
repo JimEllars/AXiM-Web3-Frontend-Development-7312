@@ -163,7 +163,7 @@ export default function AuthGateway() {
               type="button"
               onClick={handleMockWeb3Login}
               disabled={isWeb3Connecting || isProcessing}
-              className="w-full py-4 bg-transparent border border-axim-purple/50 text-axim-purple hover:bg-axim-purple hover:text-white font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50"
+              className="w-full py-4 bg-[#050505] border border-white/5 text-axim-purple hover:bg-axim-purple/10 hover:text-white hover:border-axim-purple/50 font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50 shadow-lg"
             >
               {isWeb3Connecting ? (
                 <>
