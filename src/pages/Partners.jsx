@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React from 'react';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
@@ -72,7 +73,7 @@ export default function Partners() {
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {detailedPartners.map((partner, idx) => (
-             <Link key={idx} to={partner.link} className={`group block bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${partner.bgHover}`}>
+             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full"><Link to={partner.link} className={`group block bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${partner.bgHover}`}>
                 <div className={`w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 ${partner.color === 'text-axim-purple' ? 'bg-gradient-to-br from-axim-purple to-indigo-600' : partner.color === 'text-[#DB2777]' ? 'bg-gradient-to-br from-[#DB2777] to-pink-600' : 'bg-gradient-to-br from-axim-gold to-yellow-600'}`}>
                   <SafeIcon icon={partner.icon} className={`w-6 h-6 ${partner.color === 'text-axim-gold' ? 'text-black' : 'text-white'}`} />
                 </div>
@@ -82,7 +83,7 @@ export default function Partners() {
                 <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3">
                   {partner.desc}
                 </p>
-             </Link>
+             </Link></motion.div>
           ))}
         </div>
       </section>
@@ -90,7 +91,7 @@ export default function Partners() {
       {/* Deep-Dive Alternating Layout Array */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16">
         {detailedPartners.map((partner, index) => (
-          <div key={index} className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
+          <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }} viewport={{ once: true, margin: "-50px" }} className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
             <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${partner.bgHover}`}>
                <div className={`absolute top-0 ${index % 2 === 0 ? 'right-0' : 'left-0'} w-64 h-64 opacity-10 blur-[60px] pointer-events-none ${partner.color.replace('text-', 'bg-')}`} />
                <SafeIcon icon={partner.icon} className={`w-12 h-12 mb-6 relative z-10 ${partner.color}`} />
@@ -118,7 +119,7 @@ export default function Partners() {
                   <SafeIcon icon={partner.icon} className={`w-24 h-24 opacity-20 ${partner.color}`} />
                </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </section>
     </div>

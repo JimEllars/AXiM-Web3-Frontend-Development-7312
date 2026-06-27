@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
@@ -15,8 +16,8 @@ export default function Tools() {
       title: "Demand Letter Engine",
       desc: "Generate legally formatted, aggressively structured demand letters instantly. Powered by a specialized AI framework designed to accelerate debt recovery and dispute resolution.",
       features: ["Custom dispute parameter ingestion", "Automated legal formatting", "Instant PDF extraction", "Zero-retainer cost structure"],
-      link: "https://quickdemandletter.com/start",
-      isExternal: true,
+      link: "/tools",
+      isExternal: false,
       icon: LuIcons.LuScale,
       color: "text-axim-gold",
       bgHover: "hover:border-axim-gold/30",
@@ -69,7 +70,7 @@ export default function Tools() {
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
         title="Internal Product Suite | AXiM Hub"
-        description="Access our exclusive enterprise app directory for token-gated and partner-access workflows powered by AXiM internal infrastructure." customSchema={toolsSchema}
+        description="Access our exclusive enterprise app directory to discover and launch standalone utilities engineered for operational efficiency." customSchema={toolsSchema}
       />
 
       {/* Hero Header */}
@@ -81,7 +82,7 @@ export default function Tools() {
               Internal <span className="text-axim-purple">AXiM Apps & Tools</span>
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
-              These tool matrices are engineered natively to run statelessly on top of secure network nodes. Access our exclusive enterprise app directory for token-gated and partner-access workflows.
+              These tool matrices are engineered natively to run statelessly on top of secure network nodes. Access our enterprise directory to discover and launch standalone operational utilities.
             </p>
           </div>
         </div>
@@ -91,7 +92,7 @@ export default function Tools() {
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {toolsList.map((tool, idx) => (
-             <div key={idx} className="h-full">
+             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
                {tool.isExternal ? (
                                   <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
@@ -105,7 +106,7 @@ export default function Tools() {
 
                  </Link>
                )}
-             </div>
+             </motion.div>
           ))}
         </div>
       </section>
@@ -113,7 +114,7 @@ export default function Tools() {
       {/* Deep-Dive Alternating Layout Array */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16">
         {toolsList.map((tool, index) => (
-          <div key={index} className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
+          <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }} viewport={{ once: true, margin: "-50px" }} className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
             <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${tool.bgHover}`}>
                <div className={`absolute top-0 ${index % 2 === 0 ? 'right-0' : 'left-0'} w-64 h-64 opacity-10 blur-[60px] pointer-events-none ${tool.color.replace('text-', 'bg-')}`} />
                <SafeIcon icon={tool.icon} className={`w-12 h-12 mb-6 relative z-10 ${tool.color}`} />
@@ -147,7 +148,7 @@ export default function Tools() {
                   <SafeIcon icon={tool.icon} className={`w-24 h-24 opacity-20 ${tool.color}`} />
                </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </section>
     </div>

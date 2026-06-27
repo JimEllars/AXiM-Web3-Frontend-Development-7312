@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import ArticleCard from '../components/ArticleCard';
 import { fetchPosts } from '../lib/wp-fetch';
@@ -159,9 +160,9 @@ export default function Home() {
                 Skip the legal retainer. Generate a structurally optimized, formal demand letter in seconds using our autonomous legal intake AI. Perfect for freelance disputes, property damage, and breach of contract.
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                 <a href="https://quickdemandletter.com/start" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_20px_rgba(255,234,0,0.2)] rounded-sm">
+                 <Link to="/tools" className="inline-flex items-center justify-center px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_20px_rgba(255,234,0,0.2)] rounded-sm">
                     Generate Letter - $4.00 <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
-                 </a>
+                 </Link>
               </div>
             </div>
             <div className="flex-1 w-full flex justify-center lg:justify-end">
