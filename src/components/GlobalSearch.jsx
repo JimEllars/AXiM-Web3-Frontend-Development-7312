@@ -144,10 +144,6 @@ export default function GlobalSearch() {
       if (item.path) {
         if (item.path.startsWith('http')) {
           let url = item.path;
-          if (item.path === 'https://quickndacontract.com/') {
-            url = 'https://quickndacontract.com/?via=axim_cmd_palette';
-            logTelemetry('NDA_FUNNEL_REDIRECT', { destination: 'quickndacontract_production', origin: 'axim_cmd_palette' });
-          }
           window.open(url, '_blank');
         } else {
           navigate(item.path);

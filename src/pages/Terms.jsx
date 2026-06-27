@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Terms() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   const [activeDoc, setActiveDoc] = useState('tos');
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <motion.div style={{ scaleX }} className="fixed top-0 left-0 right-0 h-1 bg-axim-purple z-50 origin-left" />
+
       <SEO title="Legal & Compliance | AXiM Systems" />
 
       <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
