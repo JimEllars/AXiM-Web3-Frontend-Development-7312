@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import { telemetryStore } from '../../lib/telemetry';
+import { getTelemetryStore } from '../../lib/telemetry';
 
 
 function AnimatedCounter({ value, prefix = '', suffix = '' }) {
