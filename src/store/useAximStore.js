@@ -74,6 +74,9 @@ export const useAximStore = create(
   wpDiagnosticError: null,
 
   nodeStatuses: null,
+  telemetryCollection: [],
+  logTelemetryEvent: (event) => set((state) => ({ telemetryCollection: [event, ...state.telemetryCollection].slice(0, 100) })),
+
   activeTelemetry: [
     { id: 1, type: 'marketing_loop', message: 'UPLINK_STABLE // ARCHIVE_SECURED', timestamp: Date.now() - 5000 },
     { id: 2, type: 'heartbeat', message: 'INTEGRITY_CHECK: PASSED', timestamp: Date.now() - 10000 },
@@ -244,6 +247,7 @@ export const useAximStore = create(
     {
       name: 'axim-operator-storage',
       partialize: (state) => ({
+        telemetryCollection: state.telemetryCollection,
         assets: state.assets,
         vaultedArtifacts: state.vaultedArtifacts,
         session: state.session

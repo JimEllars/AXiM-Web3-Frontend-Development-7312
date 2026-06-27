@@ -8,7 +8,6 @@ import { useOnyxStream } from '../../hooks/useOnyxStream';
 import { useState, useEffect } from 'react';
 
 const { LuMail, LuDownload } = LuIcons;
-import { telemetryStore } from '../../lib/telemetry';
 
 export default function LeadManager() {
   // partnerLeads is now managed via local state below

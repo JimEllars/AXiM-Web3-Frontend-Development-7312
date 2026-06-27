@@ -3,6 +3,7 @@ import useDebounce from '../hooks/useDebounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 import DOMPurify from 'isomorphic-dompurify';
 
 import * as LuIcons from 'react-icons/lu';
@@ -133,6 +134,8 @@ export default function GlobalSearch() {
 
 
     const handleSelect = (item) => {
+    const activeSessionOwner = useAximStore.getState().userSession?.user?.walletAddress || "GUEST_ANONYMOUS";
+    logTelemetry('SEARCH_RESULT_SELECTED', { path: item.path || item.slug || 'unknown', title: item.title || 'unknown', activeSessionOwner });
     setIsSynchronizing(true);
     setTimeout(() => {
       if (item.action === 'hard_reset') {
