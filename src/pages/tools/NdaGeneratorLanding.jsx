@@ -158,7 +158,7 @@ export default function NdaGeneratorLanding() {
           <div className="w-16 h-16 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.3)]">
             <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-white" />
           </div>
-          <div className="mb-4 inline-flex items-center gap-2 px-2 py-1 bg-axim-gold/10 border border-axim-gold/30 rounded-sm"><SafeIcon icon={LuIcons.LuLock} className="w-3 h-3 text-axim-gold" /><span className="text-[0.6rem] font-bold text-axim-gold uppercase tracking-widest">Token-Gated / Partner Access Required</span></div>
+
 
           <div className="flex justify-center mb-6">
             <button onClick={handleShareClick} className="px-4 py-2 bg-[#050505] border border-white/10 text-white hover:bg-white hover:text-black transition-colors rounded-sm shadow-md font-mono uppercase tracking-widest text-[0.65rem] flex items-center gap-2">
