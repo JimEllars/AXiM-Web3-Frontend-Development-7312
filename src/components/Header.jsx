@@ -65,6 +65,7 @@ export default function Header() {
             src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
             alt="AXiM Systems"
             className="h-8 w-auto object-contain group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(0,64,64,0.8)] transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+            width="120" height="32"
           />
         </Link>
 

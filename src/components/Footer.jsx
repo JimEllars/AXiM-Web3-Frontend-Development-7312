@@ -28,6 +28,8 @@ export default function Footer() {
                  src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
                  alt="AXiM Systems"
                  className="h-8 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+                 loading="lazy"
+                 width="120" height="32"
                />
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">

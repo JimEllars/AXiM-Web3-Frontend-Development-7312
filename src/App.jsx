@@ -14,7 +14,7 @@ import CookieConsent from './components/CookieConsent';
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
 import { supabase } from './lib/supabase';
-import { logTelemetry } from './lib/telemetry';
+import { logTelemetry, flushTelemetryQueue } from './lib/telemetry';
 import ScrollToTop from './components/ScrollToTop';
 
 
@@ -75,6 +75,24 @@ function App() {
   useEffect(() => {
     startTelemetryPolling();
   }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      flushTelemetryQueue(true);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    const telemetryInterval = setInterval(() => {
+      flushTelemetryQueue();
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      clearInterval(telemetryInterval);
+    };
+  }, []);
+
 
   useEffect(() => {
     let timeoutId;

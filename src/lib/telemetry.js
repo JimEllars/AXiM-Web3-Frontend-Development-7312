@@ -16,51 +16,54 @@ export function logTelemetry(type, payload) {
 
   useAximStore.getState().logTelemetryEvent(event);
 
-  // Optional: Dispatch a custom event so UI components can re-render if needed
   try {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new window.CustomEvent('axim-telemetry-update', { detail: event }));
     }
   } catch (e) { console.error("Telemetry error", e); }
 
-
   console.log(`[TELEMETRY: ${type}]`, payload);
 }
 
-export async function flushTelemetry() {
+export async function flushTelemetryQueue(force = false) {
   const telemetryStore = useAximStore.getState().telemetryCollection;
   if (isFlushing || telemetryStore.length === 0) return;
   isFlushing = true;
 
   try {
     const payload = JSON.stringify(telemetryStore);
+    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT;
+
+    if (!endpoint) {
+        console.log('[MOCK TELEMETRY SYNC]', payload);
+        useAximStore.setState({ telemetryCollection: [] });
+        return;
+    }
+
+    let success = false;
 
     // Use navigator.sendBeacon if available
     if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-      navigator.sendBeacon('/api/telemetry/sync', payload);
-    } else if (typeof window !== 'undefined' && window.fetch) {
+      success = navigator.sendBeacon(endpoint, payload);
+    }
+
+    if (!success && typeof window !== 'undefined' && window.fetch) {
       // Fallback to fetch
-      await fetch('/api/telemetry/sync', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload,
         keepalive: true,
       });
+      success = response.ok;
+    }
+
+    if (success) {
+      useAximStore.setState({ telemetryCollection: [] });
     }
   } catch (err) {
-    // Fail silently
+    // Fail silently, preserving cache for next sync
   } finally {
     isFlushing = false;
   }
-}
-
-// Setup background sync
-if (typeof window !== 'undefined') {
-  setInterval(() => {
-    flushTelemetry();
-  }, 60000); // 60 seconds
-
-  window.addEventListener('beforeunload', () => {
-    flushTelemetry();
-  });
 }
