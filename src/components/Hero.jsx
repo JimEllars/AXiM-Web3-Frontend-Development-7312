@@ -32,7 +32,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
-          Articles, AXiM Apps & Tools, & Learning Systems
+          Partner Ecosystem, AXiM Apps & Tools, & Learning Systems
         </p>
 
         {/* Updated CTAs */}
@@ -44,10 +44,10 @@ export default function Hero() {
             Explore Tools <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
           <Link
-            to="/articles"
+            to="/partners"
             className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm w-full sm:w-auto text-center"
           >
-            Explore Articles <SafeIcon icon={LuIcons.LuBookOpen} className="ml-3 w-4 h-4" />
+            Explore Partners <SafeIcon icon={LuIcons.LuNetwork} className="ml-3 w-4 h-4" />
           </Link>
         </div>
 

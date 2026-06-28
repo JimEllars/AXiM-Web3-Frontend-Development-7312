@@ -12,11 +12,14 @@ import { encryptPayload } from '../lib/crypto';
 
 export default function Consultation() {
   const { scrollYProgress } = useScroll();
+
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
+
+
 
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,7 +102,6 @@ export default function Consultation() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <motion.div style={{ scaleX }} className="fixed top-0 left-0 right-0 h-1 bg-axim-purple z-50 origin-left" />
 
       <SEO title="Web3 Infrastructure Consulting | AXiM Solutions" description="Connect directly with the AXiM team for Web3 and enterprise software consulting." />
 
