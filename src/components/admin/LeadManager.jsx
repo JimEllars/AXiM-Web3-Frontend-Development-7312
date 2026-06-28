@@ -36,7 +36,7 @@ export default function LeadManager() {
 
   useEffect(() => {
     const filterLeads = () => {
-      const leads = telemetryStore.filter(event =>
+      const leads = getTelemetryStore().filter(event =>
         event.type === 'AFFILIATE_CLICK' || event.type === 'PARTNER_LEAD_SUBMITTED'
       );
       setPartnerLeads(leads);

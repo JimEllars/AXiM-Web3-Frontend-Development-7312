@@ -32,7 +32,7 @@ function AnimatedCounter({ value, prefix = '', suffix = '' }) {
 }
 
 export default function ContentAnalytics() {
-  const [logs, setLogs] = useState([...telemetryStore]);
+  const [logs, setLogs] = useState(getTelemetryStore());
   const [selectedChannel, setSelectedChannel] = useState('All Channels');
 
   const channels = ['All Channels', 'Powur Solar', 'Chatbase Support', 'Make.com'];
@@ -67,7 +67,7 @@ export default function ContentAnalytics() {
 
 
   useEffect(() => {
-    const handleUpdate = () => setLogs([...telemetryStore]);
+    const handleUpdate = () => setLogs(getTelemetryStore());
     window.addEventListener('axim-telemetry-update', handleUpdate);
     return () => window.removeEventListener('axim-telemetry-update', handleUpdate);
   }, []);
