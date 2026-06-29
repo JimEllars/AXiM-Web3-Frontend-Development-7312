@@ -113,3 +113,20 @@ To enable dynamic configuration and SEO overrides at the edge without redeployin
    binding = "AXIM_CONFIG"
    id = "<YOUR_NAMESPACE_ID_HERE>"
    ```
+
+## 4. Telemetry Edge Worker Deployment
+
+To deploy the Telemetry Edge Worker located at `workers/telemetry-worker.js`, create or update a `wrangler.toml` file in the `workers` directory (or use your project's main wrangler config) and map it to your desired route for telemetry, such as `telemetry.axim.us.com`.
+
+Example `wrangler.toml` for the telemetry worker:
+```toml
+name = "axim-telemetry-worker"
+main = "telemetry-worker.js"
+compatibility_date = "2024-03-20"
+
+routes = [
+  { pattern = "telemetry.axim.us.com", custom_domain = true }
+]
+```
+
+Run `wrangler deploy` from the directory containing `telemetry-worker.js` and its `wrangler.toml` to deploy the worker.

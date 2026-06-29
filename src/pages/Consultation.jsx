@@ -8,6 +8,7 @@ import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 import { sanitizeInput } from '../lib/sanitize';
 import { encryptPayload } from '../lib/crypto';
+import { useAximStore } from '../store/useAximStore';
 
 
 export default function Consultation() {
@@ -44,8 +45,17 @@ export default function Consultation() {
     setIsSubmitting(true);
     setNetworkFault(false);
 
+
+    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    if (!turnstileResponse) {
+      useAximStore.getState().showToast('Please complete the security challenge.', 'error');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       // 1. Sanitize Data
+
       const cleanData = {
         name: sanitizeInput(formData.name),
         email: sanitizeInput(formData.email),
@@ -206,7 +216,11 @@ export default function Consultation() {
                       <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
                     </div>
 
-                    <button disabled={isSubmitting} type="submit" className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
+
+                    <div className="cf-turnstile mt-4" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+
+                    <button disabled={isSubmitting} type="submit"
+ className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
                       {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> ENCRYPTING PAYLOAD...</> : 'Submit Consultation Request'}
                     </button>
                   </form>
