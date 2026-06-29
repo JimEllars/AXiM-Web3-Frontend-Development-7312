@@ -31,8 +31,8 @@ export default function Header() {
       path: '/tools',
       dropdown: [
         { name: 'Mutual NDA Generator', path: '/tools/nda-generator', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
-        { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
-        { name: 'Pay Stub System', path: '/tools/paystub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
+        { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start?via=axim_hub', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
+        { name: 'Pay Stub System', path: '/tools/pay-stub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
       ]
     },
     { name: 'Articles', path: '/articles' },
