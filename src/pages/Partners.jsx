@@ -70,7 +70,7 @@ export default function Partners() {
       </section>
 
       {/* High-Contrast Grid Hub */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24 overflow-x-hidden md:overflow-visible">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {detailedPartners.map((partner, idx) => (
              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full"><Link to={partner.link} className={`group block bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${partner.bgHover}`}>
@@ -89,7 +89,7 @@ export default function Partners() {
       </section>
 
       {/* Deep-Dive Alternating Layout Array */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16">
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16 overflow-x-hidden md:overflow-visible">
         {detailedPartners.map((partner, index) => (
           <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }} viewport={{ once: true, margin: "-50px" }} className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
             <div className={`flex-1 w-full bg-[#0F172A] border border-white/5 p-12 rounded-xl shadow-2xl relative overflow-hidden transition-colors ${partner.bgHover}`}>
