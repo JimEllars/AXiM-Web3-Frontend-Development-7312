@@ -140,7 +140,7 @@ export default function PayStubLanding() {
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#DB2777]/20 via-transparent to-[#DB2777]/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">An official utility within the AXiM Apps & Tools suite</span></div></div>
+          <div className="mb-6"></div>
           <div className="w-16 h-16 bg-gradient-to-br from-[#DB2777] to-red-600 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(219,39,119,0.3)]">
             <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-white" />
           </div>

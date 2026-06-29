@@ -10,14 +10,13 @@ import { useAximStore } from '../store/useAximStore';
 
 export default function Tools() {
   const { session } = useAximAuth();
-  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const toolsList = [
     {
       title: "Demand Letter Engine",
       desc: "Generate legally formatted, aggressively structured demand letters instantly. Powered by a specialized AI framework designed to accelerate debt recovery and dispute resolution.",
       features: ["Custom dispute parameter ingestion", "Automated legal formatting", "Instant PDF extraction", "Zero-retainer cost structure"],
-      link: "/tools",
-      isExternal: false,
+      link: "https://quickdemandletter.com/start?via=axim_hub",
+      isExternal: true,
       icon: LuIcons.LuScale,
       color: "text-axim-gold",
       bgHover: "hover:border-axim-gold/30",

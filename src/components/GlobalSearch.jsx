@@ -20,8 +20,8 @@ const STATIC_ROUTES = [
   { title: "Chatbase AI", path: "/partners/chatbase", category: "Partners" },
   { title: "Powur Solar", path: "/partners/powur-solar", category: "Partners" },
   { title: "Powur Agency", path: "/partners/powur-join", category: "Partners" },
-  { title: "Launch NDA Generator", path: "/tools/nda-generator", category: "Apps & Tools" },
-  { title: "Demand Letter Generator", path: "/tools", category: "Apps & Tools" },
+  { title: "Launch NDA Generator", path: "https://quickndacontract.com/?via=axim_hub", category: "Apps & Tools", isExternal: true },
+  { title: "Demand Letter Generator", path: "https://quickdemandletter.com/start?via=axim_hub", category: "Apps & Tools", isExternal: true },
   { title: "Pay Stub Generator", path: "/tools/pay-stub", category: "Apps & Tools" },
 
   { title: "My Account", path: "/profile", category: "My Account" },

@@ -15,7 +15,7 @@ export default function NdaGeneratorLanding() {
     logTelemetry('APP_TOOL_ACCESSED', { toolName: 'nda_generator' });
   }, []);
   const [showWizard, setShowWizard] = useState(false);
-  const NDA_PRODUCTION_TARGET = 'https://quickndacontract.com/?via=axim_apps_and_tools';
+  const NDA_PRODUCTION_TARGET = 'https://quickndacontract.com/?via=axim_hub';
 
   const handleOutboundClick = (e) => {
     e.preventDefault();
@@ -153,7 +153,7 @@ export default function NdaGeneratorLanding() {
       <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-flex flex-col items-center gap-4 mb-6"><div className="inline-flex items-center gap-2 px-3 py-1 bg-[#004040]/30 border border-[#004040] rounded-sm shadow-[0_0_15px_rgba(0,64,64,0.4)]"><SafeIcon icon={LuIcons.LuShieldCheck} className="w-3 h-3 text-axim-purple" /><span className="text-[0.6rem] font-bold text-white uppercase tracking-widest">An official utility within the AXiM Apps & Tools suite</span></div></div>
+          <div className="mb-6"></div>
           <div className="w-16 h-16 bg-gradient-to-br from-axim-purple to-[#DB2777] rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.3)]">
             <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-white" />
           </div>
