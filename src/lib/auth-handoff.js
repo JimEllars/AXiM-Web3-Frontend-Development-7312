@@ -30,3 +30,8 @@ export function generateWorkerLaunchUrl(workerSubdomain, userSession) {
     throw err;
   }
 }
+
+// Added to support generateHandoffLink as requested
+export function generateHandoffLink(subdomain, token) {
+  return `https://${subdomain}.axim.us.com/?auth_token=${token || ''}`;
+}
