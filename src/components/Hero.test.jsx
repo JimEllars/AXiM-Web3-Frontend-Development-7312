@@ -36,15 +36,15 @@ describe('Hero Component', () => {
     );
 
     // Check main title
-    assert.ok(screen.getByText(/Work/));
-    assert.ok(screen.getAllByText(/Smarter/)[0]);
+    assert.ok(screen.getByText(/Enterprise Systems/));
+    assert.ok(screen.getAllByText(/& Strategic Consulting./)[0]);
 
     // Check description paragraph
-    assert.ok(screen.getByText(/Partner Ecosystem, AXiM Apps & Tools, & Learning Systems/));
+    assert.ok(screen.getByText(/Streamline your business operations with our suite of enterprise tools and expert consultation services./));
 
     // Check CTA buttons exist
-    assert.ok(screen.getAllByText(/AXiM Apps & Tools/)[0]);
-    assert.ok(screen.getByText(/Explore Partners/));
+    assert.ok(screen.getAllByText(/Explore Tools/)[0]);
+    assert.ok(screen.getByText(/Consultation/));
   });
 
 });

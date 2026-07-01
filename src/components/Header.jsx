@@ -4,7 +4,6 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Header() {
-  const [announcementVisible, setAnnouncementVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -54,22 +53,7 @@ export default function Header() {
 
   return (
     <>
-      {announcementVisible && (
-        <div className="w-full bg-gradient-to-r from-axim-purple to-[#DB2777] py-2 relative z-[60]">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-center items-center relative">
-            <p className="text-white text-[10px] md:text-sm font-bold tracking-wide text-center uppercase">
-              AXiM 2.0 Update: All Web3 Tools & Enterprise Infrastructure are now 100% Publicly Available.
-            </p>
-            <button
-              onClick={() => setAnnouncementVisible(false)}
-              className="absolute right-6 lg:right-8 text-white/70 hover:text-white transition-colors"
-              aria-label="Dismiss Announcement"
-            >
-              <SafeIcon icon={LuIcons.LuX} className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+
       <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-[#004040]/30 py-4' : 'bg-transparent py-6'

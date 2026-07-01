@@ -1,5 +1,7 @@
 import ProtectedRoute from './components/ProtectedRoute';
 import React, { useEffect, Suspense, lazy } from 'react';
+import SafeIcon from './common/SafeIcon';
+import * as LuIcons from 'react-icons/lu';
 import GlobalLoader from './components/GlobalLoader';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -246,6 +248,15 @@ function App() {
           </Suspense>
         </AnimatePresence>
       </main>
+
+      <Link
+        to="/support"
+        className="fixed bottom-6 right-6 z-[90] bg-zinc-900 text-white p-4 rounded-full shadow-lg hover:bg-zinc-800 transition-colors mb-12 md:mb-0 border border-white/10"
+        aria-label="Support"
+      >
+        <SafeIcon icon={LuIcons.LuLifeBuoy} className="w-6 h-6" />
+      </Link>
+
       <Footer />
     </div>
   );
