@@ -205,7 +205,7 @@ function App() {
       )}
 
       {/* CRITICAL FIX:
-        <ProactiveBanner /> and <EngagementGuard /> have been PURGED from this global root.
+        <EngagementGuard /> has been PURGED from this global root.
         They must only load on page-level components to preserve the top-of-page visual hierarchy.
       */}
 

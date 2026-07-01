@@ -114,6 +114,29 @@ To enable dynamic configuration and SEO overrides at the edge without redeployin
    id = "<YOUR_NAMESPACE_ID_HERE>"
    ```
 
+
+### KV Namespace Bindings
+
+To leverage edge caching for RPC calls and SEO meta tags, the following KV Namespaces must be bound to your worker.
+
+*   **WEB3_RPC_CACHE**
+    *   ID: `1fe3e2e590094e638700b4b328ebabf0`
+*   **FRONTEND_SEO_CACHE**
+    *   ID: `ce6cf5a77ca2415a9941cc0247b86d6e`
+
+The `wrangler.toml` (if used locally) or the Cloudflare Dashboard must map these bindings to the exact variables `env.WEB3_RPC_CACHE` and `env.FRONTEND_SEO_CACHE`.
+
+Example `wrangler.toml` bindings:
+```toml
+[[kv_namespaces]]
+binding = "WEB3_RPC_CACHE"
+id = "1fe3e2e590094e638700b4b328ebabf0"
+
+[[kv_namespaces]]
+binding = "FRONTEND_SEO_CACHE"
+id = "ce6cf5a77ca2415a9941cc0247b86d6e"
+```
+
 ## 4. Telemetry Edge Worker Deployment
 
 To deploy the Telemetry Edge Worker located at `workers/telemetry-worker.js`, create or update a `wrangler.toml` file in the `workers` directory (or use your project's main wrangler config) and map it to your desired route for telemetry, such as `telemetry.axim.us.com`.

@@ -9,7 +9,6 @@ import NewsFeed from '../components/NewsFeed';
 import Ecosystem from '../components/Ecosystem';
 import SEO from '../components/SEO';
 import PartnerPromo from '../components/PartnerPromo';
-import ProactiveBanner from '../components/ProactiveBanner';
 import EngagementGuard from '../components/EngagementGuard';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -189,7 +188,6 @@ export default function Home() {
           <NewsFeed limit={12} />
         </section>
 
-        <ProactiveBanner />
         <EngagementGuard />
         <Ecosystem />
         <Reviews />
