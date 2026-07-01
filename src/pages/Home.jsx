@@ -81,7 +81,7 @@ export default function Home() {
         <Hero />
 
         {/* 1. Daily News Feed */}
-        {dailyNews.length > 0 && (
+        {(dailyNews.length > 0 || isNewsLoading) && (
           <section className="py-16 relative overflow-hidden bg-bg-void">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
@@ -125,7 +125,7 @@ export default function Home() {
         <section className="py-24 relative z-10 w-full">
           <FeaturedArticles
             title="Software Spotlight"
-            categorySlug="app-software"
+            categorySlug="software-spotlight"
             limit={6}
             excludeIds={excludeDailyNewsIds}
             excludeCategories={strictCategoryExclusions}
