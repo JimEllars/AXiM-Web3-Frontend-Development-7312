@@ -58,6 +58,21 @@ export default {
 
     // Only intercept Bot traffic hitting an Article route
     if (isBot && url.pathname.startsWith('/article/')) {
+      // SEO CACHE READ
+      if (env && env.FRONTEND_SEO_CACHE) {
+        try {
+          const cachedSEO = await env.FRONTEND_SEO_CACHE.get(request.url);
+          if (cachedSEO) {
+            return new Response(cachedSEO, {
+              status: 200,
+              headers: { 'Content-Type': 'text/html' }
+            });
+          }
+        } catch (e) {
+          console.error("SEO Cache Read Error:", e);
+        }
+      }
+
       const slug = url.pathname.replace('/article/', '').replace('/', '');
 
       try {
@@ -75,7 +90,7 @@ export default {
           const rawResponse = await fetch(request);
 
           // Use HTMLRewriter to inject the accurate metadata in-flight
-          return new HTMLRewriter()
+          const rewrittenResponse = new HTMLRewriter()
             .on('title', { element(e) { e.setInnerContent(cleanTitle); } })
             .on('meta[name="description"]', { element(e) { e.setAttribute('content', cleanDesc); } })
             .on('meta[property="og:title"]', { element(e) { e.setAttribute('content', cleanTitle); } })
@@ -84,6 +99,18 @@ export default {
             .on('meta[property="twitter:title"]', { element(e) { e.setAttribute('content', cleanTitle); } })
             .on('meta[property="twitter:image"]', { element(e) { e.setAttribute('content', imageUrl); } })
             .transform(rawResponse);
+
+          // SEO CACHE WRITE
+          if (env && env.FRONTEND_SEO_CACHE) {
+            try {
+              const htmlText = await rewrittenResponse.clone().text();
+              await env.FRONTEND_SEO_CACHE.put(request.url, htmlText, { expirationTtl: 86400 });
+            } catch (e) {
+              console.error("SEO Cache Write Error:", e);
+            }
+          }
+
+          return rewrittenResponse;
         }
       } catch (err) {
         console.error("Edge Intercept Failed:", err);
