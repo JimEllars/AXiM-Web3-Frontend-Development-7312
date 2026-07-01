@@ -36,8 +36,7 @@ describe('Hero Component', () => {
     );
 
     // Check main title
-    assert.ok(screen.getByText(/Enterprise Systems/));
-    assert.ok(screen.getAllByText(/& Strategic Consulting./)[0]);
+    assert.ok(screen.getByText(/Work Smarter\./));
 
     // Check description paragraph
     assert.ok(screen.getByText(/Streamline your business operations with our suite of enterprise tools and expert consultation services./));

@@ -22,10 +22,7 @@ export default function Hero() {
         <div className="w-full flex flex-col items-center justify-center text-center mb-6">
           <div className="animate-fade-in-up animation-delay-100 w-full flex flex-col items-center justify-center">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] m-0 p-0 text-center flex flex-col items-center">
-              <span className="block text-white text-center">Enterprise Systems</span>
-              <span className="block text-center text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] pb-2">
-                & Strategic Consulting.
-              </span>
+              <span className="block text-white text-center">Work Smarter.</span>
             </h1>
           </div>
         </div>
