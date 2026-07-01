@@ -48,11 +48,14 @@ export default function FeaturedArticles({ title = "Featured Articles", category
   if (isLoading) {
     return (
       <div className="w-full max-w-7xl mx-auto py-16 px-6">
-        <div className="w-48 h-8 bg-white/5 rounded animate-pulse mb-8" />
+        <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
+          <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
+          {title}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="min-h-[300px] bg-[#050505] border border-white/5 rounded animate-pulse" />
-          <div className="min-h-[300px] bg-[#050505] border border-white/5 rounded animate-pulse" />
-          <div className="min-h-[300px] bg-[#050505] border border-white/5 rounded animate-pulse" />
+          {[1, 2, 3].map(i => (
+            <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />
+          ))}
         </div>
       </div>
     );

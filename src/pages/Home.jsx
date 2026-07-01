@@ -24,7 +24,7 @@ export default function Home() {
     const fetchDailyNews = async () => {
       try {
         // Step 1: Capture the exact ID for the Daily News category
-        const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=daily-news`);
+        const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=daily-news&timestamp=${Date.now()}`);
         const cats = await res.json();
 
         if (cats && cats.length > 0) {
@@ -99,16 +99,6 @@ export default function Home() {
           </section>
         )}
 
-        {/* 2. Featured Category (Strictly Isolated) */}
-        <section className="py-24 relative z-10 w-full">
-          <FeaturedArticles
-            title="Featured Articles"
-            categorySlug="featured"
-            limit={6}
-            excludeIds={excludeDailyNewsIds}
-            excludeCategories={strictCategoryExclusions}
-          />
-        </section>
 
         {/* 3. Partner Break: Make */}
         <PartnerPromo

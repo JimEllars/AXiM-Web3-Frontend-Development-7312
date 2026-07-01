@@ -292,6 +292,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
 
 export const fetchPosts = async (params = {}) => {
+  params._ts = Date.now();
   const queryParams = new URLSearchParams(params).toString();
   const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?_embed=1&${queryParams}`);
 
