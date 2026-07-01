@@ -45,7 +45,7 @@ describe('Home Page Component', () => {
     );
 
     // Verify Hero section
-    const el = await screen.findAllByText(/Work/i);
+    const el = await screen.findAllByText(/Work Smarter/i);
     assert.ok(el.length > 0);
   });
 });
