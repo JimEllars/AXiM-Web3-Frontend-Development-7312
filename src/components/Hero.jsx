@@ -22,9 +22,9 @@ export default function Hero() {
         <div className="w-full flex flex-col items-center justify-center text-center mb-6">
           <div className="animate-fade-in-up animation-delay-100 w-full flex flex-col items-center justify-center">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] m-0 p-0 text-center flex flex-col items-center">
-              <span className="block text-white text-center">Work</span>
+              <span className="block text-white text-center">Enterprise Systems</span>
               <span className="block text-center text-transparent bg-clip-text bg-gradient-to-r from-axim-purple via-pink-500 to-[#DB2777] pb-2">
-                Smarter.
+                & Strategic Consulting.
               </span>
             </h1>
           </div>
@@ -32,7 +32,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
-          Partner Ecosystem, AXiM Apps & Tools, & Learning Systems
+          Streamline your business operations with our suite of enterprise tools and expert consultation services.
         </p>
 
         {/* Updated CTAs */}
@@ -44,10 +44,10 @@ export default function Hero() {
             Explore Tools <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
           <Link
-            to="/partners"
+            to="/consultation"
             className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm w-full sm:w-auto text-center"
           >
-            Explore Partners <SafeIcon icon={LuIcons.LuNetwork} className="ml-3 w-4 h-4" />
+            Consultation <SafeIcon icon={LuIcons.LuPhone} className="ml-3 w-4 h-4" />
           </Link>
         </div>
 
