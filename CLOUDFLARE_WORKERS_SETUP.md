@@ -115,6 +115,24 @@ To enable dynamic configuration and SEO overrides at the edge without redeployin
    ```
 
 
+
+### Production JSON Bindings Array
+
+For CI/CD pipelines deploying directly via the Cloudflare API, the exact JSON binding array required is:
+
+```json
+[
+  {
+    "binding": "WEB3_RPC_CACHE",
+    "id": "1fe3e2e590094e638700b4b328ebabf0"
+  },
+  {
+    "binding": "FRONTEND_SEO_CACHE",
+    "id": "ce6cf5a77ca2415a9941cc0247b86d6e"
+  }
+]
+```
+
 ### KV Namespace Bindings
 
 To leverage edge caching for RPC calls and SEO meta tags, the following KV Namespaces must be bound to your worker.
