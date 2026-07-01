@@ -3,7 +3,7 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import SafeIcon from './common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import GlobalLoader from './components/GlobalLoader';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Footer from './components/Footer';
 import GlobalTicker from './components/GlobalTicker';

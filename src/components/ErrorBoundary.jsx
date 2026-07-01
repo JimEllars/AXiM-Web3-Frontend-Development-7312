@@ -15,8 +15,8 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     logTelemetry('CRITICAL_UI_FAULT', {
-      error: error.message,
-      componentStack: errorInfo.componentStack
+      message: error.message,
+      stack: errorInfo.componentStack
     });
   }
 
