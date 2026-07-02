@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import ArticleCard from '../components/ArticleCard';
 import { fetchPosts } from '../lib/wp-fetch';
@@ -23,25 +24,15 @@ export default function Home() {
     let isMounted = true;
     const fetchDailyNews = async () => {
       try {
-        // Step 1: Capture the exact ID for the Daily News category
-        const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=daily-news&timestamp=${Date.now()}`);
-        const cats = await res.json();
+        if (isMounted) setDailyNewsCategoryId(707); // Step 1: Force Category ID
 
-        if (cats && cats.length > 0) {
-          const catId = cats[0].id;
-          if (isMounted) setDailyNewsCategoryId(catId);
-
-          // Step 2: Fetch the top 3 posts for the Hero Feed
-          const posts = await fetchPosts({ categories: catId, per_page: 3, _embed: 1 });
-          if (isMounted) {
-            setDailyNews(posts || []);
-            setIsNewsLoading(false);
-          }
-        } else {
-          if (isMounted) setIsNewsLoading(false);
+        const posts = await fetchPosts({ categories: 707, per_page: 3, _embed: 1 });
+        if (isMounted) {
+          setDailyNews(posts || []);
         }
       } catch (err) {
         console.error("Failed to load daily news", err);
+      } finally {
         if (isMounted) setIsNewsLoading(false);
       }
     };
@@ -114,7 +105,7 @@ export default function Home() {
         />
 
         {/* 4. Spotlight Category (Strictly Isolated) */}
-        <section className="py-24 relative z-10 w-full">
+        <motion.div initial={{opacity: 0, y: 20}} whileInView={{opacity: 1, y: 0}} viewport={{once: true}} transition={{duration: 0.5}} className="py-24 relative z-10 w-full">
           <FeaturedArticles
             title="Software Spotlight"
             categorySlug="software-spotlight"
@@ -122,7 +113,7 @@ export default function Home() {
             excludeIds={excludeDailyNewsIds}
             excludeCategories={strictCategoryExclusions}
           />
-        </section>
+        </motion.div>
 
         {/* 5. Partner Break: Powur */}
         <PartnerPromo

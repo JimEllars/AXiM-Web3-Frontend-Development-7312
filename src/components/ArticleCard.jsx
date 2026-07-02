@@ -1,4 +1,5 @@
 import React from 'react';
+import WPImage from './WPImage';
 import { Link } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
@@ -54,7 +55,7 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
       <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#0F172A] border-b border-white/10 flex flex-col justify-end p-6">
 
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
-        <img
+        <WPImage
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
           className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
