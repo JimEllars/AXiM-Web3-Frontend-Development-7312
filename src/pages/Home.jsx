@@ -72,8 +72,7 @@ export default function Home() {
         <Hero />
 
         {/* 1. Daily News Feed */}
-        {(dailyNews.length > 0 || isNewsLoading) && (
-          <section className="py-16 relative overflow-hidden bg-bg-void">
+        <section className="py-16 relative overflow-hidden bg-bg-void">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
                 <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
@@ -90,7 +89,6 @@ export default function Home() {
               </div>
             </div>
           </section>
-        )}
 
 
         {/* 3. Partner Break: Make */}
