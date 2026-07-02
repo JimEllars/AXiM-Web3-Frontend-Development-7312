@@ -3,6 +3,22 @@ import { logTelemetry } from '../lib/telemetry';
 
 export default function Chatbot() {
   useEffect(() => {
+    // Inject Chatbase script securely
+    if (!window.chatbaseConfig) {
+      window.chatbaseConfig = {
+        chatbotId: "xYiQ2yI2XeGmRLzRUkNvP",
+      };
+    }
+    if (!document.querySelector('script[src="https://www.chatbase.co/embed.min.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://www.chatbase.co/embed.min.js';
+      script.async = true;
+      script.defer = true;
+      script.setAttribute('chatbotId', 'xYiQ2yI2XeGmRLzRUkNvP');
+      script.setAttribute('domain', 'www.chatbase.co');
+      document.body.appendChild(script);
+    }
+
     // Attempt to track when the Chatbase widget is opened
     // The widget injects a button with id 'chatbase-bubble-button' or similar,
     // but the most reliable cross-platform way without exact DOM structure is
@@ -43,12 +59,12 @@ export default function Chatbot() {
         } catch(e) { /* ignore parse error */ }
       } else if (event.data && typeof event.data === 'object') {
           // Alternatively if they send an object
-          if (event.data.type === 'chatbase_message_sent' || event.data.event === 'chatbase_message_sent') {
+          if (event.data?.type === 'chatbase_message_sent' || event.data?.event === 'chatbase_message_sent') {
              logTelemetry('SUPPORT_INQUIRY_FIRED', {
                platform: 'chatbase',
-               queryCharCount: event.data.message?.length || 0,
+               queryCharCount: event.data?.message?.length || 0,
                source: 'chatbase_widget',
-               messageLength: event.data.message?.length || 0
+               messageLength: event.data?.message?.length || 0
             });
           }
       }
