@@ -61,7 +61,17 @@ export default function FeaturedArticles({ title = "Featured Articles", category
     );
   }
 
-  if (!articles || articles.length === 0) return null;
+  if (!articles || articles.length === 0) {
+    return (
+      <div className="w-full max-w-7xl mx-auto py-16 px-6">
+        <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
+          <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
+          {title}
+        </h2>
+        <div className="w-full bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto py-16 px-6">

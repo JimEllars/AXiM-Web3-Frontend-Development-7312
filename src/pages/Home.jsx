@@ -91,6 +91,8 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {isNewsLoading ? (
                   [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
+                ) : dailyNews.length === 0 ? (
+                  <div className="col-span-1 md:col-span-3 bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]</div>
                 ) : (
                   dailyNews.map(article => <ArticleCard key={article.id} article={article} />)
                 )}
