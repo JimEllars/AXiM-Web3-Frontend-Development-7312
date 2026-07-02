@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  useState , useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -12,6 +12,19 @@ import { useAximStore } from '../store/useAximStore';
 
 
 export default function Consultation() {
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   const { scrollYProgress } = useScroll();
 
   const scaleX = useSpring(scrollYProgress, {
