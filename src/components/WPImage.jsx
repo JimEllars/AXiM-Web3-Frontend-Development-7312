@@ -10,17 +10,24 @@ export default function WPImage({ src, alt, className, post, ...props }) {
     setHasError(true);
   };
 
-  if (hasError || !post?._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
+    const defaultFallback = fallbackImage;
+  const mediaUrl =
+    post?._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+    post?.featured_media_src_url ||
+    post?.jetpack_featured_media_url ||
+    post?.yoast_head_json?.og_image?.[0]?.url ||
+    null;
+
+  const finalMediaUrl = mediaUrl || defaultFallback;
+  const imageSrc = src ? src : finalMediaUrl;
+
+  if (hasError || !imageSrc || imageSrc === fallbackImage) {
     return (
       <div className={`aspect-video bg-onyx-800 border-b border-white/5 flex items-center justify-center text-xs text-onyx-400 font-mono ${className || ''}`}>
         MEDIA OFFLINE
       </div>
     );
   }
-
-  const defaultFallback = fallbackImage;
-  const mediaUrl = post?._embedded?.['wp:featuredmedia']?.[0]?.source_url || post?.featured_media_src_url || defaultFallback;
-  const imageSrc = src ? src : mediaUrl;
 
   return (
     <motion.img

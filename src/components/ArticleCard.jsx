@@ -18,9 +18,11 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
     year: 'numeric'
   });
 
-  const rawExcerpt = article.excerpt?.rendered || "AXiM Systems Internal Briefing Data. Secure payload initialized.";
+  const displayExcerpt = article?.excerpt?.rendered || article?.excerpt || article?.content?.rendered || article?.content || "AXiM Systems Internal Briefing Data. Secure payload initialized.";
+  const rawExcerpt = displayExcerpt;
   const cleanExcerpt = decodeHtmlEntitiesAndStripTags(rawExcerpt);
-  const cleanTitle = decodeHtmlEntitiesAndStripTags(article.title?.rendered || "Intelligence Briefing");
+  const displayTitle = article?.title?.rendered || article?.title || "Untitled Article";
+  const cleanTitle = decodeHtmlEntitiesAndStripTags(displayTitle);
 
   // Highly Saturated Overlays - Lighter colored top, fading into deep dark slate at the bottom for text contrast
   const overlayGradients = [
@@ -47,7 +49,7 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
       }
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(() => {
-        useAximStore.getState().showToast('Link copied to clipboard!', 'success');
+        useAximStore.getState().addToast('Link copied to clipboard!', 'success');
         logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}`, method: 'clipboard' });
       }).catch((err) => {
         console.error('Failed to copy link', err);

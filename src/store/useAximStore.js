@@ -10,6 +10,12 @@ export const useAximStore = create(
   globalLoadingMessage: '',
   setGlobalLoading: (isLoading, message = '') => set({ globalLoading: isLoading, globalLoadingMessage: message }),
 
+  toasts: [],
+  addToast: (message, type = 'info') => {
+    const id = Date.now();
+    set((state) => ({ toasts: [...state.toasts, { id, message, type }] }));
+  },
+  removeToast: (id) => set((state) => ({ toasts: state.toasts.filter(t => t.id !== id) })),
   toast: null,
   notification: null,
   setNotification: (message) => {
