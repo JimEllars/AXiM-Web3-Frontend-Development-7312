@@ -68,8 +68,9 @@ export default function Tools() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Internal Product Suite | AXiM Hub"
-        description="Access our exclusive enterprise app directory to discover and launch standalone utilities engineered for operational efficiency." customSchema={toolsSchema}
+        title="AXiM Tools & Infrastructure | Work Smarter"
+        description="Access our suite of enterprise Web3 tools, NDA generators, and operational infrastructure."
+        customSchema={toolsSchema}
       />
 
       {/* Hero Header */}

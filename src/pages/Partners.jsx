@@ -52,8 +52,8 @@ export default function Partners() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Partner Network | AXiM Systems"
-        description="Integrate with AXiM's vetted network of enterprise software providers, visual automation engines, and decentralized infrastructure partners."
+        title="AXiM Partner Ecosystem | Scale Your Operations"
+        description="Join the AXiM partner ecosystem. Connect with Make, Powur Solar, and Chatbase."
       />
 
       {/* Hero Header */}
