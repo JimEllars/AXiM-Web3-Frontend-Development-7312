@@ -29,9 +29,9 @@ export default function Home() {
       try {
         if (isMounted) setDailyNewsCategoryId(707); // Step 1: Force Category ID
 
-        const posts = await fetchPosts({ categories: 707, per_page: 3, _embed: 1 });
+        const data = await fetchPosts({ categories: 707, per_page: 3, _embed: 1 });
         if (isMounted) {
-          setDailyNews(posts || []);
+          setDailyNews(data || []);
         }
       } catch (err) {
         console.error("Failed to load daily news", err);
@@ -88,7 +88,7 @@ export default function Home() {
                   <div className="col-span-1 md:col-span-3 bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]
                     <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
                 ) : (
-                  dailyNews.map(article => <ArticleCard key={article.id} article={article} />)
+                  dailyNews.map((post) => <ArticleCard article={post} key={post.id}/>)
                 )}
               </div>
             </div>

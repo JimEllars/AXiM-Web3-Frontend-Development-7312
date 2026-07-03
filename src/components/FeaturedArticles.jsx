@@ -19,7 +19,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
     const loadArticles = async () => {
       setIsLoading(true);
       try {
-        const categoryId = await fetchCategoryBySlug(categorySlug);
+        const categoryId = categorySlug ? await fetchCategoryBySlug(categorySlug) : null;
         const params = { per_page: limit };
         if (categoryId) params.categories = categoryId;
 
@@ -36,10 +36,10 @@ export default function FeaturedArticles({ title = "Featured Articles", category
         const data = await fetchPosts(params);
         if (isMounted) {
           setArticles(data || []);
-          setIsLoading(false);
         }
       } catch (error) {
         console.error(`[WP_FEATURED] Query failed for slug: ${categorySlug}`, error);
+      } finally {
         if (isMounted) setIsLoading(false);
       }
     };

@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function Footer() {
 
+  const [clickCount, setClickCount] = React.useState(0);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const isExternalTrackingActive = queryParams.has('via') || queryParams.has('utm_source');
@@ -87,13 +88,21 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
-            &copy; {currentYear} AXiM Systems. All rights reserved.
+            <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Systems. All rights reserved.</span>
           </p>
           <div className="flex gap-6">
              <Link to="/terms" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
+      {clickCount >= 5 && (
+        <div className="fixed bottom-0 left-0 w-full p-4 bg-red-900 text-white font-mono text-xs z-[9999] overflow-auto max-h-64 border-t border-red-500">
+          <strong>[ DIAGNOSTIC PAYLOAD ERROR ]</strong>
+          <pre className="mt-2 whitespace-pre-wrap">
+            {window.axim_debug_last_error ? JSON.stringify(window.axim_debug_last_error, null, 2) : "No error payloads found in window.axim_debug_last_error."}
+          </pre>
+        </div>
+      )}
     </footer>
   );
 }
