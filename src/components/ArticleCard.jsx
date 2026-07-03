@@ -5,6 +5,7 @@ import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { decodeHtmlEntitiesAndStripTags } from '../lib/sanitize';
 
 export default function ArticleCard({ article, index = 0, priority = false }) {
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
@@ -18,7 +19,8 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
   });
 
   const rawExcerpt = article.excerpt?.rendered || "AXiM Systems Internal Briefing Data. Secure payload initialized.";
-  const cleanExcerpt = rawExcerpt.replace(/<[^>]+>/g, '').split(' ').slice(0, 20).join(' ') + '...';
+  const cleanExcerpt = decodeHtmlEntitiesAndStripTags(rawExcerpt);
+  const cleanTitle = decodeHtmlEntitiesAndStripTags(article.title?.rendered || "Intelligence Briefing");
 
   // Highly Saturated Overlays - Lighter colored top, fading into deep dark slate at the bottom for text contrast
   const overlayGradients = [
@@ -30,14 +32,23 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
   const activeGradient = overlayGradients[index % 3] || overlayGradients[1];
 
 
-  const handleShareClick = (e) => {
+  const handleShareClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const url = `${window.location.origin}/article/${article.slug}`;
-    if (navigator.clipboard) {
+    const shareData = { title: cleanTitle, url };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}`, method: 'native' });
+      } catch (err) {
+        console.error('Failed to native share', err);
+      }
+    } else if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(() => {
         useAximStore.getState().showToast('Link copied to clipboard!', 'success');
-        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}` });
+        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}`, method: 'clipboard' });
       }).catch((err) => {
         console.error('Failed to copy link', err);
       });
@@ -84,10 +95,9 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
         </div>
 
         {/* Shifted Headline */}
-        <h2
-          className="relative z-20 text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 group-hover:text-white transition-colors leading-tight drop-shadow-md"
-          dangerouslySetInnerHTML={{ __html: article.title?.rendered || "Intelligence Briefing" }}
-        />
+        <h2 className="relative z-20 text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 group-hover:text-white transition-colors leading-tight drop-shadow-md">
+          {cleanTitle}
+        </h2>
       </div>
 
       {/* Lower Sub-Text Section */}

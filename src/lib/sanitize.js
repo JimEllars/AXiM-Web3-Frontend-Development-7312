@@ -56,3 +56,40 @@ export const sanitizeInput = (text) => {
   // STRICT MODE: No HTML tags or attributes allowed whatsoever
   return DOMPurify.sanitize(text.trim(), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
 };
+
+/**
+ * Strips HTML tags and decodes HTML entities from a string.
+ * Uses regex for stripping tags, and a robust entity decoding map or temporary element.
+ * @param {string} html - The raw HTML string.
+ * @returns {string} - Clean, decoded plain text.
+ */
+export const decodeHtmlEntitiesAndStripTags = (html) => {
+  if (!html) return '';
+  // Strip tags first
+  let text = html.replace(/<[^>]+>/g, '');
+
+  // Decode common HTML entities
+  const entities = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&#8217;': "'",
+    '&#8216;': "'",
+    '&#8220;': '"',
+    '&#8221;': '"',
+    '&#8211;': '-',
+    '&#8212;': '--',
+    '&nbsp;': ' ',
+    '&hellip;': '...'
+  };
+
+  return text.replace(/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);/gi, (entity) => {
+    return entities[entity] || (
+      entity.startsWith('&#x') ? String.fromCharCode(parseInt(entity.slice(3, -1), 16)) :
+      entity.startsWith('&#') ? String.fromCharCode(parseInt(entity.slice(2, -1), 10)) :
+      entity // Return original if not matched and not numeric
+    );
+  }).trim();
+};
