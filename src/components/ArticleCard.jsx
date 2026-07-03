@@ -56,7 +56,8 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
 
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <WPImage
-          src={finalImage}
+          post={article}
+
           alt={article.title?.rendered || "Article thumbnail"}
           className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
           loading={priority ? "eager" : "lazy"}
