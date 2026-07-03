@@ -10,9 +10,9 @@ export default function WPImage({ src, alt, className, post, ...props }) {
     setHasError(true);
   };
 
-  if (hasError) {
+  if (hasError || !post?._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
     return (
-      <div className={`w-full h-full bg-onyx-800 flex items-center justify-center text-xs text-onyx-400 font-mono ${className || ''}`}>
+      <div className={`aspect-video bg-onyx-800 border-b border-white/5 flex items-center justify-center text-xs text-onyx-400 font-mono ${className || ''}`}>
         MEDIA OFFLINE
       </div>
     );
