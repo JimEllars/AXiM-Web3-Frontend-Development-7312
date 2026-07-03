@@ -9,6 +9,9 @@ import * as LuIcons from 'react-icons/lu';
 export default function FeaturedArticles({ title = "Featured Articles", categorySlug = "featured", limit = 6, excludeIds = [], excludeCategories = [] }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const handleRetryFetch = () => setRetryCount(prev => prev + 1);
 
   useEffect(() => {
     let isMounted = true;
@@ -43,7 +46,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
 
     loadArticles();
     return () => { isMounted = false; };
-  }, [categorySlug, limit, JSON.stringify(excludeIds), JSON.stringify(excludeCategories)]);
+  }, [categorySlug, limit, JSON.stringify(excludeIds), JSON.stringify(excludeCategories), retryCount]);
 
   if (isLoading) {
     return (
@@ -68,7 +71,8 @@ export default function FeaturedArticles({ title = "Featured Articles", category
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
           {title}
         </h2>
-        <div className="w-full bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]</div>
+        <div className="w-full bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]
+          <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
       </div>
     );
   }
