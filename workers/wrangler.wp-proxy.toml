@@ -1,0 +1,8 @@
+name = "axim-wp-proxy-worker"
+main = "wp-proxy-worker.js"
+compatibility_date = "2024-03-20"
+
+# Assuming default routing or map to a specific domain if needed
+# routes = [
+#   { pattern = "wp-proxy.axim.us.com", custom_domain = true }
+# ]

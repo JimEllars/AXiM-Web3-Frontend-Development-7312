@@ -171,3 +171,29 @@ routes = [
 ```
 
 Run `wrangler deploy` from the directory containing `telemetry-worker.js` and its `wrangler.toml` to deploy the worker.
+
+## 5. WordPress CORS Proxy Worker Deployment
+
+To bypass restrictive CORS headers from the headless WordPress instance and ensure reliable frontend article fetching, deploy the WP Proxy Worker located at `workers/wp-proxy-worker.js`.
+
+1. **Create/Update `wrangler.wp-proxy.toml`**:
+   In the `workers` directory, ensure a configuration file maps to your chosen proxy domain (e.g., `wp-proxy.axim.us.com`).
+
+   ```toml
+   # workers/wrangler.wp-proxy.toml
+   name = "axim-wp-proxy-worker"
+   main = "wp-proxy-worker.js"
+   compatibility_date = "2024-03-20"
+
+   routes = [
+     { pattern = "wp-proxy.axim.us.com", custom_domain = true }
+   ]
+   ```
+
+2. **Deployment Command**:
+   Run the following from the root or `workers` directory depending on your pipeline:
+   ```bash
+   wrangler deploy -c workers/wrangler.wp-proxy.toml
+   ```
+
+This proxy specifically looks for the `?endpoint=` parameter and strictly forwards only `/wp-json/` or `/wp/` requests to `https://wp.axim.us.com` to prevent open-proxy abuse. It aggressively appends `Access-Control-Allow-Origin: *` to unblock client-side `fetch()` requests.

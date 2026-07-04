@@ -1,3 +1,22 @@
+
+
+const globalSetup = () => {
+  if (typeof global !== 'undefined') {
+    global.sessionStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} };
+    global.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} };
+  }
+};
+globalSetup();
+import { vi } from 'vitest';
+
+// Mock sessionStorage before imports
+global.sessionStorage = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
 import { test, describe, beforeEach, afterEach } from 'vitest';
 import assert from 'assert';
 import { getWordPressPost, fetchPostsByCategory, fetchCache } from './wp-fetch.js';

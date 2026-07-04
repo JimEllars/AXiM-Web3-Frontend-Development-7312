@@ -24,6 +24,11 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
   const displayTitle = article?.title?.rendered || article?.title || "Untitled Article";
   const cleanTitle = decodeHtmlEntitiesAndStripTags(displayTitle);
 
+  const calculateReadTime = (text) => Math.max(1, Math.ceil((text?.split(' ').length || 0) / 200));
+  const rawContent = article?.content?.rendered || article?.content || displayExcerpt;
+  const readTime = calculateReadTime(decodeHtmlEntitiesAndStripTags(rawContent));
+
+
   // Highly Saturated Overlays - Lighter colored top, fading into deep dark slate at the bottom for text contrast
   const overlayGradients = [
     "linear-gradient(to bottom, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.95))",   // Rich Royal Blue
@@ -90,9 +95,12 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
           </button>
         </div>
 
-        <div className="absolute top-4 left-4 z-20">
+        <div className="absolute top-4 left-4 z-20 flex items-center space-x-2">
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
             {date}
+          </span>
+          <span className="text-zinc-500 text-[0.65rem] font-medium drop-shadow-md bg-black/40 px-2 py-1 rounded-sm backdrop-blur-sm">
+            &bull; {readTime} min read
           </span>
         </div>
 
