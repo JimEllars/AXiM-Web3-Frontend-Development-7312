@@ -32,6 +32,9 @@ export default function Home() {
         const data = await fetchPosts({ categories: 707, per_page: 3, _embed: 1 });
         if (isMounted) {
           setDailyNews(data || []);
+          if (import.meta.env.DEV) {
+            console.log('[WP_DEBUG] Raw Daily News Payload:', data);
+          }
         }
       } catch (err) {
         console.error("Failed to load daily news", err);

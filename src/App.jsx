@@ -18,6 +18,7 @@ import { useAximStore } from './store/useAximStore';
 import { supabase } from './lib/supabase';
 import { logTelemetry, flushTelemetryQueue } from './lib/telemetry';
 import ScrollToTop from './components/ScrollToTop';
+import Toast from './components/Toast';
 
 
 const Home = lazy(() => import('./pages/Home'));
@@ -163,6 +164,7 @@ function App() {
       <AnalyticsTracker />
       <BackgroundEffects />
       <CookieConsent />
+      <Toast />
 
       {globalLoading && (
         <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
