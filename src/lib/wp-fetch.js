@@ -1,3 +1,40 @@
+import { useAximStore } from '../store/useAximStore';
+
+const dummyArticles = [
+  {
+    id: 9991,
+    slug: 'web3-infrastructure-scaling',
+    title: { rendered: 'Web3 Infrastructure Scaling' },
+    excerpt: { rendered: 'An analysis of decentralized protocol throughput and the required edge architecture for enterprise adoption.' },
+    date: new Date().toISOString(),
+    link: 'https://axim.us.com/article/web3-infrastructure-scaling',
+    _embedded: {
+      'wp:featuredmedia': [{ source_url: 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp' }]
+    }
+  },
+  {
+    id: 9992,
+    slug: 'autonomous-legal-agents',
+    title: { rendered: 'Autonomous Legal Agents in Tech' },
+    excerpt: { rendered: 'How generative models and vector embeddings are reducing the overhead of corporate compliance and dispute resolution.' },
+    date: new Date().toISOString(),
+    link: 'https://axim.us.com/article/autonomous-legal-agents',
+    _embedded: {
+      'wp:featuredmedia': [{ source_url: 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp' }]
+    }
+  },
+  {
+    id: 9993,
+    slug: 'decentralized-identity-auth',
+    title: { rendered: 'Zero-Trust and Decentralized Auth' },
+    excerpt: { rendered: 'Moving beyond OAuth: The role of cryptographic wallet signatures in securing modern enterprise data pipelines.' },
+    date: new Date().toISOString(),
+    link: 'https://axim.us.com/article/decentralized-identity-auth',
+    _embedded: {
+      'wp:featuredmedia': [{ source_url: 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp' }]
+    }
+  }
+];
 export const fetchCategoryBySlug = async (slug) => {
   try {
     const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
@@ -292,10 +329,32 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
 
 
 export const fetchPosts = async (params = {}) => {
-  params._ts = Date.now();
-  const queryParams = new URLSearchParams(params).toString();
-  const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?_embed=1&${queryParams}`);
+  try {
+    params._ts = Date.now();
+    const queryParams = new URLSearchParams(params).toString();
+    const endpoint = `/wp-json/wp/v2/posts?_embed=1&${queryParams}`;
 
-  if (!res.ok) throw new Error('Failed to fetch WordPress posts');
-  return res.json();
+    const proxyUrl = import.meta.env?.VITE_WP_PROXY_URL || 'https://wp-proxy.axim.us.com';
+
+    // First try the proxy route
+    let res;
+    try {
+        res = await fetch(`${proxyUrl}?endpoint=${encodeURIComponent(endpoint)}`, {
+          signal: AbortSignal.timeout(8000)
+        });
+    } catch (proxyErr) {
+        // Fallback to direct fetch if proxy URL is dead (like local dev without running proxy)
+        console.warn("[WP_FETCH] Proxy failed, trying direct WP connection.");
+        res = await fetch(`https://wp.axim.us.com${endpoint}`, {
+          signal: AbortSignal.timeout(8000)
+        });
+    }
+
+    if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
+    return await res.json();
+  } catch (error) {
+    console.error('[WP_FETCH] Fetch failed. Loading cached fallback data.', error);
+    useAximStore.getState().addToast("Live feed unavailable. Loading cached data.", "warning");
+    return dummyArticles;
+  }
 };
