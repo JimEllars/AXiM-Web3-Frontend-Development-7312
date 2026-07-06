@@ -18,14 +18,17 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
     year: 'numeric'
   });
 
-  const displayExcerpt = article?.excerpt?.rendered || article?.excerpt || article?.content?.rendered || article?.content || "AXiM Systems Internal Briefing Data. Secure payload initialized.";
-  const rawExcerpt = displayExcerpt;
-  const cleanExcerpt = decodeHtmlEntitiesAndStripTags(rawExcerpt);
-  const displayTitle = article?.title?.rendered || article?.title || "Untitled Article";
-  const cleanTitle = decodeHtmlEntitiesAndStripTags(displayTitle);
+  const excerptText = article?.excerpt?.rendered || "";
+
+
+
+  const cleanExcerpt = decodeHtmlEntitiesAndStripTags(excerptText);
+  const titleText = article?.title?.rendered || "Untitled";
+
+  const cleanTitle = decodeHtmlEntitiesAndStripTags(titleText);
 
   const calculateReadTime = (text) => Math.max(1, Math.ceil((text?.split(' ').length || 0) / 200));
-  const rawContent = article?.content?.rendered || article?.content || displayExcerpt;
+  const rawContent = article?.content?.rendered || article?.content || excerptText;
   const readTime = calculateReadTime(decodeHtmlEntitiesAndStripTags(rawContent));
 
 
