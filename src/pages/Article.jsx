@@ -136,7 +136,7 @@ export default function Article() {
 
       {/* Hero Header with Multi-Color Overlay */}
       <section className="relative w-full h-[50vh] min-h-[400px] flex items-end pb-16 border-b border-white/10">
-        <WPImage src={imageUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover grayscale-[30%]" />
+        <WPImage post={article} src={imageUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover grayscale-[30%]" />
 
         {/* Vibrant Multi-Color Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/70 via-[#DB2777]/50 to-axim-gold/40 mix-blend-overlay z-0" />
@@ -270,7 +270,7 @@ export default function Article() {
                    return (
                      <Link key={post.id} to={`/article/${post.slug}`} className="flex gap-4 group items-center border-b border-white/5 pb-5 last:border-0 last:pb-0">
                        <div className="w-16 h-16 shrink-0 rounded-sm overflow-hidden border border-white/10 relative">
-                         <WPImage src={thumb} alt="Thumbnail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                         <WPImage post={post} src={thumb} alt="Thumbnail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                          <div className="absolute inset-0 bg-axim-purple/20 mix-blend-overlay group-hover:opacity-0 transition-opacity" />
                        </div>
                        <h5 className="text-xs font-bold text-zinc-300 group-hover:text-axim-purple transition-colors leading-snug line-clamp-3" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(post.title?.rendered)}} />

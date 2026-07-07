@@ -71,6 +71,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://axim.us.com/article/openai-offers-washington-a-stake-in-ais-upside-while-everyone-pays-for-its-hardware</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/article/weak-june-jobs-report-collides-with-an-unstoppable-ai-buildout</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/article/the-ai-industry-just-admitted-it-cant-fund-itself-and-its-asking-washington-to-pick-up-the-tab</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://axim.us.com/article/the-ai-distribution-war-what-californias-claude-deal-means-for-enterprise-adoption</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
