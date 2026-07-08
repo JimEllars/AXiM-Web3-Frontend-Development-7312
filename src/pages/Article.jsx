@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import SEO from '../components/SEO';
 import { useAximStore } from '../store/useAximStore';
+import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
@@ -34,11 +35,20 @@ export default function Article() {
     }
   };
 
-  const { slug } = useParams();
+const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [recentArticles, setRecentArticles] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasLoggedCompletion, setHasLoggedCompletion] = useState(false);
+  const { scrollYProgress } = useScroll();
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest > 0.85 && !hasLoggedCompletion) {
+      setHasLoggedCompletion(true);
+      logTelemetry('article_completed', { slug });
+    }
+  });
 
   useEffect(() => {
     let isMounted = true;
