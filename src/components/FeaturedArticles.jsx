@@ -33,7 +33,7 @@ export default function FeaturedArticles({ title = "Featured Articles", category
           params.categories_exclude = excludeCategories.join(',');
         }
 
-        const data = await fetchPosts(params);
+        const data = await fetchPosts({ categorySlug, limit, ...params });
         if (isMounted) {
           setArticles(data || []);
         }

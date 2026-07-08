@@ -29,7 +29,7 @@ export default function Home() {
       try {
         if (isMounted) setDailyNewsCategoryId(707); // Step 1: Force Category ID
 
-        const data = await fetchPosts({ categories: 707, per_page: 3, _embed: 1 });
+        const data = await fetchPosts({ categorySlug: 'daily-news', limit: 3 });
         if (isMounted) {
           setDailyNews(data || []);
           if (import.meta.env.DEV) {
@@ -44,7 +44,7 @@ export default function Home() {
     };
     fetchDailyNews();
     return () => { isMounted = false; };
-  }, [retryCount]);
+  }, []);
 
   // Isolate arrays dynamically to ensure strict bleed prevention
   const excludeDailyNewsIds = dailyNews.map(dn => dn.id);

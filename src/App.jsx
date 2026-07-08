@@ -34,7 +34,7 @@ const AuthGateway = lazy(() => import('./pages/AuthGateway'));
 const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const Article = lazy(() => import('./pages/Article'));
+import Article from './pages/Article';
 const PayStubLanding = lazy(() => import('./pages/tools/PayStubLanding'));
 const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
@@ -244,7 +244,7 @@ function App() {
                 <PageTransition><AdminDashboard /></PageTransition>
               </ProtectedRoute>
             } />
-            <Route path="/article/:slug" element={<PageTransition><Article /></PageTransition>} />
+            <Route element={<Article />} path="/article/:slug" />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>
           </Suspense>
