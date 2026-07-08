@@ -6,7 +6,7 @@ import BackgroundEffects from './BackgroundEffects';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-bg-void pt-20">
+    <section className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-32">
       <BackgroundEffects />
       
       {/* Absolute Centering Wrapper */}
