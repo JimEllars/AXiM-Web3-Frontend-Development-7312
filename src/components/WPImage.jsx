@@ -4,8 +4,18 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
 
 const extractFirstImage = (html) => {
-  const match = html?.match(/<img[^>]+src="([^">]+)"/);
-  return match ? match[1] : null;
+  if (!html) return null;
+  // Look for data-lazy-src first, then data-src, then src
+  const lazyMatch = html.match(/data-lazy-src=["']([^"']+)["']/i);
+  if (lazyMatch && !lazyMatch[1].startsWith('data:')) return lazyMatch[1];
+
+  const dataSrcMatch = html.match(/data-src=["']([^"']+)["']/i);
+  if (dataSrcMatch && !dataSrcMatch[1].startsWith('data:')) return dataSrcMatch[1];
+
+  const srcMatch = html.match(/src=["']([^"']+)["']/i);
+  if (srcMatch && !srcMatch[1].startsWith('data:')) return srcMatch[1];
+
+  return null;
 };
 
 export default function WPImage({ src, alt, className, post, ...props }) {
@@ -24,6 +34,10 @@ export default function WPImage({ src, alt, className, post, ...props }) {
 
   if (imageSrc && imageSrc.startsWith('/') && !imageSrc.startsWith('//')) {
     imageSrc = `https://wp.axim.us.com${imageSrc}`;
+  }
+
+  if (imageSrc && imageSrc.startsWith('http://')) {
+    imageSrc = imageSrc.replace('http://', 'https://');
   }
 
   if (imageSrc && retryCount > 0) {
@@ -45,8 +59,8 @@ export default function WPImage({ src, alt, className, post, ...props }) {
 
   if (hasError || !imageSrc) {
     return (
-      <div className={`relative aspect-video w-full h-full object-cover bg-onyx-800 border-b border-white/5 flex items-center justify-center text-xs text-onyx-400 font-mono ${className || ''}`}>
-        MEDIA OFFLINE
+      <div className={`w-full h-full aspect-video bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
+        <SafeIcon icon={LuIcons.LuHexagon} className="text-white/5 text-6xl absolute -bottom-4 -right-4" />
         {imageSrc && (
           <button
             onClick={handleRetry}
