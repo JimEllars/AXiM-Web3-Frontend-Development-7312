@@ -23,6 +23,7 @@ const SkeletonCard = ({ isHero = false }) => (
 
 export default function Articles() {
   const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [] });
+  const [leadStory, setLeadStory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,8 +48,16 @@ export default function Articles() {
         if (isMounted) {
           const dailyNewsIds = new Set((dn || []).map(post => post.id));
 
+
+          const dailyNewsArray = dn || [];
+          if (dailyNewsArray.length > 0) {
+            setLeadStory(dailyNewsArray[0]);
+          } else {
+            setLeadStory(null);
+          }
           setCatData({
-            dailyNews: dn || [],
+            dailyNews: dailyNewsArray.slice(1),
+
             // Prevent content contamination across grids by isolating collections via explicit Sets
             featured: (feat || []).filter(post => !dailyNewsIds.has(post.id)).slice(0, 6),
             appSpotlight: (app || []).filter(post => !dailyNewsIds.has(post.id)).slice(0, 6)
@@ -104,23 +113,35 @@ export default function Articles() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
 
         {/* Section 0: Daily News */}
-        {catData.dailyNews.length > 0 && (
+        {(leadStory || catData.dailyNews.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Daily News</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div className="flex flex-col gap-6">
               {isLoading ? (
                  <>
-                   <SkeletonCard />
-                   <SkeletonCard />
-                   <SkeletonCard />
+                   <SkeletonCard isHero={true} />
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <SkeletonCard />
+                     <SkeletonCard />
+                   </div>
                  </>
               ) : (
-                 catData.dailyNews.map((article) => (
-                   <ArticleCard key={article.id} article={article} />
-                 ))
+                 <>
+                   {leadStory && (
+                     <ArticleCard key={leadStory.id} article={leadStory} isHero={true} priority={true} />
+                   )}
+                   {catData.dailyNews.length > 0 && (
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       {catData.dailyNews.map((article) => (
+                         <ArticleCard key={article.id} article={article} />
+                       ))}
+                     </div>
+                   )}
+                 </>
               )}
             </div>
           </section>

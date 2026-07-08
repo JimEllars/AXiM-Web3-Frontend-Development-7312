@@ -7,7 +7,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { decodeHtmlEntitiesAndStripTags } from '../lib/sanitize';
 
-export default function ArticleCard({ article, index = 0, priority = false }) {
+export default function ArticleCard({ article, index = 0, priority = false, isHero = false }) {
   const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const finalImage = imageUrl || defaultImage;
@@ -69,11 +69,11 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
   return (
     <Link
       to={`/article/${article.slug}`}
-      className="group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col h-full relative block"
+      className={`group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col relative block ${isHero ? "md:col-span-full md:flex-row md:min-h-[400px]" : "h-full"}`}
     >
 
       {/* Reduced Height Image Container */}
-      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#0F172A] border-b border-white/10 flex flex-col justify-end p-6">
+      <div className={`relative w-full overflow-hidden bg-[#0F172A] flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : "h-48 sm:h-52"}`}>
 
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <WPImage
@@ -114,8 +114,8 @@ export default function ArticleCard({ article, index = 0, priority = false }) {
       </div>
 
       {/* Lower Sub-Text Section */}
-      <div className="p-6 flex flex-col flex-grow relative z-10 bg-[#050505]">
-        <p className="text-zinc-400 text-xs leading-relaxed mb-6 font-medium line-clamp-3 flex-grow">
+      <div className={`p-6 flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`}>
+        <p className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}>
           {cleanExcerpt}
         </p>
 
