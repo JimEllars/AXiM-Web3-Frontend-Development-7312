@@ -197,3 +197,36 @@ To bypass restrictive CORS headers from the headless WordPress instance and ensu
    ```
 
 This proxy specifically looks for the `?endpoint=` parameter and strictly forwards only `/wp-json/` or `/wp/` requests to `https://wp.axim.us.com` to prevent open-proxy abuse. It aggressively appends `Access-Control-Allow-Origin: *` to unblock client-side `fetch()` requests.
+
+## 6. Edge SEO Interceptor Worker Deployment
+
+To ensure social media crawlers and bots see dynamic meta tags for individual articles without needing to render the React app, deploy the SEO Worker located at `workers/seo-worker.js`. This worker uses `HTMLRewriter` to modify meta tags inflight and includes a fail-open safeguard (800ms timeout on API fetch).
+
+1. **Create/Update `wrangler.seo.toml`**:
+   In the `workers` directory, ensure a configuration file maps to your main frontend domain (e.g., `axim.us.com`), specifically intercepting the `/*` or `/article/*` paths. Since it serves as a middleware, we typically deploy it as the main frontend worker, or use Route mappings in Cloudflare Dashboard.
+
+   ```toml
+   # workers/wrangler.seo.toml
+   name = "axim-seo-worker"
+   main = "seo-worker.js"
+   compatibility_date = "2024-03-20"
+
+   # Map to all routes so it can conditionally intercept based on Bot user-agents
+   routes = [
+     { pattern = "axim.us.com/*", custom_domain = true }
+   ]
+
+   [[kv_namespaces]]
+   binding = "FRONTEND_SEO_CACHE"
+   id = "ce6cf5a77ca2415a9941cc0247b86d6e"
+
+   [[kv_namespaces]]
+   binding = "AXIM_CONFIG"
+   id = "<YOUR_NAMESPACE_ID_HERE>"
+   ```
+
+2. **Deployment Command**:
+   Run the following from the root or `workers` directory:
+   ```bash
+   wrangler deploy -c workers/wrangler.seo.toml
+   ```

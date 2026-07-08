@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
+import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
+import { useAximStore } from '../store/useAximStore';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
@@ -10,6 +12,28 @@ import NewsFeed from '../components/NewsFeed';
 import SystemBreadcrumb from '../components/SystemBreadcrumb'; // Adding this as user included it in their import list, though it may not be used or used in existing UI. Wait, let me check if it's used in the bottom part.
 
 export default function Article() {
+  const navigate = useNavigate();
+  const addToast = useAximStore(state => state.addToast);
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: article?.title?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems',
+          url: url
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          navigator.clipboard.writeText(url);
+          addToast('Link Copied', 'success');
+        }
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      addToast('Link Copied', 'success');
+    }
+  };
+
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [recentArticles, setRecentArticles] = useState([]);
@@ -158,18 +182,7 @@ export default function Article() {
         <article className="lg:col-span-8">
               {/* WordPress Core Content Render (Restored Typography) */}
               <div
-                className="prose prose-invert prose-zinc max-w-none
-                           prose-headings:font-black prose-headings:tracking-tight
-                           prose-h1:text-white prose-h1:text-3xl md:prose-h1:text-4xl prose-h1:mb-8
-                           prose-h2:text-white prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:border-b prose-h2:border-white/10 prose-h2:pb-4
-                           prose-h3:text-white prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
-                           prose-p:text-zinc-300 prose-p:leading-[1.8] prose-p:text-base md:prose-p:text-lg prose-p:mb-8
-                           prose-a:text-axim-purple prose-a:no-underline prose-a:border-b prose-a:border-axim-purple/50 hover:prose-a:text-white hover:prose-a:border-white transition-colors
-                           prose-strong:text-white prose-strong:font-bold
-                           prose-ul:text-zinc-300 prose-ul:text-base md:prose-ul:text-lg prose-ul:leading-relaxed prose-li:my-3
-                           prose-ol:text-zinc-300 prose-ol:text-base md:prose-ol:text-lg prose-ol:leading-relaxed prose-li:my-3
-                           prose-img:rounded-md prose-img:shadow-2xl prose-img:my-10
-                           prose-blockquote:border-l-4 prose-blockquote:border-axim-purple prose-blockquote:bg-white/5 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-8 prose-blockquote:text-white prose-blockquote:font-medium prose-blockquote:italic prose-blockquote:rounded-r-sm"
+                className="prose prose-invert prose-axim max-w-3xl mx-auto prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content?.rendered || '') }}
               />
         </article>
@@ -288,6 +301,30 @@ export default function Article() {
       <div className="mt-20 bg-black border-t border-white/10 pt-16 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
          <NewsFeed limit={3} title="Continue Reading" hidePagination={true} />
       </div>
+
+      {/* Sticky Action Pill */}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 100 }}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-4 px-6 py-3 rounded-full bg-onyx-900/80 border border-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
+      >
+        <button
+          onClick={() => navigate('/articles')}
+          className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+          title="Back to Articles"
+        >
+          <SafeIcon icon={LuIcons.LuArrowLeft} className="w-5 h-5" />
+        </button>
+        <div className="w-px h-6 bg-white/10" />
+        <button
+          onClick={handleShare}
+          className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+          title="Share Article"
+        >
+          <SafeIcon icon={LuIcons.LuShare2} className="w-5 h-5" />
+        </button>
+      </motion.div>
 
     </div>
   );

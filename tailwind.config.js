@@ -40,9 +40,30 @@ export default {
           '100%': { opacity: '1' },
         }
       },
-      animation: {
+            animation: {
         'fade-in-up': 'fade-in-up 0.3s ease-out forwards',
         'fade-in': 'fade-in 0.3s ease-out forwards',
+      },
+      typography: {
+        axim: {
+          css: {
+            '--tw-prose-body': '#d4d4d8', // text-zinc-300
+            '--tw-prose-quote-borders': '#F0FF00', // axim-gold
+            blockquote: {
+              borderLeftColor: '#F0FF00',
+              borderLeftWidth: '4px',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              padding: '1rem 1.5rem',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+              fontStyle: 'italic',
+              fontWeight: '500',
+              color: '#ffffff',
+              borderTopRightRadius: '0.125rem',
+              borderBottomRightRadius: '0.125rem'
+            }
+          }
+        }
       }
     },
   },
