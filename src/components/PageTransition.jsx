@@ -5,9 +5,9 @@ import React, { Suspense, useEffect } from 'react';
 import GlobalLoader from './GlobalLoader';
 
 const pageVariants = {
-  initial: { opacity: 0, y: 15, filter: 'blur(4px)' },
-  in: { opacity: 1, y: 0, filter: 'blur(0px)' },
-  out: { opacity: 0, y: -15, filter: 'blur(4px)' }
+  initial: { opacity: 0 },
+  in: { opacity: 1 },
+  out: { opacity: 0 }
 };
 
 const pageTransition = {
