@@ -76,9 +76,22 @@ export default {
       const slug = url.pathname.replace('/article/', '').replace('/', '');
 
       try {
-        // Fetch specific article data from the Headless CMS
-        const wpRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?slug=${slug}&_embed=1`);
-        const wpData = await wpRes.json();
+        // Fetch specific article data from the Headless CMS with strict 800ms timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 800);
+
+        let wpRes, wpData;
+        try {
+          wpRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?slug=${slug}&_embed=1`, {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          wpData = await wpRes.json();
+        } catch (fetchErr) {
+          clearTimeout(timeoutId);
+          // throw fetchErr; // Fail-open safeguard: just log and continue to raw SPA response
+          console.error("WP API Fetch Timeout/Error:", fetchErr);
+        }
 
         if (wpData && wpData.length > 0) {
           const article = wpData[0];
