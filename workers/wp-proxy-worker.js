@@ -16,22 +16,50 @@ export default {
       const url = new URL(request.url);
       const endpoint = url.searchParams.get('endpoint');
 
-      // 2. Strict Validation: Prevent Open Proxy
-      if (!endpoint || (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/'))) {
-        return new Response(JSON.stringify({ error: 'Invalid or missing endpoint parameter.' }), {
-          status: 403,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          }
+      let fetchUrl;
+
+      // Ensure that the target URL explicitly includes the incoming query string.
+      if (endpoint) {
+        if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/')) {
+          return new Response(JSON.stringify({ error: 'Invalid or missing endpoint parameter.' }), {
+            status: 403,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            }
+          });
+        }
+
+        // Remove endpoint from the original query params
+        url.searchParams.delete('endpoint');
+
+        // Parse the endpoint string as it might contain query params itself
+        const parsedEndpoint = new URL(`https://wp.axim.us.com${endpoint}`);
+
+        // Merge the params
+        parsedEndpoint.searchParams.forEach((val, key) => {
+          url.searchParams.set(key, val);
         });
+
+        fetchUrl = 'https://wp.axim.us.com' + parsedEndpoint.pathname + url.search;
+      } else {
+        const proxyPath = url.pathname.replace('/api/wp', '');
+
+        if (!proxyPath || (!proxyPath.startsWith('/wp-json/') && !proxyPath.startsWith('/wp/'))) {
+          return new Response(JSON.stringify({ error: 'Invalid or missing proxy path.' }), {
+            status: 403,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            }
+          });
+        }
+
+        fetchUrl = 'https://wp.axim.us.com' + proxyPath + url.search;
       }
 
-      // 3. Construct Target URL
-      const targetUrl = `https://wp.axim.us.com${endpoint}`;
-
       // 4. Server-Side Fetch
-      const wpResponse = await fetch(targetUrl, {
+      const wpResponse = await fetch(fetchUrl, {
         method: request.method,
         headers: {
           'Accept': 'application/json',
