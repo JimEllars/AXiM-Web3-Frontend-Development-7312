@@ -69,7 +69,7 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
   return (
     <Link
       to={`/article/${article.slug}`}
-      className={`group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col relative block ${isHero ? "md:col-span-full md:flex-row md:min-h-[400px]" : "h-full"}`}
+      className={`group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col relative block ${isHero ? "md:col-span-3 lg:col-span-full flex flex-col md:flex-row gap-6" : "h-full"}`}
     >
 
       {/* Reduced Height Image Container */}

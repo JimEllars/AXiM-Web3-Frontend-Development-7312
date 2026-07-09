@@ -9,15 +9,15 @@ export default function NewsFeed({ limit = null, title = null }) {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('All Intelligence');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
   const filters = [
-    { id: 'All', label: 'All' },
-    { id: 'Web3 Infrastructure', label: 'Web3 Infrastructure' },
-    { id: 'AI Automation', label: 'AI Automation' },
-    { id: 'Operational Intel', label: 'Operational Intel' }
+    { id: 'All Intelligence', label: 'All Intelligence' },
+    { id: 'Web3 Systems', label: 'Web3 Systems' },
+    { id: 'Automation', label: 'Automation' },
+    { id: 'Company Bulletins', label: 'Company Bulletins' }
   ];
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export default function NewsFeed({ limit = null, title = null }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.filter(article => {
-          if (activeCategory === 'All') return true;
+          if (activeCategory === 'All Intelligence') return true;
           // check if activeCategory matches any of the article's embedded categories
           const categories = article._embedded?.['wp:term']?.[0] || [];
           return categories.some(cat => cat.name === activeCategory);
