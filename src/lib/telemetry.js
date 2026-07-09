@@ -64,7 +64,7 @@ export async function flushTelemetryQueue(force = false) {
 
   try {
     const payload = JSON.stringify(telemetryStore);
-    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT;
+    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL;
 
     if (!endpoint) {
         console.log('[MOCK TELEMETRY SYNC]', payload);

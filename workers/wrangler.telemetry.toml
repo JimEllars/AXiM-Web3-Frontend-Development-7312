@@ -1,0 +1,8 @@
+name = "axim-telemetry-worker"
+main = "telemetry-worker.js"
+compatibility_date = "2024-03-20"
+
+# Uncomment and update for production custom domain routing.
+# routes = [
+#   { pattern = "telemetry.axim.us.com/*", custom_domain = true }
+# ]

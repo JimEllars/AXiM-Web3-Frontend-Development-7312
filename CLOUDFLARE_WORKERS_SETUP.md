@@ -2,6 +2,26 @@
 
 This document outlines the required configuration for the backend engineering team to securely map the Cloudflare Worker micro-apps to their respective subdomains, and how to verify the secure handoff token from the AXiM Hub.
 
+## 0. Local Tooling and Deploy Scripts
+
+This repository now includes Wrangler as a dev dependency and worker-specific deploy scripts:
+
+```bash
+npm install
+npm run cf:whoami
+npm run cf:deploy:wp-proxy
+npm run cf:deploy:seo
+npm run cf:deploy:rpc
+npm run cf:deploy:telemetry
+```
+
+Worker config files are located in `workers/`:
+
+- `wrangler.wp-proxy.toml`
+- `wrangler.seo.toml`
+- `wrangler.rpc.toml`
+- `wrangler.telemetry.toml`
+
 ## 1. Subdomain Mapping (`wrangler.toml`)
 
 To attach the Worker to a custom subdomain (e.g., `nda.axim.us.com`), you must update the `wrangler.toml` file in the Worker's repository.
