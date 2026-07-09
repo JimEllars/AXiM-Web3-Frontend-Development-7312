@@ -3,6 +3,9 @@ main = "telemetry-worker.js"
 compatibility_date = "2024-03-20"
 
 # Uncomment and update for production custom domain routing.
-# routes = [
-#   { pattern = "telemetry.axim.us.com/*", custom_domain = true }
-# ]
+routes = [
+  { pattern = "telemetry.axim.us.com/*", custom_domain = true }
+]
+
+[vars]
+AXIM_INTERNAL_KEY = "UNSET_DEV_KEY"

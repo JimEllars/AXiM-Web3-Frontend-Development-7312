@@ -59,6 +59,7 @@ export default {
       }
 
       // 4. Server-Side Fetch
+      const startTime = Date.now();
       const wpResponse = await fetch(fetchUrl, {
         method: request.method,
         headers: {
@@ -66,6 +67,7 @@ export default {
           'User-Agent': 'Cloudflare-WP-Proxy/1.0'
         }
       });
+      const duration = Date.now() - startTime;
 
       // 5. Build Response with Permissive CORS and Caching
       const responseBody = await wpResponse.arrayBuffer(); // Read body safely
@@ -73,6 +75,7 @@ export default {
       headers.set('Access-Control-Allow-Origin', '*');
       headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
       headers.set('Cache-Control', 'public, max-age=300'); // 5 minutes edge caching
+      headers.set('X-AXiM-Edge-Latency', `${duration}ms`);
 
       return new Response(responseBody, {
         status: wpResponse.status,

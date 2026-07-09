@@ -179,6 +179,8 @@ id = "ce6cf5a77ca2415a9941cc0247b86d6e"
 
 To deploy the Telemetry Edge Worker located at `workers/telemetry-worker.js`, create or update a `wrangler.toml` file in the `workers` directory (or use your project's main wrangler config) and map it to your desired route for telemetry, such as `telemetry.axim.us.com`.
 
+**Reminder:** Ensure you use `wrangler secret put AXIM_INTERNAL_KEY` during production initialization pipelines to prevent keys from leaking into git commits.
+
 Example `wrangler.toml` for the telemetry worker:
 ```toml
 name = "axim-telemetry-worker"
