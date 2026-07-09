@@ -345,7 +345,7 @@ describe('fetchPostsByCategory', () => {
   });
 
   test('should return cached posts if available and not expired', async () => {
-    fetchCache.set('cat-posts-cached-cat-5', {
+    fetchCache.set('cat-posts-cached-cat-5-page-1', {
       data: [{ id: 999, title: 'Cached Post' }],
       timestamp: Date.now() - 1000 // 1 second ago, well within 5 mins
     });

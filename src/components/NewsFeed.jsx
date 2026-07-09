@@ -147,7 +147,7 @@ export default function NewsFeed({ limit = null, title = null }) {
               </>
             ) : (
               <>
-                <span>Load More Articles</span>
+                <span>LOAD MORE INTELLIGENCE</span>
                 <SafeIcon icon={LuIcons.LuChevronDown} className="w-4 h-4" />
               </>
             )}
