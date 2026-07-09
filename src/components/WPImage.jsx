@@ -5,17 +5,8 @@ import SafeIcon from '../common/SafeIcon.jsx';
 
 const extractFirstImage = (html) => {
   if (!html) return null;
-  // Look for data-lazy-src first, then data-src, then src
-  const lazyMatch = html.match(/data-lazy-src=["']([^"']+)["']/i);
-  if (lazyMatch && !lazyMatch[1].startsWith('data:')) return lazyMatch[1];
-
-  const dataSrcMatch = html.match(/data-src=["']([^"']+)["']/i);
-  if (dataSrcMatch && !dataSrcMatch[1].startsWith('data:')) return dataSrcMatch[1];
-
-  const srcMatch = html.match(/src=["']([^"']+)["']/i);
-  if (srcMatch && !srcMatch[1].startsWith('data:')) return srcMatch[1];
-
-  return null;
+  const match = html.match(/(?:src|data-src|data-lazy-src)=["'](https?:\/\/[^"']+)["']/i);
+  return match ? match[1] : null;
 };
 
 export default function WPImage({ src, alt, className, post, ...props }) {

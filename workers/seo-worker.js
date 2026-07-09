@@ -15,6 +15,8 @@ export default {
 
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    if (request.url.includes('/assets/')) return fetch(request);
+
 
     // --- NEW: Admin KV Write API ---
     if (request.method === "POST" && url.pathname === "/api/admin/kv-write") {
