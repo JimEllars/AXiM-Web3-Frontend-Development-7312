@@ -244,7 +244,7 @@ function App() {
                 <PageTransition><AdminDashboard /></PageTransition>
               </ProtectedRoute>
             } />
-            <Route element={<Article />} path="/article/:slug" />
+            <Route path="/article/:slug/*" element={<PageTransition><Article /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>
           </Suspense>
