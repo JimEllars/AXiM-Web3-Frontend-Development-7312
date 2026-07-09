@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
 
-const extractFirstImage = (html) => {
+const extractFromContent = (html) => {
   if (!html) return null;
-  const match = html.match(/(?:src|data-src|data-lazy-src)=["'](https?:\/\/[^"']+)["']/i);
+  const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"']+)["']/i);
   return match ? match[1] : null;
 };
 
@@ -16,9 +16,7 @@ export default function WPImage({ src, alt, className, post, ...props }) {
   let mediaUrl =
     post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
     post?.featured_media_src_url ||
-    post?.jetpack_featured_media_url ||
-    post?.yoast_head_json?.og_image?.[0]?.url ||
-    extractFirstImage(post?.content?.rendered) ||
+    extractFromContent(post?.content?.rendered) ||
     null;
 
   let imageSrc = src ? src : mediaUrl;
@@ -50,7 +48,7 @@ export default function WPImage({ src, alt, className, post, ...props }) {
 
   if (hasError || !imageSrc) {
     return (
-      <div className={`w-full h-full aspect-video bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
+      <div className={`w-full h-full aspect-video bg-gradient-to-br from-zinc-900 to-black border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
         <SafeIcon icon={LuIcons.LuHexagon} className="text-white/5 text-6xl absolute -bottom-4 -right-4" />
         {imageSrc && (
           <button

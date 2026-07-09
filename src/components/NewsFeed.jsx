@@ -9,23 +9,16 @@ export default function NewsFeed({ limit = null, title = null }) {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('All');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
   const filters = [
-    { id: 'all', label: 'All Articles' },
-    { id: 'web3', label: 'Web3' },
-    { id: 'automation', label: 'Automation' },
-    { id: 'intelligence', label: 'Intel' }
+    { id: 'All', label: 'All' },
+    { id: 'Web3 Infrastructure', label: 'Web3 Infrastructure' },
+    { id: 'AI Automation', label: 'AI Automation' },
+    { id: 'Operational Intel', label: 'Operational Intel' }
   ];
-
-  // Utility to fetch category ID if needed, or simply pass the slug to fetchPosts
-  // fetchPosts in wp-fetch.js takes generic params, we can pass categorySlug (handled by fetchPostsByCategory)
-  // or use the categories array parameter if we fetch the categories first.
-  // Actually, fetchPosts passes query string to wp/v2/posts. It doesn't handle categorySlug natively.
-  // Let's rely on fetching the category ID first, or we can use the fetchPostsByCategory method if we import it.
-  // We'll import fetchPostsByCategory from wp-fetch.
 
   useEffect(() => {
     async function loadArticles() {
@@ -34,21 +27,7 @@ export default function NewsFeed({ limit = null, title = null }) {
       setPage(1);
       setHasMore(true);
       try {
-        let data = [];
-        if (activeFilter === 'all') {
-            data = await fetchPosts({ per_page: limit || 12, _embed: 1, page: 1 });
-        } else {
-            // Need a way to fetch by category ID. We can use fetchPosts with category ID if we know it.
-            // But we don't know the IDs. Let's fetch categories by slug first.
-            const catRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${activeFilter}`);
-            const cats = await catRes.json();
-            if (cats && cats.length > 0) {
-              data = await fetchPosts({ categories: cats[0].id, per_page: limit || 12, _embed: 1, page: 1 });
-            } else {
-              data = []; // No category found
-            }
-        }
-
+        const data = await fetchPosts({ per_page: limit || 12, _embed: 1, page: 1 });
         setArticles(data || []);
         if (!data || data.length < (limit || 12)) {
           setHasMore(false);
@@ -61,7 +40,7 @@ export default function NewsFeed({ limit = null, title = null }) {
       }
     }
     loadArticles();
-  }, [activeFilter, limit]);
+  }, [limit]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore) return;
@@ -69,19 +48,9 @@ export default function NewsFeed({ limit = null, title = null }) {
     const nextPage = page + 1;
 
     try {
-        let newData = [];
-        if (activeFilter === 'all') {
-            newData = await fetchPosts({ per_page: limit || 12, _embed: 1, page: nextPage });
-        } else {
-            const catRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${activeFilter}`);
-            const cats = await catRes.json();
-            if (cats && cats.length > 0) {
-              newData = await fetchPosts({ categories: cats[0].id, per_page: limit || 12, _embed: 1, page: nextPage });
-            }
-        }
+        const newData = await fetchPosts({ per_page: limit || 12, _embed: 1, page: nextPage });
 
         if (newData && newData.length > 0) {
-           // Deduplicate
            const existingIds = new Set(articles.map(a => a.id));
            const filteredNewData = newData.filter(a => !existingIds.has(a.id));
 
@@ -141,9 +110,9 @@ export default function NewsFeed({ limit = null, title = null }) {
         {filters.map(filter => (
           <button
             key={filter.id}
-            onClick={() => setActiveFilter(filter.id)}
+            onClick={() => setActiveCategory(filter.id)}
             className={`px-4 py-2 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest transition-colors border ${
-              activeFilter === filter.id
+              activeCategory === filter.id
                 ? 'bg-axim-purple/20 border-axim-purple text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]'
                 : 'bg-black/50 border-white/10 text-zinc-400 hover:text-white hover:border-white/30'
             }`}
@@ -154,7 +123,12 @@ export default function NewsFeed({ limit = null, title = null }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article, index) => (
+        {articles.filter(article => {
+          if (activeCategory === 'All') return true;
+          // check if activeCategory matches any of the article's embedded categories
+          const categories = article._embedded?.['wp:term']?.[0] || [];
+          return categories.some(cat => cat.name === activeCategory);
+        }).map((article, index) => (
           <ArticleCard key={article.id} article={article} index={index} />
         ))}
       </div>

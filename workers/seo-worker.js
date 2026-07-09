@@ -15,7 +15,9 @@ export default {
 
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (request.url.includes('/assets/')) return fetch(request);
+    if (request.url.includes('/assets/') || request.url.match(/\.(js|css|wasm|png|ico)$/)) {
+      return fetch(request);
+    }
 
 
     // --- NEW: Admin KV Write API ---
