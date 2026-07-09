@@ -8,6 +8,11 @@
     "build": "node scripts/generate-sitemap.js && vite build --sourcemap false",
     "lint": "eslint .",
     "preview": "vite preview",
+    "cf:deploy:wp-proxy": "wrangler deploy -c workers/wrangler.wp-proxy.toml",
+    "cf:deploy:seo": "wrangler deploy -c workers/wrangler.seo.toml",
+    "cf:deploy:rpc": "wrangler deploy -c workers/wrangler.rpc.toml",
+    "cf:deploy:telemetry": "wrangler deploy -c workers/wrangler.telemetry.toml",
+    "cf:whoami": "wrangler whoami",
     "test": "vitest run src/components/BackgroundEffects.test.jsx && vitest run src/pages/Articles.test.jsx && vitest run src/pages/Home.test.jsx && vitest run src/components/Hero.test.jsx && vitest run src/components/Deployment.test.jsx && vitest run src/common/SafeIcon.test.jsx && vitest run src/components/ErrorBoundary.test.jsx && vitest run src/lib/persistence.test.js && vitest run src/lib/wp-fetch.test.js && vitest run src/lib/sanitize.test.js && vitest run src/components/Ecosystem.test.jsx && vitest run src/lib/thirdweb-client.test.js && vitest run src/hooks/useAximAuth.test.js && vitest run src/components/PageTransition.test.jsx && vitest run src/components/Pillars.test.jsx && vitest run src/components/InfoPanel.test.jsx && vitest run src/components/FeaturedArticles.test.jsx && vitest run src/pages/EarlyAccess.test.jsx && vitest run src/common/DatabaseUplinkError.test.jsx && vitest run src/components/FleetMap.test.jsx",
     "prebuild": "node scripts/generate-sitemap.js",
     "prepare": "husky"
@@ -56,7 +61,8 @@
     "terser": "^5.48.0",
     "vite": "^5.4.21",
     "vite-node": "^3.2.4",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wrangler": "^4.25.0"
   },
   "overrides": {
     "@emotion/react": "^11.13.3",
