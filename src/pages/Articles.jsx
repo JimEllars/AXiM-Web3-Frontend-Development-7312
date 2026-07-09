@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { fetchPosts } from '../lib/wp-fetch';
+import { fetchPosts, fetchPostsByCategory } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -25,24 +25,16 @@ export default function Articles() {
   const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [] });
   const [leadStory, setLeadStory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('All briefings');
 
   useEffect(() => {
     let isMounted = true;
     const loadCategories = async () => {
       try {
-        const fetchCat = async (slug, limit) => {
-          const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
-          const cats = await res.json();
-          if (cats && cats.length > 0) {
-            return await fetchPosts({ categories: cats[0].id, per_page: limit, _embed: 1 });
-          }
-          return [];
-        };
-
         const [dn, feat, app] = await Promise.all([
-          fetchCat('daily-news', 3),
-          fetchCat('featured', 6),
-          fetchCat('app-software', 6)
+          fetchPostsByCategory('daily-news', 3),
+          fetchPostsByCategory('featured', 6),
+          fetchPostsByCategory('app-software', 6)
         ]);
 
         if (isMounted) {
@@ -110,10 +102,29 @@ export default function Articles() {
         </div>
       </section>
 
+      {/* Filter Pill-Bar for Articles */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
+        <div className="flex flex-wrap gap-3 justify-center">
+          {['All briefings', 'Daily News', 'Featured', 'Software Spotlight'].map(filter => (
+            <button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`px-5 py-2.5 rounded-sm text-[0.7rem] font-mono uppercase tracking-widest transition-all border ${
+                activeFilter === filter
+                  ? 'bg-axim-purple/20 border-axim-purple text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]'
+                  : 'bg-[#050505]/80 border-white/10 text-zinc-400 hover:text-white hover:border-white/30 backdrop-blur-md'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
 
         {/* Section 0: Daily News */}
-        {(leadStory || catData.dailyNews.length > 0) && (
+        {(leadStory || catData.dailyNews.length > 0) && (activeFilter === 'All briefings' || activeFilter === 'Daily News') && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
@@ -148,6 +159,7 @@ export default function Articles() {
         )}
 
         {/* Section 1: Featured Articles */}
+        {(activeFilter === 'All briefings' || activeFilter === 'Featured') && (
         <section>
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
             <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
@@ -167,9 +179,10 @@ export default function Articles() {
             )}
           </div>
         </section>
+        )}
 
         {/* Section 2: App Spotlight (Software Spotlight) */}
-        {(!isLoading || catData.appSpotlight.length > 0) && (
+        {(!isLoading || catData.appSpotlight.length > 0) && (activeFilter === 'All briefings' || activeFilter === 'Software Spotlight') && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-purple" />

@@ -87,6 +87,14 @@
       gtag('config', 'G-620C96FBF3');
     </script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+      window.addEventListener('error', function(e) {
+        if (e.message && (e.message.includes('MIME type') || e.message.includes('dynamically imported module'))) {
+          console.warn('[AXiM Boot Recovery] Module script block detected. Clearing cache and forcing reload...');
+          window.location.reload(true);
+        }
+      }, true);
+    </script>
   </head>
   <body class="bg-bg-void text-white font-inter antialiased selection:bg-axim-purple/30 selection:text-white">
     <div id="root"></div>
