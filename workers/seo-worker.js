@@ -15,7 +15,7 @@ export default {
 
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (request.url.includes('/assets/') || request.url.match(/\.(js|css|wasm|png|ico)$/)) {
+    if (url.pathname.includes('/assets/') || url.pathname.match(/\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json)$/i)) {
       return fetch(request);
     }
 

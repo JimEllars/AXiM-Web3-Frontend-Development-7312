@@ -171,7 +171,7 @@ async function getCategoryId(apiUrl, slug) {
  * @param {number} limit - Number of posts to fetch
  * @returns {Promise<Array>} Array of mapped posts
  */
-export async function fetchPostsByCategory(categorySlug, limit = 5) {
+export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
   const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
   // Always try the wp domain first
@@ -185,7 +185,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
     urlsToTry.unshift(baseUrl);
   }
 
-  const cacheKey = `cat-posts-${categorySlug}-${limit}`;
+  const cacheKey = `cat-posts-${categorySlug}-${limit}-page-${page}`;
   const existing = fetchCache.get(cacheKey);
 
   if (existing && (Date.now() - existing.timestamp < 300000)) {
@@ -206,24 +206,24 @@ export async function fetchPostsByCategory(categorySlug, limit = 5) {
         let posts = [];
 
         if (!categorySlug) {
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else if (!categoryId) {
           // No category found, fallback to fetching recent posts
 
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
-          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
 
           if (!posts || posts.length === 0) {
 
-            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
             if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
             posts = await postsRes.json();
           }
