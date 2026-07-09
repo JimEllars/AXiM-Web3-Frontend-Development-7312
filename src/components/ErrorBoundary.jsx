@@ -13,7 +13,35 @@ export default class ErrorBoundary extends React.Component {
     return { hasError: true, error };
   }
 
+  componentDidMount() {
+    this.handleError = (event) => {
+      const isChunkLoadError = event.message && (
+        event.message.match(/Loading chunk [\d]+ failed/) ||
+        event.message.includes('Failed to fetch dynamically imported module')
+      );
+      if (isChunkLoadError) {
+        logTelemetry('CHUNK_LOAD_ERROR_RECOVERY', { message: event.message });
+        window.location.reload(true);
+      }
+    };
+    window.addEventListener('error', this.handleError);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('error', this.handleError);
+  }
+
   componentDidCatch(error, errorInfo) {
+    const isChunkLoadError = error && error.message && (
+      error.message.match(/Loading chunk [\d]+ failed/) ||
+      error.message.includes('Failed to fetch dynamically imported module')
+    );
+    if (isChunkLoadError) {
+      logTelemetry('CHUNK_LOAD_ERROR_RECOVERY', { message: error.message });
+      window.location.reload(true);
+      return;
+    }
+
     logTelemetry('CRITICAL_UI_FAULT', {
       message: error.message,
       stack: errorInfo.componentStack
