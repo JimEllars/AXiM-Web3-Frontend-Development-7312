@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { fetchPosts, fetchPostsByCategory } from '../lib/wp-fetch';
+import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -31,10 +31,14 @@ export default function Articles() {
     let isMounted = true;
     const loadCategories = async () => {
       try {
+        const dailyNewsId = await fetchCategoryBySlug('daily-news');
+        const featuredId = await fetchCategoryBySlug('featured');
+        const appSpotlightId = await fetchCategoryBySlug('app-software');
+
         const [dn, feat, app] = await Promise.all([
-          fetchPostsByCategory('daily-news', 3),
-          fetchPostsByCategory('featured', 6),
-          fetchPostsByCategory('app-software', 6)
+          fetchPosts({ categories: dailyNewsId, per_page: 3, _embed: 1 }),
+          fetchPosts({ categories: featuredId, per_page: 6, _embed: 1 }),
+          fetchPosts({ categories: appSpotlightId, per_page: 6, _embed: 1 })
         ]);
 
         if (isMounted) {

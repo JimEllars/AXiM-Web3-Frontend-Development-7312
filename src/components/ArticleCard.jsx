@@ -8,7 +8,7 @@ import * as LuIcons from 'react-icons/lu';
 import { decodeHtmlEntitiesAndStripTags } from '../lib/sanitize';
 
 export default function ArticleCard({ article, index = 0, priority = false, isHero = false }) {
-  const imageUrl = article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  const imageUrl = article?.featuredImage || article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const finalImage = imageUrl || defaultImage;
 
@@ -18,12 +18,12 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
     year: 'numeric'
   });
 
-  const excerptText = article?.excerpt?.rendered || "";
+  const excerptText = article?.excerpt?.rendered || article?.excerpt || "";
 
 
 
   const cleanExcerpt = decodeHtmlEntitiesAndStripTags(excerptText);
-  const titleText = article?.title?.rendered || "Untitled";
+  const titleText = article?.title?.rendered || article?.title || "Untitled";
 
   const cleanTitle = decodeHtmlEntitiesAndStripTags(titleText);
 
