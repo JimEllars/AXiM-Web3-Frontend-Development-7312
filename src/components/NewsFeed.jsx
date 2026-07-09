@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPosts } from '../lib/wp-fetch';
+import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import ArticleCard from './ArticleCard';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -27,7 +27,16 @@ export default function NewsFeed({ limit = null, title = null }) {
       setPage(1);
       setHasMore(true);
       try {
-        const data = await fetchPosts({ per_page: limit || 12, _embed: 1, page: 1 });
+        let params = { per_page: limit || 12, _embed: 1, page: 1 };
+
+        if (activeCategory !== 'All Intelligence') {
+          const categoryId = await fetchCategoryBySlug(activeCategory);
+          if (categoryId) {
+            params.categories = categoryId;
+          }
+        }
+
+        const data = await fetchPosts(params);
         setArticles(data || []);
         if (!data || data.length < (limit || 12)) {
           setHasMore(false);
@@ -40,7 +49,7 @@ export default function NewsFeed({ limit = null, title = null }) {
       }
     }
     loadArticles();
-  }, [limit]);
+  }, [limit, activeCategory]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore) return;
@@ -48,7 +57,16 @@ export default function NewsFeed({ limit = null, title = null }) {
     const nextPage = page + 1;
 
     try {
-        const newData = await fetchPosts({ per_page: limit || 12, _embed: 1, page: nextPage });
+        let params = { per_page: limit || 12, _embed: 1, page: nextPage };
+
+        if (activeCategory !== 'All Intelligence') {
+          const categoryId = await fetchCategoryBySlug(activeCategory);
+          if (categoryId) {
+            params.categories = categoryId;
+          }
+        }
+
+        const newData = await fetchPosts(params);
 
         if (newData && newData.length > 0) {
            setArticles(prev => {
@@ -79,9 +97,16 @@ export default function NewsFeed({ limit = null, title = null }) {
             <h2 className="text-2xl font-black uppercase tracking-tighter text-white">{title}</h2>
           </div>
         )}
-        <div className="w-full flex flex-col items-center justify-center py-24 space-y-4">
-          <div className="w-8 h-8 border-2 border-axim-purple/30 border-t-axim-purple rounded-full animate-spin"></div>
-          <span className="text-[0.65rem] font-mono uppercase tracking-widest text-zinc-500 animate-pulse">Syncing Database...</span>
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-[#050505] border border-white/5 h-80 rounded-sm p-6 flex flex-col justify-between">
+                <div className="w-1/3 h-4 bg-white/5 rounded-sm" />
+                <div className="w-full h-8 bg-white/10 rounded-sm my-4" />
+                <div className="w-2/3 h-4 bg-white/5 rounded-sm mt-auto" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -123,12 +148,7 @@ export default function NewsFeed({ limit = null, title = null }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.filter(article => {
-          if (activeCategory === 'All Intelligence') return true;
-          // check if activeCategory matches any of the article's embedded categories
-          const categories = article._embedded?.['wp:term']?.[0] || [];
-          return categories.some(cat => cat.name === activeCategory);
-        }).map((article, index) => (
+        {articles.map((article, index) => (
           <ArticleCard key={article.id} article={article} index={index} />
         ))}
       </div>
