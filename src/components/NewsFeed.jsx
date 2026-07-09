@@ -51,10 +51,10 @@ export default function NewsFeed({ limit = null, title = null }) {
         const newData = await fetchPosts({ per_page: limit || 12, _embed: 1, page: nextPage });
 
         if (newData && newData.length > 0) {
-           const existingIds = new Set(articles.map(a => a.id));
-           const filteredNewData = newData.filter(a => !existingIds.has(a.id));
-
-           setArticles(prev => [...prev, ...filteredNewData]);
+           setArticles(prev => {
+             const uniqueBatch = newData.filter(item => !prev.some(p => p.id === item.id));
+             return [...prev, ...uniqueBatch];
+           });
            setPage(nextPage);
 
            if (newData.length < (limit || 12)) {
