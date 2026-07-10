@@ -6,11 +6,13 @@ import { logTelemetry } from "../lib/telemetry";
 import { useAximStore } from "../store/useAximStore";
 import SafeIcon from "../common/SafeIcon";
 import * as LuIcons from "react-icons/lu";
+import * as FiIcons from "react-icons/fi";
 import { decodeHtmlEntitiesAndStripTags } from "../lib/sanitize";
 
 export default function ArticleCard({
   article,
   index = 0,
+  variant = 'grid',
   priority = false,
   isHero = false,
 }) {
@@ -92,33 +94,18 @@ export default function ArticleCard({
 
   const activeGradient = overlayGradients[index % 3] || overlayGradients[1];
 
+
   const handleShareClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const url = `${window.location.origin}/article/${article.slug}`;
-    const shareData = { title: cleanTitle, url };
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        logTelemetry("ORGANIC_SHARE_INTENT", {
-          path: `/article/${article.slug}`,
-          method: "native",
-        });
-      } catch (err) {
-        console.error("Failed to native share", err);
-      }
-    } else if (navigator.clipboard) {
+    if (navigator.clipboard) {
       navigator.clipboard
         .writeText(url)
         .then(() => {
-          useAximStore
-            .getState()
-            .addToast("Link copied to clipboard!", "success");
-          logTelemetry("ORGANIC_SHARE_INTENT", {
-            path: `/article/${article.slug}`,
-            method: "clipboard",
-          });
+          useAximStore.getState().addToast("COPIED", "success");
+          logTelemetry("article_share_copied", { slug: article.slug });
         })
         .catch((err) => {
           console.error("Failed to copy link", err);
@@ -126,31 +113,59 @@ export default function ArticleCard({
     }
   };
 
-  return (
-    <Link
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      to={`/article/${article.slug}`}
-      onClick={() =>
-        logTelemetry("briefing_disclosure_intent", {
-          slug: article.slug,
-          category: categoryBadge,
-        })
-      }
-      className={`group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "md:col-span-3 lg:col-span-full flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "md:col-span-2 flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`}
-    >
-      {/* Interactive Neon Hover Ray Overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.06), transparent 40%)`,
-        }}
-      />
 
-      {/* Reduced Height Image Container */}
-      <div
-        className={`relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}
+  return (
+    <motion.div
+      viewport={{ once: true, amount: 0.5 }}
+      onViewportEnter={() => {
+        logTelemetry('article_view_impression', {
+          id: article.id,
+          slug: article.slug,
+          location: window.location.pathname
+        });
+      }}
+      className={
+        variant === 'row'
+          ? "w-full"
+          : isHero
+            ? "md:col-span-3 lg:col-span-full"
+            : index % 7 === 0
+              ? "md:col-span-2"
+              : "h-full block"
+      }
+    >
+      <Link
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        to={`/article/${article.slug}`}
+        onClick={() =>
+          logTelemetry("briefing_disclosure_intent", {
+            slug: article.slug,
+            category: categoryBadge,
+          })
+        }
+        className={
+          variant === 'row'
+            ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
+            : `group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
+        }
       >
+        {/* Interactive Neon Hover Ray Overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          style={{
+            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.06), transparent 40%)`,
+          }}
+        />
+
+        {/* Reduced Height Image Container */}
+        <div
+          className={
+            variant === 'row'
+              ? "relative w-full sm:w-1/3 h-40 flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm"
+              : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
+          }
+        >
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <motion.img
           src={finalImage}
@@ -166,15 +181,7 @@ export default function ArticleCard({
           style={{ backgroundImage: activeGradient }}
         />
 
-        <div className="absolute top-4 right-4 z-20">
-          <button
-            onClick={handleShareClick}
-            className="p-2 bg-black/80 backdrop-blur-sm border border-white/10 text-white rounded-sm shadow-lg hover:bg-white hover:text-black transition-colors"
-            title="Copy Link"
-          >
-            <SafeIcon icon={LuIcons.LuShare2} className="w-3.5 h-3.5" />
-          </button>
-        </div>
+
 
         <div className="absolute top-4 left-4 z-20 flex items-center space-x-2">
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
@@ -183,12 +190,23 @@ export default function ArticleCard({
           <span className="text-zinc-500 text-[0.65rem] font-medium drop-shadow-md bg-black/40 px-2 py-1 rounded-sm backdrop-blur-sm">
             &bull; {readTime} min read
           </span>
+          <button
+            onClick={handleShareClick}
+            className="p-1.5 text-white/30 hover:text-axim-purple bg-white/5 border border-white/5 hover:border-axim-purple/30 rounded-sm transition-all duration-300 relative z-30"
+            title="Copy Link"
+          >
+            <SafeIcon icon={FiIcons.FiShare2} className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
       {/* Lower Sub-Text Section */}
       <div
-        className={`flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`}
+        className={
+          variant === 'row'
+            ? "flex flex-col flex-grow relative z-10 w-full"
+            : `flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`
+        }
       >
         <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
           {categoryBadge}
@@ -212,5 +230,6 @@ export default function ArticleCard({
         </div>
       </div>
     </Link>
+    </motion.div>
   );
 }
