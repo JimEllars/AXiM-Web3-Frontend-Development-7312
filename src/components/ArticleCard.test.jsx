@@ -1,4 +1,12 @@
 import 'global-jsdom/register';
+
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 import { test, describe, afterEach, beforeEach, vi } from 'vitest';
 import assert from 'assert';
 import { render, screen, cleanup, act } from '@testing-library/react';
@@ -7,6 +15,16 @@ import { MemoryRouter } from 'react-router-dom';
 import ArticleCard from './ArticleCard.jsx';
 
 describe('ArticleCard Component', () => {
+
+beforeEach(() => {
+  window.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+});
+
   afterEach(() => {
     cleanup();
   });

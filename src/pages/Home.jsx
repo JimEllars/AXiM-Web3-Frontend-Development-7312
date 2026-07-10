@@ -84,14 +84,14 @@ export default function Home() {
                 <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
                 <h2 className="text-3xl font-black uppercase tracking-tighter text-white">Daily News</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="flex flex-col gap-6">
                 {isNewsLoading ? (
                   [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : dailyNews.length === 0 ? (
                   <div className="col-span-1 md:col-span-3 bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]
                     <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
                 ) : (
-                  dailyNews.map((post) => <ArticleCard article={post} key={post.id}/>)
+                  dailyNews.map((post) => <ArticleCard article={post} key={post.id} variant="row" />)
                 )}
               </div>
             </div>
