@@ -147,14 +147,14 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
-            : `group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
+            : `group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/30 hover:shadow-[0_0_25px_rgba(147,51,234,0.12)] transition-shadow duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
         }
       >
         {/* Interactive Neon Hover Ray Overlay */}
         <div
           className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.06), transparent 40%)`,
+            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.05), transparent 40%)`,
           }}
         />
 
@@ -170,7 +170,7 @@ export default function ArticleCard({
         <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] opacity-50 group-hover:opacity-70"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-102 opacity-50 group-hover:opacity-60 transition-all duration-700 ease-out border-b border-white/5 relative z-10"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
@@ -211,7 +211,7 @@ export default function ArticleCard({
         <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
           {categoryBadge}
         </span>
-        <h2 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-tight text-white mt-1 mb-2.5 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
+        <h2 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-tight text-white mt-1 mb-2 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
           {cleanTitle}
         </h2>
 
