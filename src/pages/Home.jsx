@@ -23,13 +23,22 @@ export default function Home() {
 
   const handleRetryFetch = () => setRetryCount(prev => prev + 1);
 
+  const [isPrimed, setIsPrimed] = useState(false);
+  const handleSpeculativeWarmup = () => {
+    if (!isPrimed) {
+      setIsPrimed(true);
+      fetchPosts({ forceWarmup: true }).catch(err => console.error("Prefetch failed", err));
+    }
+  };
+
+
   useEffect(() => {
     let isMounted = true;
     const fetchDailyNews = async () => {
       try {
         if (isMounted) setDailyNewsCategoryId(707); // Step 1: Force Category ID
 
-        const data = await fetchPosts({ categorySlug: 'daily-news', limit: 3 });
+        const data = await fetchPosts({ categorySlug: 'daily-news', limit: 10 });
         if (isMounted) {
           setDailyNews(data || []);
           if (import.meta.env.DEV) {
@@ -91,11 +100,23 @@ export default function Home() {
                   <div className="col-span-1 md:col-span-3 bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]
                     <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
                 ) : (
-                  dailyNews.map((post) => <ArticleCard article={post} key={post.id} variant="row" />)
+                  (() => {
+                    const visibleBriefings = dailyNews.slice(0, 5);
+                    return visibleBriefings.map((post) => <ArticleCard article={post} key={post.id} variant="row" />);
+                  })()
                 )}
+
+              </div>
+
+              <div className="mt-12 flex justify-center w-full">
+                <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
+                  See All Intelligence
+                  <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </Link>
               </div>
             </div>
           </section>
+
 
 
         {/* 3. Partner Break: Make */}

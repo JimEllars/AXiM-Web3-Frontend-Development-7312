@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import ArticleCard from './ArticleCard';
 import SafeIcon from '../common/SafeIcon';
@@ -13,8 +14,10 @@ export default function NewsFeed({ limit = null, title = null }) {
   const [activeCategory, setActiveCategory] = useState('All Intelligence');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isPrimed, setIsPrimed] = useState(false);
 
   const filters = [
+    { id: 'Daily News', label: 'Daily News' },
     { id: 'All Intelligence', label: 'All Intelligence' },
     { id: 'Web3 Systems', label: 'Web3 Systems' },
     { id: 'Automation', label: 'Automation' },
@@ -63,6 +66,14 @@ export default function NewsFeed({ limit = null, title = null }) {
     }
     loadArticles();
   }, [limit, activeCategory]);
+
+
+  const handleSpeculativeWarmup = () => {
+    if (!isPrimed) {
+      setIsPrimed(true);
+      fetchPosts({ forceWarmup: true }).catch(err => console.error("Prefetch failed", err));
+    }
+  };
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore) return;
@@ -172,10 +183,24 @@ export default function NewsFeed({ limit = null, title = null }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article, index) => (
-          <ArticleCard key={article.id} article={article} index={index} />
-        ))}
+        {(() => {
+           const rawArticles = articles;
+           const visibleBriefings = activeCategory === 'Daily News' ? rawArticles.slice(0, 5) : rawArticles;
+           return visibleBriefings.map((article, index) => (
+             <ArticleCard key={article.id} article={article} index={index} />
+           ));
+        })()}
       </div>
+
+
+      {activeCategory === 'Daily News' && (
+          <div className="mt-12 flex justify-center w-full">
+            <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
+              See All Intelligence
+              <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </Link>
+          </div>
+      )}
 
       {hasMore && (
         <div className="mt-12 flex justify-center">
