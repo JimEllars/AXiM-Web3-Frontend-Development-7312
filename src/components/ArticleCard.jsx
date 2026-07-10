@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import WPImage from './WPImage';
 import { Link } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
@@ -15,11 +16,12 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
   };
 
   let mediaUrl =
-    article?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    article?.featured_media_src_url ||
-    article?.jetpack_featured_media_url ||
+    article?.featuredImage ||
+    article?.featured_image_src ||
     article?.yoast_head_json?.og_image?.[0]?.url ||
     extractFromContent(article?.content?.rendered) ||
+    article?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    article?.jetpack_featured_media_url ||
     null;
 
   if (mediaUrl && mediaUrl.startsWith('http://')) {
@@ -108,10 +110,10 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
       <div className={`relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}>
 
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
-        <img
+        <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover opacity-50 scale-100 group-hover:scale-102 group-hover:opacity-80 transition-all duration-700 ease-out"
+          className="w-full h-48 sm:h-52 object-cover object-center relative z-10 border-b border-white/5"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
@@ -138,17 +140,18 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
           </span>
         </div>
 
-        {/* Shifted Headline */}
-        <h2 className="relative z-20 text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 group-hover:text-white transition-colors leading-tight drop-shadow-md">
-          {cleanTitle}
-        </h2>
+
       </div>
 
       {/* Lower Sub-Text Section */}
-      <div className={`p-6 flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`}>
-        <span className="inline-block text-[10px] font-mono tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-3 self-start relative z-20">
+      <div className={`flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`}>
+        <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
           {categoryBadge}
         </span>
+        <h2 className="text-base sm:text-lg font-black tracking-tight leading-tight line-clamp-2 uppercase text-white mb-2">
+          {cleanTitle}
+        </h2>
+
         <p className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}>
           {cleanExcerpt}
         </p>

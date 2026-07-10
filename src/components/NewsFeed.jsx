@@ -43,7 +43,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
           if (categoryId) {
-            filteredData = filteredData.filter(item => item.categories && item.categories.includes(categoryId));
+            filteredData = filteredData.filter(item => item.categories && item.categories.includes(parseInt(categoryId)));
           }
         }
         setArticles(filteredData);
@@ -80,7 +80,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
           if (categoryId) {
-            filteredNewData = filteredNewData.filter(item => item.categories && item.categories.includes(categoryId));
+            filteredNewData = filteredNewData.filter(item => item.categories && item.categories.includes(parseInt(categoryId)));
           }
         }
 

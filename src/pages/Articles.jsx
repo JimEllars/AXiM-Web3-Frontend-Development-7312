@@ -45,14 +45,14 @@ export default function Articles() {
           const dailyNewsIds = new Set((dn || []).map(post => post.id));
 
 
-          const dailyNewsArray = (dn || []).filter(post => post.categories && post.categories.includes(dailyNewsId));
+          const dailyNewsArray = (dn || []).filter(post => post.categories && post.categories.includes(parseInt(dailyNewsId)));
           if (dailyNewsArray.length > 0) {
             setLeadStory(dailyNewsArray[0]);
           } else {
             setLeadStory(null);
           }
-          const cleanFeat = (feat || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(featuredId));
-          const cleanApp = (app || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(appSpotlightId));
+          const cleanFeat = (feat || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(parseInt(featuredId)));
+          const cleanApp = (app || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(parseInt(appSpotlightId)));
           setCatData({
             dailyNews: dailyNewsArray.slice(1),
 
