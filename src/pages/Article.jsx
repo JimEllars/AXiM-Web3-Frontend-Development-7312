@@ -15,6 +15,7 @@ import SystemBreadcrumb from '../components/SystemBreadcrumb'; // Adding this as
 export default function Article() {
   const navigate = useNavigate();
   const addToast = useAximStore(state => state.addToast);
+  const recordReadSession = useAximStore(state => state.recordReadSession);
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -47,6 +48,12 @@ const { slug } = useParams();
     if (latest > 0.85 && !hasLoggedCompletion) {
       setHasLoggedCompletion(true);
       logTelemetry('article_completed', { slug });
+      if (article) {
+        const rawContent = article?.content?.rendered || article?.content || "";
+        const cleanContent = rawContent.replace(/<[^>]+>/g, '');
+        const readTime = Math.max(1, Math.ceil((cleanContent.split(' ').length || 0) / 200));
+        recordReadSession(readTime);
+      }
     }
   });
 

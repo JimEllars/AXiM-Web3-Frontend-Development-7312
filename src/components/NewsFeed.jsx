@@ -3,6 +3,7 @@ import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import ArticleCard from './ArticleCard';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function NewsFeed({ limit = null, title = null }) {
   const [articles, setArticles] = useState([]);
@@ -150,7 +151,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         {filters.map(filter => (
           <button
             key={filter.id}
-            onClick={() => setActiveCategory(filter.id)}
+            onClick={() => { setActiveCategory(filter.id); logTelemetry('feed_filter_switch', { category: filter.id }); }}
             className={`px-4 py-2 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest transition-colors border ${
               activeCategory === filter.id
                 ? 'bg-axim-purple/20 border-axim-purple text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]'
