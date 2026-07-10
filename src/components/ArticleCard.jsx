@@ -69,6 +69,12 @@ export default function ArticleCard({
     decodeHtmlEntitiesAndStripTags(rawContent),
   );
 
+  const estimateDuration = (textString) => {
+    const wordsPerMinute = 200;
+    const totalWords = textString ? textString.split(/\s+/).length : 0;
+    return Math.max(1, Math.ceil(totalWords / wordsPerMinute));
+  };
+
   // Determine dynamic category badge based on tags/categories
   const getCategoryBadge = () => {
     const tags = article?.tags || [];
@@ -147,7 +153,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
-            : `group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/30 hover:shadow-[0_0_25px_rgba(147,51,234,0.12)] transition-shadow duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
+            : `bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_25px_rgba(147,51,234,0.12)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
         }
       >
         {/* Interactive Neon Hover Ray Overlay */}
@@ -162,15 +168,15 @@ export default function ArticleCard({
         <div
           className={
             variant === 'row'
-              ? "relative w-full sm:w-1/3 h-40 flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm"
-              : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
+              ? "relative w-full sm:w-1/3 h-40 flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm overflow-hidden mask"
+              : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 overflow-hidden mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
           }
         >
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-102 opacity-50 group-hover:opacity-60 transition-all duration-700 ease-out border-b border-white/5 relative z-10"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-102 transition-transform duration-700 ease-out opacity-50 group-hover:opacity-60 border-b border-white/5 relative z-10"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
@@ -187,8 +193,8 @@ export default function ArticleCard({
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
             {date}
           </span>
-          <span className="text-zinc-500 text-[0.65rem] font-medium drop-shadow-md bg-black/40 px-2 py-1 rounded-sm backdrop-blur-sm">
-            &bull; {readTime} min read
+          <span className="text-zinc-500 font-mono text-xs drop-shadow-md bg-black/40 px-2 py-1 rounded-sm backdrop-blur-sm">
+            • {estimateDuration(excerptText)} MIN READ
           </span>
           <button
             onClick={handleShareClick}
@@ -205,7 +211,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col flex-grow relative z-10 w-full"
-            : `flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`
+            : `flex flex-col flex-1 p-5 justify-between min-h-[180px] relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
         }
       >
         <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
@@ -216,7 +222,7 @@ export default function ArticleCard({
         </h2>
 
         <p
-          className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}
+          className={`text-sm text-zinc-400 leading-relaxed line-clamp-2 mt-2 mb-4 font-medium flex-grow`}
         >
           {cleanExcerpt}
         </p>

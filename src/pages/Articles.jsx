@@ -45,14 +45,27 @@ export default function Articles() {
           const dailyNewsIds = new Set((dn || []).map(post => post.id));
 
 
-          const dailyNewsArray = (dn || []).filter(post => post.categories && post.categories.includes(parseInt(dailyNewsId)));
+          const targetDailyNewsIntId = parseInt(dailyNewsId);
+          const targetFeaturedIntId = parseInt(featuredId);
+          const targetAppSpotlightIntId = parseInt(appSpotlightId);
+
+          const dailyNewsArray = (dn || []).filter(post =>
+              post.category_slug === 'daily-news' ||
+              (Array.isArray(post.categories) && post.categories.includes(targetDailyNewsIntId))
+          );
           if (dailyNewsArray.length > 0) {
             setLeadStory(dailyNewsArray[0]);
           } else {
             setLeadStory(null);
           }
-          const cleanFeat = (feat || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(parseInt(featuredId)));
-          const cleanApp = (app || []).filter(post => !dailyNewsIds.has(post.id) && post.categories && post.categories.includes(parseInt(appSpotlightId)));
+          const cleanFeat = (feat || []).filter(post => !dailyNewsIds.has(post.id) && (
+              post.category_slug === 'featured' ||
+              (Array.isArray(post.categories) && post.categories.includes(targetFeaturedIntId))
+          ));
+          const cleanApp = (app || []).filter(post => !dailyNewsIds.has(post.id) && (
+              post.category_slug === 'app-software' ||
+              (Array.isArray(post.categories) && post.categories.includes(targetAppSpotlightIntId))
+          ));
           setCatData({
             dailyNews: dailyNewsArray.slice(1),
 
