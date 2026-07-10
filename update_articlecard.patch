@@ -1,0 +1,81 @@
+--- src/components/ArticleCard.jsx
++++ src/components/ArticleCard.jsx
+@@ -7,9 +7,25 @@
+ import { decodeHtmlEntitiesAndStripTags } from '../lib/sanitize';
+
+ export default function ArticleCard({ article, index = 0, priority = false, isHero = false }) {
+-  const imageUrl = article?.featuredImage || article._embedded?.['wp:featuredmedia']?.[0]?.source_url;
++  const extractFromContent = (html) => {
++    if (!html) return null;
++    const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"]+)["']/i);
++    return match ? match[1] : null;
++  };
++
++  let mediaUrl =
++    article?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
++    article?.featured_media_src_url ||
++    article?.jetpack_featured_media_url ||
++    article?.yoast_head_json?.og_image?.[0]?.url ||
++    extractFromContent(article?.content?.rendered) ||
++    null;
++
++  if (mediaUrl && mediaUrl.startsWith('http://')) {
++    mediaUrl = mediaUrl.replace('http://', 'https://');
++  }
+   const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+-  const finalImage = imageUrl || defaultImage;
++  const finalImage = mediaUrl || defaultImage;
+
+   const date = new Date(article.date).toLocaleDateString('en-US', {
+     month: 'short',
+@@ -29,6 +45,21 @@
+   const rawContent = article?.content?.rendered || article?.content || excerptText;
+   const readTime = calculateReadTime(decodeHtmlEntitiesAndStripTags(rawContent));
+
++  // Determine dynamic category badge based on tags/categories
++  const getCategoryBadge = () => {
++    const tags = article?.tags || [];
++    const categories = article?.categories || [];
++
++    // Example mapping
++    if (tags.includes(15) || categories.includes(15)) return "CYBERSEC";
++    if (tags.includes(20) || categories.includes(20)) return "INTEL";
++    if (tags.includes(25) || categories.includes(25)) return "AI ENGINE";
++
++    // Default fallback if a category exists
++    if (categories.length > 0) return "BRIEFING";
++    return "UPDATE";
++  };
++  const categoryBadge = getCategoryBadge();
+
+   // Highly Saturated Overlays - Lighter colored top, fading into deep dark slate at the bottom for text contrast
+   const overlayGradients = [
+@@ -67,13 +98,12 @@
+     >
+
+       {/* Reduced Height Image Container */}
+-      <div className={`relative w-full overflow-hidden bg-[#0F172A] flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : "h-48 sm:h-52"}`}>
++      <div className={`relative w-full overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}>
+
+         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
+-        <WPImage
+-          post={article}
+-
++        <img
++          src={finalImage}
+           alt={article.title?.rendered || "Article thumbnail"}
+-          className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
++          className="absolute inset-0 w-full h-48 object-cover object-center border-b border-white/5 relative z-10 opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
+           loading={priority ? "eager" : "lazy"}
+           fetchpriority={priority ? "high" : "auto"}
+         />
+@@ -101,6 +131,9 @@
+           </span>
+         </div>
+
++        <span className="inline-block text-[10px] font-mono tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-3 self-start relative z-20">
++          {categoryBadge}
++        </span>
+         {/* Shifted Headline */}
+         <h2 className="relative z-20 text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 group-hover:text-white transition-colors leading-tight drop-shadow-md">
+           {cleanTitle}

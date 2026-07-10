@@ -104,7 +104,7 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
     >
 
       {/* Reduced Height Image Container */}
-      <div className={`relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}>
+      <div className={`relative w-full overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}>
 
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <img
@@ -145,9 +145,6 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
 
       {/* Lower Sub-Text Section */}
       <div className={`p-6 flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`}>
-        <span className="inline-block text-[10px] font-mono tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-3 self-start relative z-20">
-          {categoryBadge}
-        </span>
         <p className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}>
           {cleanExcerpt}
         </p>

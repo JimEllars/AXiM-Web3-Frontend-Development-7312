@@ -1,0 +1,47 @@
+--- src/components/NewsFeed.jsx
++++ src/components/NewsFeed.jsx
+@@ -28,8 +28,16 @@
+         }
+
+         const data = await fetchPosts(params);
+-        setArticles(data || []);
+-        if (!data || data.length < (limit || 12)) {
++
++        let filteredData = data || [];
++        if (activeCategory !== 'All Intelligence') {
++          const categoryId = await fetchCategoryBySlug(activeCategory);
++          if (categoryId) {
++            filteredData = filteredData.filter(item => item.categories && item.categories.includes(categoryId));
++          }
++        }
++        setArticles(filteredData);
++        if (!data || filteredData.length < (limit || 12)) {
+           setHasMore(false);
+         }
+       } catch (err) {
+@@ -56,15 +64,22 @@
+         }
+
+         const newData = await fetchPosts(params);
++        let filteredNewData = newData || [];
++        if (activeCategory !== 'All Intelligence') {
++          const categoryId = await fetchCategoryBySlug(activeCategory);
++          if (categoryId) {
++            filteredNewData = filteredNewData.filter(item => item.categories && item.categories.includes(categoryId));
++          }
++        }
+
+-        if (newData && newData.length > 0) {
++        if (filteredNewData.length > 0) {
+            setArticles(prev => {
+-             const uniqueBatch = newData.filter(item => !prev.some(p => p.id === item.id));
++             const uniqueBatch = filteredNewData.filter(item => !prev.some(p => p.id === item.id));
+              return [...prev, ...uniqueBatch];
+            });
+            setPage(nextPage);
+
+-           if (newData.length < (limit || 12)) {
++           if (filteredNewData.length < (limit || 12)) {
+                setHasMore(false);
+            }
+         } else {

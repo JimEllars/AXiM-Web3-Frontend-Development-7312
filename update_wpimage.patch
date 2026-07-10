@@ -1,0 +1,20 @@
+--- src/components/WPImage.jsx
++++ src/components/WPImage.jsx
+@@ -4,7 +4,7 @@
+
+ const extractFromContent = (html) => {
+   if (!html) return null;
+-  const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"']+)["']/i);
++  const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"]+)["']/i);
+   return match ? match[1] : null;
+ };
+
+@@ -14,6 +14,8 @@
+
+   let mediaUrl =
+     post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+     post?.featured_media_src_url ||
++    post?.jetpack_featured_media_url ||
++    post?.yoast_head_json?.og_image?.[0]?.url ||
+     extractFromContent(post?.content?.rendered) ||
+     null;
