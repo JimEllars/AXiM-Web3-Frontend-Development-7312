@@ -40,13 +40,14 @@ describe('NewsFeed Component', () => {
       </QueryClientProvider>
     );
 
-    // Initial loading state is null, so it renders nothing
-    assert.strictEqual(container.firstChild, null);
+    // Initial loading state displays skeleton loaders
+    assert.ok(container.querySelector('.animate-pulse') !== null);
 
     await waitFor(() => {
-        const hasPending = screen.queryByText(/\[GLOBAL_FEED_UNAVAILABLE\]/i);
-        const hasArticles = screen.queryByText(/All Articles/i);
-        assert.ok(hasPending || hasArticles);
+        // Since NewsFeed no longer has error boundaries inside it and does not render text explicitly if successful without title, just assert some content loaded
+        const articleElements = document.querySelectorAll('a[href^="/article/"]');
+        const hasPending = screen.queryByText(/\[GLOBAL_FEED_UNAVAILABLE\]/i) || screen.queryByText(/Failed to establish uplink/i);
+        assert.ok(hasPending || articleElements.length > 0);
     }, { timeout: 3000 });
   });
 });

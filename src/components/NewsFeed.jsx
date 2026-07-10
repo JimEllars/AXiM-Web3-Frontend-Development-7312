@@ -42,8 +42,12 @@ export default function NewsFeed({ limit = null, title = null }) {
         let filteredData = data || [];
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
+          const targetCategoryIntId = parseInt(categoryId);
           if (categoryId) {
-            filteredData = filteredData.filter(item => item.categories && item.categories.includes(parseInt(categoryId)));
+            filteredData = filteredData.filter(item =>
+              item.category_slug === activeCategory ||
+              (Array.isArray(item.categories) && item.categories.includes(targetCategoryIntId))
+            );
           }
         }
         setArticles(filteredData);
@@ -79,8 +83,12 @@ export default function NewsFeed({ limit = null, title = null }) {
         let filteredNewData = newData || [];
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
+          const targetCategoryIntId = parseInt(categoryId);
           if (categoryId) {
-            filteredNewData = filteredNewData.filter(item => item.categories && item.categories.includes(parseInt(categoryId)));
+            filteredNewData = filteredNewData.filter(item =>
+              item.category_slug === activeCategory ||
+              (Array.isArray(item.categories) && item.categories.includes(targetCategoryIntId))
+            );
           }
         }
 
