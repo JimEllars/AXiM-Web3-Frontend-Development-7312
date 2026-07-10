@@ -42,7 +42,11 @@ export const useAximStore = create(
       },
       clearQueue: () => set({ pendingActions: [] }),
 
+
   sessionTimeout: 15 * 60 * 1000,
+  cumulativeReadMinutes: 0,
+  recordReadSession: (mins) => set(state => ({ cumulativeReadMinutes: state.cumulativeReadMinutes + mins })),
+
 
   // Web3 Identity State
   walletAddress: sessionStorage.getItem('axim_wallet_session') || null,

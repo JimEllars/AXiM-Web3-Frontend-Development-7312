@@ -100,7 +100,8 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
   return (
     <Link
       to={`/article/${article.slug}`}
-      className={`group bg-[#050505] border border-white/5 rounded-sm overflow-hidden shadow-xl hover:border-white/20 transition-all duration-500 flex flex-col relative block ${isHero ? "md:col-span-3 lg:col-span-full flex flex-col md:flex-row gap-6" : "h-full"}`}
+      onClick={() => logTelemetry('briefing_disclosure_intent', { slug: article.slug, category: categoryBadge })}
+      className={`group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "md:col-span-3 lg:col-span-full flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "md:col-span-2 flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`}
     >
 
       {/* Reduced Height Image Container */}
@@ -110,7 +111,7 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
         <img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-48 object-cover object-center border-b border-white/5 relative z-10 opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
+          className="absolute inset-0 w-full h-full object-cover opacity-50 scale-100 group-hover:scale-102 group-hover:opacity-80 transition-all duration-700 ease-out"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
