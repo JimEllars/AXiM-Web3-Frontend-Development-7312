@@ -1,0 +1,11 @@
+--- src/components/WPImage.jsx
++++ src/components/WPImage.jsx
+@@ -48,7 +48,7 @@
+
+   if (hasError || !imageSrc) {
+     return (
+-      <div className={`w-full h-full aspect-video bg-gradient-to-br from-zinc-900 to-black border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
++      <div className={`w-full h-full aspect-video bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
+         <SafeIcon icon={LuIcons.LuHexagon} className="text-white/5 text-6xl absolute -bottom-4 -right-4" />
+         {imageSrc && (
+           <button

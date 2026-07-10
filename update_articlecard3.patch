@@ -1,0 +1,12 @@
+--- src/components/ArticleCard.jsx
++++ src/components/ArticleCard.jsx
+@@ -131,9 +131,6 @@
+           </span>
+         </div>
+
+-        <span className="inline-block text-[10px] font-mono tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-3 self-start relative z-20">
+-          {categoryBadge}
+-        </span>
+         {/* Shifted Headline */}
+         <h2 className="relative z-20 text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 group-hover:text-white transition-colors leading-tight drop-shadow-md">
+           {cleanTitle}
