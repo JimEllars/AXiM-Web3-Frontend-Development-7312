@@ -1,14 +1,29 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import WPImage from './WPImage';
-import { Link } from 'react-router-dom';
-import { logTelemetry } from '../lib/telemetry';
-import { useAximStore } from '../store/useAximStore';
-import SafeIcon from '../common/SafeIcon';
-import * as LuIcons from 'react-icons/lu';
-import { decodeHtmlEntitiesAndStripTags } from '../lib/sanitize';
+import React, { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import WPImage from "./WPImage";
+import { Link } from "react-router-dom";
+import { logTelemetry } from "../lib/telemetry";
+import { useAximStore } from "../store/useAximStore";
+import SafeIcon from "../common/SafeIcon";
+import * as LuIcons from "react-icons/lu";
+import { decodeHtmlEntitiesAndStripTags } from "../lib/sanitize";
 
-export default function ArticleCard({ article, index = 0, priority = false, isHero = false }) {
+export default function ArticleCard({
+  article,
+  index = 0,
+  priority = false,
+  isHero = false,
+}) {
+  const cardRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    }
+  };
+
   const extractFromContent = (html) => {
     if (!html) return null;
     const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"]+)["']/i);
@@ -24,30 +39,33 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
     article?.jetpack_featured_media_url ||
     null;
 
-  if (mediaUrl && mediaUrl.startsWith('http://')) {
-    mediaUrl = mediaUrl.replace('http://', 'https://');
+  if (mediaUrl && mediaUrl.startsWith("http://")) {
+    mediaUrl = mediaUrl.replace("http://", "https://");
   }
-  const defaultImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+  const defaultImage =
+    "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const finalImage = mediaUrl || defaultImage;
 
-  const date = new Date(article.date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
+  const date = new Date(article.date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
 
   const excerptText = article?.excerpt?.rendered || article?.excerpt || "";
-
-
 
   const cleanExcerpt = decodeHtmlEntitiesAndStripTags(excerptText);
   const titleText = article?.title?.rendered || article?.title || "Untitled";
 
   const cleanTitle = decodeHtmlEntitiesAndStripTags(titleText);
 
-  const calculateReadTime = (text) => Math.max(1, Math.ceil((text?.split(' ').length || 0) / 200));
-  const rawContent = article?.content?.rendered || article?.content || excerptText;
-  const readTime = calculateReadTime(decodeHtmlEntitiesAndStripTags(rawContent));
+  const calculateReadTime = (text) =>
+    Math.max(1, Math.ceil((text?.split(" ").length || 0) / 200));
+  const rawContent =
+    article?.content?.rendered || article?.content || excerptText;
+  const readTime = calculateReadTime(
+    decodeHtmlEntitiesAndStripTags(rawContent),
+  );
 
   // Determine dynamic category badge based on tags/categories
   const getCategoryBadge = () => {
@@ -67,13 +85,12 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
 
   // Highly Saturated Overlays - Lighter colored top, fading into deep dark slate at the bottom for text contrast
   const overlayGradients = [
-    "linear-gradient(to bottom, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.95))",   // Rich Royal Blue
-    "linear-gradient(to bottom, rgba(147, 51, 234, 0.4), rgba(15, 23, 42, 0.95))",  // Deep AXiM Purple
-    "linear-gradient(to bottom, rgba(0, 64, 64, 0.5), rgba(15, 23, 42, 0.95))"      // Deep Phthalo Green
+    "linear-gradient(to bottom, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.95))", // Rich Royal Blue
+    "linear-gradient(to bottom, rgba(147, 51, 234, 0.4), rgba(15, 23, 42, 0.95))", // Deep AXiM Purple
+    "linear-gradient(to bottom, rgba(0, 64, 64, 0.5), rgba(15, 23, 42, 0.95))", // Deep Phthalo Green
   ];
 
   const activeGradient = overlayGradients[index % 3] || overlayGradients[1];
-
 
   const handleShareClick = async (e) => {
     e.preventDefault();
@@ -84,36 +101,61 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}`, method: 'native' });
+        logTelemetry("ORGANIC_SHARE_INTENT", {
+          path: `/article/${article.slug}`,
+          method: "native",
+        });
       } catch (err) {
-        console.error('Failed to native share', err);
+        console.error("Failed to native share", err);
       }
     } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => {
-        useAximStore.getState().addToast('Link copied to clipboard!', 'success');
-        logTelemetry('ORGANIC_SHARE_INTENT', { path: `/article/${article.slug}`, method: 'clipboard' });
-      }).catch((err) => {
-        console.error('Failed to copy link', err);
-      });
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          useAximStore
+            .getState()
+            .addToast("Link copied to clipboard!", "success");
+          logTelemetry("ORGANIC_SHARE_INTENT", {
+            path: `/article/${article.slug}`,
+            method: "clipboard",
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to copy link", err);
+        });
     }
   };
 
-
   return (
     <Link
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
       to={`/article/${article.slug}`}
-      onClick={() => logTelemetry('briefing_disclosure_intent', { slug: article.slug, category: categoryBadge })}
+      onClick={() =>
+        logTelemetry("briefing_disclosure_intent", {
+          slug: article.slug,
+          category: categoryBadge,
+        })
+      }
       className={`group bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "md:col-span-3 lg:col-span-full flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "md:col-span-2 flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`}
     >
+      {/* Interactive Neon Hover Ray Overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.06), transparent 40%)`,
+        }}
+      />
 
       {/* Reduced Height Image Container */}
-      <div className={`relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}>
-
+      <div
+        className={`relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`}
+      >
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="w-full h-48 sm:h-52 object-cover object-center relative z-10 border-b border-white/5"
+          className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] opacity-50 group-hover:opacity-70"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
@@ -124,9 +166,12 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
           style={{ backgroundImage: activeGradient }}
         />
 
-
         <div className="absolute top-4 right-4 z-20">
-          <button onClick={handleShareClick} className="p-2 bg-black/80 backdrop-blur-sm border border-white/10 text-white rounded-sm shadow-lg hover:bg-white hover:text-black transition-colors" title="Copy Link">
+          <button
+            onClick={handleShareClick}
+            className="p-2 bg-black/80 backdrop-blur-sm border border-white/10 text-white rounded-sm shadow-lg hover:bg-white hover:text-black transition-colors"
+            title="Copy Link"
+          >
             <SafeIcon icon={LuIcons.LuShare2} className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -139,25 +184,31 @@ export default function ArticleCard({ article, index = 0, priority = false, isHe
             &bull; {readTime} min read
           </span>
         </div>
-
-
       </div>
 
       {/* Lower Sub-Text Section */}
-      <div className={`flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`}>
+      <div
+        className={`flex flex-col flex-grow relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : "justify-start pt-2 px-4 pb-0"}`}
+      >
         <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
           {categoryBadge}
         </span>
-        <h2 className="text-base sm:text-lg font-black tracking-tight leading-tight line-clamp-2 uppercase text-white mb-2">
+        <h2 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-tight text-white mt-1 mb-2.5 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
           {cleanTitle}
         </h2>
 
-        <p className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}>
+        <p
+          className={`text-zinc-400 text-xs leading-relaxed font-medium flex-grow ${isHero ? "mb-8 line-clamp-6 md:text-sm" : "mb-6 line-clamp-3"}`}
+        >
           {cleanExcerpt}
         </p>
 
         <div className="mt-auto inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors pt-4 border-t border-white/5 w-full">
-          Access Briefing <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1 text-axim-purple" />
+          Access Briefing{" "}
+          <SafeIcon
+            icon={LuIcons.LuArrowRight}
+            className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1 text-axim-purple"
+          />
         </div>
       </div>
     </Link>

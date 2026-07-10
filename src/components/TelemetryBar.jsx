@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useAximStore } from "../store/useAximStore";
 
 export default function TelemetryBar({ label, color, initialValue }) {
   const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setValue(prev => {
+      setValue((prev) => {
         const diff = Math.floor(Math.random() * 5) - 2;
         const next = prev + diff;
         return Math.min(100, Math.max(0, next));
@@ -15,13 +16,19 @@ export default function TelemetryBar({ label, color, initialValue }) {
     return () => clearInterval(interval);
   }, []);
 
-  const colorClass = color === 'axim-purple' ? 'text-axim-purple bg-axim-purple shadow-[0_0_10px_#00E5FF]' :
-                     color === 'axim-gold' ? 'text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]' :
-                     'text-axim-gold bg-axim-gold shadow-[0_0_10px_#00FF88]';
+  const colorClass =
+    color === "axim-purple"
+      ? "text-axim-purple bg-axim-purple shadow-[0_0_10px_#00E5FF]"
+      : color === "axim-gold"
+        ? "text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]"
+        : "text-axim-gold bg-axim-gold shadow-[0_0_10px_#00FF88]";
 
-  const textColor = color === 'axim-purple' ? 'text-axim-purple' :
-                    color === 'axim-gold' ? 'text-axim-gold' :
-                    'text-axim-gold';
+  const textColor =
+    color === "axim-purple"
+      ? "text-axim-purple"
+      : color === "axim-gold"
+        ? "text-axim-gold"
+        : "text-axim-gold";
 
   return (
     <div>
@@ -33,9 +40,8 @@ export default function TelemetryBar({ label, color, initialValue }) {
         <motion.div
           initial={{ width: `${initialValue}%` }}
           animate={{ width: `${value}%` }}
-          transition={{ duration: 0.4, ease: "circOut",
-                }}
-          className={`h-full ${colorClass.split(' ')[1]} ${colorClass.split(' ')[2]}`}
+          transition={{ duration: 0.4, ease: "circOut" }}
+          className={`h-full ${colorClass.split(" ")[1]} ${colorClass.split(" ")[2]}`}
         />
       </div>
     </div>
