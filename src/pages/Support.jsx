@@ -64,7 +64,7 @@ export default function Support() {
         import.meta.env.VITE_AXIM_ONYX_SECRET || "fallback_secret",
       );
 
-      const response = await fetch("/v1/webhooks/enrich", {
+      const response = await fetch(import.meta.env.VITE_SUPPORT_WEBHOOK || "/v1/webhooks/enrich", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
