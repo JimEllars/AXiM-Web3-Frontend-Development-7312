@@ -8,6 +8,7 @@ import SafeIcon from "../common/SafeIcon";
 import * as LuIcons from "react-icons/lu";
 import * as FiIcons from "react-icons/fi";
 import { decodeHtmlEntitiesAndStripTags } from "../lib/sanitize";
+import { localStore } from "../lib/persistence";
 
 export default function ArticleCard({
   article,
@@ -18,6 +19,7 @@ export default function ArticleCard({
 }) {
   const cardRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isSaved, setIsSaved] = useState(() => localStore.getSavedBriefs().includes(article.id));
 
   const handleMouseMove = (e) => {
     if (cardRef.current) {
@@ -101,6 +103,20 @@ export default function ArticleCard({
   const activeGradient = overlayGradients[index % 3] || overlayGradients[1];
 
 
+
+  const handleSaveToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const newBriefs = localStore.toggleSavedBrief(article.id);
+      setIsSaved(newBriefs.includes(article.id));
+      useAximStore.getState().addToast(isSaved ? "BRIEFING REMOVED" : "BRIEFING SAVED", "success");
+    } catch (err) {
+      console.error("Save toggle failed", err);
+      useAximStore.getState().addToast("STORAGE FAULT", "error");
+    }
+  };
+
   const handleShareClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -153,7 +169,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
-            : `bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-2xl hover:border-axim-purple/40 hover:shadow-[0_0_25px_rgba(147,51,234,0.12)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
+            : `bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-xl hover:border-axim-purple/40 hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
         }
       >
         {/* Interactive Neon Hover Ray Overlay */}
@@ -172,11 +188,20 @@ export default function ArticleCard({
               : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 overflow-hidden mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
           }
         >
+
+        <button
+          onClick={handleSaveToggle}
+          className="absolute top-4 right-4 z-30 p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300"
+          title="Save Briefing"
+        >
+          <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
+        </button>
+
         {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
         <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-102 transition-transform duration-700 ease-out opacity-50 group-hover:opacity-60 border-b border-white/5 relative z-10"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-all duration-700 ease-out opacity-50 group-hover:opacity-80 border-b border-white/5 relative z-10"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
         />
@@ -211,7 +236,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col flex-grow relative z-10 w-full"
-            : `flex flex-col flex-1 p-5 justify-between min-h-[180px] relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
+            : `flex flex-col flex-1 justify-between min-h-[160px] p-5 relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
         }
       >
         <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
@@ -222,7 +247,7 @@ export default function ArticleCard({
         </h2>
 
         <p
-          className={`text-sm text-zinc-400 leading-relaxed line-clamp-2 mt-2 mb-4 font-medium flex-grow`}
+          className="text-sm text-zinc-400 leading-relaxed line-clamp-2 md:line-clamp-3 mt-3 mb-6"
         >
           {cleanExcerpt}
         </p>
