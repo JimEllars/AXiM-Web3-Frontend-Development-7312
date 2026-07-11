@@ -5,13 +5,15 @@
 
 const STORAGE_KEYS = {
   PROFILES: 'axm_local_profiles',
-  LETTERS: 'axm_local_letters'
+  LETTERS: 'axm_local_letters',
+  SAVED_BRIEFS: 'axm_local_saved_briefs'
 };
 
 // Internal memory cache to avoid redundant localStorage I/O and JSON parsing
 const _cache = {
   profiles: null,
-  letters: null
+  letters: null,
+  savedBriefs: null
 };
 
 /**
@@ -91,11 +93,32 @@ export const localStore = {
     return letters.filter(l => l.user_id === userId);
   },
 
+
+  getSavedBriefs: () => {
+    return _getStoredData(STORAGE_KEYS.SAVED_BRIEFS, [], 'savedBriefs');
+  },
+
+  toggleSavedBrief: (articleId) => {
+    const briefs = _getStoredData(STORAGE_KEYS.SAVED_BRIEFS, [], 'savedBriefs');
+    const index = briefs.indexOf(articleId);
+    if (index > -1) {
+      briefs.splice(index, 1);
+    } else {
+      briefs.push(articleId);
+    }
+
+    // Attempt to save to localStorage
+    localStorage.setItem(STORAGE_KEYS.SAVED_BRIEFS, JSON.stringify(briefs));
+
+    return briefs;
+  },
+
   /**
    * Clears the internal cache. Useful for testing or forcing a reload.
    */
   clearCache: () => {
     _cache.profiles = null;
     _cache.letters = null;
+    _cache.savedBriefs = null;
   }
 };
