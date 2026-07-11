@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
+import { getSavedBriefings, removeBriefing } from '../lib/persistence';
+import { fetchPosts } from '../lib/wp-fetch';
 
-const { LuLock } = LuIcons;
-
+const { LuLock, LuFolderMinus, LuCalendar, LuTrash2, LuDownload } = LuIcons;
 
 const handleExport = (record) => {
   useAximStore.getState().setGlobalLoading(true, "Decrypting Vaulted Document...");
@@ -15,11 +17,10 @@ const handleExport = (record) => {
     useAximStore.getState().showToast('Vault decryption successful.', 'success');
 
     try {
-      // Create a formatted HTML string based on the record type
       let htmlContent = `
         <html>
           <head>
-            <title>${record.title}</title>
+            <title>${record.title?.rendered || record.title || 'VAULTED RECORD'}</title>
             <style>
               body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
               h1 { font-size: 24px; text-transform: uppercase; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; }
@@ -31,20 +32,9 @@ const handleExport = (record) => {
             </style>
           </head>
           <body>
-            <h1>${record.type === 'NDA' ? 'Mutual Non-Disclosure Agreement' : 'Official Earnings Statement'}</h1>
-            <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.timestamp).toUTCString()}</div>
+            <h1>${record.title?.rendered || record.title || 'VAULTED RECORD'}</h1>
+            <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.date).toUTCString()}</div>
       `;
-
-      // Dynamically map all properties captured during the wizard
-      Object.entries(record.data || {}).forEach(([key, value]) => {
-         const cleanLabel = key.replace(/([A-Z])/g, ' $1').toUpperCase();
-         htmlContent += `
-           <div class="section">
-             <div class="label">${cleanLabel}</div>
-             <div class="value">${value}</div>
-           </div>
-         `;
-      });
 
       htmlContent += `
             <div class="legal-text">
@@ -55,20 +45,15 @@ const handleExport = (record) => {
         </html>
       `;
 
-      // Open a hidden print window, write the HTML, and trigger the native PDF/Print dialog
       const printWindow = window.open('', '_blank');
       printWindow.document.write(htmlContent);
       printWindow.document.close();
       printWindow.focus();
 
-      // Delay slightly to ensure browser renders the DOM before invoking print
       setTimeout(() => {
         printWindow.print();
-
-        // Notify and track export
         useAximStore.getState().setNotification('PDF successfully generated.');
-        logTelemetry('EXPORT_GENERATED', { type: record.type });
-
+        logTelemetry('EXPORT_GENERATED', { type: record.type || 'DOCUMENT' });
         printWindow.close();
       }, 250);
 
@@ -80,112 +65,93 @@ const handleExport = (record) => {
 
 export default function VaultedRecords() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
-  const vaultedArtifacts = useAximStore((state) => state.vaultedArtifacts);
-  const removeVaultedArtifact = useAximStore((state) => state.removeVaultedArtifact);
-  const [fetching, setFetching] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [records, setRecords] = useState([]);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFetching(false);
-    }, 800);
-    return () => clearTimeout(timer);
+    let isMounted = true;
+
+    const fetchRecords = async () => {
+      setLoading(true);
+      const savedIds = getSavedBriefings();
+      if (!savedIds || savedIds.length === 0) {
+        if (isMounted) {
+          setIsEmpty(true);
+          setRecords([]);
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const data = await fetchPosts({ include: savedIds.join(',') });
+        if (isMounted) {
+          if (data && data.length > 0) {
+             setRecords(data);
+             setIsEmpty(false);
+          } else {
+             setRecords([]);
+             setIsEmpty(true);
+          }
+          setLoading(false);
+        }
+      } catch (e) {
+        console.error(e);
+        if (isMounted) {
+          setRecords([]);
+          setIsEmpty(true);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchRecords();
+    return () => { isMounted = false; };
   }, []);
 
-
-
+  const handleRemove = (id) => {
+    removeBriefing(id);
+    const updatedRecords = records.filter(record => record.id !== id);
+    setRecords(updatedRecords);
+    if (updatedRecords.length === 0) {
+      setIsEmpty(true);
+    }
+    logTelemetry('vaulted_record_removed', { id });
+  };
 
   return (
     <>
-        {fetching ? (
-          <div className="flex-1 flex items-center justify-center opacity-30 animate-pulse flex-col gap-4 py-8">
-            <SafeIcon icon={LuLock} className="w-8 h-8 text-axim-purple" />
-            <div className="uppercase text-[0.6rem] text-white tracking-widest font-mono">Querying_Secure_Vault...</div>
+        {loading ? (
+          <div className="flex flex-col gap-3 py-8">
+            <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
+            <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
+            <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
+            <div className="uppercase text-[0.6rem] text-white tracking-widest font-mono text-center mt-2">Querying_Secure_Vault...</div>
           </div>
-                ) : isWeb3Authenticated ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Mock Web3 Record 1 */}
-            <div className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
-                <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-2 pr-8">
-                    <h3 className="text-white font-bold text-sm tracking-wide">Mutual NDA - Partner #812</h3>
-                    <span className="text-[0.6rem] px-2 py-0.5 bg-axim-purple/20 text-axim-purple uppercase tracking-widest rounded-sm">
-                      NDA
-                    </span>
-                  </div>
-                  <p className="text-zinc-500 text-xs font-mono mb-4 flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuCalendar} className="w-3 h-3" />
-                    {new Date().toLocaleDateString()}
-                  </p>
-                  <div className="mt-auto">
-                    <button
-                      onClick={() => {
-                        const fileType = "NDA";
-                        useAximStore.getState().setGlobalLoading(true, `Accessing IPFS Gateway for ${fileType}...`);
-                        setTimeout(() => {
-                          useAximStore.getState().setGlobalLoading(false);
-                          useAximStore.getState().showToast('Mock download was successful.', 'success');
-                          logTelemetry('MOCK_EXPORT_GENERATED', { type: fileType });
-                        }, 1800);
-                      }}
-                      className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
-                    >
-                      <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
-                      Download (Mock) &darr;
-                    </button>
-                  </div>
-                </div>
-            </div>
-
-            {/* Mock Web3 Record 2 */}
-            <div className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
-                <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-2 pr-8">
-                    <h3 className="text-white font-bold text-sm tracking-wide">Income Verification - Q3</h3>
-                    <span className="text-[0.6rem] px-2 py-0.5 bg-axim-purple/20 text-axim-purple uppercase tracking-widest rounded-sm">
-                      PAY STUB
-                    </span>
-                  </div>
-                  <p className="text-zinc-500 text-xs font-mono mb-4 flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuCalendar} className="w-3 h-3" />
-                    {new Date(Date.now() - 86400000).toLocaleDateString()}
-                  </p>
-                  <div className="mt-auto">
-                    <button
-                      onClick={() => {
-                        const fileType = "PAY STUB";
-                        useAximStore.getState().setGlobalLoading(true, `Decrypting AXiM Secure Storage for ${fileType}...`);
-                        setTimeout(() => {
-                          useAximStore.getState().setGlobalLoading(false);
-                          useAximStore.getState().showToast('Mock download was successful.', 'success');
-                          logTelemetry('MOCK_EXPORT_GENERATED', { type: fileType });
-                        }, 1800);
-                      }}
-                      className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
-                    >
-                      <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
-                      Download (Mock) &darr;
-                    </button>
-                  </div>
-                </div>
-            </div>
+        ) : isEmpty ? (
+          <div className="flex-1 flex flex-col items-center justify-center border border-white/5 p-12 text-center rounded-sm bg-[#050505]">
+            <SafeIcon icon={LuFolderMinus} className="w-12 h-12 text-zinc-600 mb-4" />
+            <h3 className="text-white font-bold text-lg mb-2">Your intelligence vault is empty.</h3>
+            <p className="text-zinc-500 text-sm font-mono mb-6">NO CRYPTOGRAPHIC RECORDS FOUND.</p>
+            <Link to="/articles" className="py-2 px-6 bg-axim-purple text-white text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-lg">
+              Browse the Newsroom
+            </Link>
           </div>
-        ) : vaultedArtifacts && vaultedArtifacts.length > 0 ? (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {vaultedArtifacts.map((record) => (
+            {records.map((record) => (
               <div key={record.id} className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
-                <button onClick={() => removeVaultedArtifact(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
-                  <SafeIcon icon={LuIcons.LuTrash2} className="w-4 h-4" />
+                <button onClick={() => handleRemove(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
+                  <SafeIcon icon={LuTrash2} className="w-4 h-4" />
                 </button>
                 <div className="flex flex-col h-full">
                   <div className="flex justify-between items-start mb-2 pr-8">
-                    <h3 className="text-white font-bold text-sm tracking-wide">{record.title || record.name || record.target || 'UNTITLED ASSET'}</h3>
-                    <span className="text-[0.6rem] px-2 py-0.5 bg-axim-purple/20 text-axim-purple uppercase tracking-widest rounded-sm">
-                      {record.type || 'DOCUMENT'}
-                    </span>
+                    <h3 className="text-white font-bold text-sm tracking-wide line-clamp-2" dangerouslySetInnerHTML={{ __html: record.title?.rendered || record.title || 'UNTITLED ASSET' }}></h3>
                   </div>
                   <p className="text-zinc-500 text-xs font-mono mb-4 flex items-center gap-2">
-                    <SafeIcon icon={LuIcons.LuCalendar} className="w-3 h-3" />
-                    {record.timestamp || record.date ? new Date(record.timestamp || record.date).toLocaleDateString() : 'UNKNOWN DATE'}
+                    <SafeIcon icon={LuCalendar} className="w-3 h-3" />
+                    {record.date ? new Date(record.date).toLocaleDateString() : 'UNKNOWN DATE'}
                   </p>
 
                   <div className="mt-auto">
@@ -193,17 +159,13 @@ export default function VaultedRecords() {
                       onClick={() => handleExport(record)}
                       className="w-full py-2 bg-transparent border border-white/10 text-zinc-300 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center gap-2"
                     >
-                      <SafeIcon icon={LuIcons.LuDownload} className="w-3 h-3" />
+                      <SafeIcon icon={LuDownload} className="w-3 h-3" />
                       Export Document
                     </button>
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-        ) : (
-          <div className="text-zinc-500 text-sm font-mono border border-white/5 p-8 text-center rounded-sm">
-            NO CRYPTOGRAPHIC RECORDS FOUND. ACCESS THE TOOLS HUB TO GENERATE NEW ASSETS.
           </div>
         )}
     </>
