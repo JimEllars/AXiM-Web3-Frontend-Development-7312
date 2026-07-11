@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
@@ -18,6 +19,7 @@ export default function AuthGateway() {
   const [password, setPassword] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [networkFault, setNetworkFault] = useState(false);
 
   // Note: Assuming useAximAuth provides standard Supabase wrappers. Adjust as needed.
   const { signIn, signUp } = useAximAuth();
@@ -26,13 +28,25 @@ export default function AuthGateway() {
   const setNotification = useAximStore(state => state.setNotification);
   const [isWeb3Connecting, setIsWeb3Connecting] = useState(false);
 
-  const handleMockWeb3Login = () => {
+  const handleMockWeb3Login = async () => {
     setIsWeb3Connecting(true);
     setErrorMsg(null);
     setEmail('');
     setPassword('');
 
-    setTimeout(() => {
+    try {
+      // Simulate timeout and connection logic with Thirdweb wrappers
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error("Connection Timeout"));
+        }, 8000);
+
+        setTimeout(() => {
+          clearTimeout(timeout);
+          resolve();
+        }, 2000);
+      });
+
       const mockAddress = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
 
       logTelemetry('AUTH_WEB3_LOGIN_SUCCESS', {
@@ -44,7 +58,11 @@ export default function AuthGateway() {
       setNotification('Authentication successful.');
       setIsWeb3Connecting(false);
       navigate("/admin", { state: { web3Auth: mockAddress } });
-    }, 2000);
+    } catch (err) {
+      logTelemetry('auth_timeout_fault', { method: 'mock_wallet_connect', error: err.message });
+      setNetworkFault(true);
+      setIsWeb3Connecting(false);
+    }
   };
 
   const handleAuth = async (e) => {
@@ -52,34 +70,41 @@ export default function AuthGateway() {
     setIsProcessing(true);
     setErrorMsg(null);
 
+    const cleanEmail = sanitizeInput(email);
+    const authPromise = isLogin
+        ? supabase.auth.signInWithPassword({ email: cleanEmail, password: password })
+        : supabase.auth.signUp({ email: cleanEmail, password: password });
+
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth_timeout_fault")), 8000));
+
     try {
-      const cleanEmail = sanitizeInput(email);
-      if (isLogin) {
-        // Real Supabase Login
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password: password,
-        });
-        if (error) throw error;
-      } else {
-        // Real Supabase Registration
-        const { data, error } = await supabase.auth.signUp({
-          email: cleanEmail,
-          password: password,
-        });
-        if (error) throw error;
-      }
+      const { data, error } = await Promise.race([authPromise, timeoutPromise]);
+      if (error) throw error;
 
       // Route directly to the Operator Vault on success
       setNotification('Authentication successful.');
       navigate('/admin');
     } catch (err) {
-      console.error("[AXiM_AUTH] Clearance rejected:", err);
-      setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
+      if (err.message === "auth_timeout_fault") {
+        logTelemetry('auth_timeout_fault', { method: isLogin ? 'login' : 'signup', email: cleanEmail });
+        setNetworkFault(true);
+      } else {
+        console.error("[AXiM_AUTH] Clearance rejected:", err);
+        setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
+      }
     } finally {
       setIsProcessing(false);
     }
   };
+
+
+  if (networkFault) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
+        <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 flex items-center justify-center p-6 pt-24 pb-32">

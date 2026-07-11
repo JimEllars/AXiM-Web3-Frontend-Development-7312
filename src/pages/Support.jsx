@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { sanitizeInput } from "../lib/sanitize";
 import { encryptPayload } from "../lib/crypto";
 import DatabaseUplinkError from "../common/DatabaseUplinkError";
@@ -24,6 +25,7 @@ export default function Support() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [networkFault, setNetworkFault] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -38,6 +40,19 @@ export default function Support() {
   };
 
   const { showToast } = useAximStore();
+
+
+  useEffect(() => {
+    let timeoutId;
+    if (toastVisible) {
+      timeoutId = setTimeout(() => {
+        setToastVisible(false);
+      }, 3000);
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [toastVisible]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,7 +95,6 @@ export default function Support() {
         subject: sanitizedSubject,
         priority: formData.priority,
       });
-      showToast("Support ticket securely routed to AXiM Triage", "success");
 
       setFormData({
         name: "",
@@ -90,6 +104,8 @@ export default function Support() {
         priority: "Technical",
         attachment: null,
       });
+
+      setToastVisible(true);
     } catch (err) {
       console.error("Support Submission Failed:", err);
       setNetworkFault(true);
@@ -151,6 +167,19 @@ export default function Support() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+
+      {toastVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-6 right-6 bg-axim-purple text-white px-4 py-2 rounded-sm shadow-xl flex items-center gap-2 z-[100]"
+        >
+          <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4" />
+          <span>Support ticket securely routed</span>
+        </motion.div>
+      )}
+
       <SEO
         title="Decentralized Customer Support | AXiM Systems"
         description="Get help with your AXiM tools, manage tickets, and access documentation."
