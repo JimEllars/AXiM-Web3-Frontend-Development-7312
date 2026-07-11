@@ -122,3 +122,13 @@ export const localStore = {
     _cache.savedBriefs = null;
   }
 };
+export function getSavedBriefings() {
+  return localStore.getSavedBriefs();
+}
+
+export function removeBriefing(id) {
+  const briefs = localStore.getSavedBriefs();
+  if (briefs.includes(id)) {
+    localStore.toggleSavedBrief(id);
+  }
+}

@@ -165,6 +165,10 @@ const { slug } = useParams();
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-axim-purple z-[100] shadow-[0_0_15px_rgba(147,51,234,0.6)] origin-left"
+        style={{ scaleX: scrollYProgress }}
+      />
       <SEO
         title={`${cleanTitle} | AXiM Systems`}
         description={cleanExcerpt}
