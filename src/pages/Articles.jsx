@@ -123,6 +123,12 @@ export default function Articles() {
 
       {/* Filter Pill-Bar for Articles */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex items-center px-2.5 py-1 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+            CDN NODE // SYNC_OK
+          </div>
+        </div>
         <div className="flex flex-wrap gap-3 justify-center">
           {['All briefings', 'Daily News', 'Featured', 'Software Spotlight'].map(filter => (
             <button

@@ -67,31 +67,32 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL;
 
     if (!endpoint) {
-        console.log('[MOCK TELEMETRY SYNC]', payload);
-        useAximStore.setState({ telemetryCollection: [] });
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('axim_telemetry_cache');
-        }
+        console.log('[MOCK TELEMETRY SYNC PENDING]', payload);
         return;
     }
 
     let success = false;
 
-    if (typeof window !== 'undefined' && window.fetch) {
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || 'UNSET_DEV_KEY'
-          },
-          body: payload,
-          keepalive: true,
-        });
-        success = response.ok || response.status === 200 || response.status === 204;
-      } catch (fetchErr) {
-        console.error("Fetch telemetry failed, will retry later", fetchErr);
-        success = false;
+    if (typeof window !== 'undefined') {
+      if (window.navigator?.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        success = window.navigator.sendBeacon(endpoint, blob);
+      } else if (window.fetch) {
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || 'UNSET_DEV_KEY'
+            },
+            body: payload,
+            keepalive: true,
+          });
+          success = response.ok || response.status === 200 || response.status === 204;
+        } catch (fetchErr) {
+          console.error("Fetch telemetry failed, will retry later", fetchErr);
+          success = false;
+        }
       }
     }
 
