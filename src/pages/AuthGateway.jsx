@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import SafeIcon from '../common/SafeIcon';
@@ -12,6 +12,10 @@ import { useEffect } from 'react';
 import { sanitizeInput } from '../lib/sanitize';
 import { logTelemetry } from '../lib/telemetry';
 
+import { useConnect } from 'thirdweb/react';
+import { createWallet } from 'thirdweb/wallets';
+import { arbitrum } from 'thirdweb/chains';
+import { client } from '../lib/thirdweb-client';
 
 export default function AuthGateway() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,41 +30,49 @@ export default function AuthGateway() {
   const navigate = useNavigate();
   const loginWeb3Wallet = useAximStore(state => state.loginWeb3Wallet);
   const setNotification = useAximStore(state => state.setNotification);
+  const showToast = useAximStore(state => state.showToast);
   const [isWeb3Connecting, setIsWeb3Connecting] = useState(false);
 
-  const handleMockWeb3Login = async () => {
+  const { connect } = useConnect();
+
+  const handleWeb3Login = async () => {
     setIsWeb3Connecting(true);
     setErrorMsg(null);
     setEmail('');
     setPassword('');
 
     try {
-      // Simulate timeout and connection logic with Thirdweb wrappers
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error("Connection Timeout"));
-        }, 8000);
-
-        setTimeout(() => {
-          clearTimeout(timeout);
-          resolve();
-        }, 2000);
+      const wallet = await connect(async () => {
+        const injected = createWallet("io.metamask");
+        await injected.connect({
+           client,
+           chain: arbitrum
+        });
+        return injected;
       });
 
-      const mockAddress = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      const account = wallet.getAccount();
 
-      logTelemetry('AUTH_WEB3_LOGIN_SUCCESS', {
-        address: mockAddress,
-        method: 'mock_wallet_connect'
-      });
+      if (account) {
+        logTelemetry('AUTH_WEB3_WALLET_CONNECTED', {
+          address: account.address,
+        });
 
-      loginWeb3Wallet(mockAddress);
-      setNotification('Authentication successful.');
-      setIsWeb3Connecting(false);
-      navigate("/admin", { state: { web3Auth: mockAddress } });
+        loginWeb3Wallet(account.address);
+        setNotification('Authentication successful.');
+        setIsWeb3Connecting(false);
+        navigate("/admin", { state: { web3Auth: account.address } });
+      } else {
+        throw new Error("No account found");
+      }
     } catch (err) {
-      logTelemetry('auth_timeout_fault', { method: 'mock_wallet_connect', error: err.message });
-      setNetworkFault(true);
+      if (err.message && (err.message.includes('User rejected') || err.message.includes('rejected'))) {
+         logTelemetry('AUTH_WEB3_REJECTED', { error: err.message });
+         showToast("Signature Rejected", "error");
+      } else {
+         logTelemetry('auth_timeout_fault', { method: 'web3_connect', error: err.message });
+         showToast("Wallet Connection Failed", "error");
+      }
       setIsWeb3Connecting(false);
     }
   };
@@ -186,7 +198,7 @@ export default function AuthGateway() {
           <div className="flex justify-center relative z-10 w-full">
             <button
               type="button"
-              onClick={handleMockWeb3Login}
+              onClick={handleWeb3Login}
               disabled={isWeb3Connecting || isProcessing}
               className="w-full py-4 bg-[#050505] border border-white/5 text-axim-purple hover:bg-axim-purple/10 hover:text-white hover:border-axim-purple/50 font-black uppercase tracking-widest text-xs transition-colors rounded-sm flex items-center justify-center gap-3 disabled:opacity-50 shadow-lg"
             >

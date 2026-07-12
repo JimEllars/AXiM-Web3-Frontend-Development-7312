@@ -7,7 +7,12 @@ import { logTelemetry } from '../lib/telemetry';
 import { getSavedBriefings, removeBriefing } from '../lib/persistence';
 import { fetchPosts } from '../lib/wp-fetch';
 
-const { LuLock, LuFolderMinus, LuCalendar, LuTrash2, LuDownload } = LuIcons;
+import { useReadContract } from 'thirdweb/react';
+import { getContract } from 'thirdweb';
+import { client } from '../lib/thirdweb-client';
+import { arbitrum } from 'thirdweb/chains';
+
+const { LuFolderMinus, LuCalendar, LuTrash2, LuDownload, LuAward } = LuIcons;
 
 const handleExport = (record) => {
   useAximStore.getState().setGlobalLoading(true, "Decrypting Vaulted Document...");
@@ -33,7 +38,7 @@ const handleExport = (record) => {
           </head>
           <body>
             <h1>${record.title?.rendered || record.title || 'VAULTED RECORD'}</h1>
-            <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.date).toUTCString()}</div>
+            <div class="meta">DOCUMENT ID: ${record.id}<br/>TIMESTAMP: ${new Date(record.date || Date.now()).toUTCString()}</div>
       `;
 
       htmlContent += `
@@ -65,15 +70,59 @@ const handleExport = (record) => {
 
 export default function VaultedRecords() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const walletAddress = useAximStore((state) => state.walletAddress);
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState([]);
   const [isEmpty, setIsEmpty] = useState(false);
+
+  // Web3 Contract reading logic
+  const contractAddress = import.meta.env.VITE_ACADEMY_SBT_CONTRACT;
+  const contract = contractAddress ? getContract({
+    client,
+    chain: arbitrum,
+    address: contractAddress,
+  }) : null;
+
+  const { data: nfts, isLoading: isNftsLoading } = useReadContract({
+    contract,
+    method: "function getOwnedTokenIds(address _owner) view returns (uint256[])",
+    params: [walletAddress],
+    queryOptions: {
+      enabled: isWeb3Authenticated && !!contract && !!walletAddress,
+    }
+  });
+
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchRecords = async () => {
       setLoading(true);
+
+      if (isWeb3Authenticated) {
+        if (!isNftsLoading) {
+           if (isMounted) {
+             if (nfts && nfts.length > 0) {
+                // Mock mapping the tokens to UI elements
+                const mappedNfts = nfts.map((id) => ({
+                   id: `token-${id}`,
+                   title: `On-Chain Credential #${id}`,
+                   type: 'CERTIFICATION',
+                   date: new Date().toISOString() // Assuming current date for simplicity without full metadata read
+                }));
+                setRecords(mappedNfts);
+                setIsEmpty(false);
+             } else {
+                setRecords([]);
+                setIsEmpty(true);
+             }
+             setLoading(false);
+           }
+        }
+        return;
+      }
+
+      // Standard behavior
       const savedIds = getSavedBriefings();
       if (!savedIds || savedIds.length === 0) {
         if (isMounted) {
@@ -108,9 +157,10 @@ export default function VaultedRecords() {
 
     fetchRecords();
     return () => { isMounted = false; };
-  }, []);
+  }, [isWeb3Authenticated, isNftsLoading, nfts]);
 
   const handleRemove = (id) => {
+    if (isWeb3Authenticated) return; // Cannot remove on-chain tokens this way
     removeBriefing(id);
     const updatedRecords = records.filter(record => record.id !== id);
     setRecords(updatedRecords);
@@ -122,7 +172,7 @@ export default function VaultedRecords() {
 
   return (
     <>
-        {loading ? (
+        {loading || (isWeb3Authenticated && isNftsLoading) ? (
           <div className="flex flex-col gap-3 py-8">
             <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
             <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
@@ -133,7 +183,7 @@ export default function VaultedRecords() {
           <div className="flex-1 flex flex-col items-center justify-center border border-white/5 p-12 text-center rounded-sm bg-[#050505]">
             <SafeIcon icon={LuFolderMinus} className="w-12 h-12 text-zinc-600 mb-4" />
             <h3 className="text-white font-bold text-lg mb-2">Your intelligence vault is empty.</h3>
-            <p className="text-zinc-500 text-sm font-mono mb-6">NO CRYPTOGRAPHIC RECORDS FOUND.</p>
+            <p className="text-zinc-500 text-sm font-mono mb-6">NO CRYPTOGRAPHIC CREDENTIALS FOUND</p>
             <Link to="/articles" className="py-2 px-6 bg-axim-purple text-white text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-lg">
               Browse the Newsroom
             </Link>
@@ -142,9 +192,16 @@ export default function VaultedRecords() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {records.map((record) => (
               <div key={record.id} className="p-4 border border-white/10 bg-[#050505] rounded-sm hover:border-axim-purple/50 transition-colors group relative">
-                <button onClick={() => handleRemove(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
-                  <SafeIcon icon={LuTrash2} className="w-4 h-4" />
-                </button>
+                {!isWeb3Authenticated && (
+                  <button onClick={() => handleRemove(record.id)} className="absolute top-2 right-2 text-zinc-600 hover:text-[#DB2777] p-2 transition-colors z-10" title="Purge Record">
+                    <SafeIcon icon={LuTrash2} className="w-4 h-4" />
+                  </button>
+                )}
+                {isWeb3Authenticated && (
+                   <div className="absolute top-2 right-2 text-axim-gold p-2 z-10" title="On-Chain Credential">
+                     <SafeIcon icon={LuAward} className="w-4 h-4" />
+                   </div>
+                )}
                 <div className="flex flex-col h-full">
                   <div className="flex justify-between items-start mb-2 pr-8">
                     <h3 className="text-white font-bold text-sm tracking-wide line-clamp-2" dangerouslySetInnerHTML={{ __html: record.title?.rendered || record.title || 'UNTITLED ASSET' }}></h3>

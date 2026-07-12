@@ -1,3 +1,6 @@
+import { useWalletBalance } from 'thirdweb/react';
+import { arbitrum } from 'thirdweb/chains';
+import { client } from '../lib/thirdweb-client';
 import React, { useState } from 'react';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
@@ -17,6 +20,14 @@ export default function Profile() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const logoutWeb3Wallet = useAximStore((state) => state.logoutWeb3Wallet);
   const [activeTab, setActiveTab] = useState('vault');
+  const usdcTokenAddress = import.meta.env.VITE_USDC_TOKEN_ADDRESS || '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'; // Default Arbitrum USDC address
+  const { data: balanceData, isLoading: isBalanceLoading } = useWalletBalance({
+    chain: arbitrum,
+    address: walletAddress,
+    client: client,
+    tokenAddress: usdcTokenAddress,
+  });
+
   const [extractingId, setExtractingId] = useState(null);
   const [extractedAssets, setExtractedAssets] = useState([]);
 
@@ -82,6 +93,18 @@ export default function Profile() {
               )}
             </p>
           </div>
+            {isWeb3Authenticated && (
+              <div className="mt-6 border border-white/5 bg-[#050505] p-6 rounded-sm shadow-xl">
+                {isBalanceLoading ? (
+                   <div className="animate-pulse bg-white/5 h-8 rounded-sm w-48"></div>
+                ) : (
+                   <div className="font-mono text-xs uppercase tracking-widest text-zinc-300">
+                     ACCOUNT SETTLE BALANCE: <span className="text-white font-bold">{balanceData?.displayValue || '0.00'} {balanceData?.symbol || 'USDC'}</span> [ARBITRUM ONE]
+                   </div>
+                )}
+              </div>
+            )}
+
 
           <div className="flex gap-2">
             <button className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
