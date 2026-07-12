@@ -43,6 +43,13 @@ const { slug } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoggedCompletion, setHasLoggedCompletion] = useState(false);
   const { scrollYProgress } = useScroll();
+    const handlePartnerClick = (e, partnerUrl) => {
+    e.preventDefault();
+    logTelemetry('PARTNER_FUNNEL_REDIRECT', { target: partnerUrl });
+    setTimeout(() => {
+      window.open(partnerUrl + '?via=axim_hub', '_blank', 'noopener,noreferrer');
+    }, 150);
+  };
   const [scrollPercent, setScrollPercent] = useState(0);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
@@ -285,18 +292,18 @@ const { slug } = useParams();
                <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-zinc-500" /> Partner Network
              </h4>
              <div className="space-y-4">
-               <Link to="/partners/make" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+               <a href="https://www.make.com/en/register" onClick={(e) => handlePartnerClick(e, 'https://www.make.com/en/register')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-indigo-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuCpu} className="w-4 h-4 text-white" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Make.com</span>
-               </Link>
-               <Link to="/partners/powur-solar" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
+               </a>
+               <a href="https://powur.com/axim" onClick={(e) => handlePartnerClick(e, 'https://powur.com/axim')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuSun} className="w-4 h-4 text-black" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Powur Solar</span>
-               </Link>
+               </a>
              </div>
           </div>
 

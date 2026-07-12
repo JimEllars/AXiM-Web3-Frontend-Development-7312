@@ -4,19 +4,27 @@
 
 @layer utilities {
   .bg-layered-purple {
-    background-image: radial-gradient(circle at center, #1A0033 0%, #050505 100%);
+    background-image: radial-gradient(
+      circle at center,
+      #1a0033 0%,
+      #050505 100%
+    );
   }
   .bg-grid {
     background-size: 60px 60px;
-    background-image: 
+    background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(
+      circle at 50% 50%,
+      black 30%,
+      transparent 100%
+    );
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #fff 0%, #fff 50%, #FFEA00 100%);
+    background: linear-gradient(135deg, #fff 0%, #fff 50%, #ffea00 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -26,11 +34,11 @@
   .btn {
     @apply px-10 py-5 font-bold uppercase tracking-[1.5px] text-[0.85rem] inline-flex items-center gap-3 rounded cursor-pointer transition-all duration-300;
   }
-  
+
   .btn-primary {
     @apply bg-axim-gold text-black border border-axim-gold shadow-[0_10px_20px_-10px_rgba(240,255,0,0.3)] hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(240,255,0,0.5)] hover:bg-white hover:border-white;
   }
-  
+
   .btn-outline {
     @apply border border-active text-white backdrop-blur-[10px] hover:bg-white/5 hover:border-white hover:-translate-y-1;
   }
@@ -60,9 +68,13 @@ body {
   isolation: isolate;
 }
 
-@keyframes aximScroll { 
-  0% { transform: translateX(0); } 
-  100% { transform: translateX(-50%); } 
+@keyframes aximScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -72,5 +84,22 @@ body {
   /* Enforce contrast for Phthalo Green text on dark backgrounds */
   .text-\\[\\#004040\\] {
     -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4);
+  }
+}
+
+@layer components {
+  .prose-axim code {
+    @apply text-zinc-300 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-xs font-mono;
+  }
+  .prose-axim pre {
+    @apply bg-[#030303] border border-white/5 p-4 rounded-sm font-mono text-xs overflow-x-auto text-zinc-200 mb-6;
+  }
+  .prose-axim blockquote {
+    @apply border-l-2 border-axim-purple bg-gradient-to-r from-axim-purple/5 to-transparent pl-4 py-2 italic text-zinc-200 font-medium my-6;
+  }
+  .prose-axim h2,
+  .prose-axim h3,
+  .prose-axim h4 {
+    @apply font-black text-white uppercase tracking-wider mt-8 mb-4;
   }
 }
