@@ -77,13 +77,7 @@ export async function flushTelemetryQueue(force = false) {
 
     let success = false;
 
-    // Use navigator.sendBeacon if available
-    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-      success = navigator.sendBeacon(endpoint, payload);
-    }
-
-    if (!success && typeof window !== 'undefined' && window.fetch) {
-      // Fallback to fetch
+    if (typeof window !== 'undefined' && window.fetch) {
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -94,7 +88,7 @@ export async function flushTelemetryQueue(force = false) {
           body: payload,
           keepalive: true,
         });
-        success = response.ok;
+        success = response.ok || response.status === 200 || response.status === 204;
       } catch (fetchErr) {
         console.error("Fetch telemetry failed, will retry later", fetchErr);
         success = false;
