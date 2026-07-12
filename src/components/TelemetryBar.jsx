@@ -15,9 +15,14 @@ export default function TelemetryBar({ label, color, initialValue }) {
     setValue(calculatedValue > 0 ? calculatedValue : initialValue);
   }, [telemetryCollection, initialValue]);
 
+  const triggerPulseState = () => {
+    setPulse(true);
+    setTimeout(() => setPulse(false), 300);
+    setValue((prev) => Math.min(100, prev + 2));
+  };
+
   useEffect(() => {
     let liveTelemetryChannel;
-
     try {
       liveTelemetryChannel = supabase
         .channel('public:api_usage_logs')
@@ -26,10 +31,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
           schema: 'public',
           table: 'telemetry_ingress'
         }, (payload) => {
-          setPulse(true);
-          setTimeout(() => setPulse(false), 300);
-
-          setValue((prev) => Math.min(100, prev + 2));
+          triggerPulseState();
         })
         .subscribe();
     } catch (e) {
@@ -62,7 +64,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
       <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
         <span className="flex items-center">
           <span
-            className={`w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] mr-2 relative inline-block transition-all duration-300 ${pulse ? 'scale-125 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] mr-2 relative inline-block animate-pulse ${pulse ? 'scale-125 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
           />
           {label}
         </span>
