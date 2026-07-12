@@ -295,9 +295,13 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
 
 export const fetchPosts = async (params = {}) => {
   try {
-    params._ts = Date.now();
+    if (params.forceWarmup) {
+      delete params.forceWarmup;
+    } else {
+      // Allow edge caching
+    }
     const queryParams = new URLSearchParams(params).toString();
-    const endpoint = `/wp-json/wp/v2/posts?_embed=1&${queryParams}`;
+    const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
 
     const proxyUrl = import.meta.env?.VITE_WP_PROXY_URL || 'https://wp-proxy.axim.us.com';
 

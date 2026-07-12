@@ -203,7 +203,7 @@ export default function NewsFeed({ limit = null, title = null }) {
           </div>
       )}
 
-      {hasMore && (
+      {hasMore && activeCategory !== 'Daily News' && (
         <div className="mt-12 flex justify-center">
           <button
             onClick={handleLoadMore}
