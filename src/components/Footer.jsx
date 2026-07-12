@@ -2,12 +2,77 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 
 import { useLocation } from 'react-router-dom';
 
 export default function Footer() {
 
   const [clickCount, setClickCount] = React.useState(0);
+  const [latencyMs, setLatencyMs] = React.useState(null);
+  const [history, setHistory] = React.useState([20, 25, 22]);
+  const [isOffline, setIsOffline] = React.useState(false);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const measureLatency = async () => {
+      const start = performance.now();
+      try {
+        const response = await fetch('/wp-json/wp/v2/posts?per_page=1');
+        const end = performance.now();
+        const delta = Math.round(end - start);
+
+        if (!response.ok || response.status >= 500 || delta > 3000) {
+          logTelemetry('edge_node_latency_warning', {
+            id: crypto.randomUUID(),
+            endpoint: 'wp_proxy_worker',
+            measured_latency: delta,
+            status: 'TIMEOUT_EXCEEDED'
+          });
+        }
+
+        if (isMounted) {
+          setLatencyMs(delta);
+          setHistory(prev => {
+            const newHistory = [...prev, delta];
+            if (newHistory.length > 3) return newHistory.slice(-3);
+            return newHistory;
+          });
+          setIsOffline(false);
+        }
+      } catch (err) {
+        const end = performance.now();
+        const delta = Math.round(end - start);
+        logTelemetry('edge_node_latency_warning', {
+          endpoint: 'wp_proxy_worker',
+          measured_latency: delta,
+          status: 'TIMEOUT_EXCEEDED'
+        });
+        if (isMounted) {
+          setIsOffline(true);
+        }
+      }
+    };
+
+    measureLatency();
+    const interval = setInterval(measureLatency, 45000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const generateGraphPath = () => {
+    if (history.length === 0) return '';
+    const max = Math.max(100, ...history);
+    return history.map((val, i) => {
+      let x = (i / Math.max(1, history.length - 1)) * 48;
+      if (history.length === 1) x = 24;
+      const y = 16 - (Math.min(val, max) / max) * 16;
+      return `${x},${y}`;
+    }).join(' ');
+  };
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const isExternalTrackingActive = queryParams.has('via') || queryParams.has('utm_source');
@@ -90,7 +155,17 @@ export default function Footer() {
           <p className="text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
             <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Systems. All rights reserved.</span>
           </p>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
+             <div className="flex items-center gap-2 text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
+               <span>LATENCY // {latencyMs ? `${latencyMs}ms` : 'CONNECTING...'}</span>
+               <svg className="w-12 h-4" viewBox="0 0 48 16">
+                 {isOffline ? (
+                   <polyline points="0,8 24,8 48,8" fill="none" stroke="#f97316" strokeWidth="2" strokeDasharray="4 2" />
+                 ) : (
+                   <polyline points={generateGraphPath()} fill="none" stroke="#7D00FF" strokeWidth="1.5" />
+                 )}
+               </svg>
+             </div>
              <Link to="/terms" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
           </div>
         </div>
