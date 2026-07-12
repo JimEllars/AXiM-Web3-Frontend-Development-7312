@@ -101,7 +101,9 @@ export default function Home() {
                     <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
                 ) : (
                   (() => {
-                    const visibleBriefings = dailyNews.slice(0, 5);
+                    const rawArticles = dailyNews;
+                    const truncatedBriefings = rawArticles.slice(0, 5);
+                    const visibleBriefings = truncatedBriefings;
                     return visibleBriefings.map((post) => <ArticleCard article={post} key={post.id} variant="row" />);
                   })()
                 )}
@@ -109,7 +111,7 @@ export default function Home() {
               </div>
 
               <div className="mt-12 flex justify-center w-full">
-                <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
+                <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} onClick={() => logTelemetry('see_all_briefings_click', { origin: 'home_daily_news' })} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
                   See All Intelligence
                   <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
                 </Link>
