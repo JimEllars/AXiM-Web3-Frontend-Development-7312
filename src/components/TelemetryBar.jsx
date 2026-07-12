@@ -15,12 +15,6 @@ export default function TelemetryBar({ label, color, initialValue }) {
     setValue(calculatedValue > 0 ? calculatedValue : initialValue);
   }, [telemetryCollection, initialValue]);
 
-  const triggerPulseState = () => {
-    setPulse(true);
-    setTimeout(() => setPulse(false), 300);
-    setValue((prev) => Math.min(100, prev + 2));
-  };
-
   useEffect(() => {
     let liveTelemetryChannel;
     try {
@@ -31,7 +25,22 @@ export default function TelemetryBar({ label, color, initialValue }) {
           schema: 'public',
           table: 'telemetry_ingress'
         }, (payload) => {
-          triggerPulseState();
+          setPulse(true);
+          setTimeout(() => setPulse(false), 300);
+
+          if (payload.new) {
+            let increment = 2;
+            if (payload.new.load) {
+              increment = typeof payload.new.load === 'number' ? payload.new.load : 5;
+            } else if (payload.new.metrics && typeof payload.new.metrics.value === 'number') {
+              increment = payload.new.metrics.value;
+            } else if (typeof payload.new.value === 'number') {
+              increment = payload.new.value;
+            }
+            setValue((prev) => Math.min(100, prev + increment));
+          } else {
+            setValue((prev) => Math.min(100, prev + 2));
+          }
         })
         .subscribe();
     } catch (e) {
