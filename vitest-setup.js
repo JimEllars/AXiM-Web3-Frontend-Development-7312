@@ -13,3 +13,12 @@ global.localStorage = {
   removeItem: vi.fn(),
   clear: vi.fn(),
 };
+
+// Mock IntersectionObserver
+class IntersectionObserver {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+window.IntersectionObserver = IntersectionObserver;

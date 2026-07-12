@@ -36,7 +36,7 @@ describe('ChatbaseLanding', () => {
     renderWithProviders(<ChatbaseLanding />);
     const affiliateLink = screen.getAllByText(/Build Your Agent for Free/i)[0];
     expect(affiliateLink).not.toBeNull();
-    expect(affiliateLink.getAttribute('href')).toBe('https://link.chatbase.co/jrellars');
+    expect(affiliateLink.getAttribute('href')).toBe('https://link.chatbase.co/jrellars?via=axim_hub');
     expect(affiliateLink.getAttribute('target')).toBe('_blank');
     expect(affiliateLink.getAttribute('rel')).toBe('noopener noreferrer');
   });
