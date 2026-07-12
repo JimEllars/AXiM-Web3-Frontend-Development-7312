@@ -185,7 +185,8 @@ export default function NewsFeed({ limit = null, title = null }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {(() => {
            const rawArticles = articles;
-           const visibleBriefings = activeCategory === 'Daily News' ? rawArticles.slice(0, 5) : rawArticles;
+           const truncatedBriefings = rawArticles.slice(0, 5);
+           const visibleBriefings = activeCategory === 'Daily News' ? truncatedBriefings : rawArticles;
            return visibleBriefings.map((article, index) => (
              <ArticleCard key={article.id} article={article} index={index} />
            ));
