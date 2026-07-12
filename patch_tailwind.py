@@ -1,4 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+import re
+
+config = """/** @type {import('tailwindcss').Config} */
 import { theme as siteTheme } from './src/config/theme.js';
 
 export default {
@@ -101,3 +103,9 @@ export default {
   },
   plugins: [require("@tailwindcss/typography")],
 }
+"""
+
+with open("tailwind.config.js", "w") as f:
+    f.write(config)
+
+print("tailwind patched")

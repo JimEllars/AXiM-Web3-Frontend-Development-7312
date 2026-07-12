@@ -43,6 +43,11 @@ const { slug } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoggedCompletion, setHasLoggedCompletion] = useState(false);
   const { scrollYProgress } = useScroll();
+  const [scrollPercent, setScrollPercent] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollPercent(Math.round(latest * 100));
+  });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (latest > 0.85 && !hasLoggedCompletion) {
@@ -242,6 +247,7 @@ const { slug } = useParams();
              </p>
              <a
                href="https://quickdemandletter.com/start"
+               onClick={() => logTelemetry('sidebar_conversion_click', { funnel: 'demand_letter', article: slug })}
                target="_blank"
                rel="noopener noreferrer"
                className="relative z-10 flex items-center justify-center w-full py-4 px-4 bg-axim-purple text-white hover:bg-white hover:text-black text-xs font-black uppercase tracking-widest transition-all rounded-sm shadow-lg"
@@ -256,13 +262,15 @@ const { slug } = useParams();
                <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Ecosystem Tools
              </h4>
              <div className="space-y-4">
-               <Link to="/tools/nda" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+               <Link to="/tools/nda"
+                 onClick={() => logTelemetry('sidebar_tool_click', { tool: 'nda', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Mutual NDA</span>
                </Link>
-               <Link to="/tools/paystub" className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+               <Link to="/tools/paystub"
+                 onClick={() => logTelemetry('sidebar_tool_click', { tool: 'paystub', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-[#DB2777] to-red-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white" />
                  </div>
@@ -337,6 +345,8 @@ const { slug } = useParams();
         >
           <SafeIcon icon={LuIcons.LuArrowLeft} className="w-5 h-5" />
         </button>
+        <div className="w-px h-6 bg-white/10" />
+        <span className="text-[10px] font-mono tracking-widest text-zinc-400 select-none">{scrollPercent}% READ</span>
         <div className="w-px h-6 bg-white/10" />
         <button
           onClick={handleShare}
