@@ -196,7 +196,7 @@ export default function NewsFeed({ limit = null, title = null }) {
 
       {activeCategory === 'Daily News' && (
           <div className="mt-12 flex justify-center w-full">
-            <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
+            <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} onClick={() => logTelemetry('see_all_briefings_click', { origin: 'home_daily_news' })} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
               See All Intelligence
               <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
             </Link>
