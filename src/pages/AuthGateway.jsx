@@ -82,7 +82,7 @@ export default function AuthGateway() {
     setIsProcessing(true);
     setErrorMsg(null);
 
-    const cleanEmail = sanitizeInput(email);
+    const cleanEmail = sanitizeInput(email).toLowerCase();
     const authPromise = isLogin
         ? supabase.auth.signInWithPassword({ email: cleanEmail, password: password })
         : supabase.auth.signUp({ email: cleanEmail, password: password });
@@ -95,6 +95,10 @@ export default function AuthGateway() {
 
       // Route directly to the Operator Vault on success
       setNotification('Authentication successful.');
+      logTelemetry('operator_clearance_success', {
+        method: 'email_key',
+        identity: cleanEmail
+      });
       navigate('/admin');
     } catch (err) {
       if (err.message === "auth_timeout_fault") {
@@ -102,6 +106,11 @@ export default function AuthGateway() {
         setNetworkFault(true);
       } else {
         console.error("[AXiM_AUTH] Clearance rejected:", err);
+        logTelemetry('operator_clearance_denied', {
+          method: 'email_key',
+          identity: cleanEmail,
+          reason: err.message || 'Clearance rejected'
+        });
         setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
       }
     } finally {
@@ -144,6 +153,11 @@ export default function AuthGateway() {
             <p className="text-[0.7rem] font-mono text-zinc-400 uppercase tracking-widest">
               {isLogin ? 'Enter credentials to access your Operator Vault.' : 'Establish a secure profile to encrypt your assets.'}
             </p>
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm select-none mb-6 relative z-10">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+            NODE: ARBITRUM_RPC // INGRESS_OK
           </div>
 
           {errorMsg && (
