@@ -8,15 +8,16 @@ import NewsFeed from '../components/NewsFeed';
 import ArticleCard from '../components/ArticleCard';
 
 const SkeletonCard = ({ isHero = false }) => (
-  <div className={`relative block border border-white/5 bg-[#050505] overflow-hidden flex flex-col justify-end p-8 shadow-lg rounded-sm animate-pulse ${isHero ? 'min-h-[450px] lg:col-span-2' : 'min-h-[300px]'}`}>
-    <div className="relative z-10 mt-auto w-full">
-      <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
-        <div className="w-16 h-3 bg-white/10 rounded-sm" />
-        <div className="w-20 h-4 bg-white/10 rounded-sm" />
+  <div className={`flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-sm animate-pulse ${isHero ? 'min-h-[450px] lg:col-span-2' : 'min-h-[320px]'}`}>
+    <div className="w-full h-48 bg-white/5 rounded-sm mb-4" />
+    <div className="flex-1 flex flex-col justify-between">
+      <div>
+        <div className="w-16 h-3 bg-white/10 rounded-sm mb-4" />
+        <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-3" />
+        <div className="w-full h-4 bg-white/10 rounded-sm mb-1" />
+        <div className="w-5/6 h-4 bg-white/10 rounded-sm" />
       </div>
-      <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-3" />
-      <div className="w-full h-4 bg-white/10 rounded-sm mb-1" />
-      <div className="w-5/6 h-4 bg-white/10 rounded-sm" />
+      <div className="w-24 h-4 bg-white/10 rounded-sm mt-6" />
     </div>
   </div>
 );
@@ -112,7 +113,13 @@ export default function Articles() {
       <section className="pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4">
+          <div className="absolute top-0 right-0 lg:right-8 flex items-center justify-center lg:justify-end w-full lg:w-auto -mt-12 lg:mt-0">
+            <div className="inline-flex items-center px-2.5 py-1 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+              GATEWAY // ISOLATE_ACTIVE
+            </div>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-4 mt-6">
             AXiM <span className="text-axim-purple">Articles.</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
@@ -123,12 +130,6 @@ export default function Articles() {
 
       {/* Filter Pill-Bar for Articles */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center px-2.5 py-1 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-            CDN NODE // SYNC_OK
-          </div>
-        </div>
         <div className="flex flex-wrap gap-3 justify-center">
           {['All briefings', 'Daily News', 'Featured', 'Software Spotlight'].map(filter => (
             <button

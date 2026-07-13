@@ -50,11 +50,13 @@ export default function ArticleCard({
     "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const finalImage = mediaUrl || defaultImage;
 
-  const date = new Date(article.date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const date = article?.date
+    ? new Date(article.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "PENDING";
 
   const excerptText = article?.excerpt?.rendered || article?.excerpt || "";
 

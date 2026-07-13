@@ -135,10 +135,17 @@ export default function NewsFeed({ limit = null, title = null }) {
         <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-[#050505] border border-white/5 h-80 rounded-sm p-6 flex flex-col justify-between">
-                <div className="w-1/3 h-4 bg-white/5 rounded-sm" />
-                <div className="w-full h-8 bg-white/10 rounded-sm my-4" />
-                <div className="w-2/3 h-4 bg-white/5 rounded-sm mt-auto" />
+              <div key={i} className="flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-sm min-h-[320px]">
+                <div className="w-full h-48 bg-white/5 rounded-sm mb-4" />
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="w-16 h-3 bg-white/10 rounded-sm mb-4" />
+                    <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-3" />
+                    <div className="w-full h-4 bg-white/10 rounded-sm mb-1" />
+                    <div className="w-5/6 h-4 bg-white/10 rounded-sm" />
+                  </div>
+                  <div className="w-24 h-4 bg-white/10 rounded-sm mt-6" />
+                </div>
               </div>
             ))}
           </div>
@@ -184,12 +191,29 @@ export default function NewsFeed({ limit = null, title = null }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {(() => {
-           const rawArticles = articles;
-           const truncatedBriefings = rawArticles.slice(0, 5);
-           const visibleBriefings = activeCategory === 'Daily News' ? truncatedBriefings : rawArticles;
-           return visibleBriefings.map((article, index) => (
-             <ArticleCard key={article.id} article={article} index={index} />
-           ));
+           try {
+             const rawArticles = Array.isArray(articles) ? articles : [];
+             const truncatedBriefings = rawArticles.slice(0, 5);
+             const visibleBriefings = activeCategory === 'Daily News' ? truncatedBriefings : rawArticles;
+             return visibleBriefings.map((article, index) => {
+               if (!article || typeof article !== 'object') {
+                 return (
+                   <div key={`empty-${index}`} className="flex flex-col justify-center items-center p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-sm min-h-[320px]">
+                     <span className="text-zinc-600 font-mono text-xs uppercase tracking-widest">Content Unavailable</span>
+                   </div>
+                 );
+               }
+               return <ArticleCard key={article.id || `fallback-${index}`} article={article} index={index} />;
+             });
+           } catch (error) {
+             console.error("Layout Exception Blocked:", error);
+             return (
+               <div className="col-span-full py-12 text-center border border-red-500/20 bg-[#050505] rounded-sm flex flex-col items-center justify-center min-h-[320px]">
+                 <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-8 h-8 text-red-500/50 mb-3" />
+                 <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest">Feed Synchronization Fault</p>
+               </div>
+             );
+           }
         })()}
       </div>
 
