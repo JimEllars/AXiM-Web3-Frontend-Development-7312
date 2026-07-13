@@ -111,18 +111,29 @@ export default {
             // Set to replaying (handled by ui but edge can ensure it just in case, or ui can handle)
             // As per instructions, edge executes the replay.
 
-            // 4b. Mock a successful POST to the target_destination
-            // We simulate a successful POST for now.
-            const mockPost = async () => {
-              // const destination = record.target_destination;
-              // const payload = record.payload;
-              return new Promise((resolve) => setTimeout(resolve, 100)); // 100ms mock delay
-            };
-            await mockPost();
+            // 4b. True Fetch Replay
+            let payloadStr = record.payload;
+            try {
+              if (typeof payloadStr !== 'string') {
+                payloadStr = JSON.stringify(payloadStr);
+              }
+            } catch (err) {
+              throw new Error('Failed to serialize payload');
+            }
 
-            // 4c. Update status to resolved
-            await updateRecordStatus(id, 'resolved');
-            results.successful.push(id);
+            const fetchRes = await fetch(record.target_destination, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: payloadStr
+            });
+
+            if (fetchRes.status === 200 || fetchRes.status === 201) {
+              // 4c. Update status to resolved
+              await updateRecordStatus(id, 'resolved');
+              results.successful.push(id);
+            } else {
+              throw new Error(`Target returned status ${fetchRes.status}`);
+            }
 
           } catch (err) {
             results.failed.push({ id, error: err.message });
