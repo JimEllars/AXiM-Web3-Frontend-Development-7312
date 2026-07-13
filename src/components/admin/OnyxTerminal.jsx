@@ -8,6 +8,7 @@ export default function OnyxTerminal() {
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [responseLog, setResponseLog] = useState(null);
   const [replaySpeed, setReplaySpeed] = useState(1);
+  const [batchToast, setBatchToast] = useState(null);
 
   const handleKvWrite = async (e) => {
     e.preventDefault();
@@ -18,18 +19,31 @@ export default function OnyxTerminal() {
       // Parse to ensure valid JSON before transmission
       const parsedConfig = JSON.parse(kvValue);
 
+      const callStart = Date.now();
       const res = await fetch('/api/admin/kv-write', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key: kvKey, config: parsedConfig })
       });
 
+      const latencyMilli = Date.now() - callStart;
       const data = await res.json();
 
       if (res.ok) {
-        setResponseLog(`[SUCCESS] ${data.message}`);
+        setResponseLog(`[SUCCESS] ${data.message} // EDGE_RTT:${latencyMilli}ms`);
+
+        // Show batch summary toast
+        let successCount = 1;
+        let failCount = 0;
+        if (data.results) {
+          successCount = Array.isArray(data.results.successful) ? data.results.successful.length : 0;
+          failCount = Array.isArray(data.results.failed) ? data.results.failed.length : 0;
+        }
+
+        setBatchToast({ successful: successCount, failed: failCount });
+        setTimeout(() => setBatchToast(null), 4000);
       } else {
-        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'}`);
+        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'} // EDGE_RTT:${latencyMilli}ms`);
       }
     } catch (err) {
       setResponseLog(`[PARSE ERROR] Invalid JSON payload or network failure.`);
@@ -155,6 +169,17 @@ export default function OnyxTerminal() {
           </div>
         </div>
       </div>
+
+      {/* Batch Summary Toast */}
+      {batchToast && (
+        <div className="fixed bottom-6 right-6 bg-black border border-white/10 p-4 rounded-sm shadow-2xl flex flex-col gap-1 font-mono text-[11px] uppercase text-zinc-400 z-50 animate-slide-in">
+          <div className="flex items-center gap-2 text-axim-purple font-black mb-1">
+            <SafeIcon icon={LuIcons.LuActivity} className="w-4 h-4" />
+            <span>[REPLAY BATCH COMPLETE]</span>
+          </div>
+          <div>Successful: {batchToast.successful} // Anomalies Intercepted: {batchToast.failed}</div>
+        </div>
+      )}
     </div>
   );
 }
