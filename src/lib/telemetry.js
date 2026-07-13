@@ -67,8 +67,7 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL;
 
     if (!endpoint) {
-        console.log('[MOCK TELEMETRY SYNC PENDING]', payload);
-        return;
+      return;
     }
 
     let success = false;
@@ -88,7 +87,20 @@ export async function flushTelemetryQueue(force = false) {
             body: payload,
             keepalive: true,
           });
-          success = response.ok || response.status === 200 || response.status === 204;
+
+          if (response.status === 200 || response.status === 204) {
+            success = true;
+            try {
+              if (response.status !== 204) {
+                const responseData = await response.json();
+                console.log('[TELEMETRY_SYNC_SUCCESS]', responseData);
+              }
+            } catch (jsonErr) {
+              console.warn("Could not parse telemetry response JSON", jsonErr);
+            }
+          } else {
+            success = false;
+          }
         } catch (fetchErr) {
           console.error("Fetch telemetry failed, will retry later", fetchErr);
           success = false;
