@@ -130,7 +130,7 @@ describe('EarlyAccess Component', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-        assert.ok(screen.getByText(/Network submission failed. Please verify connection and try again./i));
+        assert.ok(screen.getByText(/Network Uplink Failed/i));
     });
   });
 
