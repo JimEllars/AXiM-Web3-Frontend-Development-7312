@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import DashboardAccessDenied from '../components/DashboardAccessDenied';
 import VaultedRecords from '../components/VaultedRecords';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function Profile() {
   const { session, user, signOut, profile } = useAximAuth();
@@ -28,8 +29,15 @@ export default function Profile() {
     tokenAddress: usdcTokenAddress,
   });
 
-  const [extractingId, setExtractingId] = useState(null);
+const [extractingId, setExtractingId] = useState(null);
   const [extractedAssets, setExtractedAssets] = useState([]);
+
+  const isMounted = React.useRef(true);
+  React.useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   // Zustand State Access
   const vaultedAssets = useAximStore((state) => state.assets);
@@ -44,6 +52,7 @@ export default function Profile() {
   // Security Protocol: Terminate Session
   const handleTerminate = async () => {
     try {
+      logTelemetry('operator_session_terminated', { method: isWeb3Authenticated ? 'web3_wallet' : 'email_key' });
       if (signOut) await signOut();
       await supabase.auth.signOut();
       clearStore(); // Wipe PII from local state
@@ -58,12 +67,15 @@ export default function Profile() {
 
   // UX Protocol: Simulate Cryptographic Extraction
   const handleExtract = (assetId) => {
+    logTelemetry('profile_asset_extraction_intent', { assetId });
     setExtractingId(assetId);
     // Simulate decryption and network download delay
     setTimeout(() => {
-      setExtractingId(null);
-      setExtractedAssets((prev) => [...prev, assetId]);
-      // In production, this would trigger a Blob download of the PDF
+      if (isMounted.current) {
+        setExtractingId(null);
+        setExtractedAssets((prev) => [...prev, assetId]);
+        // In production, this would trigger a Blob download of the PDF
+      }
     }, 2500);
   };
 
@@ -102,6 +114,12 @@ export default function Profile() {
                      ACCOUNT SETTLE BALANCE: <span className="text-white font-bold">{balanceData?.displayValue || '0.00'} {balanceData?.symbol || 'USDC'}</span> [ARBITRUM ONE]
                    </div>
                 )}
+                {isWeb3Authenticated && (
+                  <div className="flex items-center gap-2 mt-3 text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                    <span className="px-2 py-0.5 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple rounded-sm">[STREAK: 5 DAYS]</span>
+                    <span className="px-2 py-0.5 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold rounded-sm">[RANK: ELITE_OP]</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -122,20 +140,20 @@ export default function Profile() {
         {/* Navigation Tabs */}
         <div className="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
           <button
-            onClick={() => setActiveTab('vault')}
+            onClick={() => { setActiveTab('vault'); logTelemetry('profile_tab_view', { tab: 'vault' }); }}
             className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'vault' ? 'text-axim-purple border-b-2 border-axim-purple' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
           >
             Digital Assets
           </button>
           <button
-            onClick={() => setActiveTab('tickets')}
+            onClick={() => { setActiveTab('tickets'); logTelemetry('profile_tab_view', { tab: 'tickets' }); }}
             className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'tickets' ? 'text-[#DB2777] border-b-2 border-[#DB2777]' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
           >
             Active Consultations
           </button>
           {isWeb3Authenticated && (
             <button
-              onClick={() => setActiveTab('activity')}
+              onClick={() => { setActiveTab('activity'); logTelemetry('profile_tab_view', { tab: 'activity' }); }}
               className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'activity' ? 'text-axim-green border-b-2 border-axim-green' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
             >
               Recent On-Chain Activity
