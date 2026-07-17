@@ -189,7 +189,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
         {(() => {
            try {
              const rawArticles = Array.isArray(articles) ? articles : [];

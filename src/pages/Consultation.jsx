@@ -40,6 +40,7 @@ export default function Consultation() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [networkFault, setNetworkFault] = useState(false);
   const [formData, setFormData] = useState({ inquiryType: '', name: '', email: '', company: '', details: '' });
+  const { isWeb3Authenticated, walletAddress } = useAximStore();
 
   const inquiryCategories = [
     { id: 'Tech Infrastructure', icon: LuIcons.LuNetwork, desc: 'Decentralized systems, automation, and AI integrations.' },
@@ -49,6 +50,7 @@ export default function Consultation() {
   ];
 
   const handleCategorySelect = (categoryId) => {
+    logTelemetry('consultation_step_advanced', { currentStep: step, nextStep: 2, selectedCategory: categoryId });
     setFormData({ ...formData, inquiryType: categoryId });
     setStep(2);
   };
@@ -60,7 +62,15 @@ export default function Consultation() {
 
 
     const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
+
+    const missingFields = Object.entries(formData).filter(([key, val]) => (key !== 'company' && !val)).map(([key]) => key);
+    if (missingFields.length > 0) {
+      logTelemetry('consultation_validation_error', { step: step, missingFields: missingFields });
+    }
+
     if (!turnstileResponse) {
+      logTelemetry('consultation_validation_error', { step: step, missingFields: ['turnstile'] });
+
       useAximStore.getState().showToast('Please complete the security challenge.', 'error');
       setIsSubmitting(false);
       return;
@@ -149,6 +159,12 @@ export default function Consultation() {
           <p className="text-zinc-400 max-w-2xl text-sm md:text-base leading-relaxed">
             Connect directly with the AXiM team. Please categorize your request below so we can route you to the appropriate specialist.
           </p>
+          {isWeb3Authenticated && walletAddress && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [PRIORITY_PASS // WALLET_VERIFIED]
+            </div>
+          )}
         </div>
       </section>
 
@@ -205,7 +221,7 @@ export default function Consultation() {
                     <div className="flex items-center gap-2 mb-4 p-3 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">
                        <SafeIcon icon={LuIcons.LuCheck} className="w-4 h-4 text-axim-purple" />
                        <span className="text-[0.65rem] font-mono uppercase tracking-widest text-axim-purple">Selected: {formData.inquiryType}</span>
-                       <button type="button" onClick={() => setStep(1)} className="ml-auto text-[0.6rem] uppercase tracking-widest text-zinc-500 hover:text-white underline">Change</button>
+                       <button type="button" onClick={() => { logTelemetry('consultation_step_advanced', { currentStep: step, nextStep: 1, selectedCategory: formData.inquiryType }); setStep(1); }} className="ml-auto text-[0.6rem] uppercase tracking-widest text-zinc-500 hover:text-white underline">Change</button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -248,7 +264,7 @@ export default function Consultation() {
                     <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8 font-mono uppercase tracking-widest">
                       Your architecture parameters have been securely encrypted and routed. An integration specialist will reach out within 24 hours.
                     </p>
-                    <button onClick={() => { setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
+                    <button onClick={() => { logTelemetry('consultation_step_advanced', { currentStep: 'success', nextStep: 1, selectedCategory: null }); setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
                       Submit Another Request
                     </button>
                   </div>
