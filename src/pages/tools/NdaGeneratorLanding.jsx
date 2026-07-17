@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
+import DatabaseUplinkError from '../../common/DatabaseUplinkError';
 import * as LuIcons from 'react-icons/lu';
 
 import { logTelemetry } from '../../lib/telemetry';
@@ -27,6 +28,7 @@ export default function NdaGeneratorLanding() {
   };
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [networkFault, setNetworkFault] = useState(false);
   const navigate = useNavigate();
 
 
@@ -48,6 +50,29 @@ export default function NdaGeneratorLanding() {
   const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setNetworkFault(false);
+
+    const newAsset = {
+      id: `NDA-${Date.now()}`,
+      type: 'Mutual NDA',
+      date: new Date().toISOString(),
+      status: 'Ready',
+      icon: LuIcons.LuShieldCheck,
+      color: 'text-axim-purple'
+    };
+
+    try {
+      await fetch('/api/vault/artifact-mirror', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ artifact: newAsset })
+      });
+    } catch (err) {
+      console.error("Artifact mirror failure", err);
+      setIsSubmitting(false);
+      setNetworkFault(true);
+      return;
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
@@ -56,23 +81,13 @@ export default function NdaGeneratorLanding() {
       const store = useAximStore.getState();
       store.showToast('NDA Successfully Generated & Vaulted', 'success');
 
-      // Update useAximStore logic
-      const newAsset = {
-        id: `NDA-${Date.now()}`,
-        type: 'Mutual NDA',
-        date: new Date().toISOString(),
-        status: 'Ready',
-        icon: LuIcons.LuShieldCheck,
-        color: 'text-axim-purple'
-      };
-
       if (store.addVaultedArtifact) {
         store.addVaultedArtifact(newAsset);
       } else {
         // Fallback for store update
         useAximStore.setState((state) => ({ vaultedArtifacts: [newAsset, ...state.vaultedArtifacts] }));
       }
-    }, 2000);
+    }, 500);
   };
 
   const ndaSchema = {
@@ -113,6 +128,11 @@ export default function NdaGeneratorLanding() {
               <div className={`h-1 flex-1 rounded-full ${step >= 2 ? 'bg-axim-purple' : 'bg-white/10'}`} />
             </div>
 
+                        {networkFault && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md rounded-sm p-4">
+                <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+              </div>
+            )}
             <form onSubmit={handleGenerate} className="relative z-10">
               {step === 1 ? (
                 <div className="space-y-4 animate-fade-in">
