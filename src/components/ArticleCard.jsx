@@ -17,6 +17,7 @@ export default function ArticleCard({
   priority = false,
   isHero = false,
 }) {
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const cardRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isSaved, setIsSaved] = useState(() => localStore.getSavedBriefs().includes(article.id));
@@ -217,6 +218,11 @@ export default function ArticleCard({
 
 
         <div className="absolute top-4 left-4 z-20 flex items-center space-x-2">
+          {isWeb3Authenticated && (
+            <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[9px] tracking-widest uppercase rounded-sm shadow-md select-none">
+              [VERIFIED_INTEL]
+            </span>
+          )}
           <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
             {date}
           </span>
