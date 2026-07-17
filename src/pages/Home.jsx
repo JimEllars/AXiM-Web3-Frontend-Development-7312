@@ -14,8 +14,10 @@ import EngagementGuard from '../components/EngagementGuard';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Home() {
+  const { isWeb3Authenticated, walletAddress } = useAximStore();
   const [dailyNews, setDailyNews] = useState([]);
   const [dailyNewsCategoryId, setDailyNewsCategoryId] = useState(null);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
@@ -65,13 +67,22 @@ export default function Home() {
     "name": "AXiM Systems",
     "url": "https://axim.us.com/",
     "description": "Articles, AXiM Apps & Tools, & Learning Systems for enterprise operations.",
-    "publisher": {
+        "publisher": {
       "@type": "Organization",
       "name": "AXiM Systems",
       "logo": {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
-      }
+      },
+      "sameAs": [
+        "https://github.com/jimellars",
+        "https://x.com/aximsystems"
+      ],
+      "knowsAbout": [
+        "Decentralized Automation",
+        "Web3 Enterprise Architecture",
+        "Serverless Edge Computing"
+      ]
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -90,6 +101,15 @@ export default function Home() {
       />
       <div className="w-full">
         <Hero />
+
+        {isWeb3Authenticated && walletAddress && (
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-4 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              SECURE_VAULT_NODE_CONNECTED // WELCOME_OP_{walletAddress.slice(0, 6)}
+            </div>
+          </div>
+        )}
 
         {/* 1. Daily News Feed */}
         <section className="py-20 relative overflow-hidden bg-bg-void">
