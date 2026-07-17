@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { useAximStore } from '../store/useAximStore';
+import { useAximAuth } from '../hooks/useAximAuth';
+import { logTelemetry } from '../lib/telemetry.js';
+
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
+
+  const { session } = useAximAuth();
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const walletAddress = useAximStore((state) => state.walletAddress);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,7 +89,7 @@ export default function Header() {
               onMouseEnter={() => link.dropdown && setActiveDropdown(link.name)}
               onMouseLeave={() => link.dropdown && setActiveDropdown(null)}
             >
-              <Link
+              <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })}
                 to={link.path}
                 className={`text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-1 pb-1 border-b-2 ${
                   location.pathname === link.path || location.pathname.startsWith(link.path + '/')
@@ -99,7 +108,7 @@ export default function Header() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#004040]/10 blur-[30px] pointer-events-none" />
 
                     {/* Top Level Hub Link */}
-                    <Link to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
+                    <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })} to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
                       View All {link.name}
                     </Link>
 
@@ -108,6 +117,7 @@ export default function Header() {
                       subLink.path.startsWith('http') ? (
                         <a
                           key={subLink.name}
+                          onClick={() => logTelemetry('nav_link_click', { path: subLink.path, title: subLink.name.toLowerCase() })}
                           href={subLink.path}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -119,6 +129,7 @@ export default function Header() {
                       ) : (
                         <Link
                           key={subLink.name}
+                          onClick={() => logTelemetry('nav_link_click', { path: subLink.path, title: subLink.name.toLowerCase() })}
                           to={subLink.path}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-sm transition-colors group/sub"
                         >
@@ -133,7 +144,14 @@ export default function Header() {
             </div>
           ))}
 
-          <Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
+
+          {session || isWeb3Authenticated ? (
+            <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="text-xs font-mono font-black tracking-widest text-axim-purple hover:text-white uppercase transition-colors px-4 py-2 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">Operator Vault</Link>
+          ) : (
+            <Link className="text-xs font-mono text-zinc-400 hover:text-white uppercase tracking-widest" to="/auth">Client Access</Link>
+          )}
+
+<Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
             Consultation
           </Link>
         </nav>
@@ -200,6 +218,13 @@ export default function Header() {
               <Link to="/consultation" className="mt-4 w-full py-4 bg-[#004040] text-white text-center text-sm font-black uppercase tracking-widest rounded-sm shadow-[0_0_20px_rgba(0,64,64,0.4)]">
                 Book Consultation
               </Link>
+
+              {session || isWeb3Authenticated ? (
+                <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="mt-2 w-full py-4 bg-axim-purple/10 border border-axim-purple/20 text-axim-purple text-center text-sm font-mono font-black uppercase tracking-widest rounded-sm">Operator Vault</Link>
+              ) : (
+                <Link to="/auth" className="mt-2 w-full py-4 bg-white/5 border border-white/10 text-zinc-400 hover:text-white text-center text-sm font-mono uppercase tracking-widest rounded-sm transition-colors">Client Access</Link>
+              )}
+
             </div>
           </div>
         )}
