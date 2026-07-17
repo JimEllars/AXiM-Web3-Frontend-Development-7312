@@ -118,6 +118,11 @@ const [extractingId, setExtractingId] = useState(null);
                   <div className="flex items-center gap-2 mt-3 text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
                     <span className="px-2 py-0.5 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple rounded-sm">[STREAK: 5 DAYS]</span>
                     <span className="px-2 py-0.5 bg-axim-gold/10 border border-axim-gold/30 text-axim-gold rounded-sm">[RANK: ELITE_OP]</span>
+                    {isWeb3Authenticated && (
+                      <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-sm">
+                        [MULTIPLIER: 1.2x]
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
