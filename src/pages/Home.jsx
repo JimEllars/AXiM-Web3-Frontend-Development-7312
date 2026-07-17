@@ -72,6 +72,11 @@ export default function Home() {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
       }
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://axim.us.com/articles?search={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
   };
 
@@ -87,13 +92,13 @@ export default function Home() {
         <Hero />
 
         {/* 1. Daily News Feed */}
-        <section className="py-16 relative overflow-hidden bg-bg-void">
+        <section className="py-20 relative overflow-hidden bg-bg-void">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
                 <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
-                <h2 className="text-3xl font-black uppercase tracking-tighter text-white">Daily News</h2>
+                <h2 className="text-3xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
               </div>
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6" role="main">
                 {isNewsLoading ? (
                   [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : dailyNews.length === 0 ? (
@@ -104,7 +109,7 @@ export default function Home() {
                     const rawArticles = dailyNews;
                     const truncatedBriefings = rawArticles.slice(0, 5);
                     const visibleBriefings = truncatedBriefings;
-                    return visibleBriefings.map((post) => <ArticleCard article={post} key={post.id} variant="row" />);
+                    return visibleBriefings.map((post) => <article key={post.id}><ArticleCard article={post} variant="row" /></article>);
                   })()
                 )}
 
