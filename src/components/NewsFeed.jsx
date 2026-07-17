@@ -17,7 +17,7 @@ export default function NewsFeed({ limit = null, title = null }) {
   const [isPrimed, setIsPrimed] = useState(false);
 
   const filters = [
-    { id: 'Daily News', label: 'Daily News' },
+    { id: 'Daily News', label: 'News & Articles' },
     { id: 'All Intelligence', label: 'All Intelligence' },
     { id: 'Web3 Systems', label: 'Web3 Systems' },
     { id: 'Automation', label: 'Automation' },
