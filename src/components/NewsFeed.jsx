@@ -136,7 +136,7 @@ export default function NewsFeed({ limit = null, title = null }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-sm min-h-[320px]">
-                <div className="w-full h-48 bg-white/5 rounded-sm mb-4" />
+                <div className="w-full aspect-video h-48 bg-white/5 rounded-sm mb-4" />
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
                     <div className="w-16 h-3 bg-white/10 rounded-sm mb-4" />
