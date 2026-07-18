@@ -108,6 +108,7 @@ export default function NewsFeed({ limit = null, title = null }) {
              const uniqueBatch = filteredNewData.filter(item => !prev.some(p => p.id === item.id));
              return [...prev, ...uniqueBatch];
            });
+           logTelemetry("feed_load_more_triggered", { category: activeCategory, page: nextPage });
            setPage(nextPage);
 
            if (filteredNewData.length < (limit || 12)) {
