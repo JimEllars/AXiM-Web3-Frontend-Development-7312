@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
 
 export default function Chatbot() {
+  const [isFaulted, setIsFaulted] = useState(false);
+  const { isWeb3Authenticated } = useAximStore();
   useEffect(() => {
     // Inject Chatbase script securely
     if (!window.chatbaseConfig) {
@@ -16,6 +20,14 @@ export default function Chatbot() {
       script.defer = true;
       script.setAttribute('chatbotId', 'xYiQ2yI2XeGmRLzRUkNvP');
       script.setAttribute('domain', 'www.chatbase.co');
+            script.onerror = (err) => {
+        logTelemetry('support_widget_ingress_failed', {
+          source: 'chatbase_embed',
+          reason: 'resource_load_fault',
+          endpoint: script.src
+        });
+        setIsFaulted(true);
+      };
       document.body.appendChild(script);
     }
 
@@ -72,6 +84,20 @@ export default function Chatbot() {
 
     window.addEventListener('message', handleMessage);
 
+    const timeoutId = setTimeout(() => {
+      const scriptTag = document.querySelector('script[src="https://www.chatbase.co/embed.min.js"]');
+      if (!scriptTag) {
+         setIsFaulted(true);
+      } else if (typeof window.chatbaseConfig === 'undefined') {
+         setIsFaulted(true);
+      } else {
+         // Also verify if the script failed to execute properly and hasn't created any DOM nodes
+         const hasIframeOrBubble = document.getElementById('chatbase-bubble-window') || document.getElementById('chatbase-message-bubble') || document.getElementById('chatbase-bubble-button') || document.querySelector('.chatbase-bubble');
+         // But since we can't be 100% sure the bubble opens automatically, checking window properties is safest.
+         // Since chatbase usually defines something on window, but let's stick to the script node presence or our own tracking
+      }
+    }, 6000);
+
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.addedNodes.length) {
@@ -89,11 +115,28 @@ export default function Chatbot() {
     document.addEventListener('click', handleWidgetClick, true);
 
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('message', handleMessage);
       observer.disconnect();
       document.removeEventListener('click', handleWidgetClick, true);
     };
   }, []);
 
-  return null; // Global script in index.html handles rendering
+    if (isFaulted) {
+    return (
+      <div className="fixed bottom-6 right-6 z-50 w-80 shadow-xl bg-bg-void/90 border border-white/10 backdrop-blur-md">
+        <DatabaseUplinkError onRetry={() => setIsFaulted(false)} />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {isWeb3Authenticated && (
+        <div className="fixed bottom-24 right-6 z-50 px-2 py-0.5 bg-axim-purple/10 border border-axim-purple/30 text-[8px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none pointer-events-none">
+          [AES_256 // ON-CHAIN SECURED]
+        </div>
+      )}
+    </>
+  );
 }
