@@ -39,7 +39,7 @@ export default function Support() {
     }
   };
 
-  const { showToast } = useAximStore();
+  const { showToast, isWeb3Authenticated } = useAximStore();
 
 
   useEffect(() => {
@@ -214,10 +214,22 @@ export default function Support() {
             Submit a support ticket, browse frequently asked questions, or
             access our comprehensive documentation library.
           </p>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [SUPPORT_QUEUE: PRIORITY_ON-CHAIN]
+            </div>
+          )}
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <motion.div
+        className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12"
+        onViewportEnter={() => {
+          logTelemetry('support_page_viewed', { origin: 'help_center' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {/* Left Col: Support Form */}
         <div className="lg:col-span-5">
           <div className="bg-black border border-white/10 p-8 rounded-sm shadow-xl relative overflow-hidden animate-fade-in-up">
@@ -400,7 +412,8 @@ export default function Support() {
               {faqs.map((faq, idx) => (
                 <div
                   key={idx}
-                  className="bg-black border border-white/10 p-6 rounded-sm hover:border-axim-gold/50 transition-colors shadow-lg"
+                  onClick={() => logTelemetry('support_faq_clicked', { question: faq.q })}
+                  className="bg-black border border-white/10 p-6 rounded-sm hover:border-axim-gold/50 transition-colors shadow-lg cursor-pointer"
                 >
                   <h4 className="text-sm font-bold text-white mb-2">{faq.q}</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed">
@@ -426,6 +439,10 @@ export default function Support() {
               {wikiCategories.map((wiki, idx) => (
                 <div
                   key={idx}
+                  onClick={() => {
+                    logTelemetry('support_wiki_category_click', { title: wiki.title });
+                    showToast(`${wiki.title} documentation module coming soon.`, 'info');
+                  }}
                   className="group cursor-pointer bg-[#0F172A] border border-white/5 p-6 rounded-sm hover:border-axim-purple/50 transition-colors shadow-lg relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-16 h-16 bg-axim-purple/5 group-hover:bg-axim-purple/10 transition-colors blur-xl rounded-full" />
@@ -444,7 +461,7 @@ export default function Support() {
             </div>
           </section>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
