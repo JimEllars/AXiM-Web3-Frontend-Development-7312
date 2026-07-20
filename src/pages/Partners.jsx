@@ -4,8 +4,11 @@ import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { Link } from 'react-router-dom';
+import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Partners() {
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const detailedPartners = [
     {
       title: "Make.com Automation",
@@ -66,14 +69,26 @@ export default function Partners() {
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-10">
             A vetted ecosystem of enterprise software providers, visual automation engines, and decentralized infrastructure partners carefully selected to scale your operational capabilities.
           </p>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              [DIRECTORY_NODE: ACTIVE // LATENCY: 32MS]
+            </div>
+          )}
         </div>
       </section>
 
       {/* High-Contrast Grid Hub */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24 overflow-x-hidden md:overflow-visible">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          onViewportEnter={() => {
+            logTelemetry('partners_directory_viewed', { totalPartners: detailedPartners.length });
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {detailedPartners.map((partner, idx) => (
-             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full"><Link to={partner.link} className={`group block bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${partner.bgHover}`}>
+             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full"><Link to={partner.link} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`group block bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${partner.bgHover}`}>
                 <div className={`w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 ${partner.color === 'text-axim-purple' ? 'bg-gradient-to-br from-axim-purple to-indigo-600' : partner.color === 'text-[#DB2777]' ? 'bg-gradient-to-br from-[#DB2777] to-pink-600' : 'bg-gradient-to-br from-axim-gold to-yellow-600'}`}>
                   <SafeIcon icon={partner.icon} className={`w-6 h-6 ${partner.color === 'text-axim-gold' ? 'text-black' : 'text-white'}`} />
                 </div>
@@ -85,7 +100,7 @@ export default function Partners() {
                 </p>
              </Link></motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Deep-Dive Alternating Layout Array */}
@@ -107,7 +122,7 @@ export default function Partners() {
                  ))}
                </ul>
 
-               <Link to={partner.link} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
+               <Link to={partner.link} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
                  Explore Integration <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
                </Link>
             </div>
