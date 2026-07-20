@@ -20,19 +20,33 @@ export default function Article() {
     const url = window.location.href;
     if (navigator.share) {
       try {
+
         await navigator.share({
           title: article?.title?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems',
           url: url
         });
+        logTelemetry('article_shared', {
+          slug,
+          method: 'native_share'
+        });
+
       } catch (err) {
         if (err.name !== 'AbortError') {
           navigator.clipboard.writeText(url);
           addToast('Link Copied', 'success');
+          logTelemetry('article_shared', {
+            slug,
+            method: 'clipboard_copy'
+          });
         }
       }
     } else {
-      navigator.clipboard.writeText(url);
+          navigator.clipboard.writeText(url);
       addToast('Link Copied', 'success');
+      logTelemetry('article_shared', {
+        slug,
+        method: 'clipboard_copy'
+      });
     }
   };
 
@@ -81,7 +95,12 @@ const { slug } = useParams();
 
         if (isMounted) {
           if (mainRes && mainRes.length > 0) {
+
             setArticle(mainRes[0]);
+            logTelemetry('article_page_viewed', {
+              slug,
+              title: mainRes[0].title?.rendered?.replace(/<[^>]+>/g, '') || slug
+            });
           } else {
             setError("Article not found.");
           }
@@ -269,14 +288,14 @@ const { slug } = useParams();
                <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Ecosystem Tools
              </h4>
              <div className="space-y-4">
-               <Link to="/tools/nda"
+               <Link to="/tools/nda-generator"
                  onClick={() => logTelemetry('sidebar_tool_click', { tool: 'nda', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Mutual NDA</span>
                </Link>
-               <Link to="/tools/paystub"
+               <Link to="/tools/pay-stub"
                  onClick={() => logTelemetry('sidebar_tool_click', { tool: 'paystub', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-[#DB2777] to-red-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white" />

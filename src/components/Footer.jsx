@@ -132,7 +132,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1">Demand Letter Engine <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3"/></a></li>
               <li><Link to="/tools/nda-generator" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Mutual NDA Generator</Link></li>
-              <li><Link to="/tools/paystub" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pay Stub System</Link></li>
+              <li><Link to="/tools/pay-stub" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pay Stub System</Link></li>
               <li><Link to="/tools" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Apps & Tools →</Link></li>
             </ul>
           </div>
