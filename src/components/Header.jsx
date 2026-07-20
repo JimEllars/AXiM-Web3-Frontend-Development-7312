@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import GlobalSearch from './GlobalSearch';
 import { useAximStore } from '../store/useAximStore';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { logTelemetry } from '../lib/telemetry.js';
@@ -145,6 +146,7 @@ export default function Header() {
           ))}
 
 
+          <GlobalSearch />
           {session || isWeb3Authenticated ? (
             <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="text-xs font-mono font-black tracking-widest text-axim-purple hover:text-white uppercase transition-colors px-4 py-2 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">Operator Vault</Link>
           ) : (
@@ -156,6 +158,8 @@ export default function Header() {
           </Link>
         </nav>
 
+        <div className="md:hidden flex items-center gap-2">
+          <GlobalSearch />
         {/* Mobile Menu Toggle */}
         <button
           className="md:hidden relative z-50 p-2 text-zinc-400 hover:text-[#004040] transition-colors"
@@ -164,6 +168,7 @@ export default function Header() {
         >
           <SafeIcon icon={mobileMenuOpen ? LuIcons.LuX : LuIcons.LuMenu} className="w-6 h-6" />
         </button>
+        </div>
 
         {/* Mobile Full-Screen Overlay Navigation */}
         {mobileMenuOpen && (
@@ -219,7 +224,8 @@ export default function Header() {
                 Book Consultation
               </Link>
 
-              {session || isWeb3Authenticated ? (
+              <GlobalSearch />
+          {session || isWeb3Authenticated ? (
                 <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="mt-2 w-full py-4 bg-axim-purple/10 border border-axim-purple/20 text-axim-purple text-center text-sm font-mono font-black uppercase tracking-widest rounded-sm">Operator Vault</Link>
               ) : (
                 <Link to="/auth" className="mt-2 w-full py-4 bg-white/5 border border-white/10 text-zinc-400 hover:text-white text-center text-sm font-mono uppercase tracking-widest rounded-sm transition-colors">Client Access</Link>

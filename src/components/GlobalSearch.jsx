@@ -31,6 +31,7 @@ const STATIC_ROUTES = [
 ];
 
 export default function GlobalSearch() {
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const navigate = useNavigate();
   const [isSynchronizing, setIsSynchronizing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -211,6 +212,11 @@ export default function GlobalSearch() {
                   disabled={isSynchronizing}
                   className="w-full bg-transparent text-white text-lg placeholder:text-zinc-600 focus:outline-none font-medium"
                 />
+                                {isWeb3Authenticated && (
+                  <span className="hidden sm:inline-block px-2 py-0.5 bg-axim-purple/10 border border-axim-purple/30 text-[8px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+                    [OMNIBAR_INDEX: ON-CHAIN SECURED]
+                  </span>
+                )}
                 <button aria-label="Close Search" type="button" onClick={closeModal} className="text-zinc-500 hover:text-white p-2 bg-white/5 rounded-sm border border-white/10">
                   <SafeIcon icon={LuX} className="w-5 h-5" />
                 </button>
