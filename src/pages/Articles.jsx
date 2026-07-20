@@ -55,8 +55,10 @@ export default function Articles() {
           const targetAppSpotlightIntId = parseInt(appSpotlightId);
 
           const dailyNewsArray = (dn || []).filter(post =>
-              post.category_slug === 'daily-news' ||
-              (Array.isArray(post.categories) && post.categories.includes(targetDailyNewsIntId))
+            (post.category_slug === 'daily-news' || (Array.isArray(post.categories) && post.categories.includes(targetDailyNewsIntId))) &&
+            (!Array.isArray(post.categories) || !post.categories.includes(targetAppSpotlightIntId)) &&
+            post.category_slug !== 'software-spotlight' &&
+            post.category_slug !== 'app-software'
           );
           if (dailyNewsArray.length > 0) {
             setLeadStory(dailyNewsArray[0]);

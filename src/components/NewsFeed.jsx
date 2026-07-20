@@ -33,6 +33,14 @@ export default function NewsFeed({ limit = null, title = null }) {
       try {
         let params = { per_page: limit || 12, _embed: 1, page: 1 };
 
+        let spotlightCategoryId = null;
+        let appSoftwareCategoryId = null;
+        if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
+           spotlightCategoryId = await fetchCategoryBySlug('software-spotlight');
+           appSoftwareCategoryId = await fetchCategoryBySlug('app-software');
+           if (spotlightCategoryId) params.categories_exclude = spotlightCategoryId;
+        }
+
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
           if (categoryId) {
@@ -53,6 +61,21 @@ export default function NewsFeed({ limit = null, title = null }) {
             );
           }
         }
+
+        if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
+           const preFilterCount = filteredData.length;
+           const spotlightId = parseInt(spotlightCategoryId);
+           const appSoftwareId = parseInt(appSoftwareCategoryId);
+           filteredData = filteredData.filter(item =>
+              item.category_slug !== 'software-spotlight' &&
+              item.category_slug !== 'app-software' &&
+              (!Array.isArray(item.categories) || (!item.categories.includes(spotlightId) && !item.categories.includes(appSoftwareId)))
+           );
+           if (filteredData.length < preFilterCount) {
+             logTelemetry('category_bleed_filtered', { count: preFilterCount - filteredData.length, origin: 'NewsFeed.jsx (initial load)' });
+           }
+        }
+
         setArticles(filteredData);
         if (!data || filteredData.length < (limit || 12)) {
           setHasMore(false);
@@ -83,6 +106,14 @@ export default function NewsFeed({ limit = null, title = null }) {
     try {
         let params = { per_page: limit || 12, _embed: 1, page: nextPage };
 
+        let spotlightCategoryId = null;
+        let appSoftwareCategoryId = null;
+        if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
+           spotlightCategoryId = await fetchCategoryBySlug('software-spotlight');
+           appSoftwareCategoryId = await fetchCategoryBySlug('app-software');
+           if (spotlightCategoryId) params.categories_exclude = spotlightCategoryId;
+        }
+
         if (activeCategory !== 'All Intelligence') {
           const categoryId = await fetchCategoryBySlug(activeCategory);
           if (categoryId) {
@@ -101,6 +132,20 @@ export default function NewsFeed({ limit = null, title = null }) {
               (Array.isArray(item.categories) && item.categories.includes(targetCategoryIntId))
             );
           }
+        }
+
+        if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
+           const preFilterCount = filteredNewData.length;
+           const spotlightId = parseInt(spotlightCategoryId);
+           const appSoftwareId = parseInt(appSoftwareCategoryId);
+           filteredNewData = filteredNewData.filter(item =>
+              item.category_slug !== 'software-spotlight' &&
+              item.category_slug !== 'app-software' &&
+              (!Array.isArray(item.categories) || (!item.categories.includes(spotlightId) && !item.categories.includes(appSoftwareId)))
+           );
+           if (filteredNewData.length < preFilterCount) {
+             logTelemetry('category_bleed_filtered', { count: preFilterCount - filteredNewData.length, origin: 'NewsFeed.jsx (load more)' });
+           }
         }
 
         if (filteredNewData.length > 0) {

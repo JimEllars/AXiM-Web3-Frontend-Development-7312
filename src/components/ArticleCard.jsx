@@ -187,7 +187,7 @@ export default function ArticleCard({
         <div
           className={
             variant === 'row'
-              ? "relative w-full sm:w-1/3 h-40 flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm overflow-hidden mask"
+              ? "relative w-full sm:w-1/3 aspect-video sm:h-auto flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm mask"
               : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 overflow-hidden mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
           }
         >
@@ -247,9 +247,16 @@ export default function ArticleCard({
             : `flex flex-col flex-1 justify-between min-h-[160px] p-5 relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
         }
       >
-        <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase mb-2 self-start">
-          {categoryBadge}
-        </span>
+        <div className="flex items-center mb-2 self-start">
+          <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase">
+            {categoryBadge}
+          </span>
+          {isWeb3Authenticated && (
+            <span className="ml-2 font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none">
+              [CAT_PROOF: ISOLATED]
+            </span>
+          )}
+        </div>
         <h2 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-tight text-white mt-1 mb-2 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
           {cleanTitle}
         </h2>

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import ArticleCard from '../components/ArticleCard';
-import { fetchPosts } from '../lib/wp-fetch';
+import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import Hero from '../components/Hero';
 import Reviews from '../components/Reviews';
 import FeaturedArticles from '../components/FeaturedArticles';
@@ -40,9 +40,31 @@ export default function Home() {
       try {
         if (isMounted) setDailyNewsCategoryId(707); // Step 1: Force Category ID
 
-        const data = await fetchPosts({ categorySlug: 'daily-news', limit: 10 });
+        const spotlightCategoryId = await fetchCategoryBySlug('software-spotlight');
+        const appSoftwareCategoryId = await fetchCategoryBySlug('app-software');
+
+        const params = { categorySlug: 'daily-news', limit: 10 };
+        // If API supports categories_exclude, we can pass it
+        if (spotlightCategoryId) params.categories_exclude = spotlightCategoryId;
+
+        const data = await fetchPosts(params);
         if (isMounted) {
-          setDailyNews(data || []);
+          const rawData = data || [];
+
+          const spotlightId = parseInt(spotlightCategoryId);
+          const appSoftwareId = parseInt(appSoftwareCategoryId);
+
+          const cleanDailyNews = rawData.filter(post =>
+            post.category_slug !== 'software-spotlight' &&
+            post.category_slug !== 'app-software' &&
+            (!Array.isArray(post.categories) || (!post.categories.includes(spotlightId) && !post.categories.includes(appSoftwareId)))
+          );
+
+          if (cleanDailyNews.length < rawData.length) {
+             logTelemetry('category_bleed_filtered', { count: rawData.length - cleanDailyNews.length, origin: 'Home.jsx' });
+          }
+
+          setDailyNews(cleanDailyNews);
           if (import.meta.env.DEV) {
             console.log('[WP_DEBUG] Raw Daily News Payload:', data);
           }
