@@ -55,6 +55,7 @@ export default function EarlyAccess() {
   const handleNodeToggle = (node) => {
     setNodePreference(node);
     localStorage.setItem('axim_node_preference', node);
+    logTelemetry('newsletter_node_preference_changed', { selectedNode: node });
   };
 
   return (
@@ -62,7 +63,15 @@ export default function EarlyAccess() {
       <SEO title="Onyx Phase 1 Access | AXiM Systems" description="Get early access to Onyx Phase 1 and decentralized network updates." />
 
       <section className="flex-1 flex items-center justify-center p-6 mt-20">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-xl"
+          onViewportEnter={() => {
+            logTelemetry('early_access_page_viewed', { defaultNode: nodePreference });
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
           
           <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
             <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
