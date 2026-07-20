@@ -25,6 +25,13 @@ export default function AuthGateway() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [networkFault, setNetworkFault] = useState(false);
 
+  const isMounted = React.useRef(true);
+  React.useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   // Note: Assuming useAximAuth provides standard Supabase wrappers. Adjust as needed.
   const { signIn, signUp } = useAximAuth();
   const navigate = useNavigate();
@@ -59,9 +66,11 @@ export default function AuthGateway() {
         });
 
         loginWeb3Wallet(account.address);
-        setNotification('Authentication successful.');
-        setIsWeb3Connecting(false);
-        navigate("/admin", { state: { web3Auth: account.address } });
+        if (isMounted.current) {
+          setNotification('Authentication successful.');
+          setIsWeb3Connecting(false);
+          navigate("/admin", { state: { web3Auth: account.address } });
+        }
       } else {
         throw new Error("No account found");
       }
@@ -73,7 +82,9 @@ export default function AuthGateway() {
          logTelemetry('auth_timeout_fault', { method: 'web3_connect', error: err.message });
          showToast("Wallet Connection Failed", "error");
       }
-      setIsWeb3Connecting(false);
+      if (isMounted.current) {
+        setIsWeb3Connecting(false);
+      }
     }
   };
 
@@ -83,6 +94,7 @@ export default function AuthGateway() {
     setErrorMsg(null);
 
     const cleanEmail = sanitizeInput(email).toLowerCase();
+    logTelemetry("auth_attempt_initiated", { method: isLogin ? "login" : "signup" });
     const authPromise = isLogin
         ? supabase.auth.signInWithPassword({ email: cleanEmail, password: password })
         : supabase.auth.signUp({ email: cleanEmail, password: password });
@@ -94,16 +106,18 @@ export default function AuthGateway() {
       if (error) throw error;
 
       // Route directly to the Operator Vault on success
-      setNotification('Authentication successful.');
       logTelemetry('operator_clearance_success', {
         method: 'email_key',
         identity: cleanEmail
       });
-      navigate('/admin');
+      if (isMounted.current) {
+        setNotification('Authentication successful.');
+        navigate('/admin');
+      }
     } catch (err) {
       if (err.message === "auth_timeout_fault") {
         logTelemetry('auth_timeout_fault', { method: isLogin ? 'login' : 'signup', email: cleanEmail });
-        setNetworkFault(true);
+        if (isMounted.current) setNetworkFault(true);
       } else {
         console.error("[AXiM_AUTH] Clearance rejected:", err);
         logTelemetry('operator_clearance_denied', {
@@ -111,10 +125,10 @@ export default function AuthGateway() {
           identity: cleanEmail,
           reason: err.message || 'Clearance rejected'
         });
-        setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
+        if (isMounted.current) setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
       }
     } finally {
-      setIsProcessing(false);
+      if (isMounted.current) setIsProcessing(false);
     }
   };
 
@@ -133,7 +147,7 @@ export default function AuthGateway() {
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md" onViewportEnter={() => { logTelemetry("auth_gateway_viewed", { initialMode: isLogin ? "login" : "signup" }); }} viewport={{ once: true, amount: 0.2 }}>
 
         <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
           <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
@@ -228,7 +242,7 @@ export default function AuthGateway() {
           </div>
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
-            <button type="button" onClick={() => { setIsLogin(!isLogin); setErrorMsg(null); setEmail(''); setPassword(''); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
+            <button type="button" onClick={() => { const nextMode = !isLogin ? "login" : "signup"; setIsLogin(!isLogin); setErrorMsg(null); setEmail(''); setPassword(''); logTelemetry("auth_mode_switched", { targetMode: nextMode }); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
               {isLogin ? "Need clearance? Request an account." : "Already have clearance? Authenticate here."}
             </button>
           </div>

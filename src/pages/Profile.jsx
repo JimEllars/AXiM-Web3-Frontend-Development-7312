@@ -103,6 +103,12 @@ const [extractingId, setExtractingId] = useState(null);
               ) : (
                 user?.email || 'AXIM_OP_001'
               )}
+              {isWeb3Authenticated && walletAddress && (
+                <div className="mt-3 inline-flex items-center gap-2 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                  [VAULT_KEY: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)} // SECURE]
+                </div>
+              )}
             </p>
           </div>
             {isWeb3Authenticated && (
@@ -130,7 +136,7 @@ const [extractingId, setExtractingId] = useState(null);
 
 
           <div className="flex gap-2">
-            <button className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
+            <button onClick={() => { logTelemetry('profile_settings_clicked', { userId: user?.id || walletAddress }); useAximStore.getState().showToast('Settings configuration panel coming soon.', 'info'); }} className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
               Settings
             </button>
             <button onClick={handleTerminate} className="px-6 py-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-colors rounded-sm flex items-center gap-2">
@@ -145,20 +151,20 @@ const [extractingId, setExtractingId] = useState(null);
         {/* Navigation Tabs */}
         <div className="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
           <button
-            onClick={() => { setActiveTab('vault'); logTelemetry('profile_tab_view', { tab: 'vault' }); }}
+            onClick={() => { setActiveTab('vault'); logTelemetry('profile_tab_switch', { activeTab: 'vault' }); }}
             className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'vault' ? 'text-axim-purple border-b-2 border-axim-purple' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
           >
             Digital Assets
           </button>
           <button
-            onClick={() => { setActiveTab('tickets'); logTelemetry('profile_tab_view', { tab: 'tickets' }); }}
+            onClick={() => { setActiveTab('tickets'); logTelemetry('profile_tab_switch', { activeTab: 'tickets' }); }}
             className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'tickets' ? 'text-[#DB2777] border-b-2 border-[#DB2777]' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
           >
             Active Consultations
           </button>
           {isWeb3Authenticated && (
             <button
-              onClick={() => { setActiveTab('activity'); logTelemetry('profile_tab_view', { tab: 'activity' }); }}
+              onClick={() => { setActiveTab('activity'); logTelemetry('profile_tab_switch', { activeTab: 'activity' }); }}
               className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'activity' ? 'text-axim-green border-b-2 border-axim-green' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
             >
               Recent On-Chain Activity
