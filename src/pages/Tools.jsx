@@ -10,6 +10,7 @@ import { useAximStore } from '../store/useAximStore';
 
 export default function Tools() {
   const { session } = useAximAuth();
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const toolsList = [
     {
       title: "Demand Letter Engine",
@@ -84,23 +85,35 @@ export default function Tools() {
             <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
               These tool matrices are engineered natively to run statelessly on top of secure network nodes. Access our enterprise directory to discover and launch standalone operational utilities.
             </p>
+            {isWeb3Authenticated && (
+              <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                [DIRECTORY_NODE: ACTIVE // LATENCY: 32MS]
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* High-Contrast Grid Hub */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24 overflow-x-hidden md:overflow-visible">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          onViewportEnter={() => {
+            logTelemetry('tools_directory_viewed', { totalTools: toolsList.length });
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {toolsList.map((tool, idx) => (
              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
                {tool.isExternal ? (
-                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
+                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
 
 
                     </a>
                ) : (
-                 <Link to={tool.link} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
+                 <Link to={tool.link} onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
                     <GridCardContent tool={tool} />
 
 
@@ -108,7 +121,7 @@ export default function Tools() {
                )}
              </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Deep-Dive Alternating Layout Array */}
@@ -131,11 +144,11 @@ export default function Tools() {
                </ul>
 
                {tool.isExternal ? (
-                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
                    Launch Application <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
                  </a>
                ) : (
-                 <Link to={tool.link} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                 <Link to={tool.link} onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
                    Launch Application <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
                  </Link>
                )}
