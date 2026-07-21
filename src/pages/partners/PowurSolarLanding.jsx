@@ -42,7 +42,12 @@ export default function PowurSolarLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+      onViewportEnter={() => {
+        logTelemetry('partner_landing_viewed', { partner: 'powur_solar' });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <SEO
         title="Decentralized Energy Grids | AXiM x Powur Solar"
         description="Stop leasing power from centralized utilities. Transition to clean, Tier-1 residential solar infrastructure with zero-down financing."
@@ -164,6 +169,6 @@ export default function PowurSolarLanding() {
           Get Quote
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }

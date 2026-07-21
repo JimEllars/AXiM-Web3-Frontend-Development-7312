@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { logTelemetry } from '../../lib/telemetry';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
@@ -45,7 +46,12 @@ export default function ChatbaseLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+      onViewportEnter={() => {
+        logTelemetry('partner_landing_viewed', { partner: 'chatbase' });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <SEO
         title="Custom AI Chatbot | AXiM x Chatbase"
         description="Deploy a custom ChatGPT agent trained exclusively on your business data. Automate customer support and capture leads 24/7."
@@ -161,6 +167,6 @@ export default function ChatbaseLanding() {
           </a>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 }
