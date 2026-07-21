@@ -1,0 +1,1 @@
+sed -i "s|import DashboardAccessDenied from '../components/DashboardAccessDenied';|import DashboardAccessDenied from '../components/DashboardAccessDenied';\nimport { logTelemetry } from '../lib/telemetry';\nimport { motion } from 'framer-motion';|" src/pages/AdminDashboard.jsx

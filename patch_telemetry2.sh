@@ -1,0 +1,3 @@
+sed -i 's|<section className="max-w-7xl mx-auto px-6 lg:px-8 mt-8">|<motion.section\n        className="max-w-7xl mx-auto px-6 lg:px-8 mt-8"\n        onViewportEnter={() => { logTelemetry('\''admin_dashboard_viewed'\'', { initialTab: activeTab }); }}\n        viewport={{ once: true, amount: 0.2 }}\n      >|' src/pages/AdminDashboard.jsx
+sed -i 's|</section>|</motion.section>|' src/pages/AdminDashboard.jsx
+sed -i "s|onClick={() => setActiveTab(tab.id)}|onClick={() => {\n              setActiveTab(tab.id);\n              logTelemetry('admin_tab_switched', { tabId: tab.id, tabLabel: tab.label });\n            }}|" src/pages/AdminDashboard.jsx

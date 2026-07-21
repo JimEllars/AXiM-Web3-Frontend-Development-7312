@@ -1,6 +1,9 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAximAuth } from '../hooks/useAximAuth';
+<<<<<<< SEARCH
+export default function ProtectedRoute({ children }) {
+  const { session, isLoading } = useAximAuth();
+
+  if (isLoading) {
+=======
 import { useAximStore } from '../store/useAximStore';
 
 export default function ProtectedRoute({ children }) {
@@ -8,17 +11,19 @@ export default function ProtectedRoute({ children }) {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-bg-void flex items-center justify-center font-mono text-zinc-500 text-xs uppercase tracking-widest">
-         Authenticating Operator Credentials...
-      </div>
-    );
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+  // Strict Token Hardening: Non-authenticated traffic is instantly dumped to access denied route
+  if (!session) {
+    return <Navigate to="/dashboard/access-denied" replace />;
   }
 
+  return children;
+=======
   // Strict Token Hardening: Non-authenticated traffic is instantly dumped to access denied route
   if (!session && !isWeb3Authenticated) {
     return <Navigate to="/dashboard/access-denied" replace />;
   }
 
   return children;
-}
+>>>>>>> REPLACE

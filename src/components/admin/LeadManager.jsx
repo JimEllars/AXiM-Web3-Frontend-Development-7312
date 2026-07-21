@@ -55,6 +55,7 @@ export default function LeadManager() {
   const handleDeployOnyx = async (lead) => {
     setActiveLeadId(lead.id);
     const prompt = `[SYSTEM] Draft a highly professional, 3-sentence B2B outreach email to ${lead.primaryContact} at ${lead.companyName} regarding their inquiry about ${lead.serviceInterest}. Format with proper spacing.`;
+    logTelemetry('lead_onyx_draft_generated', { leadId: lead.id });
     await executeOnyxCommand(prompt);
   };
 
@@ -78,6 +79,7 @@ export default function LeadManager() {
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    logTelemetry('lead_csv_exported', { type: 'leads_or_telemetry' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -103,6 +105,7 @@ export default function LeadManager() {
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    logTelemetry('lead_csv_exported', { type: 'leads_or_telemetry' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
