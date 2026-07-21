@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../../lib/telemetry';
 
 export default function OnyxTerminal() {
   const [kvKey, setKvKey] = useState('seo_override_/articles');
@@ -13,6 +14,7 @@ export default function OnyxTerminal() {
   const handleKvWrite = async (e) => {
     e.preventDefault();
     setIsTransmitting(true);
+    logTelemetry('onyx_kv_write_attempted', { key: kvKey });
     setResponseLog(null);
 
     try {
@@ -31,6 +33,7 @@ export default function OnyxTerminal() {
 
       if (res.ok) {
         setResponseLog(`[SUCCESS] ${data.message} // EDGE_RTT:${latencyMilli}ms`);
+        logTelemetry('onyx_kv_write_success', { key: kvKey, latency: latencyMilli });
 
         // Show batch summary toast
         let successCount = 1;
@@ -44,6 +47,7 @@ export default function OnyxTerminal() {
         setTimeout(() => setBatchToast(null), 4000);
       } else {
         setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'} // EDGE_RTT:${latencyMilli}ms`);
+        logTelemetry('onyx_kv_write_failed', { key: kvKey, error: data.error });
       }
     } catch (err) {
       setResponseLog(`[PARSE ERROR] Invalid JSON payload or network failure.`);

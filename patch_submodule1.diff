@@ -1,0 +1,38 @@
+<<<<<<< SEARCH
+      if (res.ok) {
+        setResponseLog(`[SUCCESS] ${data.message} // EDGE_RTT:${latencyMilli}ms`);
+        logTelemetry('onyx_kv_write_success', { key: kvKey, latency: latencyMilli });
+
+        // Show batch summary toast
+        let successCount = 1;
+        let failCount = 0;
+        if (data.results) {
+          successCount = Array.isArray(data.results.successful) ? data.results.successful.length : 0;
+          failCount = Array.isArray(data.results.failed) ? data.results.failed.length : 0;
+        }
+
+        setBatchToast({ successful: successCount, failed: failCount });
+        setTimeout(() => setBatchToast(null), 4000);
+      } else {
+        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'} // EDGE_RTT:${latencyMilli}ms`);
+      }
+=======
+      if (res.ok) {
+        setResponseLog(`[SUCCESS] ${data.message} // EDGE_RTT:${latencyMilli}ms`);
+        logTelemetry('onyx_kv_write_success', { key: kvKey, latency: latencyMilli });
+
+        // Show batch summary toast
+        let successCount = 1;
+        let failCount = 0;
+        if (data.results) {
+          successCount = Array.isArray(data.results.successful) ? data.results.successful.length : 0;
+          failCount = Array.isArray(data.results.failed) ? data.results.failed.length : 0;
+        }
+
+        setBatchToast({ successful: successCount, failed: failCount });
+        setTimeout(() => setBatchToast(null), 4000);
+      } else {
+        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'} // EDGE_RTT:${latencyMilli}ms`);
+        logTelemetry('onyx_kv_write_failed', { key: kvKey, error: data.error });
+      }
+>>>>>>> REPLACE

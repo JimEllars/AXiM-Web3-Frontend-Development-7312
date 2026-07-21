@@ -1,0 +1,3 @@
+sed -i "s|import DashboardAccessDenied from '../components/DashboardAccessDenied';|import DashboardAccessDenied from '../components/DashboardAccessDenied';\nimport { useAximStore } from '../store/useAximStore';|" src/pages/AdminDashboard.jsx
+sed -i "s|const \[activeTab, setActiveTab\] = useState('terminal');|const \[activeTab, setActiveTab\] = useState('terminal');\n  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);|" src/pages/AdminDashboard.jsx
+sed -i "s|if (!session && !user) {|if (!session \&\& !user \&\& !isWeb3Authenticated) {|" src/pages/AdminDashboard.jsx

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../../lib/telemetry';
 import { useAximStore } from '../../store/useAximStore';
 import { useAximAuth } from '../../hooks/useAximAuth';
 
@@ -29,6 +30,7 @@ export default function EcosystemRegistry() {
 
   const handleTestConnection = (partnerId) => {
     setPingStatus(prev => ({ ...prev, [partnerId]: 'pinging' }));
+    logTelemetry('ecosystem_connection_pinged', { partnerId });
     setTimeout(() => {
       setPingStatus(prev => ({ ...prev, [partnerId]: 'success' }));
       setTimeout(() => {
@@ -57,6 +59,7 @@ export default function EcosystemRegistry() {
     if (!webhookUrl || !apiKey || isSubmitting) return;
 
     setIsSubmitting(true);
+    logTelemetry('ecosystem_webhook_submitted', { partnerId: selectedPartner?.id });
     setSubmitStatus(null);
 
     try {
