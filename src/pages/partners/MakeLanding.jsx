@@ -1,5 +1,6 @@
 import { logTelemetry } from '../../lib/telemetry';
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -44,7 +45,12 @@ export default function MakeLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+      onViewportEnter={() => {
+        logTelemetry('partner_landing_viewed', { partner: 'make' });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <SEO
         title="Visual Automation Platform | AXiM x Make"
         description="Connect your favorite apps and automate repetitive workflows without writing code. Reclaim thousands of hours of manual labor."
@@ -188,6 +194,6 @@ export default function MakeLanding() {
           Start Free
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }

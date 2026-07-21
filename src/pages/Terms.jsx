@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
+import { logTelemetry } from '../lib/telemetry';
+import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 
 export default function Terms() {
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -32,26 +35,47 @@ export default function Terms() {
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             Data privacy, terms of service, and enterprise processing agreements.
           </p>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [COMPLIANCE_PROOF: ON-CHAIN VERIFIED]
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 flex flex-col md:flex-row gap-12">
+      <motion.div
+        className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 flex flex-col md:flex-row gap-12"
+        onViewportEnter={() => {
+          logTelemetry('legal_page_viewed', { initialDoc: activeDoc });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {/* Document Navigation */}
         <div className="w-full md:w-64 shrink-0 flex flex-col gap-2">
           <button
-            onClick={() => setActiveDoc('tos')}
+            onClick={() => {
+              setActiveDoc('tos');
+              logTelemetry('legal_document_switched', { targetDocument: 'tos' });
+            }}
             className={`w-full text-left p-4 rounded-sm text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-between ${activeDoc === 'tos' ? 'bg-axim-purple text-white shadow-lg' : 'bg-[#050505] border border-white/10 text-zinc-500 hover:text-white hover:border-axim-purple/50'}`}
           >
             Terms of Service <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setActiveDoc('privacy')}
+            onClick={() => {
+              setActiveDoc('privacy');
+              logTelemetry('legal_document_switched', { targetDocument: 'privacy' });
+            }}
             className={`w-full text-left p-4 rounded-sm text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-between ${activeDoc === 'privacy' ? 'bg-[#DB2777] text-white shadow-lg' : 'bg-[#050505] border border-white/10 text-zinc-500 hover:text-white hover:border-[#DB2777]/50'}`}
           >
             Privacy Policy <SafeIcon icon={LuIcons.LuEyeOff} className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setActiveDoc('dpa')}
+            onClick={() => {
+              setActiveDoc('dpa');
+              logTelemetry('legal_document_switched', { targetDocument: 'dpa' });
+            }}
             className={`w-full text-left p-4 rounded-sm text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-between ${activeDoc === 'dpa' ? 'bg-axim-gold text-black shadow-lg' : 'bg-[#050505] border border-white/10 text-zinc-500 hover:text-white hover:border-axim-gold/50'}`}
           >
             Data Processing <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4" />
@@ -103,7 +127,7 @@ export default function Terms() {
 
           </div>
         </div>
-      </section>
+      </motion.div>
     </div>
   );
 }

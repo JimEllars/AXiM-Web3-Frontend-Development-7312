@@ -42,7 +42,12 @@ export default function PowurJoinLanding() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+      onViewportEnter={() => {
+        logTelemetry('partner_landing_viewed', { partner: 'powur_join' });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <SEO
         title="Launch Your Solar Agency | AXiM x Powur"
         description="Build a decentralized solar enterprise. Leverage Powur's national fulfillment grid while keeping your own margins."
@@ -164,6 +169,6 @@ export default function PowurJoinLanding() {
           Join Now
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }
