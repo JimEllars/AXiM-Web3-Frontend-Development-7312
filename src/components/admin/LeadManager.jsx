@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { logTelemetry } from '../../lib/telemetry';
 import { logTelemetry, getTelemetryStore } from '../../lib/telemetry';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';

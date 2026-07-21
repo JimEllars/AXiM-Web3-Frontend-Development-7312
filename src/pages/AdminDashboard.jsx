@@ -53,7 +53,7 @@ export default function AdminDashboard() {
             Master <span className="text-red-500">Command.</span>
           </h1>
         </div>
-      </motion.section>
+      </section>
 
       <motion.section
         className="max-w-7xl mx-auto px-6 lg:px-8 mt-8"
