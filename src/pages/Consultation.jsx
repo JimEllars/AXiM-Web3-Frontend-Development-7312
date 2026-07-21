@@ -146,7 +146,13 @@ export default function Consultation() {
       )}
 
       {/* Hero */}
-      <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
+      <motion.section
+        className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10"
+        onViewportEnter={() => {
+          logTelemetry('consultation_page_viewed', { origin: 'public_nav' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
@@ -166,24 +172,24 @@ export default function Consultation() {
             </div>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* Interactive Form Layout */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
         <div className="flex flex-col lg:flex-row gap-16">
 
           <div className="lg:w-1/3 space-y-12">
-             <div>
+             <div onClick={() => logTelemetry('consultation_audit_info_clicked', { topic: 'Tech Audits' })} className="cursor-pointer">
                <SafeIcon icon={LuIcons.LuNetwork} className="w-6 h-6 text-axim-purple mb-4" />
                <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Tech Audits</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">We deconstruct your existing software stack to eliminate bottlenecks and map out a streamlined automation strategy.</p>
              </div>
-             <div>
+             <div onClick={() => logTelemetry('consultation_audit_info_clicked', { topic: 'Leadership Scaling' })} className="cursor-pointer">
                <SafeIcon icon={LuIcons.LuBot} className="w-6 h-6 text-[#DB2777] mb-4" />
                <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">Leadership Scaling</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Beyond pure code, we optimize the human operators running your systems with elite B2B sales and leadership frameworks.</p>
              </div>
-             <div>
+             <div onClick={() => logTelemetry('consultation_audit_info_clicked', { topic: 'AES-256 Encryption' })} className="cursor-pointer">
                <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6 text-axim-gold mb-4" />
                <h3 className="text-white font-black uppercase tracking-widest text-sm mb-2">AES-256 Encryption</h3>
                <p className="text-xs text-zinc-400 leading-relaxed">Your data is locked within a cryptographic envelope locally before transmission, ensuring absolute B2B confidentiality.</p>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import DatabaseUplinkError from '../../common/DatabaseUplinkError';
@@ -34,6 +35,7 @@ export default function NdaGeneratorLanding() {
 
   const handleShareClick = (e) => {
     e.preventDefault();
+    logTelemetry('nda_share_clicked', { method: navigator.clipboard ? 'clipboard' : 'fallback' });
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href).then(() => {
         useAximStore.getState().showToast('Link copied to clipboard!', 'success');
@@ -45,6 +47,7 @@ export default function NdaGeneratorLanding() {
   };
 
   const addAsset = useAximStore((state) => state.addAsset);
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
     const showToast = useAximStore((state) => state.showToast);
 
   const handleGenerate = async (e) => {
@@ -170,7 +173,13 @@ export default function NdaGeneratorLanding() {
       )}
 
       {/* Landing Page Content */}
-      <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
+      <motion.section
+        className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10"
+        onViewportEnter={() => {
+          logTelemetry('nda_generator_landing_viewed', { origin: 'apps_and_tools' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/20 via-transparent to-axim-purple/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
           <div className="mb-6"></div>
@@ -187,6 +196,12 @@ export default function NdaGeneratorLanding() {
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-6">
             Mutual NDA <br/><span className="text-axim-purple">Generator.</span>
           </h1>
+          {isWeb3Authenticated && (
+            <div className="mt-3 mb-6 inline-flex items-center gap-2 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [TOOL_NODE: AES_256_ACTIVE // STATELESS]
+            </div>
+          )}
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations.
           </p>
@@ -194,7 +209,7 @@ export default function NdaGeneratorLanding() {
             Launch Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {/* System Capabilities & Use Cases... (Keep existing structure) */}
       <section className="max-w-7xl mx-auto px-6 py-24">

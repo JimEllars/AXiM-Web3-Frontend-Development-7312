@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../components/SEO';
 import SafeIcon from '../../common/SafeIcon';
 import DatabaseUplinkError from '../../common/DatabaseUplinkError';
@@ -18,6 +19,7 @@ export default function PayStubLanding() {
   const [showWizard, setShowWizard] = useState(false);
 
   const PAYSTUB_PRODUCTION_TARGET = 'https://quickpaystub.com/?via=axim_apps_and_tools';
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
   const handleOutboundClick = (e) => {
     e.preventDefault();
@@ -158,7 +160,13 @@ export default function PayStubLanding() {
       )}
 
       {/* Upgraded Multi-Color Hero */}
-      <section className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10">
+      <motion.section
+        className="pt-32 pb-20 relative overflow-hidden bg-black border-b border-white/10"
+        onViewportEnter={() => {
+          logTelemetry('paystub_landing_viewed', { origin: 'apps_and_tools' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="absolute inset-0 bg-gradient-to-tr from-[#DB2777]/20 via-transparent to-[#DB2777]/10 mix-blend-overlay z-0" />
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
           <div className="mb-6"></div>
@@ -169,14 +177,20 @@ export default function PayStubLanding() {
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white leading-tight mb-6">
             Autonomous <br/><span className="text-[#DB2777]">Pay Stub System.</span>
           </h1>
+          {isWeb3Authenticated && (
+            <div className="mt-3 mb-6 inline-flex items-center gap-2 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [TOOL_NODE: AES_256_ACTIVE // STATELESS]
+            </div>
+          )}
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document.
           </p>
-          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={(e) => { logTelemetry('paystub_action_triggered', { action: 'start_builder' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Launch Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {/* Architecture Matrix */}
       <section className="max-w-7xl mx-auto px-6 py-24">
@@ -233,7 +247,7 @@ export default function PayStubLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Standardize Your Docs. <br/>Stay Compliant.</h2>
           <p className="text-zinc-400 text-sm mb-10">Eliminate spreadsheet math errors and elevate the professionalism of your operation.</p>
-          <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <button onClick={(e) => { logTelemetry('paystub_action_triggered', { action: 'start_builder' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Initialize Generator <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
           </button>
         </div>
