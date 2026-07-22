@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
@@ -161,6 +162,7 @@ export default function VaultedRecords() {
 
   const handleRemove = (id) => {
     if (isWeb3Authenticated) return; // Cannot remove on-chain tokens this way
+    logTelemetry('vault_record_purge_attempted', { id });
     removeBriefing(id);
     const updatedRecords = records.filter(record => record.id !== id);
     setRecords(updatedRecords);
@@ -171,7 +173,18 @@ export default function VaultedRecords() {
   };
 
   return (
-    <>
+    <motion.div
+      onViewportEnter={() => {
+        logTelemetry('vaulted_records_viewed', { isWeb3Authenticated, recordCount: records.length });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
+        {isWeb3Authenticated && (
+          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-axim-gold/10 border border-axim-gold/30 text-[9px] font-mono tracking-widest text-axim-gold uppercase rounded-sm select-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-axim-gold animate-pulse" />
+            [VAULT_PROOFS: ON-CHAIN VERIFIED // ARBITRUM_ONE]
+          </div>
+        )}
         {loading || (isWeb3Authenticated && isNftsLoading) ? (
           <div className="flex flex-col gap-3 py-8">
             <div className="animate-pulse bg-white/5 h-16 rounded-sm w-full mb-3"></div>
@@ -184,7 +197,7 @@ export default function VaultedRecords() {
             <SafeIcon icon={LuFolderMinus} className="w-12 h-12 text-zinc-600 mb-4" />
             <h3 className="text-white font-bold text-lg mb-2">Your intelligence vault is empty.</h3>
             <p className="text-zinc-500 text-sm font-mono mb-6">NO CRYPTOGRAPHIC CREDENTIALS FOUND</p>
-            <Link to="/articles" className="py-2 px-6 bg-axim-purple text-white text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-lg">
+            <Link to="/articles" onClick={() => logTelemetry('vault_browse_newsroom_clicked', { origin: 'empty_vault' })} className="py-2 px-6 bg-axim-purple text-white text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-lg">
               Browse the Newsroom
             </Link>
           </div>
@@ -225,6 +238,6 @@ export default function VaultedRecords() {
             ))}
           </div>
         )}
-    </>
+    </motion.div>
   );
 }
