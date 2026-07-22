@@ -196,7 +196,11 @@ export default function Consultation() {
              </div>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:w-2/3">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:w-2/3"
+          onViewportEnter={() => {
+            logTelemetry('consultation_page_viewed', { initialStep: step });
+          }}
+          viewport={{ once: true, amount: 0.2 }}>
              <div className="bg-[#050505] border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden min-h-[500px] flex flex-col">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
 

@@ -92,7 +92,11 @@ export default function PayStubLanding() {
 
   return (
 
-      <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+        onViewportEnter={() => {
+          logTelemetry('tool_landing_viewed', { tool: 'paystub_generator' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}>
       <SEO
         title="Web3 Income Verification | Cryptographic Proofs | AXiM Apps & Tools"
         description="Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document."
@@ -252,7 +256,6 @@ export default function PayStubLanding() {
           </button>
         </div>
       </section>
-    </div>
-
+    </motion.div>
   );
 }
