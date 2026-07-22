@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function PartnerPromo({ partnerName, title, description, learnMorePath, startNowUrl, theme = 'purple', onClick }) {
   const isGold = theme === 'gold';
@@ -23,16 +24,29 @@ export default function PartnerPromo({ partnerName, title, description, learnMor
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto shrink-0 relative z-10">
-        <Link to={learnMorePath} className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors text-center flex justify-center items-center">
+        <Link to={learnMorePath} className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors text-center flex justify-center items-center"
+          onClick={(e) => {
+            logTelemetry('partner_promo_action_triggered', { partner: partnerName, action: 'learn_more', path: learnMorePath });
+          }}>
           Learn More
         </Link>
         {startNowUrl && startNowUrl.startsWith('/') ? (
-          <Link to={startNowUrl} className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}>
+          <Link to={startNowUrl} className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}
+            onClick={(e) => {
+              logTelemetry('partner_promo_action_triggered', { partner: partnerName, action: 'start_now', url: startNowUrl });
+            }}>
             Start Now <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
           </Link>
         ) : (
           startNowUrl && (
-            <a href={startNowUrl} target="_blank" rel="noopener noreferrer" className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}>
+            <a href={startNowUrl} target="_blank" rel="noopener noreferrer" className={`px-8 py-4 font-black uppercase tracking-widest text-xs transition-all flex justify-center items-center gap-2 ${btnClass}`}
+              onClick={(e) => {
+                e.preventDefault();
+                logTelemetry('partner_promo_action_triggered', { partner: partnerName, action: 'start_now', url: startNowUrl });
+                setTimeout(() => {
+                  window.open(startNowUrl + (startNowUrl.includes('?') ? '&' : '?') + 'via=axim_hub', '_blank');
+                }, 150);
+              }}>
               Start Now <SafeIcon icon={LuIcons.LuExternalLink} className="w-4 h-4" />
             </a>
           )

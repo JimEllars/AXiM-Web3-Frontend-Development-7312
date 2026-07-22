@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
+import { sanitizeInput } from '../lib/sanitize';
+import { useAximStore } from '../store/useAximStore';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 
 export default function EarlyAccess() {
@@ -14,12 +16,16 @@ export default function EarlyAccess() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [networkFault, setNetworkFault] = useState(false);
   const [nodePreference, setNodePreference] = useState(() => localStorage.getItem('axim_node_preference') || 'US_EAST');
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
 
     setIsSubmitting(true);
+
+    const cleanEmail = sanitizeInput(email).toLowerCase();
+    logTelemetry('newsletter_subscription_initiated', { identity: cleanEmail, node: nodePreference });
     setErrorMsg(null);
     setNetworkFault(false);
 
@@ -28,11 +34,12 @@ export default function EarlyAccess() {
       const secret = import.meta.env.VITE_AXIM_CORE_ANON_KEY;
 
       const payload = new FormData();
-      payload.append('customer_email', email);
+      payload.append('customer_email', cleanEmail);
       payload.append('subject', '[Newsletter] Priority Intelligence Subscription');
-      payload.append('description', 'User subscribed to ecosystem updates and promos.');
+      payload.append('type', 'newsletter_subscription');
       payload.append('source', 'newsletter_form');
       payload.append('preferred_node', nodePreference);
+      payload.append('tags', 'newsletter,emailit_ingest');
 
       const response = await fetch(`${workerUrl || ''}/webhooks/intake`, {
         method: 'POST',
@@ -42,7 +49,7 @@ export default function EarlyAccess() {
 
       if (!response.ok) throw new Error(`Edge submission rejected: ${response.status}`);
 
-      logTelemetry('newsletter_subscription_success', { identity: email });
+      logTelemetry('newsletter_subscription_success', { identity: cleanEmail });
       setSubmitted(true);
     } catch (err) {
       console.error("Subscription Uplink Failed:", err);
@@ -105,6 +112,13 @@ export default function EarlyAccess() {
                     <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-md">
                       Join the AXiM network. Subscribe to receive strategic blueprints, exclusive partner promos, and early access to new ecosystem tools directly to your inbox.
                     </p>
+
+                    {isWeb3Authenticated && (
+                      <div className="mb-6 inline-flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                        [SUBSCRIBER_NODE: ON-CHAIN VERIFIED]
+                      </div>
+                    )}
 
                     {errorMsg && (
                       <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm">
