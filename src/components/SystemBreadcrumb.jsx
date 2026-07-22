@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import * as LuIcons from 'react-icons/lu';
+import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 
 const { LuChevronRight } = LuIcons;
@@ -34,7 +35,9 @@ export default function SystemBreadcrumb() {
               <span className="text-axim-purple drop-shadow-[0_0_8px_#7D00FF]">{crumb.name}</span>
             ) : (
               <>
-                <Link to={crumb.path} className="hover:text-white transition-colors">{crumb.name}</Link>
+                <Link to={crumb.path} className="hover:text-white transition-colors" onClick={() => {
+                  logTelemetry('breadcrumb_nav_click', { path: crumb.path, name: crumb.name });
+                }}>{crumb.name}</Link>
                 <SafeIcon icon={LuChevronRight} className="w-3 h-3 text-zinc-700" />
               </>
             )}

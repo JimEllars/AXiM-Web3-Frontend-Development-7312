@@ -105,7 +105,11 @@ export default function NdaGeneratorLanding() {
 
   return (
 
-      <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+      <motion.div className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+        onViewportEnter={() => {
+          logTelemetry('tool_landing_viewed', { tool: 'nda_generator' });
+        }}
+        viewport={{ once: true, amount: 0.2 }}>
       <SEO
         title="Web3 NDA Generator | Cryptographic Proofs | AXiM Apps & Tools"
         description="Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations."
@@ -205,6 +209,12 @@ export default function NdaGeneratorLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Protect your operational blueprints before entering into B2B consultations. Generate a balanced, two-way non-disclosure agreement optimized for technology and software collaborations.
           </p>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 text-[9px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [ZERO_KNOWLEDGE_PROOF: ENCRYPTED_INGEST]
+            </div>
+          )}
           <button onClick={handleOutboundClick} className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Launch Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
           </button>
@@ -244,7 +254,7 @@ export default function NdaGeneratorLanding() {
           </button>
         </div>
       </section>
-    </div>
+    </motion.div>
 
   );
 }
