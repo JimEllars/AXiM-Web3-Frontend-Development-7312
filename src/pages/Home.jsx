@@ -134,13 +134,25 @@ export default function Home() {
         )}
 
         {/* 1. Daily News Feed */}
-        <section className="py-20 relative overflow-hidden bg-bg-void">
+        <motion.section
+          className="py-20 relative overflow-hidden bg-bg-void"
+          onViewportEnter={() => {
+            logTelemetry('home_news_section_viewed', { totalArticles: Math.min(dailyNews.length, 6) });
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
                 <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
                 <h2 className="text-3xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+                {isWeb3Authenticated && (
+                  <span className="ml-auto font-mono text-[9px] text-emerald-400 tracking-widest uppercase border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 rounded-sm select-none pointer-events-none hidden sm:inline-flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    [INGEST_FEED: ARBITRUM_EDGE // 6_NODES_ACTIVE]
+                  </span>
+                )}
               </div>
-              <div className="flex flex-col gap-6" role="main">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6" role="main">
                 {isNewsLoading ? (
                   [1,2,3].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : dailyNews.length === 0 ? (
@@ -149,24 +161,24 @@ export default function Home() {
                 ) : (
                   (() => {
                     const rawArticles = dailyNews;
-                    const truncatedBriefings = rawArticles.slice(0, 5);
+                    const truncatedBriefings = rawArticles.slice(0, 6);
                     const visibleBriefings = truncatedBriefings;
-                    return visibleBriefings.map((post) => <article key={post.id}><ArticleCard article={post} variant="row" /></article>);
+                    return visibleBriefings.map((post) => <article key={post.id} className="h-full"><ArticleCard article={post} variant="grid" /></article>);
                   })()
                 )}
 
               </div>
 
               <div className="mt-12 flex justify-center w-full">
-                <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} onClick={() => logTelemetry('see_all_briefings_click', { origin: 'home_daily_news' })} className="group inline-flex items-center gap-3 px-6 py-3 bg-[#090909] hover:bg-[#0f0f0f] border border-white/5 hover:border-axim-purple/40 text-xs font-mono tracking-widest text-zinc-400 hover:text-white uppercase transition-all duration-300 rounded-sm">
-                  See All Intelligence
+                <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} onClick={() => logTelemetry('see_all_articles_click', { origin: 'home_daily_news' })}
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#090909] hover:bg-[#0f0f0f] border border-white/10 hover:border-axim-purple/50 text-xs font-mono tracking-widest text-zinc-300 hover:text-white uppercase transition-all duration-300 rounded-sm shadow-lg"
+                >
+                  See All Articles
                   <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
                 </Link>
               </div>
             </div>
-          </section>
-
-
+          </motion.section>
 
         {/* 3. Partner Break: Make */}
         <PartnerPromo
@@ -217,7 +229,7 @@ export default function Home() {
                 Skip the legal retainer. Generate a structurally optimized, formal demand letter in seconds using our autonomous legal intake AI. Perfect for freelance disputes, property damage, and breach of contract.
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                 <Link to="/tools" className="inline-flex items-center justify-center px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_20px_rgba(255,234,0,0.2)] rounded-sm">
+                 <Link to="/tools" onClick={() => logTelemetry('featured_app_demand_letter_clicked', { origin: 'home_spotlight' })} className="inline-flex items-center justify-center px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_20px_rgba(255,234,0,0.2)] rounded-sm">
                     Generate Letter - $4.00 <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-4 h-4" />
                  </Link>
               </div>
@@ -237,14 +249,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 7. The Firehose */}
-        <section className="py-24 relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
-            <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
-            <h2 className="text-3xl font-black uppercase tracking-tighter text-white">All Articles</h2>
-          </div>
-          <NewsFeed limit={12} />
-        </section>
+
 
         <EngagementGuard />
         <Ecosystem />
