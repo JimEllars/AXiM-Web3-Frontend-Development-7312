@@ -223,7 +223,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         {filters.map(filter => (
           <button
             key={filter.id}
-            onClick={() => { setActiveCategory(filter.id); logTelemetry('feed_filter_switch', { category: filter.id }); }}
+            onClick={() => { setActiveCategory(filter.id); logTelemetry('feed_filter_switch', { category: filter.id }); logTelemetry('newsfeed_category_switched', { category: filter.id, label: filter.label }); }}
             className={`px-4 py-2 rounded-sm text-[0.65rem] font-mono uppercase tracking-widest transition-colors border ${
               activeCategory === filter.id
                 ? 'bg-axim-purple/20 border-axim-purple text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]'
@@ -276,7 +276,10 @@ export default function NewsFeed({ limit = null, title = null }) {
       {hasMore && activeCategory !== 'Daily News' && (
         <div className="mt-12 flex justify-center">
           <button
-            onClick={handleLoadMore}
+            onClick={() => {
+              handleLoadMore();
+              logTelemetry('newsfeed_page_advanced', { newPage: page + 1, activeCategory });
+            }}
             disabled={loadingMore}
             className="flex items-center space-x-3 px-8 py-4 bg-transparent border border-axim-purple/50 text-white font-mono text-xs uppercase tracking-widest hover:bg-axim-purple/10 hover:border-axim-purple transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
