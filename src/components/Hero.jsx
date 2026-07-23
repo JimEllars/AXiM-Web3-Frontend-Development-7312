@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
@@ -7,7 +8,13 @@ import BackgroundEffects from './BackgroundEffects';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30">
+    <motion.section
+         className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30"
+         onViewportEnter={() => {
+           logTelemetry('home_hero_viewed', { timestamp: Date.now() });
+         }}
+         viewport={{ once: true, amount: 0.2 }}
+       >
       <BackgroundEffects />
       
       {/* Absolute Centering Wrapper */}
@@ -52,6 +59,6 @@ export default function Hero() {
         </div>
 
       </div>
-    </section>
+    </motion.section>
   );
 }
