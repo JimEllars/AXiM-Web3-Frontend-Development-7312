@@ -128,7 +128,7 @@ export default function Tools() {
              </motion.div>
           ))}
         </motion.div>
-      </motion.section>
+      </section>
 
       {/* Deep-Dive Alternating Layout Array */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16 overflow-x-hidden md:overflow-visible">
@@ -169,7 +169,7 @@ export default function Tools() {
             </div>
           </motion.div>
         ))}
-      </motion.section>
+      </section>
     </div>
   );
 }
