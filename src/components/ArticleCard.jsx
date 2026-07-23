@@ -163,12 +163,18 @@ export default function ArticleCard({
         ref={cardRef}
         onMouseMove={handleMouseMove}
         to={`/article/${article.slug}`}
-        onClick={() =>
+        onClick={() => {
           logTelemetry("briefing_disclosure_intent", {
             slug: article.slug,
             category: categoryBadge,
-          })
-        }
+          });
+          logTelemetry('article_card_clicked', {
+            slug: article.slug,
+            title: article.title?.rendered?.replace(/<[^>]+>/g, '') || article.title || 'UNTITLED',
+            variant,
+            isHero
+          });
+        }}
         className={
           variant === 'row'
             ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"

@@ -116,13 +116,25 @@ export default function Articles() {
       />
 
       {/* Hub Hero */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
+      <motion.section
+        className="pt-32 pb-16 relative overflow-hidden"
+        onViewportEnter={() => {
+          logTelemetry('articles_directory_viewed', { initialFilter: activeFilter });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="absolute top-0 right-0 lg:right-8 flex items-center justify-center lg:justify-end w-full lg:w-auto -mt-12 lg:mt-0">
             <div className="inline-flex items-center px-2.5 py-1 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
               GATEWAY // ISOLATE_ACTIVE
+              {isWeb3Authenticated && (
+                <span className="ml-2 pl-2 border-l border-white/10 font-mono text-[9px] text-axim-purple tracking-widest uppercase select-none inline-flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-axim-purple animate-pulse" />
+                  [DIRECTORY_INDEX: ARBITRUM_SYNCED // LEVEL_1_READ]
+                </span>
+              )}
               {isWeb3Authenticated && walletAddress && (
                 <span className="ml-2 pl-2 border-l border-white/10 font-mono text-[9px] text-axim-purple tracking-widest uppercase">
                   [HASH: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}]
@@ -137,7 +149,7 @@ export default function Articles() {
             Strategic insights, partner integrations, and tactical blueprints for scaling your decentralized architecture.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* Filter Pill-Bar for Articles */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
