@@ -66,7 +66,7 @@ export default function AdminDashboard() {
               key={tab.id}
               onClick={() => {
               setActiveTab(tab.id);
-              logTelemetry('admin_tab_switched', { tabId: tab.id, tabLabel: tab.label });
+              logTelemetry('admin_tab_switched', { targetTab: tab.id });
             }}
               className={`flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest rounded-sm transition-colors whitespace-nowrap snap-start ${
                 activeTab === tab.id

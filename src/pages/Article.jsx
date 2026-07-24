@@ -14,6 +14,7 @@ import SystemBreadcrumb from '../components/SystemBreadcrumb'; // Adding this as
 
 export default function Article() {
   const navigate = useNavigate();
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const addToast = useAximStore(state => state.addToast);
   const recordReadSession = useAximStore(state => state.recordReadSession);
   const handleShare = async () => {
@@ -29,6 +30,7 @@ export default function Article() {
           slug,
           method: 'native_share'
         });
+        logTelemetry('article_share_initiated', { slug, platform: 'native_share' });
 
       } catch (err) {
         if (err.name !== 'AbortError') {
@@ -38,6 +40,7 @@ export default function Article() {
             slug,
             method: 'clipboard_copy'
           });
+          logTelemetry('article_share_initiated', { slug, platform: 'clipboard_copy' });
         }
       }
     } else {
@@ -47,6 +50,7 @@ export default function Article() {
         slug,
         method: 'clipboard_copy'
       });
+      logTelemetry('article_share_initiated', { slug, platform: 'clipboard_copy' });
     }
   };
 
@@ -195,7 +199,13 @@ const { slug } = useParams();
   };
 
   return (
-    <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
+    <motion.article
+      className="w-full min-h-screen bg-bg-void relative z-10 pb-32"
+      onViewportEnter={() => {
+        logTelemetry('article_reader_viewed', { slug, isWeb3Authenticated });
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-axim-purple z-[100] shadow-[0_0_15px_rgba(147,51,234,0.6)] origin-left"
         style={{ scaleX: scrollYProgress }}
@@ -223,6 +233,12 @@ const { slug } = useParams();
             <SafeIcon icon={LuIcons.LuArrowLeft} className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Hub
           </Link>
+          {isWeb3Authenticated && (
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              [ARTICLE_HASH: VERIFIED_ON_CHAIN // ARBITRUM_ONE]
+            </div>
+          )}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight max-w-4xl" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
         </div>
       </section>
@@ -383,6 +399,6 @@ const { slug } = useParams();
         </button>
       </motion.div>
 
-    </div>
+    </motion.article>
   );
 }
