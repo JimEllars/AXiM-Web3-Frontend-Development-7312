@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
@@ -81,7 +82,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden">
+    <motion.footer
+         className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden"
+         onViewportEnter={() => {
+           logTelemetry('footer_viewed', { path: location.pathname });
+         }}
+         viewport={{ once: true, amount: 0.2 }}
+       >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(147,51,234,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
@@ -102,10 +109,10 @@ export default function Footer() {
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
             </p>
             <div className="flex gap-4">
-               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors">
+               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'twitter' })}>
                  <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
                </a>
-               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors">
+               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'linkedin' })}>
                  <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
                </a>
             </div>
@@ -178,6 +185,6 @@ export default function Footer() {
           </pre>
         </div>
       )}
-    </footer>
+    </motion.footer>
   );
 }
