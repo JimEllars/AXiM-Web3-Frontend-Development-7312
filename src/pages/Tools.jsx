@@ -75,7 +75,13 @@ export default function Tools() {
       />
 
       {/* Hero Header */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
+      <motion.section
+        className="pt-32 pb-16 relative overflow-hidden"
+        onViewportEnter={() => {
+          logTelemetry('tools_hero_viewed', { isWeb3Authenticated });
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="mb-12">
@@ -88,12 +94,12 @@ export default function Tools() {
             {isWeb3Authenticated && (
               <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                [DIRECTORY_NODE: ACTIVE // LATENCY: 32MS]
+                [DIRECTORY_NODE: ACTIVE // ARBITRUM_EDGE]
               </div>
             )}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* High-Contrast Grid Hub */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24 overflow-x-hidden md:overflow-visible">
