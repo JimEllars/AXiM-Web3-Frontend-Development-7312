@@ -194,7 +194,7 @@ export default function ArticleCard({
           className={
             variant === 'row'
               ? "relative w-full sm:w-1/3 aspect-video sm:h-auto flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm mask"
-              : `relative w-full h-48 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b border-white/10 overflow-hidden mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
+              : `relative w-full h-36 sm:h-40 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-4 border-b border-white/10 mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
           }
         >
 
