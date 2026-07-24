@@ -12,6 +12,15 @@ import { logTelemetry } from "../lib/telemetry";
 import { useAximStore } from "../store/useAximStore";
 
 export default function Support() {
+  const [formInitiated, setFormInitiated] = useState(false);
+
+  const handleFormInitiation = () => {
+    if (!formInitiated) {
+      logTelemetry('support_form_initiated', { priority: formData.priority });
+      setFormInitiated(true);
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -198,7 +207,13 @@ export default function Support() {
         </div>
       )}
 
-      <section className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center">
+      <motion.section
+         className="pt-32 pb-16 relative overflow-hidden border-b border-white/10 bg-black w-full flex flex-col items-center justify-center text-center"
+         onViewportEnter={() => {
+           logTelemetry('support_hero_viewed', { isWeb3Authenticated });
+         }}
+         viewport={{ once: true, amount: 0.2 }}
+       >
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10 text-center w-full flex flex-col items-center justify-center text-center">
           <div className="w-16 h-16 bg-axim-purple/10 border border-axim-purple/30 rounded flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(147,51,234,0.2)]">
@@ -221,7 +236,7 @@ export default function Support() {
             </div>
           )}
         </div>
-      </section>
+      </motion.section>
 
       <motion.div
         className="max-w-7xl mx-auto px-6 lg:px-8 mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12"
@@ -258,7 +273,7 @@ export default function Support() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" onFocus={handleFormInitiation}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">

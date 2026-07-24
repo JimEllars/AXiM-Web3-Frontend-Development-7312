@@ -71,7 +71,12 @@ export default function GlobalSearch() {
       }
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          if (!prev) {
+            logTelemetry('globalsearch_opened', { origin: window.location.pathname });
+          }
+          return !prev;
+        });
       }
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
@@ -96,6 +101,10 @@ export default function GlobalSearch() {
     );
     setResults(matches);
     setSelectedIndex(0);
+
+    if (debouncedSearchTerm.trim()) {
+      logTelemetry('globalsearch_query_executed', { queryLength: debouncedSearchTerm.length });
+    }
 
     if (debouncedSearchTerm.trim().length > 2) {
       setIsSearchingArticles(true);
@@ -160,6 +169,11 @@ export default function GlobalSearch() {
     }, 300);
   };
 
+  const handleOpenModal = () => {
+    logTelemetry('globalsearch_opened', { origin: window.location.pathname });
+    setIsOpen(true);
+  };
+
   const closeModal = () => {
     setIsOpen(false);
     setQuery('');
@@ -170,7 +184,7 @@ export default function GlobalSearch() {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenModal}
         className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-sm hover:bg-white/10 hover:border-axim-purple/30 transition-all text-zinc-400 group"
       >
         <SafeIcon icon={LuSearch} className="w-3.5 h-3.5 group-hover:text-axim-purple transition-colors" />
@@ -184,7 +198,7 @@ export default function GlobalSearch() {
       {/* Mobile Icon */}
       <button
         aria-label="Open Omnibar Search"
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenModal}
         className="md:hidden p-2 text-white border border-white/10 bg-white/5 rounded-sm hover:text-axim-purple transition-colors"
       >
         <SafeIcon icon={LuSearch} className="w-5 h-5" />
