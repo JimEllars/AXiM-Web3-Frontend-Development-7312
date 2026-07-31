@@ -143,8 +143,16 @@ export default function Home() {
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
               <div className="flex items-center gap-3 mb-10 border-b border-white/10 pb-4">
-                <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
-                <h2 className="text-3xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+                <div>
+                  <div className="flex items-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                    // INTEL_STREAM: ARBITRUM_SYNCED
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
+                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+                  </div>
+                </div>
                 {isWeb3Authenticated && (
                   <span className="ml-auto font-mono text-[9px] text-emerald-400 tracking-widest uppercase border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 rounded-sm select-none pointer-events-none hidden sm:inline-flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -218,11 +226,15 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,234,0,0.05),transparent_50%)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
             <div className="flex-1 text-center lg:text-left">
+              <div className="flex items-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                // INTEL_STREAM: ARBITRUM_SYNCED
+              </div>
               <div className="inline-flex items-center space-x-2 px-3 py-1 bg-axim-gold/10 border border-axim-gold/30 text-[0.65rem] font-mono uppercase tracking-widest text-axim-gold mb-6 rounded-sm">
                 <SafeIcon icon={LuIcons.LuSparkles} className="w-3 h-3" />
                 <span>Featured Application</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6 leading-tight border-b border-white/10 pb-4">
                 Quick Demand <br/><span className="text-axim-gold">Letter Engine.</span>
               </h2>
               <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">

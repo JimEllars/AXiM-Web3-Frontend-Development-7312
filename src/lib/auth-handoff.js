@@ -35,3 +35,13 @@ export function generateWorkerLaunchUrl(workerSubdomain, userSession) {
 export function generateHandoffLink(subdomain, token) {
   return `https://${subdomain}.axim.us.com/?auth_token=${token || ''}`;
 }
+
+export function generateCrossAppHandoffUrl(targetAppUrl, sessionData) {
+  logTelemetry('cross_app_sso_handoff_initiated', {
+    targetApp: targetAppUrl,
+    authMethod: sessionData?.walletAddress ? 'web3_wallet' : 'email_key'
+  });
+  const url = new URL(targetAppUrl);
+  url.searchParams.set('sso_token', sessionData?.token || 'guest');
+  return url.toString();
+}

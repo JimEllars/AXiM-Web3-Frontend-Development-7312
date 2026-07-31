@@ -179,8 +179,16 @@ export default function Articles() {
         {(leadStory || catData.dailyNews.length > 0) && (activeFilter === 'All briefings' || activeFilter === 'News & Articles') && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+              <div>
+                <div className="flex items-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                  // INTEL_STREAM: ARBITRUM_SYNCED
+                </div>
+                <div className="flex items-center gap-3">
+                  <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
+                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -214,8 +222,16 @@ export default function Articles() {
         {(activeFilter === 'All briefings' || activeFilter === 'Featured') && (
         <section>
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-            <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
-            <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
+            <div>
+              <div className="flex items-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                // INTEL_STREAM: ARBITRUM_SYNCED
+              </div>
+              <div className="flex items-center gap-3">
+                <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
+                <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
+              </div>
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading ? (
@@ -242,8 +258,16 @@ export default function Articles() {
             viewport={{ once: true, amount: 0.2 }}
           >
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-              <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-purple" />
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Software Spotlight</h2>
+              <div>
+                <div className="flex items-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+                  // INTEL_STREAM: ARBITRUM_SYNCED
+                </div>
+                <div className="flex items-center gap-3">
+                  <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-purple" />
+                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Software Spotlight</h2>
+                </div>
+              </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-8 relative z-10 w-full">
               {isLoading ? (

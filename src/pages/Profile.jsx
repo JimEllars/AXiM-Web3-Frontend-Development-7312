@@ -44,6 +44,17 @@ const [extractingId, setExtractingId] = useState(null);
   const activeTickets = useAximStore((state) => state.tickets);
   const clearStore = useAximStore((state) => state.clearStore);
 
+  React.useEffect(() => {
+    if (isWeb3Authenticated && walletAddress) {
+      logTelemetry('nft_inventory_synced', {
+        walletAddress,
+        assetCount: vaultedAssets?.length || 0,
+        network: 'arbitrum_one'
+      });
+    }
+  }, [isWeb3Authenticated, walletAddress, vaultedAssets]);
+
+
   // Strict Authentication Gate
   if (!session && !isWeb3Authenticated) {
     return <DashboardAccessDenied />;
