@@ -14,9 +14,17 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
 
-  const { session } = useAximAuth();
+  const { session, user, profile } = useAximAuth();
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const walletAddress = useAximStore((state) => state.walletAddress);
+  const isAuthenticated = !!user || isWeb3Authenticated;
+
+  const getDisplayName = () => {
+    if (profile?.username) return profile.username;
+    if (user?.email) return user.email.split('@')[0];
+    if (walletAddress) return `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+    return 'Operator';
+  };
 
 
   useEffect(() => {
@@ -147,10 +155,26 @@ export default function Header() {
 
 
           <GlobalSearch />
-          {session || isWeb3Authenticated ? (
-            <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="text-xs font-mono font-black tracking-widest text-axim-purple hover:text-white uppercase transition-colors px-4 py-2 bg-axim-purple/10 border border-axim-purple/20 rounded-sm">Operator Vault</Link>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2 group">
+              <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-axim-purple/20 border border-axim-purple/50 text-white font-mono text-xs uppercase tracking-widest hover:bg-axim-purple hover:text-white transition-colors rounded-sm shadow-md"
+              >
+                <SafeIcon className="w-3.5 h-3.5 text-axim-purple group-hover:text-white" icon={LuIcons.LuUserCheck} />
+                <span>Hi {getDisplayName()}</span>
+              </Link>
+              <span className="hidden xl:inline-flex items-center gap-1 px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
+                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                [ECOSYSTEM_SSO: HYBRID_IDENTITY_SYNCED]
+              </span>
+            </div>
           ) : (
-            <Link className="text-xs font-mono text-zinc-400 hover:text-white uppercase tracking-widest" to="/auth">Client Access</Link>
+            <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
+            >
+              <SafeIcon className="w-3.5 h-3.5" icon={LuIcons.LuLogIn} />
+              <span>Login</span>
+            </Link>
           )}
 
 <Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
@@ -225,10 +249,16 @@ export default function Header() {
               </Link>
 
               <GlobalSearch />
-          {session || isWeb3Authenticated ? (
-                <Link onClick={() => logTelemetry('header_vault_click', { type: 'operator' })} to="/profile" className="mt-2 w-full py-4 bg-axim-purple/10 border border-axim-purple/20 text-axim-purple text-center text-sm font-mono font-black uppercase tracking-widest rounded-sm">Operator Vault</Link>
+          {isAuthenticated ? (
+                <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile" className="mt-2 w-full py-4 flex justify-center items-center gap-2 bg-axim-purple/20 border border-axim-purple/50 text-white text-sm font-mono uppercase tracking-widest rounded-sm transition-colors group">
+                  <SafeIcon className="w-4 h-4 text-axim-purple group-hover:text-white" icon={LuIcons.LuUserCheck} />
+                  <span>Hi {getDisplayName()}</span>
+                </Link>
               ) : (
-                <Link to="/auth" className="mt-2 w-full py-4 bg-white/5 border border-white/10 text-zinc-400 hover:text-white text-center text-sm font-mono uppercase tracking-widest rounded-sm transition-colors">Client Access</Link>
+                <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth" className="mt-2 w-full py-4 flex justify-center items-center gap-2 bg-axim-purple text-white font-black text-sm uppercase tracking-widest rounded-sm transition-colors group">
+                  <SafeIcon className="w-4 h-4" icon={LuIcons.LuLogIn} />
+                  <span>Login</span>
+                </Link>
               )}
 
             </div>

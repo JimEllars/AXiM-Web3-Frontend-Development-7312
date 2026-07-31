@@ -178,7 +178,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
-            : `bg-gradient-to-b from-[#090909] to-[#030303] border border-white/5 backdrop-blur-md shadow-xl hover:border-axim-purple/40 hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
+            : `bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block ${isHero ? "flex flex-col md:flex-row gap-6" : index % 7 === 0 ? "flex flex-col md:flex-row gap-6 min-h-[320px]" : "h-full"}`
         }
       >
         {/* Interactive Neon Hover Ray Overlay */}
@@ -254,7 +254,7 @@ export default function ArticleCard({
         }
       >
         <div className="flex items-center mb-2 self-start">
-          <span className="inline-block font-mono text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase">
+          <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase">
             {categoryBadge}
           </span>
           {isWeb3Authenticated && (

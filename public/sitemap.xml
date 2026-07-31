@@ -71,6 +71,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://axim.us.com/article/an-ai-model-was-told-to-hack-a-test-it-hacked-hugging-face-instead</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://axim.us.com/article/the-ai-buildout-just-got-another-multibillion-dollar-backer-and-wall-street-still-isnt-sure-it-wants-to-pay-for-it</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://axim.us.com/article/openais-own-models-hacked-hugging-face-proof-that-ai-containment-is-a-promise-not-a-guarantee</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
