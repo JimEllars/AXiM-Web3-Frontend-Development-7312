@@ -40,6 +40,7 @@ const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
 const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
 const ChatbaseLanding = lazy(() => import('./pages/partners/ChatbaseLanding'));
+const Games = lazy(() => import('./pages/Games'));
 
 
 
@@ -222,6 +223,7 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
             <Route path="/tools/pay-stub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
