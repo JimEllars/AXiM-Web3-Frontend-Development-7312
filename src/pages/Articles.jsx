@@ -233,7 +233,7 @@ export default function Articles() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {isLoading ? (
                <>
                  <SkeletonCard isHero={true} />
@@ -269,33 +269,19 @@ export default function Articles() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col lg:flex-row gap-8 relative z-10 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10 w-full">
               {isLoading ? (
                 <>
-                  <div className="w-full lg:w-1/2 flex">
-                    <SkeletonCard isHero={true} />
-                  </div>
-                  <div className="w-full lg:w-1/2 flex flex-col gap-4 justify-between">
-                    <SkeletonCard />
-                    <SkeletonCard />
-                    <SkeletonCard />
-                  </div>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
                 </>
               ) : (
                 <>
-                  {/* Left Highlight Panel Column */}
-                  {catData.appSpotlight[0] && (
-                    <div className="w-full lg:w-1/2 flex">
-                      <ArticleCard article={catData.appSpotlight[0]} index={0} isHero={true} priority={true}/>
-                    </div>
-                  )}
-
-                  {/* Right Briefing Stack Column */}
-                  <div className="w-full lg:w-1/2 flex flex-col gap-4 justify-between">
-                    {catData.appSpotlight.slice(1, 4).map((article, index) => (
-                      <ArticleCard index={index + 1} article={article} key={article.id || index} variant="row" />
-                    ))}
-                  </div>
+                  {catData.appSpotlight.slice(0, 4).map((article, index) => (
+                    <ArticleCard article={article} index={index} key={article.id || index} />
+                  ))}
                 </>
               )}
             </div>
