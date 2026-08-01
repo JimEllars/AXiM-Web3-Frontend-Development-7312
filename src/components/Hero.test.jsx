@@ -14,6 +14,7 @@ vi.mock('framer-motion', async () => {
     motion: {
       div: ({ children, ...props }) => <div {...props}>{children}</div>,
       section: ({ children, ...props }) => <section {...props}>{children}</section>,
+      p: ({ children, ...props }) => <p {...props}>{children}</p>,
     },
   };
 });
