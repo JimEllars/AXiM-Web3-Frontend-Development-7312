@@ -6,7 +6,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 
-export default function NewsFeed({ limit = null, title = null }) {
+export default function NewsFeed({ limit = null, title = null, onArticleClick, hidePagination = false }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -244,7 +244,7 @@ export default function NewsFeed({ limit = null, title = null }) {
              return visibleBriefings.map((article, index) => {
                try {
                  if (!article || typeof article !== 'object') throw new Error("Malformed article object");
-                 return <ArticleCard key={article.id || `fallback-${index}`} article={article} index={index} />;
+                 return <ArticleCard key={article.id || `fallback-${index}`} article={article} index={index} onCardClick={onArticleClick} />;
                } catch (e) {
                  return (
                    <div key={`error-${index}`} className="flex items-center justify-center p-5 bg-[#050505] border border-red-500/20 rounded-sm min-h-[320px]">
