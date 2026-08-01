@@ -159,7 +159,7 @@ export default function Articles() {
               key={filter}
               onClick={() => {
               setActiveFilter(filter);
-              logTelemetry('article_filter_switch', { filter, origin: 'articles_page' });
+              logTelemetry('article_category_filter_selected', { filter, origin: 'articles_directory' });
             }}
               className={`px-5 py-2.5 rounded-sm text-[0.7rem] font-mono uppercase tracking-widest transition-all border ${
                 activeFilter === filter

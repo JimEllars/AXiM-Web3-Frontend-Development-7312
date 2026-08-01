@@ -189,24 +189,33 @@ export default function ArticleCard({
           }}
         />
 
-        {/* Reduced Height Image Container */}
+        {/* Top Container */}
         <div
           className={
             variant === 'row'
               ? "relative w-full sm:w-1/3 aspect-video sm:h-auto flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm mask"
-              : `relative w-full h-36 sm:h-40 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-4 border-b border-white/10 mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r h-64 md:h-auto" : ""}`
+              : `relative w-full aspect-video overflow-hidden bg-[#0a0a0a] border-b border-white/10 rounded-t-sm mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r md:h-auto md:aspect-auto" : ""}`
           }
         >
 
-        <button
-          onClick={handleSaveToggle}
-          className="absolute top-4 right-4 z-30 p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300"
-          title="Save Briefing"
-        >
-          <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
-        </button>
+        <div className="absolute top-4 right-4 z-30 flex items-center space-x-2">
+          <button
+            onClick={handleShareClick}
+            className="p-2 text-white/40 hover:text-white/80 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
+            title="Copy Link"
+          >
+            <SafeIcon icon={FiIcons.FiShare2} className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleSaveToggle}
+            className="p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300"
+            title="Save Briefing"
+          >
+            <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
+          </button>
+        </div>
 
-        {/* Base Image - GRAYSCALE REMOVED, Opacity Increased to 60% */}
+        {/* Base Image */}
         <motion.img
           src={finalImage}
           alt={article.title?.rendered || "Article thumbnail"}
@@ -224,61 +233,59 @@ export default function ArticleCard({
 
 
         <div className="absolute top-4 left-4 z-20 flex items-center space-x-2">
+          <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/20 px-2 py-1 rounded-sm uppercase shadow-lg">
+            {categoryBadge}
+          </span>
           {isWeb3Authenticated && (
             <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[9px] tracking-widest uppercase rounded-sm shadow-md select-none">
               [VERIFIED_INTEL]
             </span>
           )}
-          <span className="px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 text-[0.55rem] font-mono uppercase tracking-widest text-white rounded-sm shadow-lg">
-            {date}
-          </span>
-          <span className="text-zinc-500 font-mono text-xs drop-shadow-md bg-black/40 px-2 py-1 rounded-sm backdrop-blur-sm">
-            • {estimateDuration(excerptText)} MIN READ
-          </span>
-          <button
-            onClick={handleShareClick}
-            className="p-1.5 text-white/30 hover:text-axim-purple bg-white/5 border border-white/5 hover:border-axim-purple/30 rounded-sm transition-all duration-300 relative z-30"
-            title="Copy Link"
-          >
-            <SafeIcon icon={FiIcons.FiShare2} className="w-3.5 h-3.5" />
-          </button>
         </div>
       </div>
 
-      {/* Lower Sub-Text Section */}
+      {/* Middle Container (Title & Subtext) */}
       <div
         className={
           variant === 'row'
             ? "flex flex-col flex-grow relative z-10 w-full"
-            : `flex flex-col flex-1 justify-between min-h-[160px] p-5 relative z-10 bg-[#050505] ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
+            : `p-5 flex flex-col flex-1 justify-between bg-[#050505] relative z-10 ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
         }
       >
-        <div className="flex items-center mb-2 self-start">
-          <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2 py-0.5 rounded-sm uppercase">
-            {categoryBadge}
-          </span>
+        <div>
+          <h3 className="text-base sm:text-lg font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors mb-2">
+            {cleanTitle}
+          </h3>
+          <div className="flex items-center space-x-2 mb-3">
+            <span className="text-[0.55rem] font-mono uppercase tracking-widest text-zinc-500">
+              {date}
+            </span>
+            <span className="text-zinc-600 font-mono text-xs">
+              • {estimateDuration(excerptText)} MIN READ
+            </span>
+          </div>
+
+          <p
+            className="text-sm text-zinc-400 leading-relaxed line-clamp-2 md:line-clamp-3 mt-1 mb-6"
+          >
+            {cleanExcerpt}
+          </p>
+        </div>
+
+        {/* Bottom CTA Footer */}
+        <div className="mt-auto flex justify-between items-center pt-4 border-t border-white/5 w-full">
+          <div className="inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
+            Access Briefing{" "}
+            <SafeIcon
+              icon={LuIcons.LuArrowRight}
+              className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1 text-axim-purple"
+            />
+          </div>
           {isWeb3Authenticated && (
-            <span className="ml-2 font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none">
-              [CAT_PROOF: ISOLATED]
+            <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none">
+              [MEDIA_NODE: ARBITRUM_VERIFIED]
             </span>
           )}
-        </div>
-        <h2 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-tight text-white mt-1 mb-2 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
-          {cleanTitle}
-        </h2>
-
-        <p
-          className="text-sm text-zinc-400 leading-relaxed line-clamp-2 md:line-clamp-3 mt-3 mb-6"
-        >
-          {cleanExcerpt}
-        </p>
-
-        <div className="mt-auto inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors pt-4 border-t border-white/5 w-full">
-          Access Briefing{" "}
-          <SafeIcon
-            icon={LuIcons.LuArrowRight}
-            className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1 text-axim-purple"
-          />
         </div>
       </div>
     </Link>
