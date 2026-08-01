@@ -43,6 +43,7 @@ export default function AuthGateway() {
   const { connect } = useConnect();
 
   const handleWeb3Login = async () => {
+    logTelemetry('auth_login_attempted', { method: 'web3_wallet' });
     setIsWeb3Connecting(true);
     setErrorMsg(null);
     setEmail('');
@@ -90,6 +91,7 @@ export default function AuthGateway() {
 
   const handleAuth = async (e) => {
     e.preventDefault();
+    logTelemetry('auth_login_attempted', { method: 'email_password' });
     setIsProcessing(true);
     setErrorMsg(null);
 

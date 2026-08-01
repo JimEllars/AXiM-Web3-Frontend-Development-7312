@@ -76,21 +76,33 @@ export default function Tools() {
 
       {/* Hero Header */}
       <motion.section
-        className="pt-32 pb-16 relative overflow-hidden"
+        className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10"
         onViewportEnter={() => {
-          logTelemetry('tools_hero_viewed', { isWeb3Authenticated });
+          logTelemetry('tools_directory_viewed', { timestamp: Date.now() });
         }}
         viewport={{ once: true, amount: 0.2 }}
       >
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="mb-12">
+            <div className="flex items-center justify-center gap-2 font-mono text-[10px] text-axim-purple uppercase tracking-widest mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              // SYSTEM_APPS: ONLINE
+            </div>
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4">
               Internal <span className="text-axim-purple">AXiM Apps & Tools</span>
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
               These tool matrices are engineered natively to run statelessly on top of secure network nodes. Access our enterprise directory to discover and launch standalone operational utilities.
             </p>
+            {isWeb3Authenticated && (
+              <div className="mt-6 flex justify-center">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-gold/10 border border-axim-gold/30 font-mono text-[8px] text-axim-gold uppercase tracking-widest rounded-sm select-none pointer-events-none">
+                  <span className="w-1 h-1 rounded-full bg-axim-gold animate-pulse" />
+                  [TOOLKIT: RWA_SMART_CONTRACTS_ENABLED]
+                </span>
+              </div>
+            )}
             {isWeb3Authenticated && (
               <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -113,13 +125,13 @@ export default function Tools() {
           {toolsList.map((tool, idx) => (
              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: idx * 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
                {tool.isExternal ? (
-                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
+                                  <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 shadow-xl transition-all duration-300 p-8 rounded-sm relative overflow-hidden`}>
                     <GridCardContent tool={tool} />
 
 
                     </a>
                ) : (
-                 <Link to={tool.link} onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden ${tool.bgHover}`}>
+                 <Link to={tool.link} onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`group block h-full bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 shadow-xl transition-all duration-300 p-8 rounded-sm relative overflow-hidden`}>
                     <GridCardContent tool={tool} />
 
 
