@@ -303,20 +303,28 @@ export const fetchPosts = async (params = {}) => {
     const queryParams = new URLSearchParams(params).toString();
     const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
 
-    const proxyUrl = import.meta.env?.VITE_WP_PROXY_URL || 'https://wp-proxy.axim.us.com';
+    const proxyUrl = import.meta.env?.VITE_WP_PROXY_URL;
 
-    // First try the proxy route
+    // Use the proxy only when it is explicitly deployed and configured.
     let res;
-    try {
+    if (proxyUrl) {
+      try {
         res = await fetch(`${proxyUrl}?endpoint=${encodeURIComponent(endpoint)}`, {
           signal: AbortSignal.timeout(8000)
         });
-    } catch (proxyErr) {
-        // Fallback to direct fetch if proxy URL is dead (like local dev without running proxy)
-        console.warn("[WP_FETCH] Proxy failed, trying direct WP connection.");
+      } catch (proxyErr) {
+        console.warn("[WP_FETCH] Configured proxy failed, trying direct WP connection.");
+      }
+    }
+
+    if (!res) {
+      try {
         res = await fetch(`https://wp.axim.us.com${endpoint}`, {
           signal: AbortSignal.timeout(8000)
         });
+      } catch (directErr) {
+        throw directErr;
+      }
     }
 
     if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
