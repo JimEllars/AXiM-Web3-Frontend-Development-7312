@@ -4,12 +4,13 @@ import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import SEO from '../components/SEO';
+import ArticleCard from '../components/ArticleCard';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
-import NewsFeed from '../components/NewsFeed';
+
 import SystemBreadcrumb from '../components/SystemBreadcrumb'; // Adding this as user included it in their import list, though it may not be used or used in existing UI. Wait, let me check if it's used in the bottom part.
 
 export default function Article() {
@@ -369,8 +370,29 @@ const { slug } = useParams();
       </div>
 
       {/* End of Page Firehose */}
-      <div className="mt-20 bg-black border-t border-white/10 pt-16 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
-         <NewsFeed limit={4} title="Continue Reading" hidePagination={true} onArticleClick={() => logTelemetry('article_related_clicked')} />
+      <div className="mt-20 bg-black border-t border-white/10 pt-16 pb-20 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
+            <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Continue Reading</h2>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {recentArticles.map((relatedPost, index) => (
+              <ArticleCard
+                key={relatedPost.id}
+                article={relatedPost}
+                index={index}
+                variant="grid"
+                onCardClick={(clickedArticle) => {
+                  logTelemetry('article_related_recirculation_clicked', {
+                    sourceSlug: slug,
+                    targetSlug: clickedArticle.slug
+                  });
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Sticky Action Pill */}

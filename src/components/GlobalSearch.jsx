@@ -102,9 +102,7 @@ export default function GlobalSearch() {
     setResults(matches);
     setSelectedIndex(0);
 
-    if (debouncedSearchTerm.trim()) {
-      logTelemetry('globalsearch_query_executed', { queryLength: debouncedSearchTerm.length });
-    }
+
 
     if (debouncedSearchTerm.trim().length > 2) {
       setIsSearchingArticles(true);
@@ -143,7 +141,21 @@ export default function GlobalSearch() {
 
 
 
-    const handleSelect = (item) => {
+
+  useEffect(() => {
+    if (query.trim().length >= 3) {
+      const timer = setTimeout(() => {
+        logTelemetry('global_search_executed', {
+          searchTerm: query.trim(),
+          resultCount: (results?.length || 0) + (articleResults?.length || 0),
+          path: window.location.pathname
+        });
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [query, results, articleResults]);
+
+  const handleSelect = (item) => {
     const activeSessionOwner = useAximStore.getState().userSession?.user?.walletAddress || "GUEST_ANONYMOUS";
     logTelemetry('SEARCH_RESULT_SELECTED', { path: item.path || item.slug || 'unknown', title: item.title || 'unknown', activeSessionOwner });
     setIsSynchronizing(true);
@@ -275,7 +287,15 @@ export default function GlobalSearch() {
                     {(articleResults.length > 0 || isSearchingArticles) && (
                       <div>
                         <h4 className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest mb-2 border-b border-white/10 pb-1 flex items-center justify-between">
-                          <span>Intel Search</span>
+                          <div className="flex items-center gap-2">
+                            <span>Intel Search</span>
+                            {isWeb3Authenticated && (
+                              <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                                [SEARCH_NODE: ENCRYPTED_QUERY]
+                              </span>
+                            )}
+                          </div>
                           {isSearchingArticles && <span className="text-axim-purple text-[0.55rem] animate-pulse">Searching...</span>}
                         </h4>
                         <div className="space-y-2">

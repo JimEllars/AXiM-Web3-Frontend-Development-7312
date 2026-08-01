@@ -1,4 +1,5 @@
 import { useAximStore } from '../store/useAximStore';
+import { logTelemetry } from './telemetry';
 
 export const fetchCategoryBySlug = async (slug) => {
   try {
@@ -312,8 +313,14 @@ export const fetchPosts = async (params = {}) => {
         res = await fetch(`${proxyUrl}?endpoint=${encodeURIComponent(endpoint)}`, {
           signal: AbortSignal.timeout(8000)
         });
+        if (!res.ok) {
+          logTelemetry('wp_edge_proxy_fallback_triggered', { endpoint, status: res.status });
+          res = null; // Trigger fallback
+        }
       } catch (proxyErr) {
+        logTelemetry('wp_edge_proxy_fallback_triggered', { endpoint, status: proxyErr.name || 'NetworkError' });
         console.warn("[WP_FETCH] Configured proxy failed, trying direct WP connection.");
+        res = null; // Ensure fallback
       }
     }
 
