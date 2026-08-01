@@ -56,6 +56,13 @@ export default function Hero() {
           >
             Consultation <SafeIcon icon={LuIcons.LuPhone} className="ml-3 w-4 h-4" />
           </Link>
+          <Link
+            onClick={() => logTelemetry('hero_cta_click', { target: 'games_hub', label: 'Web3 Games' })}
+            to="/games"
+            className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-axim-green/50 text-axim-green text-xs font-black uppercase tracking-widest hover:bg-axim-green hover:text-black transition-colors rounded-sm w-full sm:w-auto text-center"
+          >
+            Web3 Games <SafeIcon className="ml-3 w-4 h-4" icon={LuIcons.LuGamepad2}/>
+          </Link>
         </div>
 
       </div>
