@@ -17,7 +17,9 @@ export default function Hero() {
            visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
          }}
          className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30"
-         onViewportEnter={() => logTelemetry('home_hero_viewed', { timestamp: Date.now() })}
+         onViewportEnter={() => {
+           logTelemetry('home_hero_viewed', { timestamp: Date.now() });
+         }}
        >
       <BackgroundEffects />
       

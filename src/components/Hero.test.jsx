@@ -9,12 +9,16 @@ import Hero from './Hero.jsx';
 // Mock framer-motion to skip animations
 vi.mock('framer-motion', async () => {
   const actual = await vi.importActual('framer-motion');
+  const stripProps = (props) => {
+    const { initial, whileInView, viewport, variants, onViewportEnter, transition, animate, exit, layout, ...rest } = props;
+    return rest;
+  };
   return {
     ...actual,
     motion: {
-      div: ({ children, ...props }) => <div {...props}>{children}</div>,
-      section: ({ children, ...props }) => <section {...props}>{children}</section>,
-      p: ({ children, ...props }) => <p {...props}>{children}</p>,
+      div: ({ children, ...props }) => <div {...stripProps(props)}>{children}</div>,
+      section: ({ children, ...props }) => <section {...stripProps(props)}>{children}</section>,
+      p: ({ children, ...props }) => <p {...stripProps(props)}>{children}</p>,
     },
   };
 });
