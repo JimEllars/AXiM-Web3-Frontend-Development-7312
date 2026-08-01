@@ -179,7 +179,7 @@ export default function NewsFeed({ limit = null, title = null }) {
           </div>
         )}
         <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-pulse">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-sm min-h-[320px]">
                 <div className="w-full aspect-video h-48 bg-white/5 rounded-sm mb-4" />
@@ -235,7 +235,7 @@ export default function NewsFeed({ limit = null, title = null }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {(() => {
            try {
              const rawArticles = Array.isArray(articles) ? articles : [];

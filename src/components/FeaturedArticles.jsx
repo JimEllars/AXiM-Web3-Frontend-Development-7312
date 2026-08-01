@@ -81,7 +81,7 @@ export default function FeaturedArticles({
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
           {title}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
@@ -139,30 +139,14 @@ export default function FeaturedArticles({
       </h2>
 
       {/* Grid Container */}
-      <div className="flex flex-col lg:flex-row gap-8 relative z-10 w-full">
-        {/* Left Highlight Panel Column */}
-        {validArticles[0] && (
-          <div className="w-full lg:w-1/2 flex">
-            <ArticleCard
-              article={validArticles[0]}
-              index={0}
-              isHero={true}
-              priority={true}
-            />
-          </div>
-        )}
-
-        {/* Right Briefing Stack Column */}
-        <div className="w-full lg:w-1/2 flex flex-col gap-4 justify-between">
-          {validArticles.slice(1, 4).map((article, index) => (
-            <ArticleCard
-              article={article}
-              index={index + 1}
-              key={article.id || index}
-              variant="row"
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {validArticles.map((article, index) => (
+          <ArticleCard
+            article={article}
+            index={index}
+            key={article.id || index}
+          />
+        ))}
       </div>
     </motion.div>
   );

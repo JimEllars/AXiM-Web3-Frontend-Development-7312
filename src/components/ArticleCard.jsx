@@ -194,7 +194,7 @@ export default function ArticleCard({
           className={
             variant === 'row'
               ? "relative w-full sm:w-1/3 aspect-video sm:h-auto flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm mask"
-              : `relative w-full aspect-[16/9] sm:h-52 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask ${isHero ? "md:w-1/2 md:border-b-0 md:border-r md:h-auto md:aspect-auto" : ""}`
+              : "relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask"
           }
         >
 
@@ -208,45 +208,68 @@ export default function ArticleCard({
           </button>
           <button
             onClick={handleSaveToggle}
-            className="p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300"
+            className="p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
             title="Save Briefing"
           >
             <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
           </button>
         </div>
 
-        {/* Base Image */}
-        <motion.img
-          src={finalImage}
-          alt={article.title?.rendered || "Article thumbnail"}
-          className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-all duration-700 ease-out opacity-50 group-hover:opacity-80 border-b border-white/5 relative z-10"
-          loading={priority ? "eager" : "lazy"}
-          fetchpriority={priority ? "high" : "auto"}
-        />
+        {variant === 'row' ? (
+          <>
+            <motion.img
+              src={finalImage}
+              alt={article.title?.rendered || "Article thumbnail"}
+              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-all duration-700 ease-out opacity-50 group-hover:opacity-80 border-b border-white/5 relative z-10"
+              loading={priority ? "eager" : "lazy"}
+              fetchpriority={priority ? "high" : "auto"}
+            />
+            <div
+              className="absolute inset-0 z-10 transition-opacity duration-500 opacity-100 group-hover:opacity-60 mix-blend-multiply"
+              style={{ backgroundImage: activeGradient }}
+            />
+            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+              <div className="flex items-center space-x-2">
+                <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/20 px-2 py-1 rounded-sm uppercase shadow-lg">
+                  {categoryBadge}
+                </span>
+                <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-sm uppercase shadow-lg">
+                  {date}
+                </span>
+              </div>
+              {isWeb3Authenticated && (
+                <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[9px] tracking-widest uppercase rounded-sm shadow-md select-none w-fit">
+                  [VERIFIED_INTEL]
+                </span>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <motion.img
+              src={finalImage}
+              alt={cleanTitle}
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
+              loading={priority ? "eager" : "lazy"}
+              fetchpriority={priority ? "high" : "auto"}
+            />
 
-        {/* Saturated Color Overlay */}
-        <div
-          className="absolute inset-0 z-10 transition-opacity duration-500 opacity-100 group-hover:opacity-60 mix-blend-multiply"
-          style={{ backgroundImage: activeGradient }}
-        />
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+              <span className="font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/30 px-2.5 py-1 rounded-sm uppercase shadow-lg">
+                {categoryBadge}
+              </span>
+              <span className="text-[0.6rem] font-mono text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-sm uppercase shadow-lg">
+                {date}
+              </span>
+            </div>
 
-
-
-        <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-          <div className="flex items-center space-x-2">
-            <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/20 px-2 py-1 rounded-sm uppercase shadow-lg">
-              {categoryBadge}
-            </span>
-            <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-sm uppercase shadow-lg">
-              {date}
-            </span>
-          </div>
-          {isWeb3Authenticated && (
-            <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[9px] tracking-widest uppercase rounded-sm shadow-md select-none w-fit">
-              [VERIFIED_INTEL]
-            </span>
-          )}
-        </div>
+            <div className="absolute bottom-0 inset-x-0 p-4 z-20 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pt-8">
+              <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300 drop-shadow-md">
+                {cleanTitle}
+              </h3>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Middle Container (Title & Subtext) */}
@@ -254,7 +277,7 @@ export default function ArticleCard({
         className={
           variant === 'row'
             ? "flex flex-col flex-grow relative z-10 w-full"
-            : `flex flex-col flex-1 justify-between p-6 bg-[#050505] border-t border-white/5 relative z-10 w-full ${isHero ? "md:w-1/2 md:justify-center md:p-10" : ""}`
+            : "flex flex-col flex-1 justify-between p-5 bg-[#050505] relative z-10 w-full"
         }
       >
         {variant === 'row' ? (
@@ -290,7 +313,7 @@ export default function ArticleCard({
               </div>
               {isWeb3Authenticated && (
                 <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none hidden sm:inline-block">
-                  [INTEL_HASH: VERIFIED_ON_CHAIN]
+                  [INTEL_HASH: VERIFIED_ON_CHAIN // ARBITRUM]
                 </span>
               )}
             </div>
@@ -298,22 +321,6 @@ export default function ArticleCard({
         ) : (
           <>
             <div>
-              {/* Category Badge Text Line */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-axim-purple/10 border border-axim-purple/20 px-2.5 py-0.5 rounded-sm uppercase">
-                  {categoryBadge}
-                </span>
-                <span className="text-zinc-500 font-mono text-[10px]">
-                  • {estimateDuration(excerptText)} MIN READ
-                </span>
-              </div>
-
-              {/* Wide-Framed Headline */}
-              <h2 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white mb-3 line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300">
-                {cleanTitle}
-              </h2>
-
-              {/* Wide-Framed Description Body */}
               <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3 mb-6">
                 {cleanExcerpt}
               </p>
@@ -323,18 +330,24 @@ export default function ArticleCard({
             <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between w-full text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
               <div className="flex items-center gap-2">
                 <span>Access Briefing</span>
-                <SafeIcon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-axim-purple" icon={LuIcons.LuArrowRight}/>
+                <SafeIcon className="w-3.5 h-3.5 text-axim-purple transition-transform group-hover:translate-x-1" icon={LuIcons.LuArrowRight}/>
               </div>
-              {isWeb3Authenticated && (
-                <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none hidden sm:inline-block">
-                  [INTEL_HASH: VERIFIED_ON_CHAIN]
+              <div className="flex items-center gap-3">
+                {isWeb3Authenticated && (
+                  <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none hidden sm:inline-block">
+                    [INTEL_HASH: VERIFIED_ON_CHAIN // ARBITRUM]
+                  </span>
+                )}
+                <span className="font-mono text-[10px] text-zinc-500">
+                  • {estimateDuration(excerptText)} MIN READ
                 </span>
-              )}
+              </div>
             </div>
           </>
         )}
       </div>
     </Link>
     </motion.div>
+
   );
 }
