@@ -195,7 +195,7 @@ export default function Articles() {
               {isLoading ? (
                  <>
                    <SkeletonCard isHero={true} />
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                      <SkeletonCard />
                      <SkeletonCard />
                    </div>
@@ -206,7 +206,7 @@ export default function Articles() {
                      <ArticleCard key={leadStory.id} article={leadStory} isHero={true} priority={true} />
                    )}
                    {catData.dailyNews.length > 0 && (
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                        {catData.dailyNews.map((article) => (
                          <ArticleCard key={article.id} article={article} />
                        ))}

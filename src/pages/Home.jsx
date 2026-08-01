@@ -137,7 +137,7 @@ export default function Home() {
         <motion.section
           className="py-20 relative overflow-hidden bg-bg-void"
           onViewportEnter={() => {
-            logTelemetry('home_news_section_viewed', { totalArticles: Math.min(dailyNews.length, 6) });
+            logTelemetry('home_news_section_viewed', { totalArticles: Math.min(dailyNews.length, 4) });
           }}
           viewport={{ once: true, amount: 0.2 }}
         >
@@ -160,7 +160,7 @@ export default function Home() {
                   </span>
                 )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="main">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" role="main">
                 {isNewsLoading ? (
                   [1,2,3,4,5,6].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : dailyNews.length === 0 ? (
@@ -169,7 +169,7 @@ export default function Home() {
                 ) : (
                   (() => {
                     const rawArticles = dailyNews;
-                    const truncatedBriefings = rawArticles.slice(0, 6);
+                    const truncatedBriefings = rawArticles.slice(0, 4);
                     const visibleBriefings = truncatedBriefings;
                     return visibleBriefings.map((post) => <article key={post.id} className="h-full"><ArticleCard article={post} variant="grid" /></article>);
                   })()
