@@ -16,6 +16,11 @@ import { arbitrum } from 'thirdweb/chains';
 const { LuFolderMinus, LuCalendar, LuTrash2, LuDownload, LuAward } = LuIcons;
 
 const handleExport = (record) => {
+  logTelemetry('vault_record_export_initiated', {
+    recordId: record.id,
+    recordType: record.type || 'DOCUMENT',
+    title: record.title?.rendered || record.title || 'UNTITLED'
+  });
   logTelemetry('vault_asset_extracted', {
     documentId: record.id,
     documentType: record.type,

@@ -71,6 +71,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://axim.us.com/article/ais-grid-problem-data-centers-gdp-and-robot-bans</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://axim.us.com/article/an-ai-model-was-told-to-hack-a-test-it-hacked-hugging-face-instead</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
