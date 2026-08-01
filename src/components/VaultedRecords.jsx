@@ -16,10 +16,10 @@ import { arbitrum } from 'thirdweb/chains';
 const { LuFolderMinus, LuCalendar, LuTrash2, LuDownload, LuAward } = LuIcons;
 
 const handleExport = (record) => {
-  logTelemetry('vault_record_export_initiated', {
-    recordId: record.id,
-    recordType: record.type || 'DOCUMENT',
-    title: record.title?.rendered || record.title || 'UNTITLED'
+  logTelemetry('vault_asset_extracted', {
+    documentId: record.id,
+    documentType: record.type,
+    authMethod: 'standard_email'
   });
   useAximStore.getState().setGlobalLoading(true, "Decrypting Vaulted Document...");
 
@@ -189,6 +189,12 @@ export default function VaultedRecords() {
             <span className="w-1.5 h-1.5 rounded-full bg-axim-gold animate-pulse" />
             [VAULT_PROOFS: ON-CHAIN VERIFIED // ARBITRUM_ONE]
           </div>
+        )}
+        {isWeb3Authenticated && (
+          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 font-mono text-[8px] text-axim-purple uppercase tracking-widest rounded-sm select-none pointer-events-none mb-4">
+            <span className="w-1 h-1 rounded-full bg-axim-purple animate-pulse" />
+            [VAULT_STORAGE: AES-256 ENCRYPTED]
+          </span>
         )}
         {loading || (isWeb3Authenticated && isNftsLoading) ? (
           <div className="flex flex-col gap-3 py-8">

@@ -9,11 +9,15 @@ import BackgroundEffects from './BackgroundEffects';
 export default function Hero() {
   return (
     <motion.section
-         className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30"
-         onViewportEnter={() => {
-           logTelemetry('home_hero_viewed', { timestamp: Date.now() });
-         }}
+         initial="hidden"
+         whileInView="visible"
          viewport={{ once: true, amount: 0.2 }}
+         variants={{
+           hidden: { opacity: 0 },
+           visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+         }}
+         className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30"
+         onViewportEnter={() => logTelemetry('home_hero_viewed', { timestamp: Date.now() })}
        >
       <BackgroundEffects />
       
@@ -21,27 +25,27 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center">
 
         {/* Status Badge */}
-        <div className="flex items-center justify-center space-x-2 px-4 py-1.5 bg-white/5 border border-white/10 text-[0.65rem] font-mono uppercase tracking-widest text-zinc-400 mb-8 rounded-sm backdrop-blur-sm animate-fade-in-up">
+        <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex items-center justify-center space-x-2 px-4 py-1.5 bg-white/5 border border-white/10 text-[0.65rem] font-mono uppercase tracking-widest text-zinc-400 mb-8 rounded-sm backdrop-blur-sm">
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
           <span>AXiM Network Active</span>
-        </div>
+        </motion.div>
 
         {/* Bulletproof Centered Headline - Animation Isolated from Flex Container */}
-        <div className="w-full flex flex-col items-center justify-center text-center mb-6">
-          <div className="animate-fade-in-up animation-delay-100 w-full flex flex-col items-center justify-center">
+        <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="w-full flex flex-col items-center justify-center text-center mb-6">
+          <div className="w-full flex flex-col items-center justify-center">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[1.1] m-0 p-0 text-center flex flex-col items-center">
               <span className="block text-white text-center">Work Smarter.</span>
             </h1>
           </div>
-        </div>
+        </motion.div>
 
         {/* Subheadline */}
-        <p className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold animate-fade-in-up animation-delay-200 uppercase tracking-widest text-center">
+        <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold uppercase tracking-widest text-center">
           Streamline your business operations with our suite of enterprise tools and expert consultation services.
-        </p>
+        </motion.p>
 
         {/* Updated CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full animate-fade-in-up animation-delay-300">
+        <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
           <Link
             to="/tools"
             onClick={() => logTelemetry('hero_cta_click', { target: 'tools', label: 'Explore Tools' })}
@@ -63,7 +67,7 @@ export default function Hero() {
           >
             Web3 Games <SafeIcon className="ml-3 w-4 h-4" icon={LuIcons.LuGamepad2}/>
           </Link>
-        </div>
+        </motion.div>
 
       </div>
     </motion.section>

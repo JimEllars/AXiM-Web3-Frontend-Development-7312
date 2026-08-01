@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import SEO from './SEO';
+import { logTelemetry } from '../lib/telemetry';
 
 export default function DashboardAccessDenied() {
   return (
@@ -23,7 +24,7 @@ export default function DashboardAccessDenied() {
         </p>
 
         <div className="flex flex-col gap-3">
-          <Link to="/auth" className="w-full py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-colors rounded-sm flex items-center justify-center gap-2">
+          <Link to="/auth" onClick={() => logTelemetry('access_denied_auth_initiated', { source: 'dashboard_gate' })} className="w-full py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-colors rounded-sm flex items-center justify-center gap-2">
             <SafeIcon icon={LuIcons.LuKey} className="w-4 h-4" /> Authenticate
           </Link>
           <Link to="/" className="w-full py-4 bg-transparent border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white/5 transition-colors rounded-sm">
