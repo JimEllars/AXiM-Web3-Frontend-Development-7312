@@ -16,6 +16,7 @@ export default function ArticleCard({
   variant = 'grid',
   priority = false,
   isHero = false,
+  onCardClick,
 }) {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const cardRef = useRef(null);
@@ -141,6 +142,9 @@ export default function ArticleCard({
 
   return (
     <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.05 }}
       viewport={{ once: true, amount: 0.5 }}
       onViewportEnter={() => {
         logTelemetry('article_view_impression', {
@@ -150,13 +154,11 @@ export default function ArticleCard({
         });
       }}
       className={
-        variant === 'row'
-          ? "w-full"
-          : isHero
-            ? "md:col-span-3 lg:col-span-full"
-            : index % 7 === 0
-              ? "md:col-span-2"
-              : "h-full block"
+        isHero
+          ? "md:col-span-3 lg:col-span-full h-full block"
+          : index % 7 === 0
+            ? "md:col-span-2 h-full block"
+            : "h-full block"
       }
     >
       <Link
@@ -164,6 +166,7 @@ export default function ArticleCard({
         onMouseMove={handleMouseMove}
         to={`/article/${article.slug}`}
         onClick={() => {
+          if (onCardClick) onCardClick(article);
           logTelemetry("briefing_disclosure_intent", {
             slug: article.slug,
             category: categoryBadge,
@@ -171,15 +174,11 @@ export default function ArticleCard({
           logTelemetry('article_card_clicked', {
             slug: article.slug,
             title: cleanTitle,
-            layout: '2_col_wide_bottom_framed',
-            variant
+            layout: '2_col_overlay_standard',
+            variant: 'standard'
           });
         }}
-        className={
-          variant === 'row'
-            ? "flex flex-col sm:flex-row gap-6 bg-[#050505] border border-white/5 p-4 rounded-sm items-center hover:border-axim-purple/30 transition-all duration-300 group relative overflow-hidden h-full"
-            : `bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full`
-        }
+        className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
       >
         {/* Interactive Neon Hover Ray Overlay */}
         <div
@@ -190,164 +189,75 @@ export default function ArticleCard({
         />
 
         {/* Top Container */}
-        <div
-          className={
-            variant === 'row'
-              ? "relative w-full sm:w-1/3 aspect-video sm:h-auto flex-none overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 flex flex-col justify-end p-6 border-b sm:border-b-0 sm:border-r border-white/10 rounded-sm mask"
-              : "relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask"
-          }
-        >
+        <div className="relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask">
+          <motion.img
+            src={finalImage}
+            alt={cleanTitle}
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
+            loading={priority ? "eager" : "lazy"}
 
-        <div className="absolute top-4 right-4 z-30 flex items-center space-x-2">
-          <button
-            onClick={handleShareClick}
-            className="p-2 text-white/40 hover:text-white/80 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
-            title="Copy Link"
-          >
-            <SafeIcon icon={FiIcons.FiShare2} className="w-4 h-4" />
-          </button>
-          <button
-            onClick={handleSaveToggle}
-            className="p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
-            title="Save Briefing"
-          >
-            <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
-          </button>
+          />
+          {/* Top Corner Badges */}
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+            <span className="font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/30 px-2.5 py-1 rounded-sm uppercase">
+              {categoryBadge}
+            </span>
+            <span className="text-[0.6rem] font-mono text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-sm uppercase">
+              {date}
+            </span>
+          </div>
+
+          <div className="absolute top-4 right-4 z-30 flex items-center space-x-2">
+            <button
+              onClick={handleShareClick}
+              className="p-2 text-white/40 hover:text-white/80 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
+              title="Copy Link"
+            >
+              <SafeIcon icon={FiIcons.FiShare2} className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleSaveToggle}
+              className="p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm border border-white/10 hover:border-axim-purple/50 rounded-sm transition-all duration-300 relative z-30"
+              title="Save Briefing"
+            >
+              <SafeIcon icon={FiIcons.FiBookmark} className={`w-4 h-4 transition-colors ${isSaved ? 'text-axim-purple fill-axim-purple/20' : 'text-white/40 group-hover:text-white/80'}`} />
+            </button>
+          </div>
+
+          {/* Title Overlay on Thumbnail Bottom Edge */}
+          <div className="absolute bottom-0 inset-x-0 p-4 z-20 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pt-8">
+            <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300 drop-shadow-md">
+              {cleanTitle}
+            </h3>
+          </div>
         </div>
 
-        {variant === 'row' ? (
-          <>
-            <motion.img
-              src={finalImage}
-              alt={article.title?.rendered || "Article thumbnail"}
-              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-all duration-700 ease-out opacity-50 group-hover:opacity-80 border-b border-white/5 relative z-10"
-              loading={priority ? "eager" : "lazy"}
-              fetchpriority={priority ? "high" : "auto"}
-            />
-            <div
-              className="absolute inset-0 z-10 transition-opacity duration-500 opacity-100 group-hover:opacity-60 mix-blend-multiply"
-              style={{ backgroundImage: activeGradient }}
-            />
-            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-              <div className="flex items-center space-x-2">
-                <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/20 px-2 py-1 rounded-sm uppercase shadow-lg">
-                  {categoryBadge}
-                </span>
-                <span className="inline-block font-mono font-bold text-[10px] tracking-widest text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-sm uppercase shadow-lg">
-                  {date}
-                </span>
-              </div>
-              {isWeb3Authenticated && (
-                <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[9px] tracking-widest uppercase rounded-sm shadow-md select-none w-fit">
-                  [VERIFIED_INTEL]
-                </span>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            <motion.img
-              src={finalImage}
-              alt={cleanTitle}
-              className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
-              loading={priority ? "eager" : "lazy"}
-              fetchpriority={priority ? "high" : "auto"}
-            />
+        {/* Bottom Half (Wide-Framed Text Body) */}
+        <div className="flex flex-col flex-1 justify-between p-5 bg-[#050505] relative z-10 w-full">
+          <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3 mb-6">
+            {cleanExcerpt}
+          </p>
 
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-              <span className="font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/30 px-2.5 py-1 rounded-sm uppercase shadow-lg">
-                {categoryBadge}
-              </span>
-              <span className="text-[0.6rem] font-mono text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-sm uppercase shadow-lg">
-                {date}
-              </span>
+          {/* Anchored CTA Bar */}
+          <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between w-full text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
+            <div className="flex items-center gap-2">
+              <span>Access Briefing</span>
+              <SafeIcon className="w-3.5 h-3.5 text-axim-purple transition-transform group-hover:translate-x-1" icon={LuIcons.LuArrowRight}/>
             </div>
 
-            <div className="absolute bottom-0 inset-x-0 p-4 z-20 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pt-8">
-              <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300 drop-shadow-md">
-                {cleanTitle}
-              </h3>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Middle Container (Title & Subtext) */}
-      <div
-        className={
-          variant === 'row'
-            ? "flex flex-col flex-grow relative z-10 w-full"
-            : "flex flex-col flex-1 justify-between p-5 bg-[#050505] relative z-10 w-full"
-        }
-      >
-        {variant === 'row' ? (
-          <>
-            <div>
-              <h3 className="text-base sm:text-lg font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors mb-2">
-                {cleanTitle}
-              </h3>
-              <div className="flex items-center space-x-2 mb-3">
-                <span className="text-[0.55rem] font-mono uppercase tracking-widest text-zinc-500">
-                  {date}
-                </span>
-                <span className="text-zinc-600 font-mono text-xs">
-                  • {estimateDuration(excerptText)} MIN READ
-                </span>
-              </div>
-
-              <p
-                className="text-sm text-zinc-400 leading-relaxed line-clamp-2 md:line-clamp-3 mt-1 mb-6"
-              >
-                {cleanExcerpt}
-              </p>
-            </div>
-
-            {/* Bottom CTA Footer */}
-            <div className="mt-auto flex justify-between items-center pt-4 border-t border-white/5 w-full">
-              <div className="inline-flex items-center text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
-                Access Briefing{" "}
-                <SafeIcon
-                  icon={LuIcons.LuArrowRight}
-                  className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1 text-axim-purple"
-                />
-              </div>
+            <div className="flex items-center gap-3">
               {isWeb3Authenticated && (
                 <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none hidden sm:inline-block">
-                  [INTEL_HASH: VERIFIED_ON_CHAIN // ARBITRUM]
+                  [INTEL_NODE: VERIFIED_ON_CHAIN // ARBITRUM_ONE]
                 </span>
               )}
+              <span className="font-mono text-[10px] text-zinc-500">
+                • {estimateDuration(excerptText)} MIN READ
+              </span>
             </div>
-          </>
-        ) : (
-          <>
-            <div>
-              <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3 mb-6">
-                {cleanExcerpt}
-              </p>
-            </div>
-
-            {/* Anchored CTA Bar */}
-            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between w-full text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
-              <div className="flex items-center gap-2">
-                <span>Access Briefing</span>
-                <SafeIcon className="w-3.5 h-3.5 text-axim-purple transition-transform group-hover:translate-x-1" icon={LuIcons.LuArrowRight}/>
-              </div>
-              <div className="flex items-center gap-3">
-                {isWeb3Authenticated && (
-                  <span className="font-mono text-[8px] text-emerald-400/80 uppercase tracking-widest select-none pointer-events-none hidden sm:inline-block">
-                    [INTEL_HASH: VERIFIED_ON_CHAIN // ARBITRUM]
-                  </span>
-                )}
-                <span className="font-mono text-[10px] text-zinc-500">
-                  • {estimateDuration(excerptText)} MIN READ
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </Link>
+          </div>
+        </div>
+      </Link>
     </motion.div>
-
   );
 }

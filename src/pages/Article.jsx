@@ -370,7 +370,7 @@ const { slug } = useParams();
 
       {/* End of Page Firehose */}
       <div className="mt-20 bg-black border-t border-white/10 pt-16 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
-         <NewsFeed limit={3} title="Continue Reading" hidePagination={true} />
+         <NewsFeed limit={4} title="Continue Reading" hidePagination={true} onArticleClick={() => logTelemetry('article_related_clicked')} />
       </div>
 
       {/* Sticky Action Pill */}
