@@ -100,10 +100,14 @@ export default function Home() {
         "https://github.com/jimellars",
         "https://x.com/aximsystems"
       ],
-      "knowsAbout": [
-        "Decentralized Automation",
-        "Web3 Enterprise Architecture",
-        "Serverless Edge Computing"
+            "knowsAbout": [
+        "Business Automation",
+        "Make.com",
+        "Integromat",
+        "Workflow scaling",
+        "Decentralized Energy",
+        "Home Solar",
+        "Powur Solar"
       ]
     },
     "potentialAction": {

@@ -104,7 +104,17 @@ export default function Articles() {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
       }
-    }
+    ,
+      "knowsAbout": [
+        "Business Automation",
+        "Make.com",
+        "Integromat",
+        "Workflow scaling",
+        "Decentralized Energy",
+        "Home Solar",
+        "Powur Solar"
+      ]
+}
   };
 
   return (
@@ -129,6 +139,12 @@ export default function Articles() {
             <div className="inline-flex items-center px-2.5 py-1 bg-white/5 border border-white/5 text-[10px] font-mono tracking-widest text-zinc-500 uppercase rounded-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
               GATEWAY // ISOLATE_ACTIVE
+              {isWeb3Authenticated && (
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none ml-2">
+                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                  [AiO_INDEX: KNOWLEDGE_GRAPH_VERIFIED]
+                </span>
+              )}
               {isWeb3Authenticated && (
                 <span className="ml-2 pl-2 border-l border-white/10 font-mono text-[9px] text-axim-purple tracking-widest uppercase select-none inline-flex items-center gap-1">
                   <span className="w-1 h-1 rounded-full bg-axim-purple animate-pulse" />
