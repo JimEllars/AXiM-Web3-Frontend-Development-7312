@@ -181,6 +181,22 @@ export default function GlobalSearch() {
     }, 300);
   };
 
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen((prev) => {
+          if (!prev) logTelemetry('global_search_shortcut_triggered');
+          return !prev;
+        });
+      } else if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
   const handleOpenModal = () => {
     logTelemetry('globalsearch_opened', { origin: window.location.pathname });
     setIsOpen(true);
@@ -230,6 +246,8 @@ export default function GlobalSearch() {
               <form onSubmit={(e) => e.preventDefault()} className="p-4 border-b border-white/10 flex items-center gap-4 bg-black/50">
                 <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-purple" />
                 <input
+                  aria-label="Search articles and tools"
+                  role="searchbox"
                   autoFocus
                   type="text"
                   value={isSynchronizing ? "Synchronizing..." : query}

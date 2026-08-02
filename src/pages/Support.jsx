@@ -100,6 +100,11 @@ export default function Support() {
         throw new Error("Network response was not ok");
       }
 
+      logTelemetry('support_ticket_created', {
+        category: formData.priority || 'general',
+        priority: formData.priority || 'normal',
+        timestamp: Date.now()
+      });
       logTelemetry("SUPPORT_TICKET_SUBMITTED", {
         subject: sanitizedSubject,
         priority: formData.priority,

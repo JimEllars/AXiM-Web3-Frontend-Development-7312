@@ -50,6 +50,9 @@ export default function Consultation() {
   ];
 
   const handleCategorySelect = (categoryId) => {
+    logTelemetry('consultation_booking_initiated', {
+      serviceType: categoryId || 'general_consultation'
+    });
     logTelemetry('consultation_step_advanced', { currentStep: step, nextStep: 2, selectedCategory: categoryId });
     setFormData({ ...formData, inquiryType: categoryId });
     setStep(2);
@@ -88,6 +91,7 @@ export default function Consultation() {
       };
 
       // 2. Async Telemetry (Non-Blocking)
+      logTelemetry('consultation_booking_initiated', { serviceType: cleanData.inquiryType || 'general_consultation' });
       logTelemetry('consultation_requested', { category: cleanData.inquiryType });
 
       const workerUrl = import.meta.env.VITE_AXIM_CORE_API_URL;
