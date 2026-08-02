@@ -53,7 +53,17 @@ export default function Tools() {
       "name": "Demand Letter Engine",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
-      "provider": { "@type": "Organization", "name": "AXiM Systems" }
+      "provider": { "@type": "Organization", "name": "AXiM Systems",
+      "knowsAbout": [
+        "Business Automation",
+        "Make.com",
+        "Integromat",
+        "Workflow scaling",
+        "Decentralized Energy",
+        "Home Solar",
+        "Powur Solar"
+      ]
+ }
     },
     {
       "@context": "https://schema.org",
@@ -61,7 +71,17 @@ export default function Tools() {
       "name": "Mutual NDA Generator",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
-      "provider": { "@type": "Organization", "name": "AXiM Systems" }
+      "provider": { "@type": "Organization", "name": "AXiM Systems",
+      "knowsAbout": [
+        "Business Automation",
+        "Make.com",
+        "Integromat",
+        "Workflow scaling",
+        "Decentralized Energy",
+        "Home Solar",
+        "Powur Solar"
+      ]
+ }
     }
   ];
 

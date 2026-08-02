@@ -20,6 +20,12 @@ export default function SEO({
 
   return (
     <Helmet>
+
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      <meta name="chatgpt-crawler" content="index, follow" />
+      <meta name="perplexitybot" content="index, follow" />
+
       {/* Standard Metadata */}
       <title>{title}</title>
       <meta name="description" content={description} />

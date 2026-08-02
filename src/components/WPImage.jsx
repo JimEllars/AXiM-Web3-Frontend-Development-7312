@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
+import { logTelemetry } from '../lib/telemetry';
 
 const extractFromContent = (html) => {
   if (!html) return null;
   const match = html.match(/(?:src|data-src|data-lazy-src)=["']([^"]+)["']/i);
   return match ? match[1] : null;
 };
+
+const FALLBACK_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp';
 
 export default function WPImage({ src, alt, className, post, ...props }) {
   const [hasError, setHasError] = useState(false);
@@ -37,8 +40,11 @@ export default function WPImage({ src, alt, className, post, ...props }) {
     imageSrc = `${imageSrc}${separator}retry=${retryCount}`;
   }
 
-  const handleError = () => {
+  const handleError = (e) => {
     console.warn('[WP_MEDIA_ERROR] Failed to load asset:', imageSrc || src);
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = FALLBACK_IMAGE;
+    logTelemetry('article_image_fallback_triggered', { slug: post?.slug, originalSrc: imageSrc || src });
     setHasError(true);
   };
 

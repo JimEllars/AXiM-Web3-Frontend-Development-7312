@@ -195,7 +195,17 @@ const { slug } = useParams();
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
       }
-    },
+    ,
+      "knowsAbout": [
+        "Business Automation",
+        "Make.com",
+        "Integromat",
+        "Workflow scaling",
+        "Decentralized Energy",
+        "Home Solar",
+        "Powur Solar"
+      ]
+},
     "description": cleanExcerpt
   };
 

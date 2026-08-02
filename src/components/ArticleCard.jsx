@@ -194,6 +194,11 @@ export default function ArticleCard({
             src={finalImage}
             alt={cleanTitle}
             className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+              logTelemetry('article_image_fallback_triggered', { slug: article?.slug, originalSrc: mediaUrl });
+            }}
             loading={priority ? "eager" : "lazy"}
 
           />
