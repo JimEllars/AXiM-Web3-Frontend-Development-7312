@@ -262,7 +262,7 @@ export default function Consultation() {
 
                     <div className="cf-turnstile mt-4" data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} data-theme="dark"></div>
 
-                    <button disabled={isSubmitting} type="submit"
+                    <button onClick={() => logTelemetry('consultation_booking_initiated', { serviceType: formData.inquiryType || 'general_consultation' })} disabled={isSubmitting} type="submit"
  className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
                       {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> ENCRYPTING PAYLOAD...</> : 'Submit Consultation Request'}
                     </button>

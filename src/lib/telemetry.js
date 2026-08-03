@@ -17,7 +17,7 @@ export function rehydrateTelemetry() {
 
           const uniqueCached = parsedCache.filter(e => !existingIds.has(e.id));
           if (uniqueCached.length > 0) {
-            useAximStore.setState({ telemetryCollection: [...currentCollection, ...uniqueCached] });
+            useAximStore.setState({ telemetryCollection: [...currentCollection, ...uniqueCached], telemetryQueue: [...store.telemetryQueue || [], ...uniqueCached] });
           }
         }, 0);
       }
@@ -109,7 +109,7 @@ export async function flushTelemetryQueue(force = false) {
     }
 
     if (success) {
-      useAximStore.setState({ telemetryCollection: [] });
+      useAximStore.setState({ telemetryCollection: [], telemetryQueue: [] });
       if (typeof window !== 'undefined') {
         localStorage.removeItem('axim_telemetry_cache');
       }

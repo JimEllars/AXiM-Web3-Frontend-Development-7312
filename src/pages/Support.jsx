@@ -68,6 +68,12 @@ export default function Support() {
     setIsSubmitting(true);
     setErrorMsg("");
 
+    logTelemetry('support_ticket_created', {
+      category: formData.priority || 'general',
+      priority: formData.priority || 'normal',
+      timestamp: Date.now()
+    });
+
     try {
       const sanitizedSubject = sanitizeInput(formData.subject);
       const sanitizedDescription = sanitizeInput(formData.issue);
