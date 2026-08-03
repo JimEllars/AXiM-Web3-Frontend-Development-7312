@@ -27,6 +27,9 @@ export default function EcosystemRegistry() {
   const [pingStatus, setPingStatus] = useState({});
   const userSession = useAximStore((state) => state.userSession);
   const activeIntegrations = useAximStore((state) => state.activeIntegrations) || [];
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const walletAddress = useAximStore((state) => state.walletAddress);
+  const isTelemetryPolling = useAximStore((state) => state.isTelemetryPolling);
 
   const handleTestConnection = (partnerId) => {
     setPingStatus(prev => ({ ...prev, [partnerId]: 'pinging' }));
@@ -98,6 +101,37 @@ export default function EcosystemRegistry() {
           <SafeIcon icon={LuWebhook} className="w-4 h-4" />
         </div>
         <h3 className="text-lg font-black uppercase text-white tracking-widest">Ecosystem Registry Vault</h3>
+      </div>
+
+
+      {/* Node Observability Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 font-mono text-xs">
+        <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
+          <span className="text-zinc-500 mb-1">WP-PROXY</span>
+          <span className="text-emerald-400 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> ONLINE
+          </span>
+        </div>
+        <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
+          <span className="text-zinc-500 mb-1">TELEMETRY</span>
+          <span className={isTelemetryPolling ? "text-emerald-400 flex items-center gap-2" : "text-amber-400 flex items-center gap-2"}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isTelemetryPolling ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
+            {isTelemetryPolling ? 'ACTIVE' : 'IDLE'}
+          </span>
+        </div>
+        <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
+          <span className="text-zinc-500 mb-1">RPC (WEB3)</span>
+          <span className={isWeb3Authenticated ? "text-emerald-400 flex items-center gap-2" : "text-zinc-400 flex items-center gap-2"}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isWeb3Authenticated ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-400'}`}></span>
+            {isWeb3Authenticated ? 'CONNECTED' : 'STANDBY'}
+          </span>
+        </div>
+        <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
+          <span className="text-zinc-500 mb-1">SESSION</span>
+          <span className="text-axim-purple flex items-center gap-2">
+            {isWeb3Authenticated && walletAddress ? `0x...${walletAddress.slice(-4)}` : (userSession?.email || 'GUEST')}
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

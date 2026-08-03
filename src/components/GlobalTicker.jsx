@@ -1,5 +1,6 @@
 import React from 'react';
 import Marquee from './Marquee';
+import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -22,10 +23,17 @@ export default function GlobalTicker() {
           <span className="text-[0.6rem] font-mono text-zinc-400 uppercase tracking-widest">SYSTEM NODE: EDGE_TX_04</span>
         </div>
 
+
         {/* Scrolling Telemetry */}
-        <div className="flex-1 overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+        <div className="flex-1 overflow-hidden opacity-80 hover:opacity-100 transition-opacity" onMouseEnter={() => logTelemetry('ticker_stream_paused', { timestamp: Date.now() })} onMouseLeave={() => logTelemetry('ticker_stream_resumed', { timestamp: Date.now() })}>
           <Marquee speed={30}>
             <div className="flex space-x-12 items-center text-[0.6rem] font-mono uppercase tracking-widest text-zinc-500">
+              {isWeb3Authenticated && (
+                <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                  [NODE_HEALTH: ARBITRUM_RPC_100%_UPTIME]
+                </span>
+              )}
               <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuActivity} className="text-axim-green w-3 h-3"/> UPTIME: 99.999%</span>
               <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuGlobe} className="text-axim-purple w-3 h-3"/> ACTIVE EDGE NODES: 142</span>
               <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuShieldCheck} className="text-axim-green w-3 h-3"/> ENCRYPTION: AES-256</span>
