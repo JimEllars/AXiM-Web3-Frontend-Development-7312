@@ -85,7 +85,8 @@ export const useAximStore = create(
 
   nodeStatuses: null,
   telemetryCollection: [],
-  logTelemetryEvent: (event) => set((state) => ({ telemetryCollection: [event, ...state.telemetryCollection].slice(0, 100) })),
+  telemetryQueue: [],
+  logTelemetryEvent: (event) => set((state) => ({ telemetryCollection: [event, ...state.telemetryCollection].slice(0, 100), telemetryQueue: [event, ...state.telemetryQueue].slice(0, 100) })),
 
   activeTelemetry: [
     { id: 1, type: 'marketing_loop', message: 'UPLINK_STABLE // ARCHIVE_SECURED', timestamp: Date.now() - 5000 },
@@ -94,6 +95,7 @@ export const useAximStore = create(
     { id: 4, type: 'heartbeat', message: 'Core API: Latency 45ms - 3m ago', timestamp: Date.now() - 180000 }
   ],
   isPollingTelemetry: false,
+  isTelemetryPolling: false,
   historicalRevenue: [],
   historicalHealth: [],
   activeIntegrations: ['zapier', 'chatbase'], // simulating some active connections
@@ -132,7 +134,7 @@ export const useAximStore = create(
   startTelemetryPolling: () => {
     if (get().isPollingTelemetry) return;
 
-    set({ isPollingTelemetry: true });
+    set({ isPollingTelemetry: true, isTelemetryPolling: true });
 
     const fetchTelemetry = async () => {
       try {
@@ -140,7 +142,7 @@ export const useAximStore = create(
         if (response.ok) {
           const data = await response.json();
           if (data && typeof data === 'object') {
-            if (!get().isPollingTelemetry) return;
+            if (!get().isPollingTelemetry && !get().isTelemetryPolling) return;
             set({ nodeStatuses: data });
 
             const rand = Math.random();
@@ -163,7 +165,7 @@ export const useAximStore = create(
             };
 
             const currentTelemetry = get().activeTelemetry || [];
-            if (!get().isPollingTelemetry) return;
+            if (!get().isPollingTelemetry && !get().isTelemetryPolling) return;
             set({ activeTelemetry: [newEvent, ...currentTelemetry].slice(0, 10) });
           }
         }
@@ -184,7 +186,7 @@ export const useAximStore = create(
           tok: 'operational'
         };
 
-        if (!get().isPollingTelemetry) return;
+        if (!get().isPollingTelemetry && !get().isTelemetryPolling) return;
         set({
           telemetryStatus: 'SIMULATED',
           activeTelemetry: [fallbackEvent, ...currentTelemetry].slice(0, 10),
@@ -202,7 +204,7 @@ export const useAximStore = create(
     const { telemetryInterval } = get();
     if (telemetryInterval) {
       clearInterval(telemetryInterval);
-      set({ telemetryInterval: null, isPollingTelemetry: false });
+      set({ telemetryInterval: null, isPollingTelemetry: false, isTelemetryPolling: false });
     }
   },
 

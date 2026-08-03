@@ -5,8 +5,8 @@ import { supabase } from "../lib/supabase";
 
 export default function TelemetryBar({ label, color, initialValue }) {
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
-  const telemetryQueue = useAximStore((state) => state.telemetryQueue || state.telemetryCollection);
-  const isTelemetryPolling = useAximStore((state) => state.isTelemetryPolling || state.isPollingTelemetry);
+  const telemetryQueue = useAximStore((state) => state.telemetryQueue);
+  const isTelemetryPolling = useAximStore((state) => state.isTelemetryPolling);
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
   const [value, setValue] = useState(initialValue);
@@ -121,7 +121,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
           </span>
           {isWeb3Authenticated && (
-            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 mr-2">
+            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
               [TELEMETRY_NODE: CF_WORKER_EDGE_ACTIVE]
             </span>

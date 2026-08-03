@@ -186,10 +186,8 @@ export default function GlobalSearch() {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setIsOpen((prev) => {
-          if (!prev) logTelemetry('global_search_shortcut_triggered');
-          return !prev;
-        });
+        setIsOpen((prev) => !prev);
+        logTelemetry('global_search_shortcut_triggered');
       } else if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
       }
