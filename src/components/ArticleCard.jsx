@@ -191,6 +191,7 @@ export default function ArticleCard({
         {/* Top Container */}
         <div className="relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask">
           <motion.img
+            width="1200" height="675"
             src={finalImage}
             alt={cleanTitle}
             className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
@@ -204,7 +205,7 @@ export default function ArticleCard({
           />
           {/* Top Corner Badges */}
           <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-            <span className="font-mono font-bold text-[10px] tracking-widest text-axim-purple bg-black/80 backdrop-blur-sm border border-axim-purple/30 px-2.5 py-1 rounded-sm uppercase">
+            <span className="font-mono font-bold text-[10px] tracking-widest text-purple-300 bg-axim-purple/20 border-axim-purple/40 backdrop-blur-sm border px-2.5 py-1 rounded-sm uppercase">
               {categoryBadge}
             </span>
             <span className="text-[0.6rem] font-mono text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-sm uppercase">

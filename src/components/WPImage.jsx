@@ -74,7 +74,7 @@ export default function WPImage({ src, alt, className, post, ...props }) {
   }
 
   return (
-    <motion.img layoutId={`post-image-${post?.id}`}
+    <motion.img layoutId={`post-image-${post?.id}`} width="1200" height="675"
       src={imageSrc}
       alt={alt || ''}
       className={className}
