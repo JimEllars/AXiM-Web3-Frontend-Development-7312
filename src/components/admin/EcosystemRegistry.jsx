@@ -105,7 +105,7 @@ export default function EcosystemRegistry() {
 
 
       {/* Node Observability Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 font-mono text-xs">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 font-mono text-xs">
         <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
           <span className="text-zinc-500 mb-1">WP-PROXY</span>
           <span className="text-emerald-400 flex items-center gap-2">
@@ -124,6 +124,12 @@ export default function EcosystemRegistry() {
           <span className={isWeb3Authenticated ? "text-emerald-400 flex items-center gap-2" : "text-zinc-400 flex items-center gap-2"}>
             <span className={`w-1.5 h-1.5 rounded-full ${isWeb3Authenticated ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-400'}`}></span>
             {isWeb3Authenticated ? 'CONNECTED' : 'STANDBY'}
+          </span>
+        </div>
+        <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">
+          <span className="text-zinc-500 mb-1">SEO</span>
+          <span className="text-emerald-400 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> ONLINE
           </span>
         </div>
         <div className="bg-[#050505] border border-white/10 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:border-white/30 transition-colors">

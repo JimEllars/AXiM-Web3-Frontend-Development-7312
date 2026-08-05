@@ -215,9 +215,9 @@ export default function NdaGeneratorLanding() {
               [ZERO_KNOWLEDGE_PROOF: ENCRYPTED_INGEST]
             </div>
           )}
-          <button onClick={(e) => { logTelemetry('tool_outbound_cta_clicked', { tool: 'nda_generator' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={NDA_PRODUCTION_TARGET} onClick={() => logTelemetry('partner_referral_click', { partnerName: 'NDA Generator', placement: 'cta', destinationUrl: NDA_PRODUCTION_TARGET })} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Launch Generator <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-          </button>
+          </a>
         </div>
       </motion.section>
 
@@ -249,9 +249,9 @@ export default function NdaGeneratorLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Secure Your Data. <br/>Move Faster.</h2>
           <p className="text-zinc-400 text-sm mb-10">Don't let legal friction slow down your deals. Generate a standard, fair agreement in under 60 seconds.</p>
-          <button onClick={(e) => { logTelemetry('tool_outbound_cta_clicked', { tool: 'nda_generator' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
+          <a href={NDA_PRODUCTION_TARGET} onClick={() => logTelemetry('partner_referral_click', { partnerName: 'NDA Generator', placement: 'cta', destinationUrl: NDA_PRODUCTION_TARGET })} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(147,51,234,0.3)] rounded-sm">
             Initialize Document <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
-          </button>
+          </a>
         </div>
       </section>
     </motion.div>
