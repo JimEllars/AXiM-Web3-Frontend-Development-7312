@@ -12,6 +12,7 @@ export default function Partners() {
   const detailedPartners = [
     {
       title: "Make.com Automation",
+      ariaLabel: "Learn more about Make.com workflow automation",
       desc: "Connect your entire application architecture without writing code. Leverage the backend visual routing engine that powers AXiM.",
       features: ["Asynchronous webhooks", "Deterministic routing", "Fault-resistant error handlers", "Thousands of app integrations"],
       link: "/partners/make",
@@ -22,6 +23,7 @@ export default function Partners() {
     },
     {
       title: "Chatbase AI Concierge",
+      ariaLabel: "Learn more about Chatbase AI Concierge",
       desc: "Stop losing leads to slow response times. Deploy a custom ChatGPT agent trained exclusively on your business data. Embed it natively into your site or sync it with Slack, WhatsApp, and Zendesk.",
       features: ["Custom data ingestion (PDF, URL)", "Omnichannel integration", "Autonomous lead capture", "Instant deployment"],
       link: "/partners/chatbase",
@@ -32,6 +34,7 @@ export default function Partners() {
     },
     {
       title: "Powur Residential Solar",
+      ariaLabel: "Learn more about Powur Solar energy solutions",
       desc: "Stop leasing power from centralized utilities. Transition your home to clean, Tier-1 residential solar infrastructure with smart load-balancing and zero-down financing.",
       features: ["Tier-1 Monocrystalline Arrays", "Smart battery vaults", "Zero-down deployment", "30-year warranty"],
       link: "/partners/powur-solar",
@@ -42,6 +45,7 @@ export default function Partners() {
     },
     {
       title: "Powur Agency Partnership",
+      ariaLabel: "Learn more about Powur Agency Partnership",
       desc: "Scale a national solar enterprise without the overhead. You secure the contracts; Powur's decentralized cloud network handles the engineering, permitting, and installation.",
       features: ["Cloud fulfillment infrastructure", "Dynamic proposal software", "Revenue share cascades", "Complete margin control"],
       link: "/partners/powur-join",
@@ -122,7 +126,7 @@ export default function Partners() {
                  ))}
                </ul>
 
-               <Link to={partner.link} aria-label={`Learn more about ${partner.title}`} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
+               <Link to={partner.link} aria-label={partner.ariaLabel || `Learn more about ${partner.title}`} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
                  Explore Integration <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
                </Link>
             </div>
