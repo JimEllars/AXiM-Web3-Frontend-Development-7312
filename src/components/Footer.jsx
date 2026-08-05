@@ -83,7 +83,7 @@ export default function Footer() {
 
   return (
     <motion.footer
-         className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden"
+         className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden min-h-[320px] contain-layout"
          onViewportEnter={() => {
            logTelemetry('footer_viewed', { path: location.pathname });
          }}
@@ -109,10 +109,10 @@ export default function Footer() {
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
             </p>
             <div className="flex gap-4">
-               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'twitter' })}>
+               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'twitter' })}>
                  <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
                </a>
-               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'linkedin' })}>
+               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM LinkedIn" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'linkedin' })}>
                  <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
                </a>
             </div>
@@ -120,9 +120,9 @@ export default function Footer() {
 
           {/* Partner Funnels */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Partner Grid
-            </h4>
+            </h3>
             <ul className="space-y-4">
               <li><Link to="/partners/make" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Make.com Automation</Link></li>
               <li><Link to="/partners/chatbase" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Chatbase AI</Link></li>
@@ -133,9 +133,9 @@ export default function Footer() {
 
           {/* Apps & Tools */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
-            </h4>
+            </h3>
             <ul className="space-y-4">
               <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1">Demand Letter Engine <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3"/></a></li>
               <li><Link to="/tools/nda-generator" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Mutual NDA Generator</Link></li>
@@ -146,9 +146,9 @@ export default function Footer() {
 
           {/* Intelligence Hub */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Intelligence
-            </h4>
+            </h3>
             <ul className="space-y-4">
               <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Latest Articles</Link></li>
               <li><Link to="/support" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">System Support Wiki</Link></li>

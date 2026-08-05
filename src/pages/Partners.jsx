@@ -122,7 +122,7 @@ export default function Partners() {
                  ))}
                </ul>
 
-               <Link to={partner.link} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
+               <Link to={partner.link} aria-label={`Learn more about ${partner.title}`} onClick={() => logTelemetry('partner_card_click', { partnerTitle: partner.title, link: partner.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${partner.btnClass}`}>
                  Explore Integration <SafeIcon icon={LuIcons.LuArrowRight} className="ml-2 w-3 h-3" />
                </Link>
             </div>

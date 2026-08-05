@@ -1,1 +1,0 @@
-sed -i 's|setResponseLog(`\[ERROR\] ${data.error || '"'"'Transmission rejected by Edge Node'"'"'} // EDGE_RTT:${latencyMilli}ms`);|setResponseLog(`[ERROR] ${data.error || '"'"'Transmission rejected by Edge Node'"'"'} // EDGE_RTT:${latencyMilli}ms`);\n        logTelemetry('"'"'onyx_kv_write_failed'"'"', { key: kvKey, error: data.error });|' src/components/admin/OnyxTerminal.jsx
