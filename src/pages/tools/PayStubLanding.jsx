@@ -190,9 +190,9 @@ export default function PayStubLanding() {
           <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-10">
             Standardize your independent payroll documentation. Input gross earnings, tax parameters, and deductions into our processing node to receive an instant, mathematically verified document.
           </p>
-          <button onClick={(e) => { logTelemetry('tool_outbound_cta_clicked', { tool: 'pay_stub_generator' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={PAYSTUB_PRODUCTION_TARGET} onClick={() => logTelemetry('partner_referral_click', { partnerName: 'Pay Stub Generator', placement: 'cta', destinationUrl: PAYSTUB_PRODUCTION_TARGET })} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Launch Interface <SafeIcon icon={LuIcons.LuArrowRight} className="ml-3 w-4 h-4" />
-          </button>
+          </a>
         </div>
       </motion.section>
 
@@ -251,9 +251,9 @@ export default function PayStubLanding() {
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6">Standardize Your Docs. <br/>Stay Compliant.</h2>
           <p className="text-zinc-400 text-sm mb-10">Eliminate spreadsheet math errors and elevate the professionalism of your operation.</p>
-          <button onClick={(e) => { logTelemetry('tool_outbound_cta_clicked', { tool: 'pay_stub_generator' }); handleOutboundClick(e); }} className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
+          <a href={PAYSTUB_PRODUCTION_TARGET} onClick={() => logTelemetry('partner_referral_click', { partnerName: 'Pay Stub Generator', placement: 'cta', destinationUrl: PAYSTUB_PRODUCTION_TARGET })} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-12 py-5 bg-[#DB2777] text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors shadow-[0_0_30px_rgba(219,39,119,0.3)] rounded-sm">
             Initialize Generator <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-3 w-4 h-4" />
-          </button>
+          </a>
         </div>
       </section>
     </motion.div>
