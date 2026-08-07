@@ -50,20 +50,20 @@ export default function Hero() {
         <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
           <Link
             to="/tools"
-            onClick={() => logTelemetry('hero_cta_click', { target: 'tools', label: 'Explore Tools' })}
+            onClick={() => logTelemetry('hero_cta_clicked', { target: 'tools_directory' })}
             className="inline-flex items-center justify-center px-10 py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_30px_rgba(147,51,234,0.3)] w-full sm:w-auto text-center"
           >
             Explore Tools <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
           <Link
             to="/consultation"
-            onClick={() => logTelemetry('hero_cta_click', { target: 'consultation', label: 'Book Consultation' })}
+            onClick={() => logTelemetry('hero_cta_clicked', { target: 'consultation' })}
             className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm w-full sm:w-auto text-center"
           >
             Consultation <SafeIcon icon={LuIcons.LuPhone} className="ml-3 w-4 h-4" />
           </Link>
           <Link
-            onClick={() => logTelemetry('hero_cta_click', { target: 'games_hub', label: 'Web3 Games' })}
+            onClick={() => logTelemetry('hero_cta_clicked', { target: 'web3_games' })}
             to="/games"
             className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-axim-green/50 text-axim-green text-xs font-black uppercase tracking-widest hover:bg-axim-green hover:text-black transition-colors rounded-sm w-full sm:w-auto text-center"
           >

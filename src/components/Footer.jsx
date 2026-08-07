@@ -6,6 +6,7 @@ import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 
 import { useLocation } from 'react-router-dom';
+import { useAximStore } from '../store/useAximStore.js';
 
 export default function Footer() {
 
@@ -13,6 +14,7 @@ export default function Footer() {
   const [latencyMs, setLatencyMs] = React.useState(null);
   const [history, setHistory] = React.useState([20, 25, 22]);
   const [isOffline, setIsOffline] = React.useState(false);
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
   React.useEffect(() => {
     let isMounted = true;
@@ -108,11 +110,17 @@ export default function Footer() {
             <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
             </p>
+            {isWeb3Authenticated && (
+              <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 mt-3 mb-6">
+                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                [OPERATOR_ID: VERIFIED // ARBITRUM]
+              </span>
+            )}
             <div className="flex gap-4">
-               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'twitter' })}>
+               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'x_twitter' })}>
                  <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
                </a>
-               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM LinkedIn" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('footer_social_click', { platform: 'linkedin' })}>
+               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM LinkedIn" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'linkedin' })}>
                  <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
                </a>
             </div>
