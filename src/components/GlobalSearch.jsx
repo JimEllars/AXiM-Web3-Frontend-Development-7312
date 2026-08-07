@@ -233,7 +233,7 @@ export default function GlobalSearch() {
       <AnimatePresence>
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 bg-[#050505]/90 backdrop-blur-md" onClick={() => setIsOpen(false)}>
+            <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 sm:px-6 bg-[#050505]/90 backdrop-blur-md" onClick={() => setIsOpen(false)}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}

@@ -49,7 +49,7 @@ export default function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="fixed bottom-0 left-0 w-full z-[9999] bg-black/90 backdrop-blur-md border-t border-white/10 p-6 flex flex-col md:flex-row items-center justify-between gap-4"
+          className="fixed bottom-0 left-0 w-full z-[50] bg-black/90 backdrop-blur-md border-t border-white/10 p-6 flex flex-col md:flex-row items-center justify-between gap-4"
         >
           <div className="flex-1 text-sm text-zinc-400">
             <p className="mb-2">
