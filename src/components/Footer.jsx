@@ -120,9 +120,9 @@ export default function Footer() {
 
           {/* Partner Funnels */}
           <div>
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Partner Grid
-            </h3>
+            </h2>
             <ul className="space-y-4">
               <li><Link to="/partners/make" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Make.com Automation</Link></li>
               <li><Link to="/partners/chatbase" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Chatbase AI</Link></li>
@@ -133,9 +133,9 @@ export default function Footer() {
 
           {/* Apps & Tools */}
           <div>
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
-            </h3>
+            </h2>
             <ul className="space-y-4">
               <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1">Demand Letter Engine <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3"/></a></li>
               <li><Link to="/tools/nda-generator" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Mutual NDA Generator</Link></li>
@@ -146,9 +146,9 @@ export default function Footer() {
 
           {/* Intelligence Hub */}
           <div>
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Intelligence
-            </h3>
+            </h2>
             <ul className="space-y-4">
               <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Latest Articles</Link></li>
               <li><Link to="/support" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">System Support Wiki</Link></li>
