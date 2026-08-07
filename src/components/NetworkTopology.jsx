@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useAximStore } from '../store/useAximStore';
 
 // Hoisted outside component
 const NODES = [
@@ -17,6 +18,7 @@ const CONNECTIONS = [
 const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
 
 export default function NetworkTopology() {
+  const { isWeb3Authenticated } = useAximStore();
   return (
     <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm overflow-hidden">
       <div className="absolute top-4 left-4 font-mono text-[10px] text-axim-gold opacity-50 uppercase">
@@ -68,6 +70,12 @@ export default function NetworkTopology() {
       </svg>
 
       <div className="absolute bottom-4 right-4 text-right">
+        {isWeb3Authenticated && (
+          <div className="text-[10px] font-mono text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 mb-2">
+            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+            [UPLINK: SECURE_EDGE_PROXY_ACTIVE]
+          </div>
+        )}
         <div className="text-[10px] font-mono text-axim-gold animate-pulse">● UPLINK_SYNCED</div>
         <div className="text-[8px] font-mono text-zinc-600 mt-1 uppercase">Latency: 14ms</div>
       </div>

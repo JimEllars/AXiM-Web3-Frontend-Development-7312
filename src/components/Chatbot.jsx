@@ -8,27 +8,31 @@ export default function Chatbot() {
   const { isWeb3Authenticated } = useAximStore();
   useEffect(() => {
     // Inject Chatbase script securely
-    if (!window.chatbaseConfig) {
-      window.chatbaseConfig = {
-        chatbotId: "xYiQ2yI2XeGmRLzRUkNvP",
-      };
-    }
-    if (!document.querySelector('script[src="https://www.chatbase.co/embed.min.js"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://www.chatbase.co/embed.min.js';
-      script.async = true;
-      script.defer = true;
-      script.setAttribute('chatbotId', 'xYiQ2yI2XeGmRLzRUkNvP');
-      script.setAttribute('domain', 'www.chatbase.co');
-            script.onerror = (err) => {
-        logTelemetry('support_widget_ingress_failed', {
-          source: 'chatbase_embed',
-          reason: 'resource_load_fault',
-          endpoint: script.src
-        });
-        setIsFaulted(true);
-      };
-      document.body.appendChild(script);
+    try {
+      if (!window.chatbaseConfig) {
+        window.chatbaseConfig = {
+          chatbotId: "xYiQ2yI2XeGmRLzRUkNvP",
+        };
+      }
+      if (!document.querySelector('script[src="https://www.chatbase.co/embed.min.js"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://www.chatbase.co/embed.min.js';
+        script.async = true;
+        script.defer = true;
+        script.setAttribute('chatbotId', 'xYiQ2yI2XeGmRLzRUkNvP');
+        script.setAttribute('domain', 'www.chatbase.co');
+        script.onerror = (err) => {
+          logTelemetry('support_widget_ingress_failed', {
+            source: 'chatbase_embed',
+            reason: 'resource_load_fault',
+            endpoint: script.src
+          });
+          setIsFaulted(true);
+        };
+        document.body.appendChild(script);
+      }
+    } catch (e) {
+      logTelemetry('chatbot_initialization_failed', { reason: '403 Forbidden / Configuration Issue' });
     }
 
     // Attempt to track when the Chatbase widget is opened

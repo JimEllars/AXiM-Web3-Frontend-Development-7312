@@ -3,7 +3,7 @@ import { logTelemetry } from './telemetry';
 
 export const fetchCategoryBySlug = async (slug) => {
   try {
-    const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
+    const res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/categories?slug=${slug}`);
     if (!res.ok) return null;
     const data = await res.json();
     return data?.length > 0 ? data[0].id : null;
@@ -45,7 +45,7 @@ export const fetchCache = new Map();
 
 export async function getWordPressPost(slug) {
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
-  const url = (import.meta.env && import.meta.env.VITE_WORDPRESS_URL) || process.env.VITE_WORDPRESS_URL;
+  const url = 'https://wp-proxy.axim.us.com/?endpoint=/graphql';
   if (!url) return null;
 
   const cacheKey = `gql-post-${slug}`;
@@ -133,8 +133,7 @@ async function getCategoryId(apiUrl, slug) {
     try {
       const ts = Date.now();
       // Normalize URL to prevent cache misses due to trailing slashes
-      const normalizedApiUrl = apiUrl.replace(/\/$/, '');
-      const res = await fetch(`${normalizedApiUrl}/categories?slug=${slug}&_ts=${ts}`, {
+      const res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/categories?slug=${slug}&_ts=${ts}`, {
         signal: AbortSignal.timeout(10000)
       });
 
@@ -173,18 +172,7 @@ async function getCategoryId(apiUrl, slug) {
  * @returns {Promise<Array>} Array of mapped posts
  */
 export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
-  const baseUrl = (import.meta.env && import.meta.env.VITE_WORDPRESS_REST_URL) || process.env.VITE_WORDPRESS_REST_URL;
 
-  // Always try the wp domain first
-  const urlsToTry = [
-    "https://wp.axim.us.com/wp-json/wp/v2",
-    "https://axim.us.com/wp-json/wp/v2"
-  ];
-
-  // If a custom env var is provided, add it to the front of the line
-  if (baseUrl && !urlsToTry.includes(baseUrl)) {
-    urlsToTry.unshift(baseUrl);
-  }
 
   const cacheKey = `cat-posts-${categorySlug}-${limit}-page-${page}`;
   const existing = fetchCache.get(cacheKey);
@@ -197,34 +185,34 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
   const fetchPromise = (async () => {
     try {
       // Inner function to attempt fetching
-      const tryFetch = async (currentApiUrl) => {
+      const tryFetch = async () => {
         const ts = Date.now();
 
         // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
-        const categoryId = await getCategoryId(currentApiUrl, categorySlug);
+        const categoryId = await getCategoryId('https://wp-proxy.axim.us.com', categorySlug);
 
         let postsRes;
         let posts = [];
 
         if (!categorySlug) {
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else if (!categoryId) {
           // No category found, fallback to fetching recent posts
 
-          postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
-          postsRes = await fetch(`${currentApiUrl}/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
 
           if (!posts || posts.length === 0) {
 
-            postsRes = await fetch(`${currentApiUrl}/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+            postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
             if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
             posts = await postsRes.json();
           }
@@ -237,20 +225,8 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
       let successfulUrl = null;
 
       try {
-        const fetchPromises = urlsToTry.map(async (url) => {
-          try {
-            const result = await tryFetch(url);
-            return { posts: result, url };
-          } catch (err) {
-
-            throw err;
-          }
-        });
-
-        const result = await Promise.any(fetchPromises);
-        posts = result.posts;
-        successfulUrl = result.url;
-        console.info(`[wp-fetch] Successfully connected to WordPress API at: ${successfulUrl}`);
+        posts = await tryFetch();
+        console.info(`[wp-fetch] Successfully connected to WordPress API via proxy`);
       } catch (err) {
         throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
       }
@@ -304,35 +280,9 @@ export const fetchPosts = async (params = {}) => {
     const queryParams = new URLSearchParams(params).toString();
     const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
 
-    const proxyUrl = import.meta.env?.VITE_WP_PROXY_URL;
-
-    // Use the proxy only when it is explicitly deployed and configured.
-    let res;
-    if (proxyUrl) {
-      try {
-        res = await fetch(`${proxyUrl}?endpoint=${encodeURIComponent(endpoint)}`, {
-          signal: AbortSignal.timeout(8000)
-        });
-        if (!res.ok) {
-          logTelemetry('wp_edge_proxy_fallback_triggered', { endpoint, status: res.status });
-          res = null; // Trigger fallback
-        }
-      } catch (proxyErr) {
-        logTelemetry('wp_edge_proxy_fallback_triggered', { endpoint, status: proxyErr.name || 'NetworkError' });
-        console.warn("[WP_FETCH] Configured proxy failed, trying direct WP connection.");
-        res = null; // Ensure fallback
-      }
-    }
-
-    if (!res) {
-      try {
-        res = await fetch(`https://wp.axim.us.com${endpoint}`, {
-          signal: AbortSignal.timeout(8000)
-        });
-      } catch (directErr) {
-        throw directErr;
-      }
-    }
+    let res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=${encodeURIComponent(endpoint)}`, {
+        signal: AbortSignal.timeout(8000)
+      });
 
     if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
     return await res.json();
