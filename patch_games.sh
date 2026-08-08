@@ -1,3 +1,11 @@
+#!/bin/bash
+
+# A script to carefully insert Cyber Runner and the Leaderboards section
+
+# Backup just in case
+cp src/pages/Games.jsx src/pages/Games.jsx.bak
+
+cat << 'PATCHEOF' > src/pages/Games.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -159,3 +167,6 @@ export default function Games() {
     </div>
   );
 }
+PATCHEOF
+
+echo "Done modifying src/pages/Games.jsx"
