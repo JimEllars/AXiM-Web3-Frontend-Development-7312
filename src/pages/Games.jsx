@@ -153,6 +153,11 @@ export default function Games() {
             <div className="font-mono text-[10px] text-zinc-500 animate-pulse uppercase tracking-widest border-t border-white/5 pt-4">
               [ SYNCHRONIZING WITH EDGE NODE... ]
             </div>
+            {isWeb3Authenticated && (
+              <div className="mt-2 font-mono text-[8px] text-axim-purple uppercase tracking-widest animate-pulse">
+                [ARBITRUM_RPC: WEBSOCKET_CONNECTED // ENCRYPTED]
+              </div>
+            )}
           </div>
         </div>
       </motion.section>

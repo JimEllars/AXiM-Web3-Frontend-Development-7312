@@ -74,7 +74,13 @@ export default {
       const headers = new Headers(wpResponse.headers);
       headers.set('Access-Control-Allow-Origin', '*');
       headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      headers.set('Cache-Control', 'public, max-age=300, s-maxage=3600'); // 5 minutes edge caching, 1 hour CDN caching
+
+      if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
+        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+      } else {
+        headers.set('Cache-Control', 'public, max-age=300, s-maxage=3600'); // 5 minutes edge caching, 1 hour CDN caching
+      }
+
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);
 
       return new Response(responseBody, {
