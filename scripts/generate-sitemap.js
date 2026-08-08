@@ -47,33 +47,34 @@ async function fetchAllPosts() {
 async function generateSitemap() {
   console.log("Generating sitemap...");
   const staticRoutes = [
-    '/',
-    '/articles',
-    '/tools',
-    '/consultation',
-    '/support',
-    '/status',
-    '/terms',
-    '/profile',
-    '/partners',
-    '/partners/make',
-    '/partners/powur-solar',
-    '/partners/powur-join',
-    '/partners/chatbase',
-    '/early-access'
+    { route: '/', priority: '1.0', changefreq: 'daily' },
+    { route: '/articles', priority: '0.8', changefreq: 'daily' },
+    { route: '/tools', priority: '0.8', changefreq: 'daily' },
+    { route: '/consultation', priority: '0.8', changefreq: 'daily' },
+    { route: '/support', priority: '0.8', changefreq: 'daily' },
+    { route: '/status', priority: '0.8', changefreq: 'daily' },
+    { route: '/terms', priority: '0.8', changefreq: 'daily' },
+    { route: '/profile', priority: '0.8', changefreq: 'daily' },
+    { route: '/partners', priority: '0.8', changefreq: 'daily' },
+    { route: '/partners/make', priority: '0.8', changefreq: 'daily' },
+    { route: '/partners/powur-solar', priority: '0.8', changefreq: 'daily' },
+    { route: '/partners/powur-join', priority: '0.8', changefreq: 'daily' },
+    { route: '/partners/chatbase', priority: '0.8', changefreq: 'daily' },
+    { route: '/early-access', priority: '0.8', changefreq: 'daily' },
+    { route: '/services/window-cleaning', priority: '0.9', changefreq: 'weekly' }
   ];
 
   const posts = await fetchAllPosts();
 
-  const dynamicRoutes = posts.map(post => `/article/${post.slug}`);
+  const dynamicRoutes = posts.map(post => ({ route: `/article/${post.slug}`, priority: '0.8', changefreq: 'daily' }));
   const allRoutes = [...staticRoutes, ...dynamicRoutes];
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allRoutes.map(route => `  <url>
-    <loc>${BASE_URL}${route}</loc>
-    <changefreq>daily</changefreq>
-    <priority>${route === '/' ? '1.0' : '0.8'}</priority>
+${allRoutes.map(item => `  <url>
+    <loc>${BASE_URL}${item.route}</loc>
+    <changefreq>${item.changefreq}</changefreq>
+    <priority>${item.priority}</priority>
   </url>`).join('\n')}
 </urlset>`;
 

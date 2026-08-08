@@ -271,24 +271,35 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
 
 
 export const fetchPosts = async (params = {}) => {
-  try {
-    if (params.forceWarmup) {
-      delete params.forceWarmup;
-    } else {
-      // Allow edge caching
-    }
-    const queryParams = new URLSearchParams(params).toString();
-    const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
+  if (params.forceWarmup) {
+    delete params.forceWarmup;
+  } else {
+    // Allow edge caching
+  }
+  const queryParams = new URLSearchParams(params).toString();
+  const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
+  const fetchUrl = `https://wp-proxy.axim.us.com/?endpoint=${encodeURIComponent(endpoint)}`;
 
-    let res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=${encodeURIComponent(endpoint)}`, {
+  let retryCount = 0;
+  while (retryCount < 2) {
+    try {
+      let res = await fetch(fetchUrl, {
         signal: AbortSignal.timeout(8000)
       });
 
-    if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
-    return await res.json();
-  } catch (error) {
-    console.error('[WP_FETCH] Fetch failed. Loading cached fallback data.', error);
-    useAximStore.getState().addToast("Live feed unavailable. Loading cached data.", "warning");
-    return [];
+      if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
+      return await res.json();
+    } catch (error) {
+      if (retryCount === 0) {
+        retryCount++;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        continue;
+      } else {
+        console.error('[WP_FETCH] Fetch failed. Loading cached fallback data.', error);
+        logTelemetry('wp_edge_proxy_retry_failed', { endpoint: fetchUrl });
+        useAximStore.getState().addToast("Live feed unavailable. Loading cached data.", "warning");
+        return [];
+      }
+    }
   }
 };
