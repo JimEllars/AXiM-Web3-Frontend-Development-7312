@@ -50,11 +50,12 @@ async function generateSitemap() {
     { route: '/', priority: '1.0', changefreq: 'daily' },
     { route: '/articles', priority: '0.8', changefreq: 'daily' },
     { route: '/tools', priority: '0.8', changefreq: 'daily' },
+    { route: '/tools/nda-generator', priority: '0.7', changefreq: 'monthly' },
+    { route: '/tools/pay-stub', priority: '0.7', changefreq: 'monthly' },
+    { route: '/games', priority: '0.6', changefreq: 'weekly' },
     { route: '/consultation', priority: '0.8', changefreq: 'daily' },
     { route: '/support', priority: '0.8', changefreq: 'daily' },
-    { route: '/status', priority: '0.8', changefreq: 'daily' },
     { route: '/terms', priority: '0.8', changefreq: 'daily' },
-    { route: '/profile', priority: '0.8', changefreq: 'daily' },
     { route: '/partners', priority: '0.8', changefreq: 'daily' },
     { route: '/partners/make', priority: '0.8', changefreq: 'daily' },
     { route: '/partners/powur-solar', priority: '0.8', changefreq: 'daily' },
@@ -67,7 +68,14 @@ async function generateSitemap() {
 
   const posts = await fetchAllPosts();
 
-  const dynamicRoutes = posts.map(post => ({ route: `/article/${post.slug}`, priority: '0.8', changefreq: 'daily' }));
+  const dynamicRoutes = posts
+    .filter(post => post?.slug)
+    .map(post => ({
+      route: `/article/${post.slug}`,
+      priority: '0.8',
+      changefreq: 'weekly',
+      lastmod: post.modified || post.date
+    }));
   const allRoutes = [...staticRoutes, ...dynamicRoutes];
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -75,7 +83,8 @@ async function generateSitemap() {
 ${allRoutes.map(item => `  <url>
     <loc>${BASE_URL}${item.route}</loc>
     <changefreq>${item.changefreq}</changefreq>
-    <priority>${item.priority}</priority>
+    <priority>${item.priority}</priority>${item.lastmod ? `
+    <lastmod>${new Date(item.lastmod).toISOString().slice(0, 10)}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>`;
 
