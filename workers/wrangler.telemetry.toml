@@ -5,3 +5,7 @@ compatibility_date = "2026-08-01"
 [[routes]]
 pattern = "telemetry.axim.us.com"
 custom_domain = true
+
+[vars]
+SUPABASE_URL = "https://your-project.supabase.co"
+# Sensitive keys should be set via `wrangler secret put SUPABASE_SERVICE_ROLE_KEY`

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../../lib/telemetry';
+import { useAximStore } from '../../store/useAximStore';
 
 export default function OnyxTerminal() {
   const [kvKey, setKvKey] = useState('seo_override_/articles');
   const [kvValue, setKvValue] = useState('{\n  "title": "AXiM Intel",\n  "description": "Dynamic Edge Injection"\n}');
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [responseLog, setResponseLog] = useState(null);
+  const telemetryQueue = useAximStore((state) => state.telemetryQueue);
   const [replaySpeed, setReplaySpeed] = useState(1);
   const [batchToast, setBatchToast] = useState(null);
 
@@ -175,7 +177,7 @@ export default function OnyxTerminal() {
             <SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log
           </div>
 
-          <div className="flex-1 text-zinc-400 space-y-2">
+          <div className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2">
              <div>{`> INITIALIZING TERMINAL UPLINK... OK`}</div>
              <div>{`> AWAITING OPERATOR INPUT...`}</div>
              {responseLog && (
@@ -183,6 +185,13 @@ export default function OnyxTerminal() {
                  {`> ${responseLog}`}
                </div>
              )}
+             {telemetryQueue && telemetryQueue.slice(0, 50).map((event) => (
+                <div key={event.id} className="mt-2 text-[10px] break-all border-l-2 border-axim-purple pl-2 py-1">
+                   <span className="text-zinc-500">[{new Date(event.timestamp).toLocaleTimeString()}]</span>{" "}
+                   <span className={`font-bold ${event.type.includes('error') || event.type.includes('failed') ? 'text-red-400' : 'text-axim-purple'}`}>{event.type.toUpperCase()}</span>
+                   <span className="text-zinc-500"> - {JSON.stringify(event.payload)}</span>
+                </div>
+             ))}
           </div>
         </div>
       </div>
