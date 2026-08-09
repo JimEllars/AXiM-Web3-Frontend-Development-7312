@@ -64,7 +64,7 @@ export async function flushTelemetryQueue(force = false) {
 
   try {
     const payload = JSON.stringify(telemetryStore);
-    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL;
+    const endpoint = import.meta.env.VITE_TELEMETRY_WORKER_URL || import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL || '/api/telemetry';
 
     if (!endpoint) {
       return;

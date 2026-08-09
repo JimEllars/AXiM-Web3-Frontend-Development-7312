@@ -105,19 +105,19 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   return (
-    <div>
+    <div className="bg-[#050505] backdrop-blur-md p-3 rounded-lg border border-white/5 shadow-lg">
       <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
-        <span className="flex items-center">
+        <span className="flex flex-wrap items-center gap-2">
           <span
-            className={`w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] mr-2 relative inline-block animate-pulse ${pulse ? 'scale-125 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative inline-block animate-pulse ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
           />
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none mr-2">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
             [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}]
           </span>
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none mr-2">
+          <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none mr-2">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
             EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
           </span>
 
