@@ -2,7 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /assets/
+Disallow: /admin
+Disallow: /auth
+Disallow: /profile
 
 Sitemap: https://axim.us.com/sitemap.xml
-# AI Context File
-# https://axim.us.com/llms.txt

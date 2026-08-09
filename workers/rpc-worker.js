@@ -1,15 +1,29 @@
 // workers/rpc-worker.js
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': 'https://axim.us.com',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      Vary: 'Origin'
+    };
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: corsHeaders });
+    }
+
     if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405 });
+      return new Response('Method Not Allowed', { status: 405, headers: corsHeaders });
     }
 
     try {
       const rpcUrl = env.ALCHEMY_RPC_URL;
       if (!rpcUrl) {
-         return new Response(JSON.stringify({ error: "RPC URL not configured" }), { status: 500 });
+         return new Response(JSON.stringify({ error: "RPC URL not configured" }), {
+           status: 500,
+           headers: { 'Content-Type': 'application/json', ...corsHeaders }
+         });
       }
 
       const reqBody = await request.text();
@@ -29,7 +43,7 @@ export default {
         status: response.status,
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
+            ...corsHeaders
         }
       });
 
@@ -37,7 +51,7 @@ export default {
       console.error("RPC Worker Error:", error);
       return new Response(JSON.stringify({ error: "Internal Server Error" }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
   }

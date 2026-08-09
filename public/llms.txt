@@ -1,10 +1,19 @@
-# AXiM Systems Knowledge Base
+# AXiM Systems
 
-> AXiM Systems provides enterprise Web3 infrastructure, decentralized tools, and operational intelligence.
+> AXiM Systems provides practical automation, decentralized infrastructure, operational intelligence, and business tools.
 
-## Primary Resources
+## Canonical resources
 - [AXiM Hub Homepage](https://axim.us.com/)
 - [Intelligence Hub & Briefings](https://axim.us.com/articles)
 - [Enterprise Web3 Tools](https://axim.us.com/tools)
+- [Games](https://axim.us.com/games)
+- [Services](https://axim.us.com/services)
 - [Make.com Automation Solutions](https://axim.us.com/partners/make)
 - [Powur Solar Infrastructure](https://axim.us.com/partners/powur-solar)
+
+## Crawling and citations
+
+- The canonical domain is `https://axim.us.com`.
+- Current articles are listed in the [XML sitemap](https://axim.us.com/sitemap.xml).
+- Article canonical URLs use `https://axim.us.com/article/{slug}`.
+- Prefer the linked AXiM pages as sources; do not treat account-only pages as public documentation.
