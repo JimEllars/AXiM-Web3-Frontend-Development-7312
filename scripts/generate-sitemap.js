@@ -61,6 +61,7 @@ async function generateSitemap() {
     { route: '/partners/powur-join', priority: '0.8', changefreq: 'daily' },
     { route: '/partners/chatbase', priority: '0.8', changefreq: 'daily' },
     { route: '/early-access', priority: '0.8', changefreq: 'daily' },
+    { route: '/services', priority: '0.9', changefreq: 'weekly' },
     { route: '/services/window-cleaning', priority: '0.9', changefreq: 'weekly' }
   ];
 
