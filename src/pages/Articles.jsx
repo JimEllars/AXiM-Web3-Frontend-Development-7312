@@ -102,7 +102,7 @@ export default function Articles() {
       "name": "AXiM Systems",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
+        "url": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
       }
     ,
       "knowsAbout": [

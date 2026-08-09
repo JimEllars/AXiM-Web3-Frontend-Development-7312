@@ -88,25 +88,25 @@ export default function Services() {
             </div>
         </div>
 
-        {/* Preview Card 1 */}
-        <div className="bg-onyx-900/40 border border-white/5 rounded-lg overflow-hidden backdrop-blur-md shadow-2xl relative flex flex-col">
-            <div className="absolute top-4 right-4 z-20">
-                <span className="bg-white/5 border border-white/10 text-zinc-400 font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm">
-                    [COMING SOON]
-                </span>
-            </div>
-            <div className="p-6 md:p-8 flex flex-col h-full items-start opacity-60">
-               <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-md flex items-center justify-center mb-6">
-                   <SafeIcon icon={LuWind} className="text-zinc-400 w-6 h-6" />
-               </div>
+        {/* Pressure Washing Card */}
+        <div className="bg-onyx-900/40 border border-axim-green/30 rounded-lg overflow-hidden backdrop-blur-md shadow-2xl hover:border-axim-green/60 transition-colors flex flex-col group relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-axim-green/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="p-6 md:p-8 flex flex-col h-full items-start relative z-10">
+              <div className="w-12 h-12 bg-axim-green/10 border border-axim-green/20 rounded-md flex items-center justify-center mb-6">
+                  <SafeIcon icon={LuWind} className="text-axim-green w-6 h-6" />
+              </div>
               <h2 className="text-2xl font-bold text-white mb-3 pr-24">Pressure Washing & Exterior Soft Wash</h2>
               <p className="text-zinc-400 mb-6 flex-grow">
                 Deep cleaning for siding, driveways, and walkways using adjusted pressure metrics to safely remove grime without surface damage.
               </p>
 
-              <button disabled className="w-full cursor-not-allowed bg-white/5 text-zinc-500 border border-white/10 font-mono text-sm py-3 px-6 rounded-md uppercase tracking-widest mt-auto">
-                Directory Locked
-              </button>
+              <Link
+                to="/services/pressure-washing"
+                onClick={() => logTelemetry('service_card_clicked', { serviceName: 'pressure_washing' })}
+                className="w-full inline-flex items-center justify-center gap-2 bg-axim-green/10 hover:bg-axim-green/20 text-axim-green border border-axim-green/30 font-mono text-sm py-3 px-6 rounded-md transition-all uppercase tracking-widest mt-auto"
+              >
+                View Service →
+              </Link>
             </div>
         </div>
 

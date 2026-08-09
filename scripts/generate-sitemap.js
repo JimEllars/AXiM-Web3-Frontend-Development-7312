@@ -63,7 +63,8 @@ async function generateSitemap() {
     { route: '/partners/chatbase', priority: '0.8', changefreq: 'daily' },
     { route: '/early-access', priority: '0.8', changefreq: 'daily' },
     { route: '/services', priority: '0.9', changefreq: 'weekly' },
-    { route: '/services/window-cleaning', priority: '0.9', changefreq: 'weekly' }
+    { route: '/services/window-cleaning', priority: '0.9', changefreq: 'weekly' },
+    { route: '/services/pressure-washing', priority: '0.9', changefreq: 'weekly' }
   ];
 
   const posts = await fetchAllPosts();
