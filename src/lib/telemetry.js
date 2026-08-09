@@ -121,3 +121,16 @@ export async function flushTelemetryQueue(force = false) {
     isFlushing = false;
   }
 }
+
+if (typeof window !== 'undefined') {
+  setInterval(flushTelemetryQueue, 5000);
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      flushTelemetryQueue(true);
+    }
+  };
+
+  window.addEventListener('visibilitychange', handleVisibilityChange);
+  window.addEventListener('pagehide', () => flushTelemetryQueue(true));
+}

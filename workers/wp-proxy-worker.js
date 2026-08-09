@@ -60,6 +60,22 @@ export default {
 
       // 4. Server-Side Fetch
       const startTime = Date.now();
+
+      const cacheKey = new Request(fetchUrl, request);
+      const cache = caches.default;
+
+      if (request.method === 'GET') {
+        let cachedResponse = await cache.match(cacheKey);
+        if (cachedResponse) {
+          const newHeaders = new Headers(cachedResponse.headers);
+          newHeaders.set('X-Cache-Status', 'HIT');
+          return new Response(cachedResponse.body, {
+            status: cachedResponse.status,
+            statusText: cachedResponse.statusText,
+            headers: newHeaders
+          });
+        }
+      }
       const wpResponse = await fetch(fetchUrl, {
         method: request.method,
         headers: {
@@ -78,15 +94,21 @@ export default {
       if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        headers.set('Cache-Control', 'public, max-age=300, s-maxage=3600'); // 5 minutes edge caching, 1 hour CDN caching
+        headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600'); // 5 minutes edge caching, 1 hour CDN caching
       }
 
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);
 
-      return new Response(responseBody, {
+      const finalResponse = new Response(responseBody, {
         status: wpResponse.status,
         headers: headers
       });
+
+      if (request.method === 'GET' && wpResponse.ok) {
+        ctx.waitUntil(cache.put(cacheKey, finalResponse.clone()));
+      }
+
+      return finalResponse;
 
     } catch (error) {
       return new Response(JSON.stringify({ error: 'Internal Server Error' }), {

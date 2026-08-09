@@ -28,7 +28,7 @@ function isValidEvent(event) {
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 202, headers: CORS_HEADERS });
     }
 
     if (request.method !== 'POST') {
@@ -46,7 +46,11 @@ export default {
       return jsonResponse({ error: 'Invalid JSON payload.' }, 400);
     }
 
-    if (!Array.isArray(events) || events.length === 0 || events.length > 50) {
+    if (!Array.isArray(events)) {
+      events = [events];
+    }
+
+    if (events.length === 0 || events.length > 50) {
       return jsonResponse({ error: 'Expected between 1 and 50 telemetry events.' }, 400);
     }
 
@@ -70,6 +74,6 @@ export default {
       return jsonResponse({ error: 'Telemetry ingestion failed.' }, 502);
     }
 
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    return new Response(null, { status: 202, headers: CORS_HEADERS });
   }
 };
