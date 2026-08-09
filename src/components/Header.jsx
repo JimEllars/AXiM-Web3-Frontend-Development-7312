@@ -53,15 +53,7 @@ export default function Header() {
       ]
     },
     { name: 'Articles', path: '/articles' },
-    {
-      name: 'Partners',
-      path: '/partners',
-      dropdown: [
-        { name: 'Make.com Automation', path: '/partners/make', icon: LuIcons.LuCpu, color: 'text-axim-purple' },
-        { name: 'Chatbase AI', path: '/partners/chatbase', icon: LuIcons.LuBot, color: 'text-[#DB2777]' },
-        { name: 'Powur Solar (Home)', path: '/partners/powur-solar', icon: LuIcons.LuSun, color: 'text-axim-gold' }
-      ]
-    },
+
     { name: 'Support', path: '/support' }
   ];
 
