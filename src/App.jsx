@@ -40,6 +40,7 @@ const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
 const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
 const ChatbaseLanding = lazy(() => import('./pages/partners/ChatbaseLanding'));
+const Services = lazy(() => import('./pages/Services'));
 const WindowCleaning = lazy(() => import('./pages/services/WindowCleaning'));
 const Games = lazy(() => import('./pages/Games'));
 
@@ -232,6 +233,7 @@ function App() {
             <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
             <Route path="/partners/powur-join" element={<PageTransition><PowurJoinLanding /></PageTransition>} />
             <Route path="/partners/chatbase" element={<PageTransition><ChatbaseLanding /></PageTransition>} />
+            <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
             <Route path="/services/window-cleaning" element={<PageTransition><WindowCleaning /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
