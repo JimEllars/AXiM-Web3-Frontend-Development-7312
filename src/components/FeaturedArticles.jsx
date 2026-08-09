@@ -114,7 +114,7 @@ export default function FeaturedArticles({
   }
 
   const validArticles = articles.filter(
-    (article) => article && article.title && article.title.rendered,
+    (article) => article && article.title,
   );
 
   return (
@@ -131,9 +131,10 @@ export default function FeaturedArticles({
       <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
         <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
         {title}
-        {isWeb3Authenticated && (
-          <span className="ml-auto font-mono text-[9px] text-zinc-500 tracking-widest uppercase border border-white/5 bg-black/40 px-2 py-0.5 rounded-sm select-none pointer-events-none hidden sm:inline-block">
-            [NODE_INGEST_DECRYPT: 18.4 MB/S]
+{isWeb3Authenticated && (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
+            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+            [FEED_NODE: DIRECT_WP_REST_ACTIVE]
           </span>
         )}
       </h2>

@@ -8,7 +8,7 @@ export default function Chatbot() {
   const { isWeb3Authenticated } = useAximStore();
   useEffect(() => {
     // Inject Chatbase script securely
-    try {
+try {
       if (!window.chatbaseConfig) {
         window.chatbaseConfig = {
           chatbotId: "xYiQ2yI2XeGmRLzRUkNvP",
@@ -27,12 +27,18 @@ export default function Chatbot() {
             reason: 'resource_load_fault',
             endpoint: script.src
           });
+          logTelemetry('chatbot_403_suppressed');
           setIsFaulted(true);
         };
         document.body.appendChild(script);
       }
     } catch (e) {
       logTelemetry('chatbot_initialization_failed', { reason: '403 Forbidden / Configuration Issue' });
+      logTelemetry('chatbot_403_suppressed');
+    }
+
+    if (window.chatbase && window.chatbase.theme) {
+      // guard logic for theme
     }
 
     // Attempt to track when the Chatbase widget is opened

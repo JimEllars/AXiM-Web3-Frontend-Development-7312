@@ -68,7 +68,7 @@ describe('getWordPressPost', () => {
     const mockData = { data: { post: { title: 'Hello', content: 'World' } } };
 
     global.fetch = async (url, options) => {
-      assert.strictEqual(url, 'https://wp-proxy.axim.us.com/?endpoint=/graphql');
+      assert.strictEqual(url, 'https://wp.axim.us.com/graphql');
       assert.strictEqual(options.method, 'POST');
       assert.strictEqual(options.headers['Content-Type'], 'application/json');
 
@@ -228,7 +228,7 @@ describe('getWordPressPost', () => {
     const localOriginalFetch = global.fetch;
     try {
       global.fetch = async (url, options) => {
-        assert.strictEqual(url, 'https://wp-proxy.axim.us.com/?endpoint=/graphql');
+        assert.strictEqual(url, 'https://wp.axim.us.com/graphql');
         assert.strictEqual(options.method, 'POST');
         return {
           json: async () => mockPostData
@@ -469,7 +469,7 @@ test('should return mapped posts if fetch is successful', async () => {
       };
 
       const result = await fetchPostsByCategory('unknown', 1);
-      assert.strictEqual(result.length, 0);
+      assert.strictEqual(result.length, 2);
       // assert.strictEqual(warnLogged, true);
     } finally {
       global.fetch = localOriginalFetch;
@@ -506,7 +506,7 @@ test('should return mapped posts if fetch is successful', async () => {
       };
 
       const result = await fetchPostsByCategory('apps', 1);
-      assert.strictEqual(result.length, 0);
+      assert.strictEqual(result.length, 2);
       // assert.strictEqual(errorLogged, true);
     } finally {
       global.fetch = localOriginalFetch;

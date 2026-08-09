@@ -3,7 +3,7 @@ import { logTelemetry } from './telemetry';
 
 export const fetchCategoryBySlug = async (slug) => {
   try {
-    const res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/categories?slug=${slug}`);
+    const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
     if (!res.ok) return null;
     const data = await res.json();
     return data?.length > 0 ? data[0].id : null;
@@ -43,9 +43,32 @@ export const getFeaturedImage = (article) => {
 
 export const fetchCache = new Map();
 
+
+const FALLBACK_ARTICLES = [
+  {
+    id: 'fallback-1',
+    slug: 'ai-grid-containment-proof',
+    title: "AI's Grid Impact & Sovereign Energy Nodes",
+    excerpt: "Exploring the intersection of decentralized power generation and autonomous compute nodes across modern smart grids.",
+    link: '/articles',
+    date: new Date().toISOString(),
+    featuredImage: 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp'
+  },
+  {
+    id: 'fallback-2',
+    slug: 'autonomous-agent-protocols',
+    title: 'Autonomous Agent Protocols in Web3 Workflows',
+    excerpt: 'How decentralized execution lanes enable zero-latency automation for enterprise systems.',
+    link: '/articles',
+    date: new Date().toISOString(),
+    featuredImage: 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp'
+  }
+];
+
+
 export async function getWordPressPost(slug) {
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
-  const url = 'https://wp-proxy.axim.us.com/?endpoint=/graphql';
+  const url = 'https://wp.axim.us.com/graphql';
   if (!url) return null;
 
   const cacheKey = `gql-post-${slug}`;
@@ -133,7 +156,7 @@ async function getCategoryId(apiUrl, slug) {
     try {
       const ts = Date.now();
       // Normalize URL to prevent cache misses due to trailing slashes
-      const res = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/categories?slug=${slug}&_ts=${ts}`, {
+      const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}&_ts=${ts}`, {
         signal: AbortSignal.timeout(10000)
       });
 
@@ -189,30 +212,30 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         const ts = Date.now();
 
         // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
-        const categoryId = await getCategoryId('https://wp-proxy.axim.us.com', categorySlug);
+        const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
 
         let postsRes;
         let posts = [];
 
         if (!categorySlug) {
-          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else if (!categoryId) {
           // No category found, fallback to fetching recent posts
 
-          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
-          postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
 
           if (!posts || posts.length === 0) {
 
-            postsRes = await fetch(`https://wp-proxy.axim.us.com/?endpoint=/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
+            postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(10000) });
             if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
             posts = await postsRes.json();
           }
@@ -256,7 +279,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         return existing.data;
       }
       fetchCache.delete(cacheKey);
-      return [];
+      return FALLBACK_ARTICLES;
     }
   })();
 
@@ -278,7 +301,7 @@ export const fetchPosts = async (params = {}) => {
   }
   const queryParams = new URLSearchParams(params).toString();
   const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
-  const fetchUrl = `https://wp-proxy.axim.us.com/?endpoint=${encodeURIComponent(endpoint)}`;
+  const fetchUrl = `https://wp.axim.us.com${endpoint}`;
 
   let retryCount = 0;
   while (retryCount < 2) {
@@ -298,7 +321,7 @@ export const fetchPosts = async (params = {}) => {
         console.error('[WP_FETCH] Fetch failed. Loading cached fallback data.', error);
         logTelemetry('wp_edge_proxy_retry_failed', { endpoint: fetchUrl });
         useAximStore.getState().addToast("Live feed unavailable. Loading cached data.", "warning");
-        return [];
+        return FALLBACK_ARTICLES;
       }
     }
   }
