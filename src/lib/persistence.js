@@ -4,6 +4,7 @@
  */
 
 const STORAGE_KEYS = {
+  OFFLINE_SESSION: 'axm_offline_session',
   PROFILES: 'axm_local_profiles',
   LETTERS: 'axm_local_letters',
   SAVED_BRIEFS: 'axm_local_saved_briefs'
@@ -44,6 +45,29 @@ function _getStoredData(key, defaultValue, cacheKey) {
 }
 
 export const localStore = {
+  saveOfflineSession: (session) => {
+    if (!session) return;
+    try {
+      const stamp = {
+        session,
+        timestamp: Date.now()
+      };
+      const encoded = btoa(JSON.stringify(stamp));
+      localStorage.setItem(STORAGE_KEYS.OFFLINE_SESSION, encoded);
+    } catch(e) { /* ignore */ }
+  },
+
+  getOfflineSession: () => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.OFFLINE_SESSION);
+      if (!stored) return null;
+      const decoded = JSON.parse(atob(stored));
+      return decoded;
+    } catch(e) {
+      return null;
+    }
+  },
+
   getProfile: (address) => {
     if (!address) return null;
     const profiles = _getStoredData(STORAGE_KEYS.PROFILES, {}, 'profiles');

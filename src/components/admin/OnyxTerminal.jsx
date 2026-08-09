@@ -155,7 +155,16 @@ export default function OnyxTerminal() {
             type="submit"
             className="w-full py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:bg-white hover:text-black disabled:opacity-50 flex items-center justify-center gap-2 rounded-sm"
           >
-            {isTransmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin"/> Transmitting to Edge...</> : 'Deploy to Cloudflare KV'}
+            {isTransmitting ? (
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  <div className="w-1.5 h-1.5 bg-white/80 animate-pulse rounded-sm" style={{ animationDelay: '0ms' }} />
+                  <div className="w-1.5 h-1.5 bg-axim-purple animate-pulse rounded-sm" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1.5 h-1.5 bg-white/80 animate-pulse rounded-sm" style={{ animationDelay: '300ms' }} />
+                </div>
+                Transmitting to Edge...
+              </div>
+            ) : 'Deploy to Cloudflare KV'}
           </button>
         </form>
 
