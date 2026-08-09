@@ -26,9 +26,9 @@ function isValidEvent(event) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 202, headers: CORS_HEADERS });
+      return new Response(null, { status: 200, headers: CORS_HEADERS });
     }
 
     if (request.method !== 'POST') {
@@ -58,22 +58,25 @@ export default {
       return jsonResponse({ error: 'Telemetry event validation failed.' }, 400);
     }
 
-    const response = await fetch(`${env.SUPABASE_URL}/rest/v1/telemetry_ingress`, {
-      method: 'POST',
-      headers: {
-        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
-      body: JSON.stringify(events)
-    });
+    ctx.waitUntil(
+      fetch(`${env.SUPABASE_URL}/rest/v1/telemetry_ingress`, {
+        method: 'POST',
+        headers: {
+          apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify(events)
+      }).then(response => {
+        if (!response.ok) {
+          console.error('Telemetry ingestion failed', response.status);
+        }
+      }).catch(err => {
+        console.error('Telemetry ingestion error', err);
+      })
+    );
 
-    if (!response.ok) {
-      console.error('Telemetry ingestion failed', response.status);
-      return jsonResponse({ error: 'Telemetry ingestion failed.' }, 502);
-    }
-
-    return new Response(null, { status: 202, headers: CORS_HEADERS });
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 };

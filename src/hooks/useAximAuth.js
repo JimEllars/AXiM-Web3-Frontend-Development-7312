@@ -78,8 +78,8 @@ export function useAximAuth() {
             // Or use the offline session fallback
             const offline = localStore.getOfflineSession();
             if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-              // Optimistically retain
               console.warn("Retaining session optimistically due to recent offline stamp");
+              setSession(offline.session);
               return;
             }
             await supabase.auth.signOut();
@@ -93,8 +93,8 @@ export function useAximAuth() {
             // Network failure during refresh
             const offline = localStore.getOfflineSession();
             if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-              // Optimistically retain
               console.warn("Retaining session optimistically after exception");
+              setSession(offline.session);
               return;
             }
             await supabase.auth.signOut();
@@ -116,5 +116,5 @@ export function useAximAuth() {
     return () => { isMounted = false; clearInterval(heartbeatInterval); };
   }, []);
 
-  return { profile, loading, isLoading: loading, session };
+  return { profile, loading, isLoading: loading, session, checkDomain };
 }

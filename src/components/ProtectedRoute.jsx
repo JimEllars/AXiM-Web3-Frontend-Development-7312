@@ -23,8 +23,11 @@ export default function ProtectedRoute({ children }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-bg-void flex items-center justify-center font-mono text-zinc-500 text-xs uppercase tracking-widest">
-         Authenticating Operator Credentials...
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center font-mono text-zinc-500 text-xs uppercase tracking-widest border border-white/5">
+         <div className="flex items-center gap-2">
+            <div className="w-3 h-3 border-2 border-axim-purple border-t-transparent rounded-full animate-spin"></div>
+            Authenticating Operator Credentials...
+         </div>
       </div>
     );
   }
