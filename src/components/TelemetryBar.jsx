@@ -35,6 +35,23 @@ export default function TelemetryBar({ label, color, initialValue }) {
   }, []);
 
   useEffect(() => {
+    const handleLocalTelemetryUpdate = (event) => {
+        setPulse(true);
+        setTimeout(() => setPulse(false), 300);
+    };
+    if (typeof window !== 'undefined') {
+        window.addEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
+        window.addEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
+    }
+    return () => {
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
+            window.removeEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
+        }
+    }
+  }, []);
+
+  useEffect(() => {
     const collectionLength = Array.isArray(telemetryCollection) ? telemetryCollection.length : 0;
     const calculatedValue = Math.min(100, collectionLength * 5);
     setValue(calculatedValue > 0 ? calculatedValue : initialValue);
@@ -63,15 +80,8 @@ export default function TelemetryBar({ label, color, initialValue }) {
               actualValue = payload.new.value;
             }
 
-            // Map the parsed real metric to a reasonable layout scaled range.
-            // e.g. mapping an arbitrary payload load pattern to a 0-100 gauge.
             if (actualValue > 0) {
               setValue((prev) => {
-                 // scale fluidly: track real operational load rather than simply incrementing
-                 // Assuming payload values are absolute state or need to be smoothed.
-                 // Let's use the actualValue directly if it represents a bounded metric,
-                 // otherwise use it to adjust the bar in a non-crutch way.
-                 // We will set the value directly based on actualValue mapping to 1-100 to show load
                  const mappedValue = Math.min(100, Math.max(0, actualValue));
                  return mappedValue;
               });
@@ -105,40 +115,40 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   return (
-    <div className="bg-[#050505] backdrop-blur-md p-3 rounded-lg border border-white/5 shadow-lg">
+    <div className="bg-[#050505]/80 backdrop-blur-md p-3 rounded-lg border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
       <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
         <span className="flex flex-wrap items-center gap-2">
           <span
-            className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative inline-block animate-pulse ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative inline-block transition-transform duration-300 ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
           />
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
             [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}]
           </span>
-          <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
+          <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
             EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
           </span>
 
           {isWeb3Authenticated && (
-            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1">
+            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 shadow-sm">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
               [TELEMETRY_NODE: CF_WORKER_EDGE_ACTIVE]
             </span>
           )}
           {isWeb3Authenticated && (
-            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1">
+            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 shadow-sm">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
               [PERF_NODE: CLS_STABILIZED // 0.00]
             </span>
           )}
 
-          {label}
+          <span className="font-bold text-zinc-200 tracking-wider ml-1">{label}</span>
         </span>
-        <span className={textColor}>{value}%</span>
+        <span className={`${textColor} font-bold drop-shadow-md`}>{value}%</span>
       </div>
-      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden shadow-inner">
         <motion.div
           initial={{ width: `${initialValue}%` }}
           animate={{ width: `${value}%` }}

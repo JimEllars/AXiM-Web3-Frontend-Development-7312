@@ -19,3 +19,9 @@
 
 /*.svg
   Cache-Control: public, max-age=31536000, immutable
+
+/api/telemetry/*
+  Access-Control-Allow-Origin: https://axim.us.com
+  Access-Control-Allow-Methods: POST, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, X-AXiM-Internal-Key
+  Cache-Control: no-store

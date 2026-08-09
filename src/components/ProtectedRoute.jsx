@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
+import GlobalLoader from './GlobalLoader';
 
 export default function ProtectedRoute({ children }) {
   const { session, isLoading } = useAximAuth();
@@ -23,11 +24,8 @@ export default function ProtectedRoute({ children }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center font-mono text-zinc-500 text-xs uppercase tracking-widest border border-white/5">
-         <div className="flex items-center gap-2">
-            <div className="w-3 h-3 border-2 border-axim-purple border-t-transparent rounded-full animate-spin"></div>
-            Authenticating Operator Credentials...
-         </div>
+      <div className="min-h-screen bg-[#050505] border border-white/5 flex items-center justify-center">
+         <GlobalLoader loadingMessage="Authenticating Operator Credentials..." />
       </div>
     );
   }
