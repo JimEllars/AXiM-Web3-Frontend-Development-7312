@@ -100,9 +100,9 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6 group">
                <img
-                 src="https://wp.axim.us.com/wp-content/uploads/2025/06/12.png"
-                 alt="AXiM Systems"
-                 className="h-8 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+                 src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
+                 alt="AXiM Business Development"
+                 className="h-8 md:h-10 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity"
                  loading="lazy"
                  width="120" height="32"
                />
