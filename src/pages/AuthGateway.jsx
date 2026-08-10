@@ -101,7 +101,7 @@ export default function AuthGateway() {
         ? supabase.auth.signInWithPassword({ email: cleanEmail, password: password })
         : supabase.auth.signUp({ email: cleanEmail, password: password });
 
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth_timeout_fault")), 8000));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth_timeout_fault")), 15000)); // Increased timeout to 15s to be safer
 
     try {
       const { data, error } = await Promise.race([authPromise, timeoutPromise]);
@@ -117,7 +117,7 @@ export default function AuthGateway() {
         navigate('/admin');
       }
     } catch (err) {
-      if (err.message === "auth_timeout_fault") {
+      if (err.message === "auth_timeout_fault" || err.message === "Failed to fetch") {
         logTelemetry('auth_timeout_fault', { method: isLogin ? 'login' : 'signup', email: cleanEmail });
         if (isMounted.current) setNetworkFault(true);
       } else {

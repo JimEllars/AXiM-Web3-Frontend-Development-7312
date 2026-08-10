@@ -85,11 +85,26 @@ export function useAximAuth() {
     const heartbeatInterval = setInterval(async () => {
       if (!isMounted) return;
 
-      // Do not interrupt active Web3 session with a force logout
       const currentWeb3State = useAximStore.getState().isWeb3Authenticated;
       if (currentWeb3State) return;
 
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      // Retry mechanism for connection hiccups
+      let currentSession = null;
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          const { data } = await supabase.auth.getSession();
+          currentSession = data?.session;
+          break; // success
+        } catch (err) {
+          retries -= 1;
+          if (retries === 0) {
+             console.warn("[AXiM_AUTH] Session fetch failed after retries.");
+          } else {
+             await new Promise(r => setTimeout(r, 1000)); // wait 1s before retry
+          }
+        }
+      }
       if (currentSession) {
         try {
           const { data, error } = await supabase.auth.refreshSession();
@@ -108,7 +123,14 @@ export function useAximAuth() {
             localStore.saveOfflineSession(data.session);
           }
         } catch (e) {
+            const isNetworkError = e.message === 'Failed to fetch' || !navigator.onLine;
             const offline = localStore.getOfflineSession();
+
+            if (isNetworkError && offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+              console.warn("Retaining session optimistically due to network fault");
+              setSession(offline.session);
+              return;
+            }
             if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
               console.warn("Retaining session optimistically after exception");
               setSession(offline.session);
