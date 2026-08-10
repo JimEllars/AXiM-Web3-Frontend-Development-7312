@@ -19,7 +19,7 @@ export default function WindowCleaning() {
     email: '',
     address: '',
     preferredDate: '',
-  });
+  addOns: []});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
 
@@ -29,12 +29,22 @@ export default function WindowCleaning() {
     "serviceType": "Window Cleaning",
     "provider": {
       "@type": "LocalBusiness",
-      "name": "AXiM Systems"
+      "name": "AXiM Business Development"
     },
     "areaServed": {
       "@type": "State",
       "name": "Service Area"
     }
+  };
+
+
+  const handleAddOnChange = (addOn) => {
+      setFormData(prev => {
+          const addOns = prev.addOns.includes(addOn)
+              ? prev.addOns.filter(a => a !== addOn)
+              : [...prev.addOns, addOn];
+          return { ...prev, addOns };
+      });
   };
 
   const handleNextStep = () => {
@@ -55,6 +65,7 @@ export default function WindowCleaning() {
     logTelemetry('window_cleaning_quote_submitted', {
       stories: formData.stories,
       package: formData.package,
+            addOnsCount: formData.addOns?.length || 0,
       hasAddress: !!formData.address,
       timestamp: Date.now()
     });
@@ -278,7 +289,29 @@ export default function WindowCleaning() {
                                 ))}
                             </div>
 
-                            <div className="flex gap-4 mt-8">
+
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-300 mb-3">Frequently Combined Add-Ons</label>
+                                    <div className="space-y-3">
+                                        {[
+                                            { label: 'Solar Panel Surface Wash (+$49)', value: 'solar_panel' },
+                                            { label: 'Driveway Pressure Wash (+$89)', value: 'driveway' },
+                                            { label: 'Screen Deep Detail & UV Barrier (+$29)', value: 'screen_detail' }
+                                        ].map(addon => (
+                                            <label key={addon.value} className="flex items-center space-x-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-4 w-4 text-axim-green bg-black/50 border-white/10 rounded focus:ring-axim-green focus:ring-offset-black transition-colors"
+                                                    checked={formData.addOns.includes(addon.value)}
+                                                    onChange={() => handleAddOnChange(addon.value)}
+                                                />
+                                                <span className="text-zinc-400 text-sm">{addon.label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4 mt-8">
                                 <button
                                     onClick={handlePrevStep}
                                     className="px-6 py-4 rounded-md bg-white/5 border border-white/10 text-zinc-400 hover:text-white transition-colors uppercase tracking-widest text-sm font-bold"
@@ -360,7 +393,7 @@ export default function WindowCleaning() {
                         Thank you for choosing AXiM Systems. We're reviewing your property profile and will reach out shortly to finalize your quote and scheduling.
                     </p>
                     <button
-                        onClick={() => { setStep(1); setIsSubmitted(false); setFormData({stories:'', windowCount:'', package:'', firstName:'', lastName:'', phone:'', email:'', address:'', preferredDate:''}); }}
+                        onClick={() => { setStep(1); setIsSubmitted(false); setFormData({stories:'', windowCount:'', package:'', firstName:'', lastName:'', phone:'', email:'', address:'', preferredDate:'', addOns: []}); }}
                         className="text-axim-green hover:text-white text-sm font-mono tracking-widest uppercase transition-colors border-b border-axim-green/50 hover:border-white pb-1"
                     >
                         Submit Another Request
