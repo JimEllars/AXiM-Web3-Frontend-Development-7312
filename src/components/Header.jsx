@@ -76,13 +76,13 @@ export default function Header() {
           <img
             src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
             alt="AXiM Business Development"
-            className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+            className="h-9 md:h-11 w-auto object-contain items-center group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
             width="144" height="40"
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           {navLinks.map((link) => (
             <div
               key={link.name}
@@ -162,14 +162,14 @@ export default function Header() {
             </div>
           ) : (
             <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth"
-              className="inline-flex items-center gap-2 px-5 py-2 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-axim-purple text-white font-black uppercase whitespace-nowrap tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
             >
               <SafeIcon className="w-3.5 h-3.5" icon={LuIcons.LuLogIn} />
               <span>Login</span>
             </Link>
           )}
 
-<Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
+<Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase whitespace-nowrap tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
             Consultation
           </Link>
         </nav>
