@@ -1,7 +1,8 @@
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': 'https://axim.us.com',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key',
+  'Cache-Control': 'no-store, max-age=0',
   Vary: 'Origin'
 };
 
@@ -77,6 +78,6 @@ export default {
       })
     );
 
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    return jsonResponse({ status: 'success', count: events.length }, 200);
   }
 };

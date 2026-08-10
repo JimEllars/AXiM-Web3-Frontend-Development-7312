@@ -33,6 +33,15 @@ function AnimatedCounter({ value, prefix = '', suffix = '' }) {
 
 export default function ContentAnalytics() {
   const [logs, setLogs] = useState(getTelemetryStore());
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading for skeleton loader demonstration
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
   const [selectedChannel, setSelectedChannel] = useState('All Channels');
 
   const channels = ['All Channels', 'Powur Solar', 'Chatbase Support', 'Make.com'];
@@ -95,6 +104,13 @@ export default function ContentAnalytics() {
 
 
       {/* KPI Cards */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
+          <div className="p-6 bg-white/5 border border-white/10 rounded-sm animate-pulse h-[120px]"></div>
+          <div className="p-6 bg-white/5 border border-white/10 rounded-sm animate-pulse h-[120px]" style={{ animationDelay: '150ms' }}></div>
+          <div className="p-6 bg-white/5 border border-white/10 rounded-sm animate-pulse h-[120px]" style={{ animationDelay: '300ms' }}></div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
         <div className="p-6 bg-[#0A0A0A] border border-axim-purple/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent z-0"></div>
@@ -112,9 +128,16 @@ export default function ContentAnalytics() {
           <p className={`text-4xl font-black tracking-wider relative z-10 ${conversionColor}`}><AnimatedCounter value={conversionRate} suffix="%" /></p>
         </div>
       </div>
+      )}
 
       <div className="flex-1 bg-[#0A0A0A] border border-white/5 rounded-sm p-4 overflow-y-auto no-scrollbar">
-        {filteredLogs.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col gap-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-3 border border-white/5 bg-white/5 animate-pulse rounded-sm h-[60px]" style={{ animationDelay: `${i * 100}ms` }}></div>
+            ))}
+          </div>
+        ) : filteredLogs.length === 0 ? (
           <div className="h-full flex items-center justify-center text-zinc-600 font-mono text-xs uppercase tracking-widest">
             Waiting for system events...
           </div>

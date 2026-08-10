@@ -70,7 +70,7 @@ export default function OnyxTerminal() {
 
 
       {/* System Operational Verification (SOV) Panel */}
-      <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-6 mb-2">
+      <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-axim-purple/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
           <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-axim-green" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Onyx Core Diagnostics Engine</h3>
@@ -78,19 +78,19 @@ export default function OnyxTerminal() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Gateway Layer</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Edge Data Buffer</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Onyx Swarm Uplink</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/30 text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ PASS ]</span>
+            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Edge Cache Status</span>
-            <span className="px-2 py-1 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">[ HIT // MEM_POOL ]</span>
+            <span className="px-2 py-1 bg-axim-purple/10 border border-axim-purple/50 shadow-[0_0_8px_rgba(147,51,234,0.5)] text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />[ HIT // MEM_POOL ]</span>
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function OnyxTerminal() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
 
       {/* Telemetry Replay Controller */}
-      <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-6 mb-2">
+      <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-axim-purple/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
           <SafeIcon icon={LuIcons.LuFastForward} className="w-5 h-5 text-axim-purple" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Telemetry Replay Controller</h3>
@@ -171,15 +171,15 @@ export default function OnyxTerminal() {
         </form>
 
         {/* Console Output */}
-        <div className="bg-[#0A0A0A] border border-white/5 rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden">
+        <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden hover:border-axim-purple/30 transition-colors">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-axim-purple via-[#DB2777] to-transparent opacity-50" />
           <div className="text-zinc-600 mb-4 uppercase tracking-widest border-b border-white/5 pb-2 flex items-center gap-2">
             <SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log
           </div>
 
           <div className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2">
-             <div>{`> INITIALIZING TERMINAL UPLINK... OK`}</div>
-             <div>{`> AWAITING OPERATOR INPUT...`}</div>
+             <div className="animate-pulse">{'> INITIALIZING TERMINAL UPLINK... OK'}</div>
+             <div className="animate-pulse animation-delay-200">{'> AWAITING OPERATOR INPUT...'}</div>
              {responseLog && (
                <div className={`mt-4 ${responseLog.includes('SUCCESS') ? 'text-axim-green' : 'text-red-500'}`}>
                  {`> ${responseLog}`}

@@ -92,7 +92,7 @@ export async function flushTelemetryQueue(force = false) {
         success = window.navigator.sendBeacon(endpoint, blob);
       } else if (window.fetch) {
         try {
-          const response = await fetch(endpoint, {
+          const fetchPromise = fetch(endpoint, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -101,6 +101,9 @@ export async function flushTelemetryQueue(force = false) {
             body: payload,
             keepalive: true,
           });
+
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
+          const response = await Promise.race([fetchPromise, timeoutPromise]);
 
           if (response.status === 200 || response.status === 204) {
             success = true;
