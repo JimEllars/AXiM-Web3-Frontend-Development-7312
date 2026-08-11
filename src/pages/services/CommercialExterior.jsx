@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAximStore } from '../../store/useAximStore';
 import SEO from '../../components/SEO';
+import Reviews from '../../components/Reviews';
+ '../../components/SEO';
 import { logTelemetry } from '../../lib/telemetry';
 
 export default function CommercialExterior() {
@@ -113,6 +115,31 @@ export default function CommercialExterior() {
         </motion.div>
       </div>
 
+      <div className="mb-16">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8">
+            <div className="bg-onyx-900/60 border border-axim-gold/20 rounded-lg p-8 backdrop-blur-md">
+                <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">Corporate ROI Analysis</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">38%</span>
+                        <span className="text-sm font-bold text-white">Reduction in Facade Degradation</span>
+                        <span className="text-xs text-zinc-400 mt-1">Extends the lifespan of exterior commercial surfaces.</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">$5M</span>
+                        <span className="text-sm font-bold text-white">General Liability Coverage</span>
+                        <span className="text-xs text-zinc-400 mt-1">Fully insured and bonded for enterprise risk mitigation.</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">&lt;24hr</span>
+                        <span className="text-sm font-bold text-white">Sub-24hr RFP Response Time</span>
+                        <span className="text-xs text-zinc-400 mt-1">Rapid estimation and dedicated corporate account management.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
       <motion.div
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
@@ -193,6 +220,7 @@ export default function CommercialExterior() {
             </form>
         )}
       </motion.div>
+      <Reviews />
     </div>
   );
 }
