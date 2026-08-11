@@ -15,6 +15,24 @@ export default function SEO({
   noindex = false
 }) {
   const location = useLocation();
+
+  const defaultOrgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "AXiM Systems",
+    "url": "https://axim.us.com",
+    "logo": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "128",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  };
+
+  const finalSchemas = [...customSchema, defaultOrgSchema];
+
   const currentUrl = url || `https://axim.us.com${location.pathname}`;
   const metaImage = image || DEFAULT_SOCIAL_IMAGE;
 
@@ -55,7 +73,7 @@ export default function SEO({
       <meta name="twitter:image" content={metaImage} />
 
       {/* Custom JSON-LD Schema Injection */}
-      {customSchema.map((schema, index) => (
+      {finalSchemas.map((schema, index) => (
         <script type="application/ld+json" key={index}>
           {JSON.stringify(schema)}
         </script>

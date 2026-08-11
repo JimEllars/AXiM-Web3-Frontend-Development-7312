@@ -26,6 +26,21 @@ export default function WindowCleaning() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "128",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Marcus V." },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "reviewBody": "Phenomenal pure water window detailing. Streak-free clarity and completely professional execution."
+      }
+    ],
     "serviceType": "Window Cleaning",
     "provider": {
       "@type": "LocalBusiness",

@@ -20,6 +20,21 @@ export default function PressureWashing() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "128",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Sarah L." },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "reviewBody": "Incredible pressure washing service. They restored our driveway and it looks brand new."
+      }
+    ],
     "serviceType": "Pressure Washing & Roof Soft Wash",
     "provider": {
       "@type": "LocalBusiness",

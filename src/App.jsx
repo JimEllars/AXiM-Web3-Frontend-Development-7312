@@ -44,6 +44,7 @@ const Services = lazy(() => import('./pages/Services'));
 const WindowCleaning = lazy(() => import('./pages/services/WindowCleaning'));
 const PressureWashing = lazy(() => import('./pages/services/PressureWashing'));
 const Games = lazy(() => import('./pages/Games'));
+const CommercialExterior = lazy(() => import('./pages/services/CommercialExterior'));
 
 
 
@@ -237,6 +238,7 @@ function App() {
             <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
             <Route path="/services/window-cleaning" element={<PageTransition><WindowCleaning /></PageTransition>} />
             <Route path="/services/pressure-washing" element={<PageTransition><PressureWashing /></PageTransition>} />
+            <Route path="/services/commercial-exterior" element={<PageTransition><CommercialExterior /></PageTransition>} />
             <Route path="/consultation" element={<PageTransition><Consultation /></PageTransition>} />
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
             <Route path="/auth" element={<PageTransition><AuthGateway /></PageTransition>} />
