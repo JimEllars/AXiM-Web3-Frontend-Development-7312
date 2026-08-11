@@ -73,12 +73,7 @@ export default function Header() {
 
         {/* Brand Logo Integration - White PNG */}
         <Link to="/" className="flex items-center gap-3 group z-50">
-          <img
-            src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
-            alt="AXiM Business Development"
-            className="h-9 md:h-11 w-auto object-contain items-center group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-            width="144" height="40"
-          />
+          <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Business Development" className="h-9 md:h-11 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
         </Link>
 
         {/* Desktop Navigation */}
@@ -172,6 +167,14 @@ export default function Header() {
 <Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase whitespace-nowrap tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
             Consultation
           </Link>
+
+          {isWeb3Authenticated && (
+            <span className="hidden xl:inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
+              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+              [SCHEMA_NODE: AI_PRE_RENDER_ACTIVE]
+            </span>
+          )}
+
         </nav>
 
         <div className="md:hidden flex items-center gap-2">

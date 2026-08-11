@@ -149,11 +149,11 @@ export default function Services() {
                   <li className="flex items-center gap-2"><span className="text-axim-gold">✓</span> Professional Operations</li>
                 </ul>
                 <Link
-                  to="/consultation"
+                  to="/services/commercial-exterior"
                   onClick={() => logTelemetry('service_card_clicked', { serviceName: 'commercial_exterior', category: 'business_services' })}
                   className="w-full inline-flex items-center justify-center gap-2 bg-axim-gold/10 hover:bg-axim-gold/20 text-axim-gold border border-axim-gold/30 font-mono text-sm py-3 px-6 rounded-md transition-all uppercase tracking-widest mt-auto"
                 >
-                  Consultation →
+                  View B2B Service →
                 </Link>
               </div>
             </div>
