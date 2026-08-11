@@ -162,7 +162,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
-            <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Systems. All rights reserved.</span>
+            <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Business Development. All rights reserved.</span>
           </p>
           <div className="flex items-center gap-6">
              <div className="flex items-center gap-2 text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">

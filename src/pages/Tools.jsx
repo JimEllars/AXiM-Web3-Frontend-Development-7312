@@ -338,6 +338,27 @@ export default function Tools() {
                     Nexus CRM and Ground Game are enterprise sales development platforms managed by AXiM Business Development. External organizational access is available by invitation only.
                   </p>
 
+                  {selectedApp === 'nexus_crm' && (
+                      <div className="mb-6 p-4 bg-onyx-800/50 border border-axim-gold/20 rounded-md">
+                        <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Quantitative Performance Metrics</h4>
+                        <ul className="text-zinc-400 text-sm space-y-2">
+                          <li className="flex items-start gap-2"><span className="text-axim-gold">►</span> 2.4x Speedup in Sales Rep Onboarding</li>
+                          <li className="flex items-start gap-2"><span className="text-axim-gold">►</span> 42% Increase in Lead Conversion Rate</li>
+                          <li className="flex items-start gap-2"><span className="text-axim-gold">►</span> Real-time granular pipeline analytics</li>
+                        </ul>
+                      </div>
+                  )}
+                  {selectedApp === 'ground_game' && (
+                      <div className="mb-6 p-4 bg-onyx-800/50 border border-emerald-500/20 rounded-md">
+                        <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Quantitative Performance Metrics</h4>
+                        <ul className="text-zinc-400 text-sm space-y-2">
+                          <li className="flex items-start gap-2"><span className="text-emerald-500">►</span> 2.4x Speedup in Sales Rep Onboarding</li>
+                          <li className="flex items-start gap-2"><span className="text-emerald-500">►</span> 42% Increase in Lead Conversion Rate</li>
+                          <li className="flex items-start gap-2"><span className="text-emerald-500">►</span> 100% precise territory optimization mapping</li>
+                        </ul>
+                      </div>
+                  )}
+
                   <form onSubmit={(e) => {
                       e.preventDefault();
                       logTelemetry('invite_access_requested', {

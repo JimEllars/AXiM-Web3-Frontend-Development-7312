@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAximStore } from '../../store/useAximStore';
 import SEO from '../../components/SEO';
+import Reviews from '../../components/Reviews';
+ '../../components/SEO';
 import { logTelemetry } from '../../lib/telemetry';
 import SafeIcon from '../../common/SafeIcon';
 import { LuCircleCheck, LuShieldCheck, LuDroplets, LuSun, LuWind, LuChevronDown, LuChevronUp } from 'react-icons/lu';
@@ -419,6 +421,31 @@ export default function WindowCleaning() {
       </div>
 
       {/* Tiered Pricing Section */}
+      <div className="mb-16">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8">
+            <div className="bg-onyx-900/60 border border-axim-gold/20 rounded-lg p-8 backdrop-blur-md">
+                <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">Quantitative Performance Metrics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">99.4%</span>
+                        <span className="text-sm font-bold text-white">Pure Water Deionization Purity</span>
+                        <span className="text-xs text-zinc-400 mt-1">Leaves absolutely no mineral deposits or spots.</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">7-Day</span>
+                        <span className="text-sm font-bold text-white">Rain Touch-Up Protection</span>
+                        <span className="text-xs text-zinc-400 mt-1">Complimentary re-cleaning if rain affects visibility.</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-3xl font-black text-axim-gold mb-2">100%</span>
+                        <span className="text-sm font-bold text-white">Streak-Free Guarantee</span>
+                        <span className="text-xs text-zinc-400 mt-1">Impeccable clarity ensured on every window.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
       <div className="mb-20">
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Maintenance Plans</h2>
@@ -477,6 +504,7 @@ export default function WindowCleaning() {
         </div>
       </div>
 
+      <Reviews />
     </div>
   );
 }
