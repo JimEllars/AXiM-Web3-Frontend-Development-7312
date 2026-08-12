@@ -40,7 +40,7 @@ export default function PressureWashing() {
     "serviceType": "Pressure Washing & Roof Soft Wash",
     "provider": {
       "@type": "LocalBusiness",
-      "name": "AXiM Business Development"
+      "name": "AXiM Development"
     },
     "areaServed": {
       "@type": "State",
