@@ -45,7 +45,7 @@ describe('Hero Component', () => {
     assert.ok(screen.getByText(/Work Smarter\./));
 
     // Check description paragraph
-    assert.ok(screen.getByText(/Boost your Sales and Business Development Systems with the AXiM Advantage./));
+    assert.ok(screen.getByText(/Accelerate Your Personal, Professional, and Business Systems with the AXiM Development Advantage./));
 
     // Check CTA buttons exist
     assert.ok(screen.getAllByText(/Explore Tools/)[0]);

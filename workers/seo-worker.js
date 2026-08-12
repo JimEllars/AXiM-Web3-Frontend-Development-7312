@@ -185,8 +185,8 @@ export default {
         },
         publisher: {
           '@type': 'Organization',
-          name: 'AXiM Systems',
-          logo: { '@type': 'ImageObject', url: 'https://wp.axim.us.com/wp-content/uploads/2025/06/12.png' }
+          name: 'AXiM Development',
+          logo: { '@type': 'ImageObject', url: 'https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp' }
         }
       });
 

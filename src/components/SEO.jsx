@@ -19,7 +19,7 @@ export default function SEO({
   const defaultOrgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "AXiM Business Development",
+    "name": "AXiM Development",
     "url": "https://axim.us.com",
     "logo": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp",
     "aggregateRating": {
@@ -55,14 +55,14 @@ export default function SEO({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={metaImage} />
-      <meta property="og:site_name" content="AXiM Business Development" />
+      <meta property="og:site_name" content="AXiM Development" />
 
       {/* Conditional News/Article Tags */}
       {type === 'article' && publishedTime && (
         <meta property="article:published_time" content={publishedTime} />
       )}
       {type === 'article' && (
-        <meta property="article:author" content="AXiM Business Development Editorial" />
+        <meta property="article:author" content="AXiM Development Editorial" />
       )}
 
       {/* Twitter */}

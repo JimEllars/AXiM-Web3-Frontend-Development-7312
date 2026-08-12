@@ -43,7 +43,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="w-full max-w-2xl mx-auto text-sm md:text-base text-zinc-400 leading-relaxed mb-10 font-bold uppercase tracking-widest text-center">
-          Boost your Sales and Business Development Systems with the AXiM Advantage.
+          Accelerate Your Personal, Professional, and Business Systems with the AXiM Development Advantage.
         </motion.p>
 
         {/* Updated CTAs */}
