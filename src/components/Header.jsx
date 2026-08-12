@@ -66,18 +66,18 @@ export default function Header() {
 
       <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-[#004040]/30 py-4' : 'bg-transparent py-6'
+        isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-[#004040]/30 py-4 md:py-5' : 'bg-transparent py-6 md:py-7'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
 
         {/* Brand Logo Integration - White PNG */}
         <Link to="/" className="flex items-center gap-3 group z-50">
-          <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Business Development" className="h-9 md:h-11 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+          <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6">
           {navLinks.map((link) => (
             <div
               key={link.name}
@@ -164,16 +164,17 @@ export default function Header() {
             </Link>
           )}
 
-<Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase whitespace-nowrap tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
-            Consultation
-          </Link>
-
-          {isWeb3Authenticated && (
+{isWeb3Authenticated && (
             <span className="hidden xl:inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
               [AXIM_NODE: DEVELOPMENT_CORE_SYNCED]
             </span>
           )}
+          <Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase whitespace-nowrap tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
+            Consultation
+          </Link>
+
+
 
         </nav>
 

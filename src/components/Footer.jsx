@@ -99,7 +99,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6 group">
-               <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Business Development" className="h-8 md:h-10 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
+               <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-11 md:h-14 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
@@ -162,7 +162,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
-            <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Business Development. All rights reserved.</span>
+            <span onClick={() => setClickCount(prev => prev + 1)} className="cursor-pointer">&copy; {currentYear} AXiM Development. All rights reserved.</span>
           </p>
           <div className="flex items-center gap-6">
              <div className="flex items-center gap-2 text-zinc-600 font-mono text-[0.6rem] uppercase tracking-widest">
