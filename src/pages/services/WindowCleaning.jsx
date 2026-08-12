@@ -46,7 +46,7 @@ export default function WindowCleaning() {
     "serviceType": "Window Cleaning",
     "provider": {
       "@type": "LocalBusiness",
-      "name": "AXiM Business Development"
+      "name": "AXiM Development"
     },
     "areaServed": {
       "@type": "State",

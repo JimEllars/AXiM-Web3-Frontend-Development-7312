@@ -60,19 +60,51 @@ export default function ContentAnalytics() {
     });
   }, [logs, selectedChannel]);
 
-  const totalAffiliateClicks = useMemo(() => filteredLogs.filter(log => log.type === 'AFFILIATE_CLICK' || log.type === 'PARTNER_FUNNEL_CLICK' || log.type === 'partner_click').length, [filteredLogs]);
-  const totalLeadsCaptured = useMemo(() => filteredLogs.filter(log => log.type === 'PARTNER_LEAD_SUBMITTED').length, [filteredLogs]);
 
-  const conversionRate = useMemo(() => {
-    if (totalAffiliateClicks === 0) return 0;
-    return (totalLeadsCaptured / totalAffiliateClicks) * 100;
-  }, [totalAffiliateClicks, totalLeadsCaptured]);
+  const totalLeadsCaptured = useMemo(() => filteredLogs.filter(log => ['service_quote_requested', 'invite_access_requested', 'consultation_lead_submitted'].includes(log.type)).length, [filteredLogs]);
 
-  const conversionColor = useMemo(() => {
-    if (conversionRate > 15) return 'text-green-500';
-    if (conversionRate >= 5) return 'text-amber-500';
-    return 'text-red-500';
-  }, [conversionRate]);
+  const [devToolsCount, residentialCount, commercialCount] = useMemo(() => {
+    let dev = 0, res = 0, com = 0;
+    filteredLogs.forEach(log => {
+      const type = log.type || '';
+      const cat = log.payload?.category || '';
+      if (type.includes('dev_tool') || cat === 'development') dev++;
+      else if (type.includes('residential') || cat === 'residential') res++;
+      else if (type.includes('commercial') || type.includes('rfp') || cat === 'commercial') com++;
+    });
+    return [dev, res, com];
+  }, [filteredLogs]);
+
+  const totalCategories = devToolsCount + residentialCount + commercialCount;
+  const categoryDistribution = useMemo(() => {
+    if (totalCategories === 0) return { dev: 0, res: 0, com: 0 };
+    return {
+      dev: (devToolsCount / totalCategories) * 100,
+      res: (residentialCount / totalCategories) * 100,
+      com: (commercialCount / totalCategories) * 100
+    };
+  }, [devToolsCount, residentialCount, commercialCount, totalCategories]);
+
+  const averageLatency = useMemo(() => {
+    const latencyLogs = filteredLogs.filter(log => log.type === 'edge_node_latency');
+    if (latencyLogs.length === 0) return 0;
+    const sum = latencyLogs.reduce((acc, log) => acc + (log.payload?.latency || 0), 0);
+    return sum / latencyLogs.length;
+  }, [filteredLogs]);
+
+  const exportCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8,"
+      + "Timestamp,Type,Payload\n"
+      + filteredLogs.map(e => `${new Date(e.timestamp).toISOString()},${e.type},${JSON.stringify(e.payload).replace(/"/g, '""')}`).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "axim_analytics_summary.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
 
   useEffect(() => {
@@ -98,6 +130,9 @@ export default function ContentAnalytics() {
               <option key={channel} value={channel}>{channel}</option>
             ))}
           </select>
+          <button onClick={exportCSV} className="bg-axim-purple/20 hover:bg-axim-purple border border-axim-purple/50 transition-colors text-white text-xs font-mono py-2 px-4 rounded-sm uppercase tracking-widest flex items-center gap-2">
+            <SafeIcon icon={LuIcons.LuDownload} className="w-4 h-4" /> Export CSV
+          </button>
           <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-axim-purple" />
         </div>
       </div>
@@ -114,18 +149,27 @@ export default function ContentAnalytics() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
         <div className="p-6 bg-[#0A0A0A] border border-axim-purple/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent z-0"></div>
-          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Affiliate Clicks</h3>
-          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={totalAffiliateClicks} /></p>
+          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Lead Intake</h3>
+          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={totalLeadsCaptured} /></p>
         </div>
         <div className="p-6 bg-[#0A0A0A] border border-axim-gold/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent z-0"></div>
-          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Total Leads Captured</h3>
-          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={totalLeadsCaptured} /></p>
+          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Edge Node Latency</h3>
+          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={averageLatency} suffix="ms" /></p>
         </div>
-        <div className="p-6 bg-[#0A0A0A] border border-white/20 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
+        <div className="p-6 bg-[#0A0A0A] border border-white/20 rounded-sm flex flex-col justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0"></div>
-          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Conversion Rate</h3>
-          <p className={`text-4xl font-black tracking-wider relative z-10 ${conversionColor}`}><AnimatedCounter value={conversionRate} suffix="%" /></p>
+          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10 text-center mb-2">Category Distribution</h3>
+          <div className="flex flex-col gap-1.5 w-full px-4 relative z-10">
+             <div className="flex items-center justify-between text-[0.6rem] font-mono text-zinc-400"><span>Dev Tools</span> <span>{categoryDistribution.dev.toFixed(1)}%</span></div>
+             <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden"><div className="bg-axim-purple h-full" style={{width: `${categoryDistribution.dev}%`}}></div></div>
+
+             <div className="flex items-center justify-between text-[0.6rem] font-mono text-zinc-400 mt-1"><span>Residential</span> <span>{categoryDistribution.res.toFixed(1)}%</span></div>
+             <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden"><div className="bg-axim-gold h-full" style={{width: `${categoryDistribution.res}%`}}></div></div>
+
+             <div className="flex items-center justify-between text-[0.6rem] font-mono text-zinc-400 mt-1"><span>Commercial</span> <span>{categoryDistribution.com.toFixed(1)}%</span></div>
+             <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden"><div className="bg-emerald-500 h-full" style={{width: `${categoryDistribution.com}%`}}></div></div>
+          </div>
         </div>
       </div>
       )}

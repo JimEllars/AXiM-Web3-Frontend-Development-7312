@@ -171,7 +171,7 @@ export default function Header() {
           {isWeb3Authenticated && (
             <span className="hidden xl:inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-              [SCHEMA_NODE: AI_PRE_RENDER_ACTIVE]
+              [AXIM_NODE: DEVELOPMENT_CORE_SYNCED]
             </span>
           )}
 

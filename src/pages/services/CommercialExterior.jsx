@@ -40,7 +40,7 @@ export default function CommercialExterior() {
     "serviceType": "Enterprise Commercial Exterior & Facility Maintenance",
     "provider": {
       "@type": "LocalBusiness",
-      "name": "AXiM Systems",
+      "name": "AXiM Development",
       "image": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp"
     }
   };
