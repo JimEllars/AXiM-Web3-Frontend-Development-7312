@@ -44,6 +44,8 @@ const Services = lazy(() => import('./pages/Services'));
 const WindowCleaning = lazy(() => import('./pages/services/WindowCleaning'));
 const PressureWashing = lazy(() => import('./pages/services/PressureWashing'));
 const Games = lazy(() => import('./pages/Games'));
+const Business = lazy(() => import('./pages/Business'));
+const Personal = lazy(() => import('./pages/Personal'));
 const CommercialExterior = lazy(() => import('./pages/services/CommercialExterior'));
 
 
@@ -226,6 +228,8 @@ function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
+            <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
+            <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />

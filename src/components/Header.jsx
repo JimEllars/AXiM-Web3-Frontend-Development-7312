@@ -65,7 +65,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
 
         {/* Brand Logo Integration - White PNG */}
-        <Link to="/" className="flex items-center gap-3 group z-50">
+        <Link to="/" className="flex items-center gap-3 group z-50 min-w-[200px] flex-shrink-0 mr-4">
           <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
         </Link>
 
