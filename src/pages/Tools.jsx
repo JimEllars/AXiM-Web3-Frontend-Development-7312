@@ -10,7 +10,7 @@ import * as LuIcons from 'react-icons/lu';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
 
-export default function Tools() {
+export default function Tools({ embedMode = false }) {
   const { session } = useAximAuth();
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const [isModalOpen, setIsModalOpen] = useState(false);
