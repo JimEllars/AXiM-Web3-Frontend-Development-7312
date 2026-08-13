@@ -132,9 +132,9 @@ export default function TelemetryBar({ label, color, initialValue }) {
           </span>
 
           {isWeb3Authenticated && (
-            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 shadow-sm">
+            <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none shadow-sm">
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-              [TELEMETRY_NODE: CF_WORKER_EDGE_ACTIVE]
+              [TELEMETRY_NODE: ARBITRUM_EDGE_ACTIVE]
             </span>
           )}
           {isWeb3Authenticated && (

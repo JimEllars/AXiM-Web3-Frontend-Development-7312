@@ -99,9 +99,10 @@ const [extractingId, setExtractingId] = useState(null);
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(147,51,234,0.1),transparent_50%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
+
             <div className="inline-flex items-center space-x-2 px-3 py-1 bg-axim-green/10 border border-axim-green/30 text-[0.65rem] font-mono uppercase tracking-widest text-axim-green mb-4 rounded-sm">
               <SafeIcon icon={LuIcons.LuLock} className="w-3 h-3" />
-              <span>Connection Secure</span>
+              <span>[SESSION_ACTIVE // HYBRID_SYNCED]</span>
             </div>
             <h2 className="text-xl md:text-5xl font-black text-white tracking-tight uppercase leading-tight">
               {isWeb3Authenticated ? "Cryptographic Operator Profile" : "Standard System Profile"}
@@ -146,7 +147,14 @@ const [extractingId, setExtractingId] = useState(null);
             )}
 
 
-          <div className="flex gap-2">
+                    <div className="flex gap-2">
+            <button onClick={() => {
+                navigator.clipboard.writeText(user?.email || walletAddress || 'AXIM_OP_001');
+                logTelemetry('profile_identity_copied', { isWeb3Authenticated });
+                useAximStore.getState().showToast('Operator Identity Copied to Clipboard', 'success');
+              }} className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
+              Copy Operator ID
+            </button>
             <button onClick={() => { logTelemetry('profile_settings_clicked', { userId: user?.id || walletAddress }); useAximStore.getState().showToast('Settings configuration panel coming soon.', 'info'); }} className="px-6 py-3 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm">
               Settings
             </button>

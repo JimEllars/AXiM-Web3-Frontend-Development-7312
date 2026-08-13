@@ -52,6 +52,19 @@ export default function Tools() {
       btnClass: "bg-emerald-400 text-black hover:bg-white"
     },
     {
+      title: "Onboard1",
+      desc: "Automated sales rep sourcing, candidate vetting, and onboarding engine.",
+      features: ["Sales rep sourcing", "Candidate vetting", "Automated onboarding"],
+      link: "#",
+      badge: "[IN DEVELOPMENT]",
+      isInternal: true,
+      icon: LuIcons.LuUserPlus,
+      color: "text-zinc-400",
+      bgHover: "hover:border-zinc-400/30",
+      btnClass: "bg-zinc-800 text-zinc-400 cursor-not-allowed",
+      isDisabled: true
+    },
+    {
       title: "RecruitFlow",
       desc: "Automated candidate sourcing, structured video interviewing, and accelerated hiring and onboarding workflows designed for high-turnover sales forces.",
       features: ["Candidate sourcing", "Video interviews", "Automated onboarding"],
@@ -218,7 +231,11 @@ export default function Tools() {
                  ))}
                </ul>
 
-               {tool.isExternal ? (
+               {tool.isDisabled ? (
+                 <span className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
+                   Awaiting Deployment <SafeIcon icon={LuIcons.LuLock} className="ml-2 w-3 h-3" />
+                 </span>
+               ) : tool.isExternal ? (
                                   <a href={tool.link} target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('tool_launch_intent', { toolTitle: tool.title, isExternal: tool.isExternal, target: tool.link })} className={`relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg ${tool.btnClass}`}>
                    Launch Application <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
                  </a>
