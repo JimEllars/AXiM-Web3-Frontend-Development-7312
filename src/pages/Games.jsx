@@ -69,7 +69,7 @@ export default function Games() {
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4 flex items-center justify-center gap-4">
               Web3 <span className="text-axim-green">Games Directory</span>
-              {isHandoffActive && (
+              {(isHandoffActive && isWeb3Authenticated) && (
                  <span className="ml-3 inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-gold/10 border border-axim-gold/30 font-mono text-[8px] text-axim-gold uppercase tracking-widest rounded-sm select-none">
                    <span className="w-1 h-1 rounded-full bg-axim-gold animate-pulse" />
                    [SSO_TICKET: GENERATED // SECURE]
@@ -121,6 +121,26 @@ export default function Games() {
               <button
                 onClick={() => handleLaunchGame('cyber_runner', 'https://axim.us.com/games/Cyber-Runner/')}
                 className="relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg bg-axim-purple text-white hover:bg-white hover:text-black w-full justify-center"
+              >
+                Play Now <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
+              </button>
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
+            <div className="group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden hover:border-axim-gold/30">
+              <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-gold to-yellow-600">
+                <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 flex items-center justify-between transition-colors group-hover:text-axim-gold">
+                Neon Chess
+              </h3>
+              <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6">
+                Tactical Web3 Chess. Think ahead, execute with precision, and earn rewards on-chain.
+              </p>
+
+              <button
+                onClick={() => handleLaunchGame('neon_chess', 'https://axim.us.com/games/neon-chess')}
+                className="relative z-10 inline-flex items-center px-6 py-3 font-black uppercase tracking-widest text-[0.65rem] transition-colors rounded-sm shadow-lg bg-axim-gold text-black hover:bg-white hover:text-black w-full justify-center"
               >
                 Play Now <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-3 h-3" />
               </button>
