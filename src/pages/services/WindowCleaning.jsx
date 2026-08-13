@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAximStore } from '../../store/useAximStore';
 import SEO from '../../components/SEO';
 import Reviews from '../../components/Reviews';
- '../../components/SEO';
 import { logTelemetry } from '../../lib/telemetry';
 import SafeIcon from '../../common/SafeIcon';
 import { LuCircleCheck, LuShieldCheck, LuDroplets, LuSun, LuWind, LuChevronDown, LuChevronUp } from 'react-icons/lu';
