@@ -111,6 +111,9 @@ export default function Footer() {
               </span>
             )}
             <div className="flex gap-4">
+               <a href="mailto:hello@axim.us.com" aria-label="Email AXiM" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'email' })}>
+                 <SafeIcon icon={LuIcons.LuMail} className="w-4 h-4" />
+               </a>
                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'x_twitter' })}>
                  <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
                </a>
@@ -139,9 +142,9 @@ export default function Footer() {
               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
             </h2>
             <ul className="space-y-4">
-              <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1">Demand Letter Engine <SafeIcon icon={LuIcons.LuArrowUpRight} className="w-3 h-3"/></a></li>
-              <li><Link to="/tools/nda-generator" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Mutual NDA Generator</Link></li>
-              <li><Link to="/tools/pay-stub" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pay Stub System</Link></li>
+              <li><Link to="/tools" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
+              <li><Link to="/tools" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Ground Game Canvassing</Link></li>
+              <li><Link to="/services/commercial-exterior" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Contracts</Link></li>
               <li><Link to="/tools" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Apps & Tools →</Link></li>
             </ul>
           </div>

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useAximStore } from '../../store/useAximStore';
 import SEO from '../../components/SEO';
 import Reviews from '../../components/Reviews';
- '../../components/SEO';
 import { logTelemetry } from '../../lib/telemetry';
 
 export default function CommercialExterior() {
