@@ -34,7 +34,7 @@ export default function CommercialExterior() {
         "@type": "Review",
         "author": { "@type": "Person", "name": "James R." },
         "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Exceptional commercial exterior cleaning for our corporate campus. They handled our multi-site contract with ease."
+        "reviewBody": "Exceptional telemetry tracking and edge performance. The ability to manage our entire canvassing network from one command center is invaluable."
       }
     ],
     "serviceType": "Enterprise Commercial Exterior & Facility Maintenance",

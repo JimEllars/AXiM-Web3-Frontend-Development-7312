@@ -40,7 +40,7 @@ export default function WindowCleaning() {
         "@type": "Review",
         "author": { "@type": "Person", "name": "Marcus V." },
         "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Phenomenal pure water window detailing. Streak-free clarity and completely professional execution."
+        "reviewBody": "The Nexus CRM and automated lead routing systems completely transformed our pipeline. Conversion rates are up 38% since onboarding."
       }
     ],
     "serviceType": "Window Cleaning",

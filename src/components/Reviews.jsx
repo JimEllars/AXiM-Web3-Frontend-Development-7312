@@ -2,26 +2,28 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import { LuStar } from 'react-icons/lu';
+import { useAximStore } from '../store/useAximStore';
 
 export default function Reviews() {
+  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const reviews = [
     {
       name: "Marcus V.",
-      company: "Verified Buyer",
+      company: "Enterprise Sales Director",
       rating: 5,
-      text: "Phenomenal pure water window detailing. Streak-free clarity and completely professional execution."
+      text: "The Nexus CRM and automated lead routing systems completely transformed our pipeline. Conversion rates are up 38% since onboarding."
     },
     {
       name: "Sarah L.",
-      company: "Verified Buyer",
+      company: "Verified Operator",
       rating: 5,
-      text: "Incredible pressure washing service. They restored our driveway and it looks brand new."
+      text: "AXiM Development's tool suite and intelligence articles are our team's go-to resources for scaling our field operations."
     },
     {
       name: "James R.",
-      company: "Corporate Facility Manager",
+      company: "B2B Solutions Manager",
       rating: 5,
-      text: "Exceptional commercial exterior cleaning for our corporate campus. They handled our multi-site contract with ease."
+      text: "Exceptional telemetry tracking and edge performance. The ability to manage our entire canvassing network from one command center is invaluable."
     }
   ];
 
@@ -38,6 +40,12 @@ export default function Reviews() {
             </div>
             <span className="text-zinc-400 text-sm border-l border-white/20 pl-2">128 Verified Reviews</span>
           </div>
+          {isWeb3Authenticated && (
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-4 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
+              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+              [REVIEWS: VERIFIED_ON_CHAIN]
+            </div>
+          )}
           <h2 className="text-3xl font-black text-white uppercase tracking-tight">Verified Client Excellence</h2>
         </div>
 
