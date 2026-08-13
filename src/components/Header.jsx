@@ -41,19 +41,12 @@ export default function Header() {
     setActiveDropdown(null);
   }, [location.pathname]);
 
-  // STRICT ORDERING: Apps & Tools -> Articles -> Partners -> Support
+  // STRICT ORDERING: Business -> Personal -> Articles -> Games -> Support
   const navLinks = [
-    {
-      name: 'Apps & Tools',
-      path: '/tools',
-      dropdown: [
-        { name: 'Mutual NDA Generator', path: '/tools/nda-generator', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
-        { name: 'Quick Demand Letter', path: 'https://quickdemandletter.com/start?via=axim_hub', icon: LuIcons.LuShieldCheck, color: 'text-axim-purple' },
-        { name: 'Pay Stub System', path: '/tools/pay-stub', icon: LuIcons.LuFileText, color: 'text-[#DB2777]' }
-      ]
-    },
+    { name: 'Business', path: '/business' },
+    { name: 'Personal', path: '/personal' },
     { name: 'Articles', path: '/articles' },
-
+    { name: 'Games', path: '/games' },
     { name: 'Support', path: '/support' }
   ];
 
@@ -170,9 +163,7 @@ export default function Header() {
               [AXIM_NODE: DEVELOPMENT_CORE_SYNCED]
             </span>
           )}
-          <Link to="/consultation" className="ml-4 px-6 py-2.5 bg-white/5 border border-[#004040]/40 text-white text-xs font-black uppercase whitespace-nowrap tracking-widest hover:bg-[#004040] hover:text-white hover:border-transparent transition-all duration-300 rounded-sm shadow-lg">
-            Consultation
-          </Link>
+
 
 
 
@@ -240,9 +231,7 @@ export default function Header() {
                   )}
                 </div>
               ))}
-              <Link to="/consultation" className="mt-4 w-full py-4 bg-[#004040] text-white text-center text-sm font-black uppercase tracking-widest rounded-sm shadow-[0_0_20px_rgba(0,64,64,0.4)]">
-                Book Consultation
-              </Link>
+
 
               <GlobalSearch />
           {isAuthenticated ? (

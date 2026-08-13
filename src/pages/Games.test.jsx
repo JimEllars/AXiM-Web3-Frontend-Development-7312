@@ -18,7 +18,7 @@ describe('Games Hub UI', () => {
     });
   });
 
-  it('renders Daily Word Cipher and Cyber Runner games', () => {
+  it('renders Daily Word Cipher, Cyber Runner, and Neon Chess games', () => {
     render(
       <HelmetProvider>
         <MemoryRouter>
@@ -29,6 +29,7 @@ describe('Games Hub UI', () => {
 
     expect(screen.getByText(/Daily Word Cipher/i)).toBeInTheDocument();
     expect(screen.getByText(/Cyber Runner/i)).toBeInTheDocument();
+    expect(screen.getByText(/Neon Chess/i)).toBeInTheDocument();
   });
 
   it('does NOT display [ON_CHAIN_SYNC: ACTIVE] when isWeb3Authenticated is false', () => {
