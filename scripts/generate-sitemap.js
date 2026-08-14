@@ -50,6 +50,7 @@ async function generateSitemap() {
     { route: '/', priority: '1.0', changefreq: 'daily' },
     { route: '/articles', priority: '0.8', changefreq: 'daily' },
     { route: '/business', priority: '0.8', changefreq: 'daily' },
+    { route: '/products/nexus-crm-course', priority: '0.8', changefreq: 'daily' },
     { route: '/personal', priority: '0.8', changefreq: 'daily' },
     { route: '/tools', priority: '0.8', changefreq: 'daily' },
     { route: '/tools/nda-generator', priority: '0.7', changefreq: 'monthly' },
