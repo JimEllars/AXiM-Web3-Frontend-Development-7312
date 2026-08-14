@@ -133,7 +133,8 @@ try {
             }
           } catch (supabaseErr) {
             success = false;
-            console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert completely failed', supabaseErr);
+            console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message);
+            return;
           }
 
           // Dispatch a mock success to keep UI functional and prevent infinite queues if worker is offline
@@ -158,8 +159,8 @@ try {
       batchQueue = [...currentBatch, ...batchQueue];
     }
   } catch (err) {
-    // Fail silently, preserving cache for next sync
-    batchQueue = [...currentBatch, ...batchQueue];
+    console.warn("[TELEMETRY] Sync failed silently.", err.message);
+    return;
   } finally {
     isFlushing = false;
   }

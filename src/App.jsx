@@ -45,6 +45,7 @@ const Services = lazy(() => import('./pages/Services'));
 const WindowCleaning = lazy(() => import('./pages/services/WindowCleaning'));
 const PressureWashing = lazy(() => import('./pages/services/PressureWashing'));
 const Games = lazy(() => import('./pages/Games'));
+const AI = lazy(() => import('./pages/AI'));
 const Store = lazy(() => import('./pages/Store'));
 const Business = lazy(() => import('./pages/Business'));
 const Personal = lazy(() => import('./pages/Personal'));
