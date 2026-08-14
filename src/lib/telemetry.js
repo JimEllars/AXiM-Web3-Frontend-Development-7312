@@ -1,4 +1,5 @@
 import { useAximStore } from '../store/useAximStore';
+import { supabase } from '../lib/supabase';
 
 let isFlushing = false;
 let batchQueue = []; // In-memory queue for dispatching batches
@@ -91,7 +92,7 @@ export async function flushTelemetryQueue(force = false) {
         const blob = new Blob([payload], { type: 'application/json' });
         success = window.navigator.sendBeacon(endpoint, blob);
       } else if (window.fetch) {
-        try {
+try {
           const fetchPromise = fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -119,8 +120,22 @@ export async function flushTelemetryQueue(force = false) {
             success = false;
           }
         } catch (fetchErr) {
-          // Fall back gracefully to mock real-time metrics without throwing unhandled promise rejections
-          success = false;
+          console.warn("Edge telemetry failed, falling back to direct Supabase insert", fetchErr);
+
+          try {
+            const { error } = await supabase.from('telemetry_events').insert(currentBatch);
+            if (!error) {
+               success = true;
+               console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
+            } else {
+               success = false;
+               console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error);
+            }
+          } catch (supabaseErr) {
+            success = false;
+            console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert completely failed', supabaseErr);
+          }
+
           // Dispatch a mock success to keep UI functional and prevent infinite queues if worker is offline
           window.dispatchEvent(new window.CustomEvent('axim-telemetry-fallback-sync', { detail: { count: currentBatch.length } }));
         }

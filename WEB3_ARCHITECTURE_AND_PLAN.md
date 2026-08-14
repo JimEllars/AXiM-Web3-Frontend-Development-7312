@@ -46,3 +46,6 @@ The AXiM Web3 frontend currently utilizes modern React (v18) built with Vite, Ta
 
 ## 4. Removed Legacy Dependencies
 *   **Quest Labs SDK**: Removed to mitigate security risks associated with hardcoded tokens and to ensure a cleaner architecture relying purely on Thirdweb for Web3 capabilities. Legacy `Feedback` and `SDKWrapper` components were successfully deprecated and purged from the codebase.
+
+## Sprint Log
+* Sprint 1.14: Added GitHub Actions CI/CD safety net and implemented a direct Supabase fallback for telemetry while DNS resolves.
