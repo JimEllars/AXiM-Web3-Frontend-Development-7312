@@ -45,13 +45,13 @@ export default function Store() {
             onClick={handleWaitlistClick}
             className="w-full relative z-10 inline-flex items-center justify-center px-6 py-4 font-black uppercase tracking-widest text-sm transition-colors rounded-sm border border-axim-purple/50 bg-axim-purple/20 text-white hover:bg-axim-purple hover:text-white"
           >
-            Enter Pre-Sale Waitlist
+            Join the Waitlist
           </button>
 
           {isWeb3Authenticated && (
             <div className="mt-6 font-mono text-[10px] text-axim-purple uppercase tracking-widest border border-axim-purple/30 bg-axim-purple/10 px-3 py-1 inline-flex items-center gap-2 rounded-sm select-none">
               <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
-              [WEB3: STORE_WHITELISTED]
+              [WEB3: WAITLIST_VERIFIED]
             </div>
           )}
         </div>

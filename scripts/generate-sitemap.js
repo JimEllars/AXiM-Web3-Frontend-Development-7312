@@ -57,6 +57,7 @@ async function generateSitemap() {
     { route: '/tools/nda-generator', priority: '0.7', changefreq: 'monthly' },
     { route: '/tools/pay-stub', priority: '0.7', changefreq: 'monthly' },
     { route: '/games', priority: '0.6', changefreq: 'weekly' },
+    { route: '/ai', priority: '0.8', changefreq: 'daily' },
     { route: '/consultation', priority: '0.8', changefreq: 'daily' },
     { route: '/support', priority: '0.8', changefreq: 'daily' },
     { route: '/terms', priority: '0.8', changefreq: 'daily' },
