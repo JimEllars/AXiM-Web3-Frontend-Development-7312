@@ -235,6 +235,7 @@ function App() {
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
+            <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
             <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
             <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
             <Route path="/tools/pay-stub" element={<PageTransition><PayStubLanding /></PageTransition>} />
