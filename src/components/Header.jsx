@@ -47,6 +47,7 @@ export default function Header() {
     { name: 'Personal', path: '/personal' },
     { name: 'Articles', path: '/articles' },
     { name: 'Games', path: '/games' },
+    { name: 'Store', path: '/store' },
     { name: 'Support', path: '/support' }
   ];
 

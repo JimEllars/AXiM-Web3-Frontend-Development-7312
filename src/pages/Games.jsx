@@ -172,17 +172,13 @@ export default function Games() {
               <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
                 In-game assets, skins, and operator IDs.
               </p>
-              <button
-                onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'The Gaming Store' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
-                }}
+              <Link
+                to="/store"
+                onClick={() => logTelemetry('store_marketplace_entered', { source: 'Games Hub' })}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
               >
-                Join Waitlist
-              </button>
+                Enter Marketplace
+              </Link>
             </div>
 
             {/* Game Economics Masterclass Card */}
@@ -237,17 +233,13 @@ export default function Games() {
               <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
                 In-game assets, skins, and operator IDs.
               </p>
-              <button
-                onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'The Gaming Store' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
-                }}
+              <Link
+                to="/store"
+                onClick={() => logTelemetry('store_marketplace_entered', { source: 'Games Hub' })}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
               >
-                Join Waitlist
-              </button>
+                Enter Marketplace
+              </Link>
             </div>
 
             {/* Game Economics Masterclass Card */}

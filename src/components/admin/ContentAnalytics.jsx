@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { useAximStore } from '../../store/useAximStore.js';
 import { getTelemetryStore } from '../../lib/telemetry';
 
 
@@ -34,6 +35,7 @@ function AnimatedCounter({ value, prefix = '', suffix = '' }) {
 export default function ContentAnalytics() {
   const [logs, setLogs] = useState(getTelemetryStore());
   const [isLoading, setIsLoading] = useState(true);
+  const telemetryCollection = useAximStore((state) => state.telemetryCollection);
 
   useEffect(() => {
     // Simulate loading for skeleton loader demonstration
@@ -58,7 +60,7 @@ export default function ContentAnalytics() {
       if (selectedChannel === 'Make.com' && partner.toLowerCase().includes('make')) return true;
       return false;
     });
-  }, [logs, selectedChannel]);
+  }, [logs, selectedChannel, telemetryCollection]);
 
 
   const totalLeadsCaptured = useMemo(() => filteredLogs.filter(log => ['service_quote_requested', 'invite_access_requested', 'consultation_lead_submitted'].includes(log.type)).length, [filteredLogs]);
