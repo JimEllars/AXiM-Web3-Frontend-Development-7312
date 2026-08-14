@@ -68,7 +68,7 @@ export default function Games() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4 flex items-center justify-center gap-4">
-              Web3 <span className="text-axim-green">Games Directory</span>
+              <span className="text-axim-green">Gaming Development Hub</span>
               {(isHandoffActive && isWeb3Authenticated) && (
                  <span className="ml-3 inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-gold/10 border border-axim-gold/30 font-mono text-[8px] text-axim-gold uppercase tracking-widest rounded-sm select-none">
                    <span className="w-1 h-1 rounded-full bg-axim-gold animate-pulse" />
@@ -146,6 +146,136 @@ export default function Games() {
               </button>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+
+      {/* Future Integrations Section */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
+        <div className="relative pt-8 mt-12 border-t border-white/5">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-axim-green border border-axim-green/30 px-2 py-1 rounded-sm bg-axim-green/5">
+              Future Integrations
+            </span>
+          </div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* The Gaming Store Card */}
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
+                [COMING SOON]
+              </div>
+              <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-green to-emerald-600">
+                <SafeIcon icon={LuIcons.LuStore} className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 group-hover:text-axim-green transition-colors">The Gaming Store</h3>
+              <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
+                In-game assets, skins, and operator IDs.
+              </p>
+              <button
+                onClick={() => {
+                  logTelemetry('web3_early_access_intent', { module: 'The Gaming Store' });
+                  if (isWeb3Authenticated) {
+                    console.log("[AXIM_NODE] Wallet queued for early access.");
+                  }
+                }}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
+              >
+                Join Waitlist
+              </button>
+            </div>
+
+            {/* Game Economics Masterclass Card */}
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
+                [COMING SOON]
+              </div>
+              <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-green to-emerald-600">
+                <SafeIcon icon={LuIcons.LuGraduationCap} className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 group-hover:text-axim-green transition-colors">Game Economics Masterclass</h3>
+              <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
+                Course on building sustainable play-to-earn ecosystems.
+              </p>
+              <button
+                onClick={() => {
+                  logTelemetry('web3_early_access_intent', { module: 'Game Economics Masterclass' });
+                  if (isWeb3Authenticated) {
+                    console.log("[AXIM_NODE] Wallet queued for early access.");
+                  }
+                }}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
+              >
+                Join Waitlist
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      {/* Future Integrations Section */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
+        <div className="relative pt-8 mt-12 border-t border-white/5">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-axim-green border border-axim-green/30 px-2 py-1 rounded-sm bg-axim-green/5">
+              Future Integrations
+            </span>
+          </div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* The Gaming Store Card */}
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
+                [COMING SOON]
+              </div>
+              <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-green to-emerald-600">
+                <SafeIcon icon={LuIcons.LuStore} className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 group-hover:text-axim-green transition-colors">The Gaming Store</h3>
+              <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
+                In-game assets, skins, and operator IDs.
+              </p>
+              <button
+                onClick={() => {
+                  logTelemetry('web3_early_access_intent', { module: 'The Gaming Store' });
+                  if (isWeb3Authenticated) {
+                    console.log("[AXIM_NODE] Wallet queued for early access.");
+                  }
+                }}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
+              >
+                Join Waitlist
+              </button>
+            </div>
+
+            {/* Game Economics Masterclass Card */}
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
+                [COMING SOON]
+              </div>
+              <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-green to-emerald-600">
+                <SafeIcon icon={LuIcons.LuGraduationCap} className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 group-hover:text-axim-green transition-colors">Game Economics Masterclass</h3>
+              <p className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed line-clamp-3 mb-6 flex-grow">
+                Course on building sustainable play-to-earn ecosystems.
+              </p>
+              <button
+                onClick={() => {
+                  logTelemetry('web3_early_access_intent', { module: 'Game Economics Masterclass' });
+                  if (isWeb3Authenticated) {
+                    console.log("[AXIM_NODE] Wallet queued for early access.");
+                  }
+                }}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-green/30 bg-axim-green/10 text-axim-green hover:bg-axim-green hover:text-black mt-auto"
+              >
+                Join Waitlist
+              </button>
+            </div>
+
+          </div>
         </div>
       </section>
 
