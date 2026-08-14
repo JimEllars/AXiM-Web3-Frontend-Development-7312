@@ -35,6 +35,7 @@ const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 import Article from './pages/Article';
+import NexusCrmCourse from './pages/products/NexusCrmCourse';
 const PayStubLanding = lazy(() => import('./pages/tools/PayStubLanding'));
 const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
@@ -229,7 +230,8 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
-            <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
+<Route path="/products/nexus-crm-course" element={<PageTransition><NexusCrmCourse /></PageTransition>} />
+                        <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
