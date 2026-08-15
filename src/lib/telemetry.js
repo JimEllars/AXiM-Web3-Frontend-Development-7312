@@ -53,6 +53,18 @@ export function logTelemetry(type, payload) {
     event.sessionId = newSessionId;
   }
 
+
+  const MAKE_WEBHOOK_URL = import.meta.env?.VITE_MAKE_AUTOMATION_WEBHOOK || null;
+  const HIGH_VALUE_EVENTS = ['vip_consultation_requested', 'store_waitlist_intent', 'checkout_intent'];
+
+  if (HIGH_VALUE_EVENTS.includes(type) && MAKE_WEBHOOK_URL) {
+    fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: type, payload, timestamp: event.timestamp })
+    }).catch(err => console.warn("[WEBHOOK] Make.com Forwarding Failed silently."));
+  }
+
   useAximStore.getState().logTelemetryEvent(event);
   batchQueue.push(event);
 

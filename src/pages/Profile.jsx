@@ -143,6 +143,16 @@ const [extractingId, setExtractingId] = useState(null);
                     )}
                   </div>
                 )}
+
+                {isWeb3Authenticated && (
+                  <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 font-mono text-[10px] text-blue-400 uppercase tracking-widest rounded-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                      [AUTOMATION_WEBHOOK: Make.com // SECURE_SOCKET_READY]
+                    </div>
+                  </div>
+                )}
+
               </div>
             )}
 
