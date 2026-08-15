@@ -31,12 +31,10 @@ const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AuthGateway = lazy(() => import('./pages/AuthGateway'));
-const NdaGeneratorLanding = lazy(() => import('./pages/tools/NdaGeneratorLanding'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 import Article from './pages/Article';
 import NexusCrmCourse from './pages/products/NexusCrmCourse';
-const PayStubLanding = lazy(() => import('./pages/tools/PayStubLanding'));
 const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
 const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
@@ -238,8 +236,6 @@ function App() {
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
             <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
-            <Route path="/tools/nda-generator" element={<PageTransition><NdaGeneratorLanding /></PageTransition>} />
-            <Route path="/tools/pay-stub" element={<PageTransition><PayStubLanding /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />
             <Route path="/partners/powur-solar" element={<PageTransition><PowurSolarLanding /></PageTransition>} />
