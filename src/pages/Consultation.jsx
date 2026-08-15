@@ -92,7 +92,7 @@ export default function Consultation() {
 
       // 2. Async Telemetry (Non-Blocking)
       logTelemetry('consultation_booking_initiated', { serviceType: cleanData.inquiryType || 'general_consultation' });
-      logTelemetry('consultation_requested', { category: cleanData.inquiryType });
+      logTelemetry('vip_consultation_requested', { ...cleanData });
 
       const workerUrl = import.meta.env.VITE_AXIM_CORE_API_URL;
       const secret = import.meta.env.VITE_AXIM_CORE_ANON_KEY;
