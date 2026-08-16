@@ -199,6 +199,12 @@ const [extractingId, setExtractingId] = useState(null);
               Recent On-Chain Activity
             </button>
           )}
+          <button
+            onClick={() => { setActiveTab('settings'); logTelemetry('profile_tab_switch', { activeTab: 'settings' }); }}
+            className={`pb-4 text-xs font-black uppercase tracking-widest transition-colors whitespace-nowrap ${activeTab === 'settings' ? 'text-fuchsia-400 border-b-2 border-fuchsia-400' : 'text-zinc-500 hover:text-white border-b-2 border-transparent'}`}
+          >
+            Settings
+          </button>
         </div>
 
         {/* Enterprise Tools Section */}
@@ -306,6 +312,18 @@ const [extractingId, setExtractingId] = useState(null);
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Tab 4: Settings */}
+        {activeTab === 'settings' && (
+          <div className="animate-fade-in">
+            {isWeb3Authenticated && (
+              <div className="mt-4 p-3 bg-fuchsia-500/10 border border-fuchsia-500/30 font-mono text-[10px] text-fuchsia-400 uppercase tracking-widest rounded-sm flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
+                [ON_CHAIN_SEO: CANONICAL_HASH_ENCRYPTED]
+              </div>
+            )}
           </div>
         )}
       </section>

@@ -52,7 +52,6 @@ async function generateSitemap() {
     { route: '/business', priority: '0.8', changefreq: 'daily' },
     { route: '/products/nexus-crm-course', priority: '0.8', changefreq: 'daily' },
     { route: '/personal', priority: '0.8', changefreq: 'daily' },
-    { route: '/tools', priority: '0.8', changefreq: 'daily' },
     { route: '/store', priority: '0.8', changefreq: 'daily' },
     { route: '/games', priority: '0.6', changefreq: 'weekly' },
     { route: '/ai', priority: '0.8', changefreq: 'daily' },

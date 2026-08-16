@@ -23,7 +23,7 @@ import Toast from './components/Toast';
 
 const Home = lazy(() => import('./pages/Home'));
 const Articles = lazy(() => import('./pages/Articles'));
-const Tools = lazy(() => import('./pages/Tools'));
+
 const Consultation = lazy(() => import('./pages/Consultation'));
 const Support = lazy(() => import('./pages/Support'));
 const Partners = lazy(() => import('./pages/Partners'));
@@ -232,7 +232,6 @@ function App() {
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
 <Route path="/products/nexus-crm-course" element={<PageTransition><NexusCrmCourse /></PageTransition>} />
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
-            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
             <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
