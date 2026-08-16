@@ -55,6 +55,7 @@ async function generateSitemap() {
     { route: '/store', priority: '0.8', changefreq: 'daily' },
     { route: '/games', priority: '0.6', changefreq: 'weekly' },
     { route: '/ai', priority: '0.8', changefreq: 'daily' },
+    { route: '/tech', priority: '0.9', changefreq: 'weekly' },
     { route: '/consultation', priority: '0.8', changefreq: 'daily' },
     { route: '/support', priority: '0.8', changefreq: 'daily' },
     { route: '/terms', priority: '0.8', changefreq: 'daily' },
