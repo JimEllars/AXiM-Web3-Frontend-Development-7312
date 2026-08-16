@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useAximStore } from '../store/useAximStore';
 import SEO from '../components/SEO';
 import Reviews from '../components/Reviews';
- '../components/SEO';
 import { logTelemetry } from '../lib/telemetry';
 import { LuDroplets, LuSun, LuWind, LuBuilding2, LuTrendingUp, LuZap } from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';

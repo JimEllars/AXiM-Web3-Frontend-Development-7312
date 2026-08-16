@@ -56,6 +56,9 @@ export default function Consultation() {
       preselectedInquiry = 'Ground Game Canvassing Access';
     } else if (appParam === 'recruitflow') {
       preselectedInquiry = 'RecruitFlow Talent Operations';
+    } else if (params.get('pillar') === 'personal' || params.get('module')) {
+      const moduleName = params.get('module') || 'Personal Growth Framework';
+      preselectedInquiry = `Personal Development: ${moduleName}`;
     } else if (serviceParam === 'commercial_exterior') {
       preselectedInquiry = 'Commercial Exterior Maintenance';
     }
@@ -69,6 +72,11 @@ export default function Consultation() {
 
 
   const inquiryCategories = [
+  {
+    id: 'Personal Development & Growth',
+    icon: LuIcons.LuBrain,
+    desc: 'Purpose alignment, operational mindset, and life-strategy frameworks.'
+  },
     { id: 'Tech Infrastructure', icon: LuIcons.LuNetwork, desc: 'Decentralized systems, automation, and AI integrations.' },
     { id: 'Sales & Leadership Training', icon: LuIcons.LuTrendingUp, desc: 'Organizational scaling and operator protocol training.' },
     { id: 'Media Inquiry', icon: LuIcons.LuMic, desc: 'Press, interviews, and media asset requests.' },
