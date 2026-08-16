@@ -40,6 +40,13 @@ export default function Business() {
             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500">
               AXiM Business<br />Development Engine
             </h1>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 font-mono text-[10px] text-axim-purple uppercase tracking-widest rounded-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [BUSINESS_NODE: SALES_ENGINE_VERIFIED]
+            </div>
+          )}
+
             <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto font-medium">
               Scaling enterprise revenue and B2B systems. Access our suite of commercial services, intelligence articles, and dedicated apps & tools.
             </p>
@@ -146,57 +153,6 @@ export default function Business() {
 
           </div>
         </div>
-
-        {/* Digital Offerings & Training Section */}
-        <div className="relative pt-8 mt-12 border-t border-white/5">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Digital Offerings & Training
-            </span>
-          </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            {/* Nexus CRM Certification Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-              <SafeIcon icon={LuIcons.LuBadgeCheck} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Nexus CRM Certification</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Focus on automated routing mastery.</p>
-              <Link
-                to="/products/nexus-crm-course"
-                onClick={() => logTelemetry('course_view_intent', { course: 'nexus_crm' })}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
-              >
-                View Course Details →
-              </Link>
-            </div>
-
-            {/* Financial Prospect Scaling Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [IN DEVELOPMENT]
-              </div>
-              <SafeIcon icon={LuIcons.LuTrendingUp} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Financial Prospect Scaling</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Focus on improving financial metrics.</p>
-              <button
-                onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'Financial Prospect Scaling' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
-                }}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
-              >
-                Join Waitlist
-              </button>
-            </div>
-
-          </div>
-        </div>
-
 
         {/* Digital Offerings & Training Section */}
         <div className="relative pt-8 mt-12 border-t border-white/5">
