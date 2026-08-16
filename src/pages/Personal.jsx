@@ -41,10 +41,10 @@ export default function Personal() {
               Personal Development<br />& Growth Systems
             </h1>
           {isWeb3Authenticated && (
-            <div className="mt-4 inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 font-mono text-[10px] text-axim-purple uppercase tracking-widest rounded-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
-              [PERSONAL_NODE: GROWTH_FRAMEWORK_ACTIVE]
-            </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-4 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
+           <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+           [PERSONAL_NODE: GROWTH_FRAMEWORK_VERIFIED]
+         </div>
           )}
 
             <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto font-medium">
@@ -57,7 +57,7 @@ export default function Personal() {
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Property & Home Services Card */}
-          <Link to="/services" className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
+          <Link to="/services" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'property_home' })} className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuHouse} className="w-8 h-8 text-emerald-500 mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Property & Home</h2>
@@ -69,7 +69,7 @@ export default function Personal() {
           </Link>
 
           {/* Individual Utilities Card */}
-          <Link to="/tools/nda-generator" className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
+          <Link to="/tools/nda-generator" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-emerald-500 mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Individual Utilities</h2>
@@ -81,7 +81,7 @@ export default function Personal() {
           </Link>
 
           {/* Growth Frameworks Card */}
-          <Link to="/articles" className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
+          <Link to="/articles" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'growth_frameworks' })} className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuBookOpen} className="w-8 h-8 text-emerald-500 mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Growth Frameworks</h2>
@@ -113,10 +113,8 @@ export default function Personal() {
               <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Masterclass on dealing with corporate anxiety and owning your achievements.</p>
               <button
                 onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'Overcoming Imposter Syndrome' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
+                  logTelemetry('growth_module_intent', { module: 'imposter_syndrome' });
+                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
                 }}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
               >
@@ -135,10 +133,8 @@ export default function Personal() {
               <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Interactive assessment to discover your operational strengths and weaknesses.</p>
               <button
                 onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'Core Personality Type Quiz' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
+                  logTelemetry('growth_module_intent', { module: 'personality_quiz' });
+                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
                 }}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
               >
@@ -157,10 +153,8 @@ export default function Personal() {
               <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Audio/text module for self-alignment and mental recalibration.</p>
               <button
                 onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'Inner Voice Calibration' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
+                  logTelemetry('growth_module_intent', { module: 'inner_voice' });
+                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
                 }}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
               >
