@@ -1,6 +1,6 @@
 import React, {  useState , useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
@@ -41,6 +41,32 @@ export default function Consultation() {
   const [networkFault, setNetworkFault] = useState(false);
   const [formData, setFormData] = useState({ inquiryType: '', name: '', email: '', company: '', details: '' });
   const { isWeb3Authenticated, walletAddress } = useAximStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const appParam = params.get('app');
+    const serviceParam = params.get('service');
+
+    let preselectedInquiry = null;
+
+    if (appParam === 'nexus_crm') {
+      preselectedInquiry = 'Nexus CRM Enterprise Access';
+    } else if (appParam === 'ground_game') {
+      preselectedInquiry = 'Ground Game Canvassing Access';
+    } else if (appParam === 'recruitflow') {
+      preselectedInquiry = 'RecruitFlow Talent Operations';
+    } else if (serviceParam === 'commercial_exterior') {
+      preselectedInquiry = 'Commercial Exterior Maintenance';
+    }
+
+    if (preselectedInquiry) {
+      setFormData(prev => ({ ...prev, inquiryType: preselectedInquiry }));
+      setStep(2);
+      logTelemetry('consultation_query_param_ingested', { app: appParam, service: serviceParam, step: 2 });
+    }
+  }, [location.search]);
+
 
   const inquiryCategories = [
     { id: 'Tech Infrastructure', icon: LuIcons.LuNetwork, desc: 'Decentralized systems, automation, and AI integrations.' },

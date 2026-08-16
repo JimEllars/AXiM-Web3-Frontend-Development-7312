@@ -28,9 +28,30 @@ const SkeletonCard = ({ isHero = false }) => (
 export default function Articles() {
   const { isWeb3Authenticated, walletAddress } = useAximStore();
   const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [] });
+  const [activeFilter, setActiveFilter] = useState('All Articles');
   const [leadStory, setLeadStory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeFilter, setActiveFilter] = useState('All briefings');
+  // Helper to filter articles by category pill
+  const filterArticles = (articles) => {
+    if (activeFilter === 'All Articles') return articles;
+    return articles.filter(article => {
+      const title = (article?.title?.rendered || article?.title || '').toLowerCase();
+      const tags = (article?.tags || []).join(' ').toLowerCase();
+      const term = activeFilter.toLowerCase();
+
+      if (term.includes('business')) return title.includes('business') || tags.includes('business');
+      if (term.includes('personal')) return title.includes('personal') || tags.includes('personal');
+      if (term.includes('tech')) return title.includes('tech') || tags.includes('tech');
+      return false;
+    });
+  };
+
+  const filteredDailyNews = filterArticles(catData.dailyNews);
+  const filteredFeatured = filterArticles(catData.featured);
+  const filteredAppSpotlight = filterArticles(catData.appSpotlight);
+  const filteredLeadStory = leadStory && filterArticles([leadStory]).length > 0 ? leadStory : null;
+
+
 
   useEffect(() => {
     let isMounted = true;
@@ -170,7 +191,7 @@ export default function Articles() {
       {/* Filter Pill-Bar for Articles */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
         <div className="flex flex-wrap gap-3 justify-center">
-          {['All briefings', 'News & Articles', 'Featured', 'Software Spotlight'].map(filter => (
+          {['All Articles', 'Business Development', 'Personal Development', 'Tech Development'].map(filter => (
             <button
               key={filter}
               onClick={() => {
@@ -192,7 +213,7 @@ export default function Articles() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
 
         {/* Section 0: Daily News */}
-        {(leadStory || catData.dailyNews.length > 0) && (activeFilter === 'All briefings' || activeFilter === 'News & Articles') && (
+        {(filteredLeadStory || filteredDailyNews.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <div>
@@ -218,12 +239,12 @@ export default function Articles() {
                  </>
               ) : (
                  <>
-                   {leadStory && (
-                     <ArticleCard key={leadStory.id} article={leadStory} isHero={true} priority={true} />
+                   {filteredLeadStory && (
+                     <ArticleCard key={leadStory.id} article={filteredLeadStory} isHero={true} priority={true} />
                    )}
-                   {catData.dailyNews.length > 0 && (
+                   {filteredDailyNews.length > 0 && (
                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                       {catData.dailyNews.map((article) => (
+                       {filteredDailyNews.map((article) => (
                          <ArticleCard key={article.id} article={article} />
                        ))}
                      </div>
@@ -235,7 +256,7 @@ export default function Articles() {
         )}
 
         {/* Section 1: Featured Articles */}
-        {(activeFilter === 'All briefings' || activeFilter === 'Featured') && (
+        {(!isLoading && filteredFeatured.length > 0) && (
         <section>
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
             <div>
@@ -257,7 +278,7 @@ export default function Articles() {
                  <SkeletonCard />
                </>
             ) : (
-               catData.featured.map((article, idx) => (
+               filteredFeatured.map((article, idx) => (
                  <ArticleCard key={article.id} article={article} isHero={idx === 0} />
                ))
             )}
@@ -266,10 +287,10 @@ export default function Articles() {
         )}
 
         {/* Section 2: App Spotlight (Software Spotlight) */}
-        {(!isLoading || catData.appSpotlight.length > 0) && (activeFilter === 'All briefings' || activeFilter === 'Software Spotlight') && (
+        {(!isLoading && filteredAppSpotlight.length > 0) && (
           <motion.section
             onViewportEnter={() => {
-              logTelemetry('articles_page_spotlight_impression', { count: catData.appSpotlight?.length || 0 });
+              logTelemetry('articles_page_spotlight_impression', { count: filteredAppSpotlight?.length || 0 });
             }}
             viewport={{ once: true, amount: 0.2 }}
           >
@@ -295,7 +316,7 @@ export default function Articles() {
                 </>
               ) : (
                 <>
-                  {catData.appSpotlight.slice(0, 4).map((article, index) => (
+                  {filteredAppSpotlight.slice(0, 4).map((article, index) => (
                     <ArticleCard article={article} index={index} key={article.id || index} />
                   ))}
                 </>
