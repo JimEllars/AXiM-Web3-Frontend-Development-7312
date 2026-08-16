@@ -59,14 +59,14 @@ export default function Header() {
     <>
 
       <header
-      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+      className={`sticky top-0 w-full z-[60] transition-all duration-300 ${
         isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-[#004040]/30 py-4 md:py-5' : 'bg-transparent py-6 md:py-7'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between gap-4 items-center">
 
         {/* Brand Logo Integration - White PNG */}
-        <Link to="/" className="flex items-center gap-3 group z-50 flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
+        <Link to="/" className="flex items-center gap-3 group z-[60] flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
           <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
         </Link>
 
@@ -174,7 +174,7 @@ export default function Header() {
           <GlobalSearch />
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden relative z-50 p-2 text-zinc-400 hover:text-[#004040] transition-colors"
+          className="md:hidden relative z-[60] p-2 text-zinc-400 hover:text-[#004040] transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle Menu"
         >

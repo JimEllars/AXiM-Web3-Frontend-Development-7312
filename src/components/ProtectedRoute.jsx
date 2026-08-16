@@ -8,6 +8,7 @@ import GlobalLoader from './GlobalLoader';
 export default function ProtectedRoute({ children }) {
   const { session, isLoading } = useAximAuth();
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const isWeb3Connecting = useAximStore((state) => state.isWeb3Connecting); // assuming we can check this, or we just rely on isLoading
   const location = useLocation();
 
   const isAuthenticated = session || isWeb3Authenticated;

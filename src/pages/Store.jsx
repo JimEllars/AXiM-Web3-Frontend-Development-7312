@@ -26,7 +26,7 @@ export default function Store() {
         {/* Background effects */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-axim-purple/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="bg-[#050505] border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative z-10 flex flex-col items-center text-center">
+        <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 md:p-12 rounded-lg shadow-2xl relative z-10 flex flex-col items-center text-center">
 
           <div className="mb-6 inline-flex font-mono text-[10px] text-axim-gold uppercase tracking-widest border border-axim-gold/30 bg-axim-gold/10 px-3 py-1 items-center gap-2 rounded-sm select-none">
             <span className="w-1.5 h-1.5 rounded-full bg-axim-gold animate-pulse" />

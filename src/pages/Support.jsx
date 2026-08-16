@@ -439,7 +439,7 @@ export default function Support() {
                 <div
                   key={idx}
                   onClick={() => logTelemetry('support_faq_clicked', { question: faq.q })}
-                  className="bg-black border border-white/10 p-6 rounded-sm hover:border-axim-gold/50 transition-colors shadow-lg cursor-pointer"
+                  className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg hover:border-axim-gold/50 transition-colors shadow-lg cursor-pointer"
                 >
                   <h4 className="text-sm font-bold text-white mb-2">{faq.q}</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed">
@@ -469,7 +469,7 @@ export default function Support() {
                     logTelemetry('support_wiki_category_click', { title: wiki.title });
                     showToast(`${wiki.title} documentation module coming soon.`, 'info');
                   }}
-                  className="group cursor-pointer bg-[#0F172A] border border-white/5 p-6 rounded-sm hover:border-axim-purple/50 transition-colors shadow-lg relative overflow-hidden"
+                  className="group cursor-pointer bg-onyx-900/40 backdrop-blur-md border border-white/5 p-6 rounded-lg hover:border-axim-purple/50 transition-colors shadow-lg relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-16 h-16 bg-axim-purple/5 group-hover:bg-axim-purple/10 transition-colors blur-xl rounded-full" />
                   <SafeIcon
