@@ -40,6 +40,13 @@ export default function Personal() {
             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500">
               Personal Development<br />& Growth Systems
             </h1>
+          {isWeb3Authenticated && (
+            <div className="mt-4 inline-flex items-center gap-1.5 px-2.5 py-1 bg-axim-purple/10 border border-axim-purple/30 font-mono text-[10px] text-axim-purple uppercase tracking-widest rounded-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />
+              [PERSONAL_NODE: GROWTH_FRAMEWORK_ACTIVE]
+            </div>
+          )}
+
             <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto font-medium">
               Maximizing individual efficiency and property value. Explore our residential services, utility apps, and personal growth frameworks.
             </p>

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 const DEFAULT_SOCIAL_IMAGE = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
 
 export default function SEO({
-  title = "AXiM Business Development | Work Smarter",
+  title = "AXiM Development",
   description = "Articles, AXiM Apps & Tools, & Learning Systems engineered to eliminate operational friction and scale enterprise revenue.",
   image,
   type = "website",

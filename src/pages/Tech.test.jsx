@@ -29,7 +29,7 @@ describe('Tech Hub Page', () => {
     expect(screen.getByText(/Technical Backbone/i)).toBeDefined();
 
     // Verify Web3 Badge
-    expect(screen.getByText(/\[TECH_NODE: INFRASTRUCTURE_BACKBONE_ACTIVE\]/i)).toBeDefined();
+    expect(screen.getAllByText(/\[TECH_NODE: INFRASTRUCTURE_BACKBONE_ACTIVE\]/i).length).toBeGreaterThan(0);
 
     // Verify Sections
     expect(screen.getByText(/Enterprise Applications & Infrastructure/i)).toBeDefined();

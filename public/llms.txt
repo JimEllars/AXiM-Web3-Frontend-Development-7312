@@ -1,6 +1,11 @@
-# AXiM Systems
+# AXiM Development Knowledge Base
 
-> AXiM Systems provides practical automation, decentralized infrastructure, operational intelligence, and business tools.
+> AXiM Development provides practical automation, decentralized infrastructure, operational intelligence, and business tools.
+
+### Core Pillars
+- **Business Development**: Enterprise sales systems, workforce operations, B2B services.
+- **Personal Development**: Purpose discovery, life frameworks, property/home services.
+- **Tech Development**: Software backbone, AI pipelines, cognitive tools, and interactive games.
 
 ## Canonical resources
 - [AXiM Hub Homepage](https://axim.us.com/)

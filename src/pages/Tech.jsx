@@ -32,6 +32,8 @@ export default function Tech() {
           Engineering the <span className='text-axim-gold'>Technical Backbone</span>
         </h1>
 
+
+
         {isWeb3Authenticated && (
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-4 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none relative z-10">
             <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
@@ -56,7 +58,7 @@ export default function Tech() {
                 <span className="text-[8px] font-mono text-yellow-500 border border-yellow-500/30 bg-yellow-500/10 px-1 py-0.5 rounded-sm">[INVITE ONLY]</span>
               </h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Core operating system for distributed network management.</p>
-              <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'Nexus CRM' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</button>
+              <Link to="/consultation?app=nexus_crm" onClick={() => logTelemetry('app_access_intent', { app: 'nexus_crm', accessType: 'invite_only' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</Link>
             </div>
 
             <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
@@ -65,7 +67,7 @@ export default function Tech() {
                 <span className="text-[8px] font-mono text-yellow-500 border border-yellow-500/30 bg-yellow-500/10 px-1 py-0.5 rounded-sm">[INVITE ONLY]</span>
               </h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Geospatial territory management and field operations toolkit.</p>
-              <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'Ground Game Canvassing' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</button>
+              <Link to="/consultation?app=ground_game" onClick={() => logTelemetry('app_access_intent', { app: 'ground_game', accessType: 'invite_only' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</Link>
             </div>
 
             <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
