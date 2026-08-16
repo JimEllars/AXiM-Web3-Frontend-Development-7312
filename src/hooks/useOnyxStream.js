@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useAximStore } from '../store/useAximStore';
 import { useAximAuth } from './useAximAuth';
+import DOMPurify from 'isomorphic-dompurify';
 
 export function useOnyxStream() {
   const [streamResponse, setStreamResponse] = useState('');
@@ -68,7 +69,7 @@ export function useOnyxStream() {
                   const data = JSON.parse(line.slice(6));
                   if (data.token) {
                     fullResponse += data.token;
-                    setStreamResponse(fullResponse);
+                    setStreamResponse(DOMPurify.sanitize(fullResponse));
                   }
                 } catch (e) {
                   // Ignore partial JSON chunks
@@ -79,7 +80,7 @@ export function useOnyxStream() {
         } else {
           const data = await response.json();
           fullResponse = data.reply || 'Command executed.';
-          setStreamResponse(fullResponse);
+          setStreamResponse(DOMPurify.sanitize(fullResponse));
         }
 
         setIsStreaming(false);

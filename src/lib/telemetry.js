@@ -53,7 +53,6 @@ export function logTelemetry(type, payload) {
     event.sessionId = newSessionId;
   }
 
-
   const MAKE_WEBHOOK_URL = import.meta.env?.VITE_MAKE_AUTOMATION_WEBHOOK || null;
   const HIGH_VALUE_EVENTS = ['vip_consultation_requested', 'store_waitlist_intent', 'checkout_intent'];
 
@@ -90,7 +89,7 @@ export async function flushTelemetryQueue(force = false) {
 
   try {
     const payload = JSON.stringify(currentBatch);
-    const endpoint = import.meta.env.VITE_TELEMETRY_WORKER_URL || import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_ONYX_WORKER_URL || '/api/telemetry';
+    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL || import.meta.env.VITE_ONYX_WORKER_URL || '/api/telemetry';
 
     if (!endpoint) {
       batchQueue = [...currentBatch, ...batchQueue]; // Restore on fail
@@ -104,7 +103,7 @@ export async function flushTelemetryQueue(force = false) {
         const blob = new Blob([payload], { type: 'application/json' });
         success = window.navigator.sendBeacon(endpoint, blob);
       } else if (window.fetch) {
-try {
+        try {
           const fetchPromise = fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -146,7 +145,7 @@ try {
           } catch (supabaseErr) {
             success = false;
             console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message);
-            return;
+            // Don't return here, continue to cleanup to avoid infinite loops
           }
 
           // Dispatch a mock success to keep UI functional and prevent infinite queues if worker is offline
@@ -172,7 +171,6 @@ try {
     }
   } catch (err) {
     console.warn("[TELEMETRY] Sync failed silently.", err.message);
-    return;
   } finally {
     isFlushing = false;
   }

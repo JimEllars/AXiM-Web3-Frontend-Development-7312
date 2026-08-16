@@ -86,7 +86,7 @@ export default function Games() {
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-12 overflow-x-hidden md:overflow-visible">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
-            <div className="group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden hover:border-axim-green/30">
+            <div className="group block h-full bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg transition-colors shadow-2xl relative overflow-hidden hover:border-axim-green/30">
               <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-green to-emerald-600">
                 <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-white" />
               </div>
@@ -107,7 +107,7 @@ export default function Games() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
-            <div className="group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden hover:border-axim-purple/30">
+            <div className="group block h-full bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg transition-colors shadow-2xl relative overflow-hidden hover:border-axim-purple/30">
               <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-purple to-fuchsia-600">
                 <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-white" />
               </div>
@@ -127,7 +127,7 @@ export default function Games() {
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true, margin: "-50px" }} className="h-full">
-            <div className="group block h-full bg-[#050505] border border-white/10 p-8 rounded-sm transition-colors shadow-2xl relative overflow-hidden hover:border-axim-gold/30">
+            <div className="group block h-full bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg transition-colors shadow-2xl relative overflow-hidden hover:border-axim-gold/30">
               <div className="w-12 h-12 rounded flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-500 bg-gradient-to-br from-axim-gold to-yellow-600">
                 <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-white" />
               </div>
@@ -161,7 +161,7 @@ export default function Games() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
             {/* The Gaming Store Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+            <div className="group relative bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [COMING SOON]
               </div>
@@ -182,7 +182,7 @@ export default function Games() {
             </div>
 
             {/* Game Economics Masterclass Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+            <div className="group relative bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [COMING SOON]
               </div>
@@ -222,7 +222,7 @@ export default function Games() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
             {/* The Gaming Store Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+            <div className="group relative bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [COMING SOON]
               </div>
@@ -243,7 +243,7 @@ export default function Games() {
             </div>
 
             {/* Game Economics Masterclass Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
+            <div className="group relative bg-onyx-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg hover:border-axim-green/30 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-2xl">
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [COMING SOON]
               </div>
@@ -277,7 +277,7 @@ export default function Games() {
         viewport={{ once: true, amount: 0.2 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-[#050505] border border-white/10 rounded-sm p-6 shadow-2xl col-span-1 md:col-span-2 lg:col-span-3">
+          <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 rounded-lg p-6 shadow-2xl col-span-1 md:col-span-2 lg:col-span-3">
             <h3 className="text-lg font-black text-white uppercase tracking-tight mb-4 flex items-center justify-between">
               Live Leaderboards
               {isWeb3Authenticated && (

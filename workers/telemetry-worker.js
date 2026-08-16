@@ -60,24 +60,27 @@ export default {
     }
 
     ctx.waitUntil(
-      fetch(`${env.SUPABASE_URL}/rest/v1/telemetry_ingress`, {
-        method: 'POST',
-        headers: {
-          apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal'
-        },
-        body: JSON.stringify(events)
-      }).then(response => {
-        if (!response.ok) {
-          console.error('Telemetry ingestion failed', response.status);
+      (async () => {
+        try {
+          const response = await fetch(`${env.SUPABASE_URL}/rest/v1/telemetry_ingress`, {
+            method: 'POST',
+            headers: {
+              apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+              Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+              'Content-Type': 'application/json',
+              Prefer: 'return=minimal'
+            },
+            body: JSON.stringify(events)
+          });
+          if (!response.ok) {
+            console.error('Telemetry ingestion failed', response.status);
+          }
+        } catch (err) {
+          console.error('Telemetry ingestion error', err);
         }
-      }).catch(err => {
-        console.error('Telemetry ingestion error', err);
-      })
+      })()
     );
 
-    return jsonResponse({ status: 'success', count: events.length }, 200);
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 };
