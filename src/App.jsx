@@ -44,6 +44,7 @@ const WindowCleaning = lazy(() => import('./pages/services/WindowCleaning'));
 const PressureWashing = lazy(() => import('./pages/services/PressureWashing'));
 const Games = lazy(() => import('./pages/Games'));
 const AI = lazy(() => import('./pages/AI'));
+const Tech = lazy(() => import('./pages/Tech'));
 const Store = lazy(() => import('./pages/Store'));
 const Business = lazy(() => import('./pages/Business'));
 const Personal = lazy(() => import('./pages/Personal'));
@@ -234,6 +235,7 @@ function App() {
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
+            <Route path="/tech" element={<PageTransition><Tech /></PageTransition>} />
             <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
             <Route path="/partners" element={<PageTransition><Partners /></PageTransition>} />
             <Route path="/partners/make" element={<PageTransition><MakeLanding /></PageTransition>} />

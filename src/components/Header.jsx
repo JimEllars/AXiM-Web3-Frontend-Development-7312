@@ -41,13 +41,12 @@ export default function Header() {
     setActiveDropdown(null);
   }, [location.pathname]);
 
-  // STRICT ORDERING: Business -> Personal -> Articles -> Games -> Support
+  // STRICT ORDERING: Business -> Personal -> Tech -> Articles -> Store -> Support
   const navLinks = [
     { name: 'Business', path: '/business' },
     { name: 'Personal', path: '/personal' },
+    { name: 'Tech', path: '/tech' },
     { name: 'Articles', path: '/articles' },
-    { name: 'Games', path: '/games' },
-    { name: 'AI', path: '/ai' },
     { name: 'Store', path: '/store' },
     { name: 'Support', path: '/support' }
   ];
