@@ -6,7 +6,6 @@ import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
-import Tools from './Tools';
 
 export default function Business() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -82,15 +81,69 @@ export default function Business() {
           </Link>
         </div>
 
-        {/* Embedded Tools Section */}
+
+        {/* Enterprise Systems & Intelligence Section */}
         <div className="relative pt-8 mt-12 border-t border-white/5">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
             <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Apps & Tools Hub
+              Enterprise Systems & Intelligence
             </span>
           </div>
-          <div className="mt-8">
-            <Tools embedMode={true} />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {/* Nexus CRM Certification Card */}
+            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <SafeIcon icon={LuIcons.LuBadgeCheck} className="w-8 h-8 text-axim-gold mb-4" />
+              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Nexus CRM Certification</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Master pipeline architecture.</p>
+              <Link
+                to="/products/nexus-crm-course"
+                onClick={() => logTelemetry('course_view_intent', { course: 'nexus_crm' })}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
+              >
+                View Details
+              </Link>
+            </div>
+
+            {/* Quick Demand Letter Card */}
+            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-axim-gold mb-4" />
+              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Quick Demand Letter</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Generate external legal documentation rapidly.</p>
+              <a
+                href="https://quickdemandletter.com/start?via=axim_hub"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => logTelemetry('external_tool_intent', { tool: 'quick_demand_letter' })}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
+              >
+                Open Tool
+                <SafeIcon icon={LuIcons.LuExternalLink} className="w-3 h-3 ml-2" />
+              </a>
+            </div>
+
+            {/* Automated Canvassing Masterclass Card */}
+            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
+                [COMING SOON]
+              </div>
+              <SafeIcon icon={LuIcons.LuMapPin} className="w-8 h-8 text-axim-gold mb-4" />
+              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Automated Canvassing Masterclass</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Deploy ground game teams efficiently.</p>
+              <Link
+                to="/business"
+                onClick={() => {
+                  logTelemetry('waitlist_intent', { module: 'canvassing_masterclass' });
+                }}
+                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
+              >
+                Join Waitlist
+              </Link>
+            </div>
+
           </div>
         </div>
 

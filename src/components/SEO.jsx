@@ -47,7 +47,7 @@ export default function SEO({
       {/* Standard Metadata */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={currentUrl} />
+      <link rel="canonical" href={`https://axim.us.com${typeof window !== 'undefined' ? window.location.pathname : location.pathname}`} />
 
       {/* Open Graph / Facebook / LinkedIn */}
       <meta property="og:type" content={type} />
