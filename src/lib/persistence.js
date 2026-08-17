@@ -62,8 +62,13 @@ export const localStore = {
       const stored = localStorage.getItem(STORAGE_KEYS.OFFLINE_SESSION);
       if (!stored) return null;
       const decoded = JSON.parse(atob(stored));
+      if (!decoded || typeof decoded !== 'object' || !decoded.session || !decoded.timestamp) {
+        localStorage.removeItem(STORAGE_KEYS.OFFLINE_SESSION);
+        return null;
+      }
       return decoded;
     } catch(e) {
+      localStorage.removeItem(STORAGE_KEYS.OFFLINE_SESSION);
       return null;
     }
   },

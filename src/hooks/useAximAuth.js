@@ -12,6 +12,7 @@ const MOCK_ON_CHAIN_ACTIVITY = [
 export function useAximAuth() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isHydrating, setIsHydrating] = useState(true);
   const [session, setSession] = useState(null);
 
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -57,6 +58,7 @@ export function useAximAuth() {
           }
         }
         setLoading(false);
+          setIsHydrating(false);
       }
     });
 
@@ -163,8 +165,9 @@ export function useAximAuth() {
   useEffect(() => {
       if (isWeb3Authenticated && loading) {
           setLoading(false);
+          setIsHydrating(false);
       }
   }, [isWeb3Authenticated, loading]);
 
-  return { profile, loading, isLoading: loading, session, checkDomain };
+  return { profile, loading, isLoading: loading, isHydrating, session, checkDomain };
 }

@@ -1,37 +1,34 @@
 import 'global-jsdom/register';
-import { test, describe, afterEach } from 'vitest';
-import assert from 'node:assert/strict';
+import { test, describe, expect, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import GlobalSearch from './GlobalSearch.jsx';
 
-describe('GlobalSearch Component', () => {
+const GlobalSearch = (await import('./GlobalSearch.jsx')).default;
+
+describe('GlobalSearch Component Focus Trapping', () => {
   afterEach(() => {
     cleanup();
   });
 
-  test('renders search button and opens modal', async () => {
+  test('Escape key closes modal', async () => {
     render(
       <MemoryRouter>
         <GlobalSearch />
       </MemoryRouter>
     );
 
-    // Find the button with text Search
     const searchBtns = screen.getAllByRole('button');
-    const searchBtn = searchBtns[0];
-
-    fireEvent.click(searchBtn);
+    fireEvent.click(searchBtns[0]);
 
     const input = screen.getByPlaceholderText('Search Intelligence Hub & Offerings...');
-    assert.ok(input);
+    expect(input).toBeTruthy();
 
-    fireEvent.change(input, { target: { value: 'Apps & Tools' } });
+    fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
 
     await waitFor(() => {
-        const toolsResult = screen.getAllByText('Apps & Tools')[0];
-        assert.ok(toolsResult);
+        expect(screen.queryByPlaceholderText('Search Intelligence Hub & Offerings...')).toBeNull();
     });
   });
 });
