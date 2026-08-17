@@ -1,112 +1,152 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useAximStore } from '../store/useAximStore';
-import { useAximAuth } from './useAximAuth';
-import DOMPurify from 'isomorphic-dompurify';
+import { logTelemetry } from '../lib/telemetry';
 
 export function useOnyxStream() {
-  const [streamResponse, setStreamResponse] = useState('');
+  const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState('disconnected'); // 'connected' | 'reconnecting' | 'disconnected'
-
-  const userSession = useAximStore((state) => state.userSession);
-  const { session } = useAximAuth();
-
-  const token = userSession?.session_token || session?.access_token;
   const abortControllerRef = useRef(null);
 
-  const executeOnyxCommand = useCallback(async (command) => {
-    setIsStreaming(true);
-    if (connectionStatus !== 'reconnecting') {
-      setStreamResponse('');
+  const token = useAximStore((state) => state.token);
+  const addToast = useAximStore((state) => state.addToast);
+
+  const sendMessage = useCallback(async (text, context = {}) => {
+    if (!text.trim()) return;
+
+    // Disconnect existing stream if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
+    abortControllerRef.current = new AbortController();
+
+    const userMessage = { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date().toISOString() };
+    setMessages(prev => [...prev, userMessage]);
+    setIsStreaming(true);
     setError(null);
-    setConnectionStatus('connected');
+
+    const onyxMessageId = crypto.randomUUID();
+    setMessages(prev => [...prev, {
+      id: onyxMessageId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date().toISOString(),
+      isStreaming: true
+    }]);
+
+    logTelemetry('onyx_stream_initiated', { promptLength: text.length });
 
     let retryCount = 0;
-    const maxRetries = 5; // 1s, 2s, 4s, 8s, 16s
+    const maxRetries = 3;
 
-    const attemptFetch = async () => {
+    const connectStream = async () => {
       try {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
-        }
-        abortControllerRef.current = new AbortController();
+        const endpoint = import.meta.env.VITE_ONYX_WORKER_URL || '/api/onyx/chat';
 
-        const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/onyx-bridge', {
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': token ? `Bearer ${token}` : '',
+            'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || ''
           },
-          body: JSON.stringify({ command }),
+          body: JSON.stringify({ message: text, context }),
           signal: abortControllerRef.current.signal
         });
 
         if (!response.ok) {
-          throw new Error(`Network error: ${response.status}`);
+           throw new Error(`Edge connection failed: ${response.status}`);
         }
 
-        setConnectionStatus('connected');
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
 
-        const contentType = response.headers.get('content-type');
-        let fullResponse = streamResponse; // Preserve if reconnecting
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        if (contentType && contentType.includes('text/event-stream')) {
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
+          buffer += decoder.decode(value, { stream: true });
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') break;
 
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                try {
-                  const data = JSON.parse(line.slice(6));
-                  if (data.token) {
-                    fullResponse += data.token;
-                    setStreamResponse(DOMPurify.sanitize(fullResponse));
-                  }
-                } catch (e) {
-                  // Ignore partial JSON chunks
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.error) throw new Error(parsed.error);
+
+                if (parsed.content) {
+                  setMessages(prev => prev.map(msg =>
+                    msg.id === onyxMessageId
+                      ? { ...msg, content: msg.content + parsed.content }
+                      : msg
+                  ));
                 }
+              } catch (e) {
+                console.warn('[SSE Parse Error]', e);
               }
             }
           }
-        } else {
-          const data = await response.json();
-          fullResponse = data.reply || 'Command executed.';
-          setStreamResponse(DOMPurify.sanitize(fullResponse));
         }
 
         setIsStreaming(false);
-        setConnectionStatus('disconnected');
-        return fullResponse;
+        setMessages(prev => prev.map(msg =>
+          msg.id === onyxMessageId
+            ? { ...msg, isStreaming: false }
+            : msg
+        ));
+        logTelemetry('onyx_stream_completed', { responseLength: messages.find(m => m.id === onyxMessageId)?.content?.length || 0 });
 
       } catch (err) {
-        if (err.name === 'AbortError') return null;
-
-        if (retryCount < maxRetries) {
-          setConnectionStatus('reconnecting');
-          const delay = Math.pow(2, retryCount) * 1000;
-          retryCount++;
-          await new Promise(r => setTimeout(r, delay));
-          return attemptFetch();
+        if (err.name === 'AbortError') {
+          console.log('Stream aborted by user.');
+          return;
         }
 
-        setConnectionStatus('disconnected');
-        setError(err.message);
-        setIsStreaming(false);
-        return null;
+        if (retryCount < maxRetries) {
+          retryCount++;
+          const backoff = Math.pow(2, retryCount) * 1000;
+          console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
+          logTelemetry('onyx_stream_retry', { retryCount, backoff });
+          setTimeout(connectStream, backoff);
+        } else {
+          console.error('[Onyx Stream] Max retries reached.', err);
+          setError(err.message);
+          setIsStreaming(false);
+
+          // Fallback Mode
+          setMessages(prev => prev.map(msg =>
+            msg.id === onyxMessageId
+              ? { ...msg, content: msg.content || `[SYSTEM OFFLINE] Edge uplink failed after ${maxRetries} attempts. Diagnostics: ${err.message}`, isStreaming: false, isFallback: true }
+              : msg
+          ));
+          logTelemetry('onyx_stream_failed', { error: err.message });
+          if(addToast) addToast(`Onyx connection failed: ${err.message}`, 'error');
+        }
       }
     };
 
-    return attemptFetch();
-  }, [token, streamResponse, connectionStatus]);
+    connectStream();
+  }, [token, addToast, messages]);
 
-  return { streamResponse, isStreaming, executeOnyxCommand, error, connectionStatus };
+  const abortStream = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setIsStreaming(false);
+
+      setMessages(prev => prev.map(msg =>
+        msg.isStreaming
+          ? { ...msg, content: msg.content + ' [STREAM ABORTED]', isStreaming: false }
+          : msg
+      ));
+    }
+  }, []);
+
+  return { messages, isStreaming, error, sendMessage, abortStream };
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAximStore } from '../store/useAximStore';
 
@@ -19,6 +19,24 @@ const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
 
 export default function NetworkTopology() {
   const { isWeb3Authenticated } = useAximStore();
+  const [svgSupported, setSvgSupported] = useState(true);
+
+  // Fallback check if SVG somehow crashes or isn't supported
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const isSvgSupported = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+      setSvgSupported(isSvgSupported);
+    }
+  }, []);
+
+  if (!svgSupported) {
+    return (
+      <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm flex items-center justify-center">
+         <div className="font-mono text-xs text-zinc-500">[ TOPOLOGY_RENDER_FAILED // OFFLINE ]</div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full aspect-square max-w-[500px] mx-auto bg-[#080808] border border-subtle p-8 rounded-sm overflow-hidden">
       <div className="absolute top-4 left-4 font-mono text-[10px] text-axim-gold opacity-50 uppercase">

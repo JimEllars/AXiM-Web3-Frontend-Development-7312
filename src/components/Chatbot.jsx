@@ -1,33 +1,37 @@
-import React, { useEffect } from 'react';
-import { useAximStore } from '../store/useAximStore';
+import { useEffect } from 'react';
+import { theme } from '../config/theme';
 
 export default function Chatbot() {
-  const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const botId = theme?.chatbaseBotId || import.meta.env.VITE_CHATBASE_BOT_ID;
 
   useEffect(() => {
-    window.chatbaseConfig = { chatbotId: "axim-dev-bot-placeholder" };
-    const script = document.createElement("script");
+    if (!botId) return;
+
+    window.chatbaseConfig = {
+      chatbotId: botId,
+    };
+
+    const script = document.createElement('script');
     script.src = "https://www.chatbase.co/embed.min.js";
-    script.id = "axim-dev-bot-placeholder";
+    script.id = botId;
+    script.domain = "www.chatbase.co";
     script.defer = true;
-    document.head.appendChild(script);
+
+    document.body.appendChild(script);
 
     return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
+      // Clean up script on unmount if needed
+      const existingScript = document.getElementById(botId);
+      if (existingScript) {
+        document.body.removeChild(existingScript);
       }
-      delete window.chatbaseConfig;
+      // Also attempt to remove the embedded iframe/container chatbase creates
+      const chatbaseContainer = document.getElementById('chatbase-bubble');
+      if (chatbaseContainer) {
+          chatbaseContainer.remove();
+      }
     };
-  }, []);
+  }, [botId]);
 
-  return (
-    <>
-      {isWeb3Authenticated && (
-        <div className="fixed bottom-24 right-6 z-[100] inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
-          <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-          [LLM_NODE: SECURE_INFERENCE_ACTIVE]
-        </div>
-      )}
-    </>
-  );
+  return null; // The Chatbase script handles its own UI injection
 }
