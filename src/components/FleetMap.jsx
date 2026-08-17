@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAximStore } from '../store/useAximStore';
 import { motion } from 'framer-motion';
 
 export default function FleetMap() {
   const nodeStatuses = useAximStore((state) => state.nodeStatuses);
+  const [svgSupported, setSvgSupported] = useState(true);
+
+  // Fallback check if SVG somehow crashes or isn't supported
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const isSvgSupported = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+      setSvgSupported(isSvgSupported);
+    }
+  }, []);
 
   const nodes = [
     { id: 'core', cx: 500, cy: 300, label: 'AXiM Core' },
@@ -11,6 +20,14 @@ export default function FleetMap() {
     { id: 'lon', cx: 520, cy: 180, label: 'London Node' },
     { id: 'tok', cx: 850, cy: 250, label: 'Tokyo Node' },
   ];
+
+  if (!svgSupported) {
+    return (
+      <div className="w-full flex items-center justify-center p-8 bg-[#050505] text-axim-purple font-mono text-xs border border-white/5 rounded-sm">
+        [ MAP_OFFLINE // FALLBACK_MODE_ACTIVE ]
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex justify-center p-4 bg-[#050505]">

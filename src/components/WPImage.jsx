@@ -73,15 +73,18 @@ export default function WPImage({ src, alt, className, post, ...props }) {
     );
   }
 
+  // Ensure aspect ratio to prevent CLS
   return (
-    <motion.img layoutId={`post-image-${post?.id}`} width="1200" height="675"
-      src={imageSrc}
-      alt={alt || ''}
-      className={className}
-      onError={handleError}
-      referrerPolicy="no-referrer"
-      loading="lazy"
-      {...props}
-    />
+    <div className={`relative overflow-hidden aspect-video ${className || ''}`}>
+        <motion.img layoutId={`post-image-${post?.id}`} width="1200" height="675"
+        src={imageSrc}
+        alt={alt || ''}
+        className="absolute inset-0 w-full h-full object-cover"
+        onError={handleError}
+        referrerPolicy="no-referrer"
+        loading="lazy"
+        {...props}
+        />
+    </div>
   );
 }

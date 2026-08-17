@@ -1,65 +1,59 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import SEO from '../components/SEO';
-import DatabaseUplinkError from '../common/DatabaseUplinkError';
-import SafeIcon from '../common/SafeIcon';
-import * as LuIcons from 'react-icons/lu';
-import { useAximAuth } from '../hooks/useAximAuth';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { useAximStore } from '../store/useAximStore';
-import { useEffect } from 'react';
-import { sanitizeInput } from '../lib/sanitize';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import * as LuIcons from 'react-icons/lu';
+import SafeIcon from '../common/SafeIcon';
+import SEO from '../components/SEO';
 import { logTelemetry } from '../lib/telemetry';
-
-import { useConnect } from 'thirdweb/react';
-import { createWallet } from 'thirdweb/wallets';
-import { arbitrum } from 'thirdweb/chains';
+import { sanitizeInput } from '../lib/sanitize';
+import DatabaseUplinkError from '../common/DatabaseUplinkError';
+import { useAximStore } from '../store/useAximStore';
+import { useConnect, useActiveAccount } from "thirdweb/react";
 import { client } from '../lib/thirdweb-client';
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 
 export default function AuthGateway() {
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [networkFault, setNetworkFault] = useState(false);
 
-  const isMounted = React.useRef(true);
-  React.useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
+  const { connect } = useConnect();
+  const activeAccount = useActiveAccount();
+
+  const isMounted = useRef(true);
+  const setNotification = useAximStore((state) => state.setNotification);
+  const isWeb3Connecting = useAximStore((state) => state.isWeb3Connecting);
+  const setIsWeb3Connecting = useAximStore((state) => state.setIsWeb3Connecting);
+  const loginWeb3Wallet = useAximStore((state) => state.loginWeb3Wallet);
+  const showToast = useAximStore((state) => state.addToast);
+
+  const from = location.state?.from?.pathname || '/admin';
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
   }, []);
 
-  // Note: Assuming useAximAuth provides standard Supabase wrappers. Adjust as needed.
-  const { signIn, signUp } = useAximAuth();
-  const navigate = useNavigate();
-  const loginWeb3Wallet = useAximStore(state => state.loginWeb3Wallet);
-  const setNotification = useAximStore(state => state.setNotification);
-  const showToast = useAximStore(state => state.showToast);
-  const [isWeb3Connecting, setIsWeb3Connecting] = useState(false);
-
-  const { connect } = useConnect();
-
   const handleWeb3Login = async () => {
-    logTelemetry('auth_login_attempted', { method: 'web3_wallet' });
     setIsWeb3Connecting(true);
     setErrorMsg(null);
-    setEmail('');
-    setPassword('');
+    logTelemetry('auth_web3_login_attempted', { provider: 'inAppWallet' });
 
     try {
-      const wallet = await connect(async () => {
-        const injected = createWallet("io.metamask");
-        await injected.connect({
+      const wallet = inAppWallet();
+      const account = await connect(async () => {
+        await wallet.connect({
            client,
-           chain: arbitrum
+           strategy: "google",
         });
-        return injected;
+        return wallet;
       });
-
-      const account = wallet.getAccount();
 
       if (account) {
         logTelemetry('AUTH_WEB3_WALLET_CONNECTED', {
@@ -70,7 +64,7 @@ export default function AuthGateway() {
         if (isMounted.current) {
           setNotification('Authentication successful.');
           setIsWeb3Connecting(false);
-          navigate("/admin", { state: { web3Auth: account.address } });
+          navigate(from, { replace: true, state: { web3Auth: account.address } });
         }
       } else {
         throw new Error("No account found");
@@ -114,7 +108,7 @@ export default function AuthGateway() {
       });
       if (isMounted.current) {
         setNotification('Authentication successful.');
-        navigate('/admin');
+        navigate(from, { replace: true });
       }
     } catch (err) {
       if (err.message === "auth_timeout_fault" || err.message === "Failed to fetch") {

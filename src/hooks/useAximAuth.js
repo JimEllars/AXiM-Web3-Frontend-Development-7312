@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { localStore } from '../lib/persistence.js';
 import { useAximStore } from '../store/useAximStore.js';
@@ -15,8 +15,10 @@ export function useAximAuth() {
   const [session, setSession] = useState(null);
 
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const isRefreshing = useRef(false);
 
   const checkDomain = async (currentSession) => {
+    // Basic domain check, real logic would use secure server claims.
     if (currentSession && currentSession.user && currentSession.user.email) {
       if (!currentSession.user.email.endsWith('@axim.us.com')) {
         await supabase.auth.signOut();
@@ -59,7 +61,7 @@ export function useAximAuth() {
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
-      if (isMounted) {
+      if (isMounted && !isRefreshing.current) {
         const isValid = await checkDomain(currentSession);
         if (isValid) {
           setSession(currentSession);
@@ -107,20 +109,23 @@ export function useAximAuth() {
       }
       if (currentSession) {
         try {
+          isRefreshing.current = true;
           const { data, error } = await supabase.auth.refreshSession();
           if (error || !data.session) {
             const offline = localStore.getOfflineSession();
             if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
               console.warn("Retaining session optimistically due to recent offline stamp");
               setSession(offline.session);
-              return;
+            } else {
+              await supabase.auth.signOut();
+              setSession(null);
+              setProfile(null);
+              // Avoid hard redirect, let router handle unauthorized state
             }
-            await supabase.auth.signOut();
-            setSession(null);
-            setProfile(null);
-            window.location.href = "/profile";
           } else if (data.session) {
             localStore.saveOfflineSession(data.session);
+            // Don't call setSession/setProfile here to avoid UI flicker
+            // The onAuthStateChange will catch it if needed, or we just trust the token updated
           }
         } catch (e) {
             const isNetworkError = e.message === 'Failed to fetch' || !navigator.onLine;
@@ -129,17 +134,17 @@ export function useAximAuth() {
             if (isNetworkError && offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
               console.warn("Retaining session optimistically due to network fault");
               setSession(offline.session);
-              return;
-            }
-            if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+            } else if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
               console.warn("Retaining session optimistically after exception");
               setSession(offline.session);
-              return;
+            } else {
+              await supabase.auth.signOut();
+              setSession(null);
+              setProfile(null);
+              // Avoid hard redirect
             }
-            await supabase.auth.signOut();
-            setSession(null);
-            setProfile(null);
-            window.location.href = "/profile";
+        } finally {
+            isRefreshing.current = false;
         }
       } else {
          const offline = localStore.getOfflineSession();

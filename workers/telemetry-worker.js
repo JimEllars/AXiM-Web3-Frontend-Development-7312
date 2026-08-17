@@ -59,6 +59,23 @@ export default {
       return jsonResponse({ error: 'Telemetry event validation failed.' }, 400);
     }
 
+    // Capture request CF details (client IP/geo tagging)
+    const geoData = {
+      ip: request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown',
+      country: request.cf?.country || 'unknown',
+      city: request.cf?.city || 'unknown',
+      userAgent: request.headers.get('user-agent') || 'unknown'
+    };
+
+    // Append geo/client data to each event payload securely
+    events = events.map(event => ({
+      ...event,
+      payload: {
+         ...(event.payload || {}),
+         _cf_geo: geoData
+      }
+    }));
+
     ctx.waitUntil(
       (async () => {
         try {

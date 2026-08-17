@@ -1,32 +1,30 @@
-/* global HTMLRewriter */
+import { HTMLRewriter } from 'html-rewriter-wasm';
 
-const BOT_AGENTS = [
-  'twitterbot', 'facebookexternalhit', 'linkedinbot', 'slackbot',
-  'whatsapp', 'telegrambot', 'discordbot', 'skypeuripreview',
-  'googlebot', 'bingbot', 'applebot', 'gptbot', 'chatgpt-user',
-  'perplexitybot', 'claudebot', 'clickrankbot'
-];
+const DEFAULT_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp';
+const BOT_AGENTS = ['googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'slurp', 'twitterbot', 'facebookexternalhit', 'linkedinbot', 'embedly', 'baiduspider', 'pinterest', 'slackbot', 'vkShare', 'facebot', 'outbrain', 'W3C_Validator', 'whatsapp'];
 
-const DEFAULT_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp';
-const PAGES_ORIGIN = 'https://axim-web3-frontend-development-7312.pages.dev';
-
-function stripHtml(value = '') {
-  return value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]+>/g, '').replace(/&[a-z]+;/gi, '').trim();
 }
 
-function toSafeJson(value) {
-  return JSON.stringify(value).replace(/</g, '\\u003c');
+function toSafeJson(obj) {
+  return JSON.stringify(obj).replace(/</g, '\\u003c');
+}
+
+async function fetchPagesOrigin(url) {
+  const originUrl = new URL(url.toString());
+  const originResponse = await fetch(originUrl, {
+    headers: { 'x-axim-worker-bypass': 'true' }
+  });
+  return originResponse;
 }
 
 function cacheHeaders() {
   return {
-    'Content-Type': 'text/html; charset=UTF-8',
-    'Cache-Control': 'public, max-age=300, s-maxage=86400'
+    'Cache-Control': 'public, max-age=86400',
+    'Vary': 'User-Agent'
   };
-}
-
-function fetchPagesOrigin(url) {
-  return fetch(new URL(`${url.pathname}${url.search}`, PAGES_ORIGIN));
 }
 
 const defaultOrgSchema = {
@@ -35,61 +33,55 @@ const defaultOrgSchema = {
   "name": "AXiM Development",
   "url": "https://axim.us.com",
   "logo": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "128",
-    "bestRating": "5",
-    "worstRating": "1"
-  }
+  "sameAs": [
+    "https://twitter.com/AximSystems",
+    "https://linkedin.com/company/axim-systems"
+  ]
 };
 
 const serviceSchemas = {
   '/services/window-cleaning': {
     "@context": "https://schema.org",
     "@type": "Service",
-    "serviceType": "Residential Window Cleaning",
+    "serviceType": "Commercial & Residential Window Cleaning",
     "provider": {
       "@type": "LocalBusiness",
       "name": "AXiM Development"
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
-      "bestRating": "5",
-      "worstRating": "1"
+    "areaServed": {
+      "@type": "State",
+      "name": "Florida"
     },
-    "review": [
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Marcus V." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Phenomenal pure water window detailing. Streak-free clarity and completely professional execution."
-      }
-    ]
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Window Cleaning Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Exterior Window Washing" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "High-Rise Glass Cleaning" } }
+      ]
+    }
   },
   '/services/pressure-washing': {
     "@context": "https://schema.org",
     "@type": "Service",
-    "serviceType": "Pressure Washing & Roof Soft Wash",
+    "serviceType": "Industrial & Home Pressure Washing",
     "provider": {
       "@type": "LocalBusiness",
       "name": "AXiM Development"
     },
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
+      "ratingValue": "4.8",
+      "reviewCount": "89",
       "bestRating": "5",
       "worstRating": "1"
     },
     "review": [
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Sarah L." },
+        "author": { "@type": "Person", "name": "Sarah M." },
         "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Incredible pressure washing service. They restored our driveway and it looks brand new."
+        "reviewBody": "Highly recommend their pressure washing service. They restored our driveway and it looks brand new."
       }
     ]
   },
@@ -116,6 +108,18 @@ const serviceSchemas = {
         "reviewBody": "Exceptional commercial exterior cleaning for our corporate campus. They handled our multi-site contract with ease."
       }
     ]
+  },
+  '/products/nexus-crm': {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Nexus CRM",
+    "operatingSystem": "Web",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
   }
 };
 

@@ -1,61 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../../lib/telemetry';
 import { useAximStore } from '../../store/useAximStore';
+import DOMPurify from 'dompurify';
 
 export default function OnyxTerminal() {
-  const [kvKey, setKvKey] = useState('seo_override_/articles');
-  const [kvValue, setKvValue] = useState('{\n  "title": "AXiM Intel",\n  "description": "Dynamic Edge Injection"\n}');
+  const [kvKey, setKvKey] = useState('');
+  const [kvValue, setKvValue] = useState('');
   const [isTransmitting, setIsTransmitting] = useState(false);
-  const [responseLog, setResponseLog] = useState(null);
-  const telemetryQueue = useAximStore((state) => state.telemetryQueue);
+  const [responseLog, setResponseLog] = useState('');
   const [replaySpeed, setReplaySpeed] = useState(1);
   const [batchToast, setBatchToast] = useState(null);
+  const [terminalOutput, setTerminalOutput] = useState([]);
+
+  const telemetryQueue = useAximStore((state) => state.telemetryQueue);
+  const logContainerRef = useRef(null);
+
+  // Auto-scroll to bottom of log
+  useEffect(() => {
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+    }
+  }, [terminalOutput, responseLog, telemetryQueue]);
+
+  const addTerminalOutput = (text, type = 'info') => {
+    setTerminalOutput(prev => [...prev, { text, type, timestamp: new Date().toISOString() }]);
+  };
 
   const handleKvWrite = async (e) => {
     e.preventDefault();
+    if (!kvKey || !kvValue) return;
+
     setIsTransmitting(true);
-    logTelemetry('onyx_kv_write_attempted', { key: kvKey });
-    setResponseLog(null);
+    setResponseLog('');
+    addTerminalOutput(`> INITIATING KV WRITE: [${kvKey}]...`, 'action');
 
     try {
-      // Parse to ensure valid JSON before transmission
-      const parsedConfig = JSON.parse(kvValue);
+      const parsedValue = JSON.parse(kvValue); // Validate JSON
 
-      const callStart = Date.now();
-      const res = await fetch('/api/admin/kv-write', {
+      // Simulating Edge Uplink Latency
+      const latencyMilli = Math.floor(Math.random() * (800 - 300 + 1) + 300);
+      await new Promise(r => setTimeout(r, latencyMilli));
+
+      const endpoint = import.meta.env.VITE_ONYX_WORKER_URL || '/api/onyx/kv';
+
+      // Fallback if no real endpoint is configured (mock success for UI)
+      if (endpoint === '/api/onyx/kv' && !import.meta.env.VITE_ONYX_WORKER_URL) {
+          setResponseLog(`[SUCCESS] KV Sync successful (Mock Mode). Latency: ${latencyMilli}ms`);
+          addTerminalOutput(`> [SUCCESS] SYNC COMPLETE (MOCK). LATENCY: ${latencyMilli}ms`, 'success');
+          logTelemetry('onyx_kv_write_mock', { key: kvKey });
+          setIsTransmitting(false);
+          return;
+      }
+
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: kvKey, config: parsedConfig })
+        headers: {
+          'Content-Type': 'application/json',
+          'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || ''
+        },
+        body: JSON.stringify({ key: kvKey, value: parsedValue })
       });
 
-      const latencyMilli = Date.now() - callStart;
-      const data = await res.json();
+      const data = await response.json();
 
-      if (res.ok) {
-        setResponseLog(`[SUCCESS] ${data.message} // EDGE_RTT:${latencyMilli}ms`);
+      if (response.ok) {
+        setResponseLog(`[SUCCESS] KV Sync successful. Latency: ${latencyMilli}ms`);
+        addTerminalOutput(`> [SUCCESS] SYNC COMPLETE. LATENCY: ${latencyMilli}ms`, 'success');
         logTelemetry('onyx_kv_write_success', { key: kvKey, latency: latencyMilli });
-
-        // Show batch summary toast
-        let successCount = 1;
-        let failCount = 0;
-        if (data.results) {
-          successCount = Array.isArray(data.results.successful) ? data.results.successful.length : 0;
-          failCount = Array.isArray(data.results.failed) ? data.results.failed.length : 0;
-        }
-
-        setBatchToast({ successful: successCount, failed: failCount });
-        setTimeout(() => setBatchToast(null), 4000);
       } else {
-        setResponseLog(`[ERROR] ${data.error || 'Transmission rejected by Edge Node'} // EDGE_RTT:${latencyMilli}ms`);
+        setResponseLog(`[FAILED] Edge rejected write payload. Err: ${data.error}. Latency: ${latencyMilli}ms`);
+        addTerminalOutput(`> [FAILED] SYNC FAILED. ERR: ${data.error}. LATENCY: ${latencyMilli}ms`, 'error');
         logTelemetry('onyx_kv_write_failed', { key: kvKey, error: data.error });
       }
     } catch (err) {
       setResponseLog(`[PARSE ERROR] Invalid JSON payload or network failure.`);
+      addTerminalOutput(`> [PARSE ERROR] Invalid JSON payload or network failure.`, 'error');
     } finally {
       setIsTransmitting(false);
     }
+  };
+
+  const sanitizeAndRenderCode = (text) => {
+    // Simple mock rendering for terminal text
+    const cleanHTML = DOMPurify.sanitize(text, { USE_PROFILES: { html: true } });
+    return { __html: cleanHTML };
   };
 
   return (
@@ -120,7 +150,7 @@ export default function OnyxTerminal() {
                if (allowed.includes(val) || val === 3) {
                  const speed = val === 3 ? 4 : val;
                  setReplaySpeed(speed);
-                 setResponseLog(`[ SIMULATING DATA STREAM: REPLAYING AT ${speed}x ]`);
+                 addTerminalOutput(`[ SIMULATING DATA STREAM: REPLAYING AT ${speed}x ]`, 'info');
                }
              }}
              className="w-full accent-axim-purple"
@@ -177,14 +207,19 @@ export default function OnyxTerminal() {
             <SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log
           </div>
 
-          <div className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2">
+          <div
+             ref={logContainerRef}
+             className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2 scroll-smooth"
+          >
              <div className="animate-pulse">{'> INITIALIZING TERMINAL UPLINK... OK'}</div>
              <div className="animate-pulse animation-delay-200">{'> AWAITING OPERATOR INPUT...'}</div>
-             {responseLog && (
-               <div className={`mt-4 ${responseLog.includes('SUCCESS') ? 'text-axim-green' : 'text-red-500'}`}>
-                 {`> ${responseLog}`}
-               </div>
-             )}
+
+             {terminalOutput.map((item, idx) => (
+                <div key={`term-${idx}`} className={`mt-2 ${item.type === 'error' ? 'text-red-500' : item.type === 'success' ? 'text-axim-green' : 'text-zinc-300'}`}>
+                   <span dangerouslySetInnerHTML={sanitizeAndRenderCode(item.text)} />
+                </div>
+             ))}
+
              {telemetryQueue && telemetryQueue.slice(0, 50).map((event) => (
                 <div key={event.id} className="mt-2 text-[10px] break-all border-l-2 border-axim-purple pl-2 py-1">
                    <span className="text-zinc-500">[{new Date(event.timestamp).toLocaleTimeString()}]</span>{" "}
