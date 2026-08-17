@@ -5,7 +5,7 @@ import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
 
 export default function ProtectedRoute({ children, adminOnly = false }) {
-  const { session, isLoading } = useAximAuth();
+  const { session, isLoading, isHydrating } = useAximAuth();
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const location = useLocation();
 
@@ -27,7 +27,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
     }
   }, [isAuthenticated, isRoleAuthorized, isLoading, location.pathname]);
 
-  if (isLoading) {
+  if (isLoading || isHydrating) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
          <div className="flex flex-col items-center gap-4">

@@ -195,6 +195,37 @@ export default function GlobalSearch() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const modalElement = document.getElementById('global-search-modal');
+    if (!modalElement) return;
+
+    const focusableElements = modalElement.querySelectorAll('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select');
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTabKey = (e) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    modalElement.addEventListener('keydown', handleTabKey);
+    return () => modalElement.removeEventListener('keydown', handleTabKey);
+  }, [isOpen, results, articleResults]);
+
   const handleOpenModal = () => {
     logTelemetry('globalsearch_opened', { origin: window.location.pathname });
     setIsOpen(true);
@@ -239,7 +270,10 @@ export default function GlobalSearch() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.4, ease: "circOut" }}
-              className="w-full max-w-2xl bg-[#0F172A] border border-axim-purple/30 rounded-xl overflow-hidden shadow-[0_0_100px_rgba(147,51,234,0.15)] flex flex-col"
+              id="global-search-modal" className="w-full max-w-2xl bg-[#0F172A] border border-axim-purple/30 rounded-xl overflow-hidden shadow-[0_0_100px_rgba(147,51,234,0.15)] flex flex-col"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Global Search"
              onClick={(e) => e.stopPropagation()}>
               <form onSubmit={(e) => e.preventDefault()} className="p-4 border-b border-white/10 flex items-center gap-4 bg-black/50">
                 <SafeIcon icon={LuSearch} className="w-6 h-6 text-axim-purple" />

@@ -7,7 +7,7 @@ export default {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Headers': 'Content-Type, authorization, x-axim-client',
         },
       });
     }
@@ -21,7 +21,7 @@ export default {
       // Ensure that the target URL explicitly includes the incoming query string.
       if (endpoint) {
         if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/')) {
-          return new Response(JSON.stringify({ error: 'Invalid or missing endpoint parameter.' }), {
+          return new Response(JSON.stringify({ success: false, error: 'Invalid or missing endpoint parameter.', code: 403, timestamp: new Date().toISOString() }), {
             status: 403,
             headers: {
               'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export default {
         const proxyPath = url.pathname.replace('/api/wp', '');
 
         if (!proxyPath || (!proxyPath.startsWith('/wp-json/') && !proxyPath.startsWith('/wp/'))) {
-          return new Response(JSON.stringify({ error: 'Invalid or missing proxy path.' }), {
+          return new Response(JSON.stringify({ success: false, error: 'Invalid or missing proxy path.', code: 403, timestamp: new Date().toISOString() }), {
             status: 403,
             headers: {
               'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export default {
       return finalResponse;
 
     } catch (error) {
-      return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      return new Response(JSON.stringify({ success: false, error: 'Internal Server Error', code: 500, timestamp: new Date().toISOString() }), {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
