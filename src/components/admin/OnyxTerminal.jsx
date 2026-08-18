@@ -3,6 +3,7 @@ import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../../lib/telemetry';
 import { useAximStore } from '../../store/useAximStore';
+import { useOnyxStream } from '../../hooks/useOnyxStream';
 import DOMPurify from 'dompurify';
 
 export default function OnyxTerminal() {
@@ -15,6 +16,7 @@ export default function OnyxTerminal() {
   const [terminalOutput, setTerminalOutput] = useState([]);
 
   const telemetryQueue = useAximStore((state) => state.telemetryQueue);
+  const { isStreaming } = useOnyxStream();
   const logContainerRef = useRef(null);
 
   // Auto-scroll to bottom of log
@@ -95,7 +97,15 @@ export default function OnyxTerminal() {
           <h2 className="text-xl font-black text-white uppercase tracking-widest">Onyx Terminal</h2>
           <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Direct Edge KV Configurator</p>
         </div>
-        <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />
+        <div className="flex items-center gap-4">
+          {isStreaming && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 rounded-sm shadow-[0_0_10px_rgba(147,51,234,0.2)] animate-pulse">
+              <div className="w-2 h-2 rounded-full bg-axim-purple shadow-[0_0_8px_rgba(147,51,234,0.8)]" />
+              <span className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest">Edge Connected</span>
+            </div>
+          )}
+          <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />
+        </div>
       </div>
 
 

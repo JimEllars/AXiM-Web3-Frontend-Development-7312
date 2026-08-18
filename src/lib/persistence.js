@@ -5,6 +5,7 @@
 
 const STORAGE_KEYS = {
   OFFLINE_SESSION: 'axm_offline_session',
+  TELEMETRY_CACHE: 'axim_telemetry_cache',
   PROFILES: 'axm_local_profiles',
   LETTERS: 'axm_local_letters',
   SAVED_BRIEFS: 'axm_local_saved_briefs'
@@ -45,6 +46,15 @@ function _getStoredData(key, defaultValue, cacheKey) {
 }
 
 export const localStore = {
+  saveTelemetryCache: (cache) => {
+    if (!cache) return;
+    try {
+      localStorage.setItem(STORAGE_KEYS.TELEMETRY_CACHE, JSON.stringify(cache));
+    } catch(e) { /* ignore */ }
+  },
+  getTelemetryCache: () => {
+    return _getStoredData(STORAGE_KEYS.TELEMETRY_CACHE, [], 'telemetryCache');
+  },
   saveOfflineSession: (session) => {
     if (!session) return;
     try {

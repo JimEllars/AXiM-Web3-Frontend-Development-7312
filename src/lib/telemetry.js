@@ -1,5 +1,6 @@
 import { useAximStore } from '../store/useAximStore';
 import { supabase } from '../lib/supabase';
+import { localStore } from '../lib/persistence';
 
 let isFlushing = false;
 let batchQueue = []; // In-memory queue for dispatching batches
@@ -7,10 +8,10 @@ let batchQueue = []; // In-memory queue for dispatching batches
 export function rehydrateTelemetry() {
   if (typeof window === 'undefined') return;
   try {
-    const cached = localStorage.getItem('axim_telemetry_cache');
-    if (cached) {
-      const parsedCache = JSON.parse(cached);
-      if (Array.isArray(parsedCache) && parsedCache.length > 0) {
+    const cached = localStore.getTelemetryCache();
+    // we handle cached as an array below now instead of string
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      const parsedCache = cached;
         // Ensure Zustand persist is loaded by delaying slightly, or merge directly.
         setTimeout(() => {
           const store = useAximStore.getState();
@@ -24,7 +25,6 @@ export function rehydrateTelemetry() {
           }
         }, 0);
       }
-    }
   } catch (err) {
     console.error("Failed to rehydrate telemetry from local cache", err);
   }
@@ -67,10 +67,14 @@ export function logTelemetry(type, payload) {
   useAximStore.getState().logTelemetryEvent(event);
   batchQueue.push(event);
 
+  if (batchQueue.length >= 10) {
+    flushTelemetryQueue();
+  }
+
   try {
     if (typeof window !== 'undefined') {
       const collection = useAximStore.getState().telemetryCollection;
-      localStorage.setItem('axim_telemetry_cache', JSON.stringify(collection));
+      localStore.saveTelemetryCache(collection);
       window.dispatchEvent(new window.CustomEvent('axim-telemetry-update', { detail: event }));
     }
   } catch (e) {
@@ -163,7 +167,7 @@ export async function flushTelemetryQueue(force = false) {
 
       useAximStore.setState({ telemetryCollection: newCollection, telemetryQueue: newQueue });
       if (typeof window !== 'undefined') {
-        localStorage.setItem('axim_telemetry_cache', JSON.stringify(newCollection));
+        localStore.saveTelemetryCache(newCollection);
       }
     } else {
       // Put back in queue if failed
