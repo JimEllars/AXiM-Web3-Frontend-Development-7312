@@ -24,6 +24,7 @@ function isValidEvent(event) {
     typeof event.timestamp === 'string' &&
     !Number.isNaN(Date.parse(event.timestamp)) &&
     typeof event.type === 'string' &&
+    (event.sessionId === undefined || typeof event.sessionId === 'string') &&
     event.type.length <= 128 &&
     JSON.stringify(event.payload ?? null).length <= 16384
   );
@@ -35,8 +36,9 @@ export default {
       return new Response(null, { status: 200, headers: CORS_HEADERS });
     }
 
-    if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405, headers: CORS_HEADERS });
+    const url = new URL(request.url);
+    if (request.method !== 'POST' || (url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
+      return new Response('Not Found or Method Not Allowed', { status: 404, headers: CORS_HEADERS });
     }
 
     if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {

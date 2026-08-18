@@ -12,6 +12,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
   const [value, setValue] = useState(initialValue);
   const [pulse, setPulse] = useState(false);
   const [latencyInfo, setLatencyInfo] = useState({ rtt: 50, type: '4G' });
+  const [edgeRegion, setEdgeRegion] = useState('UNKNOWN_RAY');
 
   useEffect(() => {
     if (typeof window !== 'undefined' && navigator.connection) {
@@ -28,6 +29,13 @@ export default function TelemetryBar({ label, color, initialValue }) {
       };
 
       navigator.connection.addEventListener('change', updateConnection);
+
+      fetch('/', { method: 'HEAD' }).then(res => {
+        const ray = res.headers.get('cf-ray');
+        if (ray) {
+            setEdgeRegion(ray.split('-')[1] || ray);
+        }
+      }).catch(() => {});
       return () => {
         navigator.connection.removeEventListener('change', updateConnection);
       };
@@ -122,7 +130,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative inline-block transition-transform duration-300 ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
           />
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
-            [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}]
+            [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
           </span>
           <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
