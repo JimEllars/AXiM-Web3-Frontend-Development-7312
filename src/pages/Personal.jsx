@@ -69,7 +69,7 @@ export default function Personal() {
           </Link>
 
           {/* Individual Utilities Card */}
-          <Link to="/tools/nda-generator" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
+          <Link to="/store" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-emerald-500 mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Individual Utilities</h2>

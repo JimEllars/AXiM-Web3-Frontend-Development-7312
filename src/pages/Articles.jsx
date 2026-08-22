@@ -4,6 +4,7 @@ import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import HubNavigator from "../components/HubNavigator";
 import NewsFeed from '../components/NewsFeed';
 import ArticleCard from '../components/ArticleCard';
 import { logTelemetry } from '../lib/telemetry';
@@ -328,6 +329,7 @@ export default function Articles() {
 
       {/* Section 3: All Articles (The Catch-All Firehose) */}
       <div className="mt-12 bg-[#050505] border-t border-white/10 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
+         <HubNavigator title="Explore AXiM Systems" />
          <NewsFeed limit={9} title="All Articles" />
       </div>
     </div>

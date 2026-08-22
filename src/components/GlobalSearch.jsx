@@ -15,14 +15,14 @@ const STATIC_ROUTES = [
   { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
   { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
 
-    { title: "Apps & Tools", path: "/tools", category: "Apps & Tools" },
+    { title: "Store Marketplace", path: "/store", category: "Store Marketplace" },
   { title: "Make.com Automation", path: "/partners/make", category: "Partners" },
   { title: "Chatbase AI", path: "/partners/chatbase", category: "Partners" },
   { title: "Powur Solar", path: "/partners/powur-solar", category: "Partners" },
   { title: "Powur Agency", path: "/partners/powur-join", category: "Partners" },
-  { title: "Launch NDA Generator", path: "https://quickndacontract.com/?via=axim_hub", category: "Apps & Tools", isExternal: true },
-  { title: "Demand Letter Generator", path: "https://quickdemandletter.com/start?via=axim_hub", category: "Apps & Tools", isExternal: true },
-  { title: "Pay Stub Generator", path: "/tools/pay-stub", category: "Apps & Tools" },
+  { title: "Launch NDA Generator", path: "https://quickndacontract.com/?via=axim_hub", category: "Store Marketplace", isExternal: true },
+  { title: "Demand Letter Generator", path: "https://quickdemandletter.com/start?via=axim_hub", category: "Store Marketplace", isExternal: true },
+  { title: "Pay Stub Generator", path: "/store", category: "Store Marketplace" },
 
   { title: "My Account", path: "/profile", category: "My Account" },
   { title: "Asset Licenses", path: "/profile", category: "My Account" },
@@ -307,7 +307,7 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Main Menu', 'Apps & Tools', 'My Account', 'Developer Utilities'].map(category => {
+                        {['Main Menu', 'Store Marketplace', 'My Account', 'Developer Utilities'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (

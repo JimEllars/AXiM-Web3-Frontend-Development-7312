@@ -48,7 +48,7 @@ describe('Hero Component', () => {
     assert.ok(screen.getByText(/Accelerate Your Personal, Professional, and Business Systems with the AXiM Development Advantage./));
 
     // Check CTA buttons exist
-    assert.ok(screen.getAllByText(/Explore Tools/)[0]);
+    assert.ok(screen.getAllByText(/Explore Marketplace/)[0]);
     assert.ok(screen.getByText(/Consultation/));
   });
 

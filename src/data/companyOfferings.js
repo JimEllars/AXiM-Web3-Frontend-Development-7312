@@ -11,7 +11,7 @@ export const generators = [
     title: "NDA Generator",
     desc: "Standard Non-Disclosure Agreements for B2B ops.",
     iconName: "LuShieldCheck",
-    externalUrl: "/tools/nda-generator"
+    externalUrl: "/store"
   },
   {
     id: "G_PRIVACY",
@@ -32,7 +32,7 @@ export const generators = [
     title: "Pay Stub",
     desc: "Verifiable Pay Stub Generation Tool ($4.00).",
     iconName: "LuDatabase",
-    externalUrl: "/tools/pay-stub"
+    externalUrl: "/store"
   }
 ];
 
