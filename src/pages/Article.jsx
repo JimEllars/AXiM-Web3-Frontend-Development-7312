@@ -25,7 +25,7 @@ export default function Article() {
       try {
 
         await navigator.share({
-          title: article?.title?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems',
+          title: article?.title?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Development',
           url: url
         });
         logTelemetry('article_shared', {
@@ -129,7 +129,7 @@ const { slug } = useParams();
     if (article && article.title?.rendered) {
       // Strip WordPress HTML entities natively
       const cleanTitle = article.title.rendered.replace(/<[^>]+>/g, '');
-      document.title = `${cleanTitle} | AXiM Systems`;
+      document.title = `${cleanTitle} | AXiM Development`;
     }
   }, [article]);
 
@@ -170,7 +170,7 @@ const { slug } = useParams();
 
   // Clean titles and excerpts for schema and meta tags
   const cleanTitle = article.title?.rendered?.replace(/<[^>]+>/g, '') || 'Intelligence Briefing';
-  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Systems Intelligence Briefing';
+  const cleanExcerpt = article.excerpt?.rendered?.replace(/<[^>]+>/g, '') || 'AXiM Development Intelligence Briefing';
 
   // Construct AIO/SEO Rich Snippet Schema
   const articleSchema = {
@@ -191,7 +191,7 @@ const { slug } = useParams();
     },
     "publisher": {
       "@type": "Organization",
-      "name": "AXiM Systems",
+      "name": "AXiM Development",
       "logo": {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
@@ -223,7 +223,7 @@ const { slug } = useParams();
         style={{ scaleX: scrollYProgress }}
       />
       <SEO
-        title={`${cleanTitle} | AXiM Systems`}
+        title={`${cleanTitle} | AXiM Development`}
         description={cleanExcerpt}
         image={imageUrl}
         type="article"

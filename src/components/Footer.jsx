@@ -126,38 +126,39 @@ export default function Footer() {
           {/* Partner Funnels */}
           <div>
             <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Partner Grid
+              <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Business Development
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/partners/make" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Make.com Automation</Link></li>
-              <li><Link to="/partners/chatbase" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Chatbase AI</Link></li>
-              <li><Link to="/partners/powur-solar" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Powur Solar</Link></li>
-              <li><Link to="/partners" className="text-axim-purple hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Partners →</Link></li>
+              <li><Link to="/services/commercial-exterior" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Services</Link></li>
+              <li><Link to="/products/nexus-crm-course" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
+              <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Demand Letters</a></li>
+              <li><Link to="/business" className="text-axim-purple hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Business Hub →</Link></li>
             </ul>
           </div>
 
           {/* Store Marketplace */}
           <div>
             <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
+              <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Personal & Home
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
-              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Ground Game Canvassing</Link></li>
-              <li><Link to="/services/commercial-exterior" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Contracts</Link></li>
-              <li><Link to="/store" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Store Marketplace →</Link></li>
+              <li><Link to="/services/window-cleaning" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Window Cleaning</Link></li>
+              <li><Link to="/services/pressure-washing" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pressure Washing</Link></li>
+              <li><Link to={"/tools/nda-generator"} className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Legal Utilities</Link></li>
+              <li><Link to="/personal" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Personal Hub →</Link></li>
             </ul>
           </div>
 
           {/* Intelligence Hub */}
           <div>
             <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Intelligence
+              <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Tech & Intelligence
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Latest Articles</Link></li>
-              <li><Link to="/support" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">System Support Wiki</Link></li>
-              <li><Link to="/consultation" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Book Consultation</Link></li>
+              <li><Link to="/tech" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Tech Infrastructure</Link></li>
+              <li><Link to="/games" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Games Arcade</Link></li>
+              <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Articles</Link></li>
+              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Digital Marketplace</Link></li>
             </ul>
           </div>
 

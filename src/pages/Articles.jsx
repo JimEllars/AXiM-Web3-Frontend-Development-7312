@@ -121,7 +121,7 @@ export default function Articles() {
     "url": "https://axim.us.com/articles",
     "publisher": {
       "@type": "Organization",
-      "name": "AXiM Systems",
+      "name": "AXiM Development",
       "logo": {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
@@ -142,7 +142,7 @@ export default function Articles() {
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO
-        title="Intelligence Hub | AXiM Systems"
+        title="Intelligence Hub | AXiM Development"
         description="Latest intelligence briefings, system architecture updates, and decentralized enterprise automation strategies."
         customSchema={[blogSchema]}
       />
@@ -329,7 +329,7 @@ export default function Articles() {
 
       {/* Section 3: All Articles (The Catch-All Firehose) */}
       <div className="mt-12 bg-[#050505] border-t border-white/10 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
-         <HubNavigator title="Explore AXiM Systems" />
+         <HubNavigator title="Explore AXiM Development" />
          <NewsFeed limit={9} title="All Articles" />
       </div>
     </div>

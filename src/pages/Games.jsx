@@ -35,7 +35,7 @@ export default function Games() {
       "name": "AXiM Daily Word Cipher",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Web",
-      "provider": { "@type": "Organization", "name": "AXiM Systems",
+      "provider": { "@type": "Organization", "name": "AXiM Development",
       "knowsAbout": [
         "Business Automation",
         "Make.com",

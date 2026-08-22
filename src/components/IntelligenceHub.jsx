@@ -29,7 +29,7 @@ export default function IntelligenceHub() {
             height="100%"
             frameBorder="0"
             className="flex-grow w-full h-full"
-            title="AXiM Systems Intelligence AI"
+            title="AXiM Development Intelligence AI"
           ></iframe>
         </motion.div>
       </div>

@@ -54,7 +54,7 @@ const handleExport = (record) => {
 
       htmlContent += `
             <div class="legal-text">
-               This document was autonomously generated via the AXiM Systems Infrastructure on behalf of the cryptographic operator.
+               This document was autonomously generated via the AXiM Development Infrastructure on behalf of the cryptographic operator.
                This cryptographic hash serves as a timestamped verification of intent.
             </div>
           </body>
