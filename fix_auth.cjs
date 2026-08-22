@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+const fs = require('fs');
+
+let content = `import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { localStore } from '../lib/persistence.js';
 import { useAximStore } from '../store/useAximStore.js';
@@ -185,3 +187,6 @@ export function useAximAuth() {
 
   return { profile, loading, isLoading: loading, isHydrating, session, checkDomain, isBackgroundSyncing };
 }
+`;
+
+fs.writeFileSync('src/hooks/useAximAuth.js', content);

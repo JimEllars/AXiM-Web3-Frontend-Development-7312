@@ -37,7 +37,8 @@ export function useOnyxStream() {
     logTelemetry('onyx_stream_initiated', { promptLength: text.length });
 
     let retryCount = 0;
-    const maxRetries = 3;
+    const maxRetries = 4;
+    let currentBackoff = 1000;
 
     const connectStream = async () => {
       try {
@@ -79,6 +80,7 @@ export function useOnyxStream() {
               try {
                 const parsed = JSON.parse(data);
                 if (parsed.error) throw new Error(parsed.error);
+                if (parsed.type === 'keepalive') continue;
 
                 if (parsed.content) {
                   setMessages(prev => prev.map(msg =>
@@ -110,7 +112,8 @@ export function useOnyxStream() {
 
         if (retryCount < maxRetries) {
           retryCount++;
-          const backoff = Math.pow(2, retryCount) * 1000;
+          const backoff = currentBackoff;
+          currentBackoff = Math.min(currentBackoff * 2, 8000);
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           logTelemetry('onyx_stream_retry', { retryCount, backoff });
           setTimeout(connectStream, backoff);
