@@ -86,12 +86,12 @@ export default function Home() {
   const homeSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "AXiM Systems",
+    "name": "AXiM Development",
     "url": "https://axim.us.com/",
     "description": "Articles, AXiM Apps & Tools, & Learning Systems for enterprise operations.",
         "publisher": {
       "@type": "Organization",
-      "name": "AXiM Systems",
+      "name": "AXiM Development",
       "logo": {
         "@type": "ImageObject",
         "url": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"

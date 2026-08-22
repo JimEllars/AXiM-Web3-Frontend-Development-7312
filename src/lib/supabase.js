@@ -16,3 +16,5 @@ const supabaseUrl = getEnv('VITE_AXIM_CORE_URL', 'https://mock-core.axim.us.com'
 const supabaseKey = getEnv('VITE_AXIM_CORE_ANON_KEY', 'mock-anon-key');
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
+
+export const isSupabaseConfigured = !supabaseUrl.includes('mock-core') && supabaseKey !== 'mock-anon-key';

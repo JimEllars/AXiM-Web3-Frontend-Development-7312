@@ -38,9 +38,11 @@ describe('Telemetry', () => {
 
     // Override supabase insert to also fail so it stays in queue
     const { supabase } = await import('../lib/supabase.js');
+    const supabaseModule = await import('../lib/supabase.js');
     supabase.from.mockReturnValueOnce({
       insert: vi.fn().mockRejectedValue(new Error('Supabase error'))
     });
+    supabaseModule.isSupabaseConfigured = false;
 
     logTelemetry('buffer_test', { data: 1 });
     await flushTelemetryQueue();

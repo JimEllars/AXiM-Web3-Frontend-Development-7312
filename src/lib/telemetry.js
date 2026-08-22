@@ -1,5 +1,5 @@
 import { useAximStore } from '../store/useAximStore';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { localStore } from '../lib/persistence';
 
 let isFlushing = false;
@@ -93,7 +93,9 @@ export async function flushTelemetryQueue(force = false) {
 
   try {
     const payload = JSON.stringify(currentBatch);
-    const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL || import.meta.env.VITE_ONYX_WORKER_URL || '/api/telemetry';
+    const rawEndpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL;
+    const isValidRemote = rawEndpoint && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
+    const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
       batchQueue = [...currentBatch, ...batchQueue]; // Restore on fail
@@ -135,21 +137,32 @@ export async function flushTelemetryQueue(force = false) {
             success = false;
           }
         } catch (fetchErr) {
-          console.warn("Edge telemetry failed, falling back to direct Supabase insert", fetchErr);
+          console.warn("Edge telemetry failed", fetchErr);
 
-          try {
-            const { error } = await supabase.from('telemetry_events').insert(currentBatch);
-            if (!error) {
-               success = true;
-               console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
-            } else {
-               success = false;
-               console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error);
+          // Using imported isSupabaseConfigured
+
+          if (isSupabaseConfigured) {
+            console.warn("Falling back to direct Supabase insert");
+            try {
+              const { error } = await supabase.from('telemetry_events').insert(currentBatch);
+              if (!error) {
+                 success = true;
+                 console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
+              } else {
+                 success = false;
+                 console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error);
+              }
+            } catch (supabaseErr) {
+              success = false;
+              console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message);
             }
-          } catch (supabaseErr) {
+          } else {
             success = false;
-            console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message);
-            // Don't return here, continue to cleanup to avoid infinite loops
+            if (typeof window !== 'undefined') {
+              try {
+                localStore.saveTelemetryCache([...useAximStore.getState().telemetryCollection, ...currentBatch]);
+              } catch(e) { /* ignore */ }
+            }
           }
 
           // Dispatch a mock success to keep UI functional and prevent infinite queues if worker is offline
