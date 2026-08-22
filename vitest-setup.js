@@ -23,5 +23,6 @@ vi.mock('./src/lib/supabase.js', () => ({
       insert: vi.fn(),
       select: vi.fn()
     }))
-  }
+  },
+  isSupabaseConfigured: true
 }));

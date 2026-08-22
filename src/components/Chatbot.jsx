@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 import { theme } from '../config/theme';
 
 export default function Chatbot() {
-  const botId = theme?.chatbaseBotId || import.meta.env.VITE_CHATBASE_BOT_ID;
+  const botId = import.meta.env.VITE_CHATBASE_BOT_ID || theme?.chatbaseBotId;
+  const isBotConfigured = botId && botId !== "987654321" && !botId.includes("placeholder");
 
   useEffect(() => {
-    if (!botId) return;
+    if (!isBotConfigured) return;
 
     window.chatbaseConfig = {
       chatbotId: botId,
@@ -31,15 +32,8 @@ export default function Chatbot() {
           chatbaseContainer.remove();
       }
     };
-  }, [botId]);
+  }, [botId, isBotConfigured]);
 
-
-  // The Chatbase script handles its own UI injection, but we can add a connection badge
-  return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 px-3 py-1 bg-black/80 backdrop-blur-md border border-white/10 rounded-full shadow-lg pointer-events-none">
-      <div className="w-2 h-2 rounded-full bg-axim-green animate-pulse" />
-      <span className="text-[0.65rem] font-mono text-zinc-400 uppercase tracking-widest">Onyx Edge Connected</span>
-    </div>
-  );
-
+  if (!isBotConfigured) return null;
+  return null; // Chatbase injects its own floating bubble when configured
 }

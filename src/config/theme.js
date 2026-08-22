@@ -1,5 +1,5 @@
 export const theme = {
-  siteName: "AXiM Systems",
+  siteName: "AXiM Development",
   colors: {
     primary: '#F0FF00', // axim-gold
     secondary: '#00FF00', // axim-green
@@ -8,5 +8,5 @@ export const theme = {
     background: '#050505', // bg-void
   },
   wpRestEndpoint: "https://axim.us.com/wp-json/wp/v2",
-  chatbaseBotId: "987654321",
+  chatbaseBotId: null,
 };
