@@ -191,4 +191,17 @@ if (typeof window !== 'undefined') {
 
   window.addEventListener('visibilitychange', handleVisibilityChange);
   window.addEventListener('pagehide', () => flushTelemetryQueue(true));
+  window.addEventListener('online', () => flushTelemetryQueue(true));
+}
+
+export function setupTelemetryHooks() {
+  if (typeof window === 'undefined') return;
+
+  // Wallet hooks
+  window.addEventListener('wallet_connect', (e) => logTelemetry('wallet_connect', e.detail || {}));
+  window.addEventListener('wallet_disconnect', (e) => logTelemetry('wallet_disconnect', e.detail || {}));
+  window.addEventListener('chain_switch', (e) => logTelemetry('chain_switch', e.detail || {}));
+
+  // AI query hook
+  window.addEventListener('ai_query', (e) => logTelemetry('ai_query', e.detail || {}));
 }

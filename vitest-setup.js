@@ -1,24 +1,27 @@
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
+global.expect = expect;
 
-global.sessionStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-
-global.localStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-
-// Mock IntersectionObserver
-class IntersectionObserver {
+// Mock IntersectionObserver globally
+global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-}
-window.IntersectionObserver = IntersectionObserver;
+};
+
+// Mock crypto securely for jsdom
+Object.defineProperty(global, 'crypto', {
+  value: {
+    randomUUID: () => Math.random().toString(36).substring(2)
+  }
+});
+
+// Mock supabase for tests
+vi.mock('./src/lib/supabase.js', () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      insert: vi.fn(),
+      select: vi.fn()
+    }))
+  }
+}));

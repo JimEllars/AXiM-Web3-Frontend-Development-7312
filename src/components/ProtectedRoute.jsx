@@ -5,7 +5,7 @@ import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
 
 export default function ProtectedRoute({ children, adminOnly = false }) {
-  const { session, isLoading, isHydrating } = useAximAuth();
+  const { session, isLoading, isHydrating, isBackgroundSyncing } = useAximAuth();
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const location = useLocation();
 
@@ -51,5 +51,17 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
     return <Navigate to="/dashboard/access-denied" replace />;
   }
 
-  return children;
+
+  const syncingBar = isBackgroundSyncing ? (
+    <div className="fixed top-0 left-0 w-full h-1 bg-axim-purple/20 z-50 overflow-hidden">
+      <div className="h-full bg-axim-purple animate-pulse w-1/3 rounded-r-full" />
+    </div>
+  ) : null;
+
+  return (
+    <>
+      {syncingBar}
+      {children}
+    </>
+  );
 }

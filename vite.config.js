@@ -11,9 +11,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react', 'react-icons'],
-          'state-vendor': ['zustand']
+          'vendor-react': ['react', 'react-dom', 'react-router-dom', 'zustand'],
+          'vendor-icons': ['lucide-react'],
+          'ui-vendor': ['framer-motion', 'react-icons'],
+          'vendor-web3': ['thirdweb']
         }
       }
     }
