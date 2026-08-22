@@ -4,6 +4,7 @@ import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import SEO from '../components/SEO';
+
 import ArticleCard from '../components/ArticleCard';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
@@ -315,14 +316,14 @@ const { slug } = useParams();
                <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Ecosystem Tools
              </h4>
              <div className="space-y-4">
-               <Link to="/tools/nda-generator"
+               <Link to="/store"
                  onClick={() => logTelemetry('sidebar_tool_click', { tool: 'nda', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Mutual NDA</span>
                </Link>
-               <Link to="/tools/pay-stub"
+               <Link to="/store"
                  onClick={() => logTelemetry('sidebar_tool_click', { tool: 'paystub', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-[#DB2777] to-red-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white" />
@@ -379,6 +380,7 @@ const { slug } = useParams();
         </aside>
       </div>
 
+      <HubNavigator title="Keep Exploring" />
       {/* End of Page Firehose */}
       <div className="mt-20 bg-black border-t border-white/10 pt-16 pb-20 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">

@@ -33,6 +33,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AuthGateway = lazy(() => import('./pages/AuthGateway'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const DashboardAccessDenied = lazy(() => import('./components/DashboardAccessDenied'));
 import Article from './pages/Article';
 import NexusCrmCourse from './pages/products/NexusCrmCourse';
 const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
@@ -250,6 +251,7 @@ function App() {
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
             <Route path="/auth" element={<PageTransition><AuthGateway /></PageTransition>} />
             <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+            <Route path="/dashboard/access-denied" element={<PageTransition><DashboardAccessDenied /></PageTransition>} />
             <Route path="/early-access" element={<PageTransition><EarlyAccess /></PageTransition>} />
             <Route path="/profile" element={
               <ProtectedRoute>

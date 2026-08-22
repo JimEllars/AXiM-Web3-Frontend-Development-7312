@@ -83,8 +83,8 @@ export default function Tech() {
               <h3 className="font-bold uppercase tracking-widest mb-2">Utility Tools</h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Document generation and administrative automation.</p>
               <div className="flex flex-col gap-2">
-                <Link to="/tools/nda-generator" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'NDA Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Launch NDA Generator →</Link>
-                <Link to="/tools/pay-stub" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'Paystub Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Launch Paystub Generator →</Link>
+                <Link to="/store" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'NDA Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Access NDA Generator →</Link>
+                <Link to="/store" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'Paystub Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Access Paystub Generator →</Link>
               </div>
             </div>
 

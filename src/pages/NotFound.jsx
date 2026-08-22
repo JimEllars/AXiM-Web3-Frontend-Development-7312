@@ -85,7 +85,7 @@ export default function NotFound() {
          <div className="mt-8 border-t border-white/10 pt-8 text-left">
            <h3 className="text-white text-sm font-bold uppercase tracking-widest mb-4">Available AXiM Infrastructure</h3>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link to="/tools/nda-generator" onClick={() => trackRecovery('NDA Generator')} className="group relative bg-[#050505] overflow-hidden border border-white/5 p-4 rounded-sm hover:border-axim-purple/30 transition-colors flex items-center gap-4 before:absolute before:inset-0 before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity">
+              <Link to="/store" onClick={() => trackRecovery('NDA Generator')} className="group relative bg-[#050505] overflow-hidden border border-white/5 p-4 rounded-sm hover:border-axim-purple/30 transition-colors flex items-center gap-4 before:absolute before:inset-0 before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity">
                 <div className="relative z-10 w-8 h-8 rounded bg-black flex items-center justify-center shrink-0 border border-white/10 group-hover:border-axim-purple/50 transition-colors">
                   <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white group-hover:text-axim-purple transition-colors" />
                 </div>
@@ -94,7 +94,7 @@ export default function NotFound() {
                   <div className="text-zinc-500 text-[0.6rem] font-mono uppercase">Secure Documents</div>
                 </div>
               </Link>
-              <Link to="/tools/pay-stub" onClick={() => trackRecovery('Pay Stub Generator')} className="group relative bg-[#050505] overflow-hidden border border-white/5 p-4 rounded-sm hover:border-axim-purple/30 transition-colors flex items-center gap-4 before:absolute before:inset-0 before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity">
+              <Link to="/store" onClick={() => trackRecovery('Pay Stub Generator')} className="group relative bg-[#050505] overflow-hidden border border-white/5 p-4 rounded-sm hover:border-axim-purple/30 transition-colors flex items-center gap-4 before:absolute before:inset-0 before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity">
                 <div className="relative z-10 w-8 h-8 rounded bg-black flex items-center justify-center shrink-0 border border-white/10 group-hover:border-axim-purple/50 transition-colors">
                   <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white group-hover:text-axim-purple transition-colors" />
                 </div>

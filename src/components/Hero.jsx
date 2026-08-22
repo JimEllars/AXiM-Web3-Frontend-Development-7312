@@ -49,11 +49,11 @@ export default function Hero() {
         {/* Updated CTAs */}
         <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
           <Link
-            to="/tools"
-            onClick={() => logTelemetry('hero_cta_clicked', { target: 'tools_directory' })}
+            to="/store"
+            onClick={() => logTelemetry('hero_cta_clicked', { target: 'store_marketplace' })}
             className="inline-flex items-center justify-center px-10 py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_30px_rgba(147,51,234,0.3)] w-full sm:w-auto text-center"
           >
-            Explore Tools <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
+            Explore Marketplace <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
           <Link
             to="/consultation"

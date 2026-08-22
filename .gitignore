@@ -25,3 +25,5 @@ dist-ssr
 .env*.patch
 *.bak
 *.orig
+.env
+test-results/

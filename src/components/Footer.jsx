@@ -136,16 +136,16 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Apps & Tools */}
+          {/* Store Marketplace */}
           <div>
             <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Infrastructure
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/tools" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
-              <li><Link to="/tools" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Ground Game Canvassing</Link></li>
+              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
+              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Ground Game Canvassing</Link></li>
               <li><Link to="/services/commercial-exterior" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Contracts</Link></li>
-              <li><Link to="/tools" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Apps & Tools →</Link></li>
+              <li><Link to="/store" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View All Store Marketplace →</Link></li>
             </ul>
           </div>
 

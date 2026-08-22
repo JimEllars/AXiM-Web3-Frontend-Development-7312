@@ -214,7 +214,7 @@ const [extractingId, setExtractingId] = useState(null);
             <h3 className="text-xl font-black uppercase tracking-tighter text-white">Enterprise Tools</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Link to="/tools/nda-generator" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group flex items-start gap-4">
+            <Link to="/store" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-axim-purple/50 transition-colors group flex items-start gap-4">
               <div className="p-3 bg-axim-purple/10 text-axim-purple rounded-sm">
                 <SafeIcon icon={LuIcons.LuShieldCheck} className="w-6 h-6" />
               </div>
@@ -223,7 +223,7 @@ const [extractingId, setExtractingId] = useState(null);
                 <p className="text-xs text-zinc-500 leading-relaxed">Generate a balanced, two-way non-disclosure agreement optimized for tech collaborations.</p>
               </div>
             </Link>
-            <Link to="/tools/pay-stub" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-[#DB2777]/50 transition-colors group flex items-start gap-4">
+            <Link to="/store" className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl hover:border-[#DB2777]/50 transition-colors group flex items-start gap-4">
               <div className="p-3 bg-[#DB2777]/10 text-[#DB2777] rounded-sm">
                 <SafeIcon icon={LuIcons.LuFileText} className="w-6 h-6" />
               </div>
