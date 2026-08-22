@@ -66,6 +66,10 @@ export default function Games() {
       >
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
+          <Link onClick={() => logTelemetry('nav_link_click', { path: '/tech', title: 'return_to_tech' })} to="/tech" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white font-mono text-xs uppercase tracking-widest transition-colors mb-6 group">
+            <SafeIcon className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" icon={LuIcons.LuArrowLeft}/>
+            Back to Tech Hub
+          </Link>
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4 flex items-center justify-center gap-4">
               <span className="text-axim-green">Gaming Development Hub</span>

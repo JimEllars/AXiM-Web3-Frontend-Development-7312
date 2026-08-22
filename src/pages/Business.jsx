@@ -24,7 +24,7 @@ export default function Business() {
   return (
     <div className="min-h-screen bg-bg-void text-white font-sans selection:bg-axim-gold/30">
       <SEO
-        title="Business Development Hub | AXiM Systems"
+        title="Business Development Hub | AXiM Development"
         description="Scaling enterprise revenue and B2B systems through intelligent applications and commercial services."
         schema={schema}
       />
