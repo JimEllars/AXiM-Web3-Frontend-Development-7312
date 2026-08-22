@@ -201,7 +201,7 @@ export default function Support() {
       )}
 
       <SEO
-        title="Decentralized Customer Support | AXiM Systems"
+        title="Decentralized Customer Support | AXiM Development"
         description="Get help with your AXiM tools, manage tickets, and access documentation."
         customSchema={[faqSchema]}
       />

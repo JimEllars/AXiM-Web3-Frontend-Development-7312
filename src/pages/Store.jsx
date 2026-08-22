@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAximStore } from '../store/useAximStore.js';
 import { logTelemetry } from '../lib/telemetry.js';
 import SEO from '../components/SEO.jsx';
@@ -6,10 +6,16 @@ import SEO from '../components/SEO.jsx';
 export default function Store() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const showToast = useAximStore((state) => state.showToast);
+  const [waitlistedProducts, setWaitlistedProducts] = useState(new Set());
 
   const handleWaitlistClick = (productTitle) => {
-    logTelemetry('store_product_waitlist', { productTitle });
-    showToast('Added to Store Waitlist', 'success');
+    if (waitlistedProducts.has(productTitle)) return;
+    setWaitlistedProducts((prev) => new Set(prev).add(productTitle));
+    logTelemetry('store_product_waitlist', {
+      productTitle,
+      isWeb3Authenticated
+    });
+    showToast(`Added ${productTitle} to Waitlist`, 'success');
   };
 
   const seoData = {
@@ -106,9 +112,13 @@ export default function Store() {
                   </p>
                   <button
                     onClick={() => handleWaitlistClick(product.title)}
-                    className="w-full mt-auto inline-flex items-center justify-center px-4 py-3 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-purple/50 bg-axim-purple/10 text-white hover:bg-axim-purple hover:text-white"
+                    className={`w-full mt-auto inline-flex items-center justify-center px-4 py-3 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border ${
+                      waitlistedProducts.has(product.title)
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                        : 'border-axim-purple/50 bg-axim-purple/10 text-white hover:bg-axim-purple hover:text-white'
+                    }`}
                   >
-                    Join Product Waitlist
+                    {waitlistedProducts.has(product.title) ? '✓ Waitlist Confirmed' : 'Join Product Waitlist'}
                   </button>
                 </div>
               ))}

@@ -24,7 +24,7 @@ export default function Personal() {
   return (
     <div className="min-h-screen bg-bg-void text-white font-sans selection:bg-emerald-500/30">
       <SEO
-        title="Personal Development Hub | AXiM Systems"
+        title="Personal Development Hub | AXiM Development"
         description="Maximizing individual efficiency and property value through targeted services and growth frameworks."
         schema={schema}
       />
