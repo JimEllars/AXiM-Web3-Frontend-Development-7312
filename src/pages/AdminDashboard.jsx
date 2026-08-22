@@ -34,7 +34,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
-      <SEO title="Command Center | AXiM Systems" />
+      <SEO title="Command Center | AXiM Development" />
 
       <section className="pt-32 pb-8 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.1),transparent_50%)] pointer-events-none" />

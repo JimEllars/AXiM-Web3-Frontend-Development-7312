@@ -8,6 +8,20 @@ const { LuChevronRight } = LuIcons;
 
 export default function SystemBreadcrumb() {
 
+  const formatBreadcrumbLabel = (value) => {
+    const map = {
+      'business': 'Business Development',
+      'personal': 'Personal Development',
+      'tech': 'Tech Development',
+      'commercial-exterior': 'Commercial Exterior',
+      'window-cleaning': 'Window Cleaning',
+      'pressure-washing': 'Pressure Washing',
+      'nexus-crm-course': 'Nexus CRM Masterclass'
+    };
+    return map[value.toLowerCase()] || value.toUpperCase();
+  };
+
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const isExternalTrackingActive = queryParams.has('via') || queryParams.has('utm_source');
@@ -21,7 +35,7 @@ export default function SystemBreadcrumb() {
     { name: 'AXM_CORE', path: '/dashboard' },
     ...pathnames.map((value, index) => {
       const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-      return { name: (value || 'UNKNOWN').toUpperCase(), path: to };
+      return { name: formatBreadcrumbLabel(value || 'UNKNOWN'), path: to };
     }).filter(crumb => crumb.name !== 'UNKNOWN' && crumb.name.trim() !== '')
   ];
 
@@ -36,7 +50,7 @@ export default function SystemBreadcrumb() {
             ) : (
               <>
                 <Link to={crumb.path} className="hover:text-white transition-colors" onClick={() => {
-                  logTelemetry('breadcrumb_nav_click', { path: crumb.path, name: crumb.name });
+                  logTelemetry('breadcrumb_clicked', { path: crumb.path, label: crumb.name });
                 }}>{crumb.name}</Link>
                 <SafeIcon icon={LuChevronRight} className="w-3 h-3 text-zinc-700" />
               </>

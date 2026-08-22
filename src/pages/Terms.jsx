@@ -21,7 +21,7 @@ export default function Terms() {
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <motion.div style={{ scaleX }} className="fixed top-0 left-0 right-0 h-1 bg-axim-purple z-50 origin-left" />
 
-      <SEO title="Legal & Compliance | AXiM Systems" />
+      <SEO title="Legal & Compliance | AXiM Development" />
 
       <section className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_50%)] pointer-events-none" />
@@ -92,13 +92,13 @@ export default function Terms() {
               <div className="animate-fade-in">
                 <h2>Terms of Service</h2>
                 <p>Last Updated: October 1, 2026</p>
-                <p>Welcome to AXiM Systems. By accessing our decentralized infrastructure, API gateways, or automated documentation portals, you agree to be bound by these operational parameters.</p>
+                <p>Welcome to AXiM Development. By accessing our decentralized infrastructure, API gateways, or automated documentation portals, you agree to be bound by these operational parameters.</p>
                 <h3>1. Operator Responsibilities</h3>
-                <p>Operators are entirely responsible for the security of their cryptographic keys, login credentials, and downloaded digital assets from the Operator Vault. AXiM Systems is not liable for unauthorized access resulting from compromised end-user endpoints.</p>
+                <p>Operators are entirely responsible for the security of their cryptographic keys, login credentials, and downloaded digital assets from the Operator Vault. AXiM Development is not liable for unauthorized access resulting from compromised end-user endpoints.</p>
                 <h3>2. Service Availability</h3>
-                <p>While we engineer our systems for 99.99% uptime via distributed edge nodes, AXiM Systems does not guarantee uninterrupted access and reserves the right to throttle or suspend endpoints to preserve network integrity during anomalous traffic spikes.</p>
+                <p>While we engineer our systems for 99.99% uptime via distributed edge nodes, AXiM Development does not guarantee uninterrupted access and reserves the right to throttle or suspend endpoints to preserve network integrity during anomalous traffic spikes.</p>
                 <h3>3. Intellectual Property</h3>
-                <p>The core logic engines, front-end matrices, and proprietary tools remain the exclusive property of AXiM Systems. Generation of documents does not transfer ownership of the underlying algorithms.</p>
+                <p>The core logic engines, front-end matrices, and proprietary tools remain the exclusive property of AXiM Development. Generation of documents does not transfer ownership of the underlying algorithms.</p>
               </div>
             )}
 
@@ -106,7 +106,7 @@ export default function Terms() {
               <div className="animate-fade-in">
                 <h2>Privacy Policy</h2>
                 <p>Last Updated: October 1, 2026</p>
-                <p>AXiM Systems operates on a Zero-Trust architecture principle. We collect only the data strictly necessary to execute your requested operations.</p>
+                <p>AXiM Development operates on a Zero-Trust architecture principle. We collect only the data strictly necessary to execute your requested operations.</p>
                 <h3>Data Ingestion</h3>
                 <p>When you utilize our Micro-Apps (NDA Generator, Pay Stub System), your inputs are locally sanitized and transmitted via AES-256-GCM encrypted envelopes. We do not sell, rent, or share your proprietary inputs with external marketing aggregators.</p>
                 <h3>Telemetry & Cookies</h3>
@@ -117,11 +117,11 @@ export default function Terms() {
             {activeDoc === 'dpa' && (
               <div className="animate-fade-in">
                 <h2>Data Processing Agreement (DPA)</h2>
-                <p>This DPA outlines the responsibilities of AXiM Systems acting as a Data Processor on behalf of your enterprise.</p>
+                <p>This DPA outlines the responsibilities of AXiM Development acting as a Data Processor on behalf of your enterprise.</p>
                 <h3>Sub-Processors</h3>
                 <p>AXiM utilizes authorized infrastructure partners (e.g., Cloudflare, Supabase) to route and vault encrypted data. All sub-processors are bound by strict SOC-2 Type II compliance standards.</p>
                 <h3>Incident Response</h3>
-                <p>In the highly unlikely event of a cryptographic breach or data leak, AXiM Systems will notify affected operators via their registered Secure Comms within 48 hours, providing a detailed Root Cause Analysis (RCA).</p>
+                <p>In the highly unlikely event of a cryptographic breach or data leak, AXiM Development will notify affected operators via their registered Secure Comms within 48 hours, providing a detailed Root Cause Analysis (RCA).</p>
               </div>
             )}
 

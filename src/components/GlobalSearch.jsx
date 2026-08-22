@@ -12,22 +12,20 @@ import SafeIcon from '../common/SafeIcon';
 const { LuSearch, LuX } = LuIcons;
 
 const STATIC_ROUTES = [
-  { title: "Dashboard", path: "/dashboard", category: "Main Menu" },
-  { title: "Intelligence Hub", path: "/articles", category: "Main Menu" },
-
-    { title: "Store Marketplace", path: "/store", category: "Store Marketplace" },
-  { title: "Make.com Automation", path: "/partners/make", category: "Partners" },
-  { title: "Chatbase AI", path: "/partners/chatbase", category: "Partners" },
-  { title: "Powur Solar", path: "/partners/powur-solar", category: "Partners" },
-  { title: "Powur Agency", path: "/partners/powur-join", category: "Partners" },
-  { title: "Launch NDA Generator", path: "https://quickndacontract.com/?via=axim_hub", category: "Store Marketplace", isExternal: true },
-  { title: "Demand Letter Generator", path: "https://quickdemandletter.com/start?via=axim_hub", category: "Store Marketplace", isExternal: true },
-  { title: "Pay Stub Generator", path: "/store", category: "Store Marketplace" },
-
-  { title: "My Account", path: "/profile", category: "My Account" },
-  { title: "Asset Licenses", path: "/profile", category: "My Account" },
-  { title: "Security Settings", path: "/profile", category: "My Account" },
-  { title: "⚠️ Developer: Hard Reset State", action: "hard_reset", category: "Developer Utilities" }
+  { title: "Business Development Hub", path: "/business", category: "Business Development" },
+  { title: "Commercial Exterior Contracts", path: "/services/commercial-exterior", category: "Business Development" },
+  { title: "Nexus CRM Masterclass", path: "/products/nexus-crm-course", category: "Business Development" },
+  { title: "Personal Development Hub", path: "/personal", category: "Personal Development" },
+  { title: "Residential Window Cleaning", path: "/services/window-cleaning", category: "Personal Development" },
+  { title: "Pressure Washing Operations", path: "/services/pressure-washing", category: "Personal Development" },
+  { title: "Mutual NDA Generator", path: "/tools" + "/nda-generator", category: "Personal Development" },
+  { title: "Pay Stub Generator", path: "/tools" + "/pay-stub", category: "Personal Development" },
+  { title: "Tech Development Infrastructure", path: "/tech", category: "Tech Development" },
+  { title: "Cyber Runner Arcade", path: "/games", category: "Tech Development" },
+  { title: "Digital Marketplace", path: "/store", category: "Marketplace" },
+  { title: "Intelligence Hub & Articles", path: "/articles", category: "Intelligence" },
+  { title: "Book Consultation", path: "/consultation", category: "Support & Operations" },
+  { title: "Support Wiki", path: "/support", category: "Support & Operations" }
 ];
 
 export default function GlobalSearch() {
@@ -289,8 +287,9 @@ export default function GlobalSearch() {
                   className="w-full bg-transparent text-white text-lg placeholder:text-zinc-600 focus:outline-none font-medium"
                 />
                                 {isWeb3Authenticated && (
-                  <span className="hidden sm:inline-block px-2 py-0.5 bg-axim-purple/10 border border-axim-purple/30 text-[8px] font-mono tracking-widest text-axim-purple uppercase rounded-sm select-none">
-                    [OMNIBAR_INDEX: ON-CHAIN SECURED]
+                  <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-[8px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
+                    <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                    [OMNIBAR_INDEX: ON-CHAIN_SECURED]
                   </span>
                 )}
                 <button aria-label="Close Search" type="button" onClick={closeModal} className="text-zinc-500 hover:text-white p-2 bg-white/5 rounded-sm border border-white/10">
@@ -307,12 +306,12 @@ export default function GlobalSearch() {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Main Menu', 'Store Marketplace', 'My Account', 'Developer Utilities'].map(category => {
+                        {['Business Development', 'Personal Development', 'Tech Development', 'Marketplace', 'Intelligence', 'Support & Operations'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (
                             <div key={category} className="mb-4">
-                              <h4 className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest mb-2 border-b border-white/10 pb-1">{category}</h4>
+                              <h4 className={`text-[0.65rem] font-mono uppercase tracking-widest mb-2 border-b border-white/10 pb-1 ${['Business Development', 'Personal Development', 'Tech Development'].includes(category) ? 'text-axim-gold drop-shadow-[0_0_8px_#F59E0B]' : 'text-axim-purple drop-shadow-[0_0_8px_#7D00FF]'}`}>{category}</h4>
                               <div className="space-y-2">
                                 {categoryResults.map((route) => {
                                   const globalIndex = results.indexOf(route);
