@@ -114,7 +114,7 @@ export default function WindowCleaning() {
   return (
     <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 z-10">
       <SEO
-        title="Professional Window Cleaning Services | AXiM Systems"
+        title="Professional Window Cleaning Services | AXiM Development"
         description="Get a crystal clear view with our professional window cleaning services. Request a quote today."
         type="website"
         customSchema={[schema]}
@@ -406,7 +406,7 @@ export default function WindowCleaning() {
                     </div>
                     <h2 className="text-3xl font-bold text-white mb-4">Request Received!</h2>
                     <p className="text-zinc-400 max-w-md mx-auto mb-8">
-                        Thank you for choosing AXiM Systems. We're reviewing your property profile and will reach out shortly to finalize your quote and scheduling.
+                        Thank you for choosing AXiM Development. We're reviewing your property profile and will reach out shortly to finalize your quote and scheduling.
                     </p>
                     <button
                         onClick={() => { setStep(1); setIsSubmitted(false); setFormData({stories:'', windowCount:'', package:'', firstName:'', lastName:'', phone:'', email:'', address:'', preferredDate:'', addOns: []}); }}

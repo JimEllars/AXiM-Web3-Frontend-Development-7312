@@ -1,31 +1,60 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import { LuStar } from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 
-export default function Reviews() {
+export default function Reviews({ category = "all" }) {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
-  const reviews = [
+  const allReviews = [
     {
       name: "Marcus V.",
       company: "Enterprise Sales Director",
       rating: 5,
-      text: "The Nexus CRM and automated lead routing systems completely transformed our pipeline. Conversion rates are up 38% since onboarding."
+      text: "The Nexus CRM and automated lead routing systems completely transformed our pipeline. Conversion rates are up 38% since onboarding.",
+      category: "business"
     },
     {
       name: "Sarah L.",
       company: "Verified Operator",
       rating: 5,
-      text: "AXiM Development's tool suite and intelligence articles are our team's go-to resources for scaling our field operations."
+      text: "AXiM Development's tool suite and intelligence articles are our team's go-to resources for scaling our field operations.",
+      category: "business"
     },
     {
       name: "James R.",
       company: "B2B Solutions Manager",
       rating: 5,
-      text: "Exceptional telemetry tracking and edge performance. The ability to manage our entire canvassing network from one command center is invaluable."
+      text: "Exceptional telemetry tracking and edge performance. The ability to manage our entire canvassing network from one command center is invaluable.",
+      category: "tech"
+    },
+    {
+      name: "Elena G.",
+      company: "Property Owner",
+      rating: 5,
+      text: "The personal document generators saved me countless hours of administrative work. Extremely efficient.",
+      category: "personal"
+    },
+    {
+      name: "Michael T.",
+      company: "Independent Contractor",
+      rating: 5,
+      text: "Flawless infrastructure and reliable edge nodes. The deployment speed is unmatched.",
+      category: "tech"
+    },
+    {
+      name: "David K.",
+      company: "Residential Client",
+      rating: 5,
+      text: "Their personal growth frameworks and utilities helped me optimize my daily output significantly.",
+      category: "personal"
     }
   ];
+
+  const reviews = category === 'all'
+    ? allReviews
+    : allReviews.filter(r => r.category === category);
 
   return (
     <div className="py-16">
@@ -76,3 +105,7 @@ export default function Reviews() {
     </div>
   );
 }
+
+Reviews.propTypes = {
+  category: PropTypes.string
+};

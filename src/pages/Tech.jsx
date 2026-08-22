@@ -6,6 +6,8 @@ import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Reviews from '../components/Reviews.jsx';
+
 
 export default function Tech() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -52,7 +54,7 @@ export default function Tech() {
           <h2 className="text-2xl font-black uppercase tracking-tight mb-8 border-b border-white/10 pb-4">Enterprise Applications & Infrastructure</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors hover:bg-white/5">
               <h3 className="font-bold uppercase tracking-widest mb-2 flex justify-between items-start">
                 Nexus CRM
                 <span className="text-[8px] font-mono text-yellow-500 border border-yellow-500/30 bg-yellow-500/10 px-1 py-0.5 rounded-sm">[INVITE ONLY]</span>
@@ -61,7 +63,7 @@ export default function Tech() {
               <Link to="/consultation?app=nexus_crm" onClick={() => logTelemetry('app_access_intent', { app: 'nexus_crm', accessType: 'invite_only' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</Link>
             </div>
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors hover:bg-white/5">
               <h3 className="font-bold uppercase tracking-widest mb-2 flex justify-between items-start">
                 Ground Game Canvassing
                 <span className="text-[8px] font-mono text-yellow-500 border border-yellow-500/30 bg-yellow-500/10 px-1 py-0.5 rounded-sm">[INVITE ONLY]</span>
@@ -70,7 +72,7 @@ export default function Tech() {
               <Link to="/consultation?app=ground_game" onClick={() => logTelemetry('app_access_intent', { app: 'ground_game', accessType: 'invite_only' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</Link>
             </div>
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors hover:bg-white/5">
               <h3 className="font-bold uppercase tracking-widest mb-2 flex justify-between items-start">
                 RecruitFlow Operations
                 <span className="text-[8px] font-mono text-axim-purple border border-axim-purple/30 bg-axim-purple/10 px-1 py-0.5 rounded-sm">[INTERNAL / BIZDEV CORE]</span>
@@ -79,7 +81,7 @@ export default function Tech() {
               <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'RecruitFlow Operations' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">View Details →</button>
             </div>
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-gold/30 transition-colors">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors hover:bg-white/5">
               <h3 className="font-bold uppercase tracking-widest mb-2">Utility Tools</h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Document generation and administrative automation.</p>
               <div className="flex flex-col gap-2">
@@ -95,21 +97,21 @@ export default function Tech() {
           <h2 className="text-2xl font-black uppercase tracking-tight mb-8 border-b border-white/10 pb-4">Autonomous AI & Stream Systems</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
               <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
               <h3 className="font-bold uppercase tracking-widest mb-2">Onyx Terminal</h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Internal swarm intelligence for DevSecOps and content management.</p>
               <Link to="/admin" onClick={() => logTelemetry('tech_card_clicked', { section: 'Autonomous AI', name: 'Onyx Terminal' })} className="text-xs font-bold uppercase text-axim-purple hover:text-white transition-colors self-start">Access Terminal →</Link>
             </div>
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
               <SafeIcon icon={LuIcons.LuBot} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
               <h3 className="font-bold uppercase tracking-widest mb-2">Chatbase Integration</h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Public-facing AI concierge and support routing.</p>
               <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Autonomous AI', name: 'Chatbase Integration' })} className="text-xs font-bold uppercase text-axim-purple hover:text-white transition-colors self-start">Engage Assistant →</button>
             </div>
 
-            <div className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group">
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
               <SafeIcon icon={LuIcons.LuServerCog} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
               <h3 className="font-bold uppercase tracking-widest mb-2">Edge Compute Workers</h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Cloudflare-powered decentralized routing and caching layer.</p>
@@ -120,7 +122,7 @@ export default function Tech() {
         </section>
 
         <section>
-          <div className="bg-onyx-900/40 backdrop-blur-md border border-axim-green/30 p-8 rounded-lg shadow-2xl relative overflow-hidden group">
+          <div className="bg-[#050505] border border-axim-green/30 p-8 rounded-lg shadow-2xl relative overflow-hidden group hover:bg-white/5">
             <div className="absolute inset-0 bg-axim-green/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             <h2 className="text-2xl font-black uppercase tracking-tight mb-2 relative z-10 flex items-center gap-3">
               <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-axim-green" />
