@@ -139,7 +139,7 @@ export default function AuthGateway() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 flex items-center justify-center p-6 pt-24 pb-32">
-      <SEO title="Secure Authentication | AXiM Systems" description="Authenticate to access your encrypted Operator Vault and active digital assets." />
+      <SEO title="Secure Authentication | AXiM Development" description="Authenticate to access your encrypted Operator Vault and active digital assets." />
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 

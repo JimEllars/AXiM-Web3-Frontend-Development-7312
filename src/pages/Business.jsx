@@ -6,6 +6,8 @@ import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
+import Reviews from '../components/Reviews.jsx';
+
 
 export default function Business() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -64,7 +66,7 @@ export default function Business() {
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {/* Commercial Services Card */}
-          <Link to="/services/commercial-exterior" className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden">
+          <Link to="/services/commercial-exterior" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
             <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuBuilding2} className="w-8 h-8 text-axim-gold mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Commercial Services</h2>
@@ -76,7 +78,7 @@ export default function Business() {
           </Link>
 
           {/* B2B Intelligence & Articles Card */}
-          <Link to="/articles" className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden">
+          <Link to="/articles" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
             <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuChartLine} className="w-8 h-8 text-axim-gold mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">B2B Intelligence</h2>
@@ -99,7 +101,7 @@ export default function Business() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             {/* Nexus CRM Certification Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <SafeIcon icon={LuIcons.LuBadgeCheck} className="w-8 h-8 text-axim-gold mb-4" />
               <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Nexus CRM Certification</h2>
@@ -114,7 +116,7 @@ export default function Business() {
             </div>
 
             {/* Quick Demand Letter Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-axim-gold mb-4" />
               <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Quick Demand Letter</h2>
@@ -132,7 +134,7 @@ export default function Business() {
             </div>
 
             {/* Automated Canvassing Masterclass Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [COMING SOON]
@@ -164,7 +166,7 @@ export default function Business() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             {/* Nexus CRM Certification Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <SafeIcon icon={LuIcons.LuBadgeCheck} className="w-8 h-8 text-axim-gold mb-4" />
@@ -180,7 +182,7 @@ export default function Business() {
             </div>
 
             {/* Financial Prospect Scaling Card */}
-            <div className="group relative bg-[#0A0A0A] border border-white/5 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full">
+            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
                 [IN DEVELOPMENT]

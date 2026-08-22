@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { useAximStore } from '../store/useAximStore.js';
 import { logTelemetry } from '../lib/telemetry.js';
 import SEO from '../components/SEO.jsx';
 
+
+const SelldoneEmbed = ({ product, shelfTitle }) => {
+  return (
+    <div
+      className="mt-auto pt-4 border-t border-white/10"
+      onClick={() => logTelemetry('marketplace_category_viewed', { category: shelfTitle })}
+    >
+      <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
+         <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors">Load Storefront</span>
+      </div>
+    </div>
+  );
+};
+
+
+SelldoneEmbed.propTypes = {
+  product: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+  shelfTitle: PropTypes.string.isRequired,
+};
+
 export default function Store() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
-  const showToast = useAximStore((state) => state.showToast);
-  const [waitlistedProducts, setWaitlistedProducts] = useState(new Set());
 
-  const handleWaitlistClick = (productTitle) => {
-    if (waitlistedProducts.has(productTitle)) return;
-    setWaitlistedProducts((prev) => new Set(prev).add(productTitle));
-    logTelemetry('store_product_waitlist', {
-      productTitle,
-      isWeb3Authenticated
-    });
-    showToast(`Added ${productTitle} to Waitlist`, 'success');
-  };
 
   const seoData = {
     title: 'AXiM Digital Marketplace',
@@ -110,16 +122,7 @@ export default function Store() {
                   <p className="text-sm text-zinc-400 mb-6 flex-grow leading-relaxed">
                     {product.description}
                   </p>
-                  <button
-                    onClick={() => handleWaitlistClick(product.title)}
-                    className={`w-full mt-auto inline-flex items-center justify-center px-4 py-3 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border ${
-                      waitlistedProducts.has(product.title)
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
-                        : 'border-axim-purple/50 bg-axim-purple/10 text-white hover:bg-axim-purple hover:text-white'
-                    }`}
-                  >
-                    {waitlistedProducts.has(product.title) ? '✓ Waitlist Confirmed' : 'Join Product Waitlist'}
-                  </button>
+                  <SelldoneEmbed product={product} shelfTitle={shelf.title} />
                 </div>
               ))}
             </div>

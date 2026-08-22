@@ -11,7 +11,7 @@ export default function MakeLanding() {
     const makeAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Make.com Automation Architecture via AXiM Systems",
+    "name": "Make.com Automation Architecture via AXiM Development",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "provider": {

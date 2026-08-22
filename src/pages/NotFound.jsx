@@ -30,7 +30,7 @@ export default function NotFound() {
 
   return (
     <div className="w-full min-h-screen bg-bg-void relative z-10 flex items-center justify-center p-6">
-      <SEO title="Signal Lost | AXiM Systems" noindex={true} />
+      <SEO title="Signal Lost | AXiM Development" noindex={true} />
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 
