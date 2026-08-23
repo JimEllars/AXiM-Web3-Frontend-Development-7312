@@ -147,18 +147,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const clickRankAi = document.createElement("script");
-    clickRankAi.src = "https://js.clickrank.ai/seo/a53a59e0-cc42-4ec5-995e-d44d7177f1b3/script?" + new Date().getTime();
-    clickRankAi.async = true;
+    // Only load the script once to prevent connection closed issues
+    const scriptId = "clickrank-seo-script";
+    if (!document.getElementById(scriptId)) {
+        const clickRankAi = document.createElement("script");
+        clickRankAi.id = scriptId;
+        // Removed dynamic timestamp to allow browser caching
+        clickRankAi.src = "https://js.clickrank.ai/seo/a53a59e0-cc42-4ec5-995e-d44d7177f1b3/script";
+        clickRankAi.async = true;
+        clickRankAi.crossOrigin = "anonymous";
+        clickRankAi.referrerPolicy = "no-referrer-when-downgrade";
+        document.head.appendChild(clickRankAi);
+    }
+
     logTelemetry("PAGE_VIEW", { path: location.pathname });
 
-    document.head.appendChild(clickRankAi);
-
-    return () => {
-      if (document.head.contains(clickRankAi)) {
-        document.head.removeChild(clickRankAi);
-      }
-    };
+    // Do not remove script on unmount
   }, [location.pathname]);
 
 

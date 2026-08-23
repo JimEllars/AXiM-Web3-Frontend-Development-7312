@@ -37,7 +37,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (request.method !== 'POST' || (url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
+    if (request.method !== 'POST' || (url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
       return new Response('Not Found or Method Not Allowed', { status: 404, headers: CORS_HEADERS });
     }
 
