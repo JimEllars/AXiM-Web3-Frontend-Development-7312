@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
@@ -177,7 +177,15 @@ export default function AuthGateway() {
             </div>
           )}
 
-          <form onSubmit={handleAuth} className="space-y-5 relative z-10">
+
+          {!isSupabaseConfigured && (
+            <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[0.65rem] font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm text-center justify-center">
+              <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+              Web2 Database Uplink Offline. Please connect via Web3 Operator Wallet.
+            </div>
+          )}
+
+          <form onSubmit={handleAuth} className={`space-y-5 relative z-10 ${!isSupabaseConfigured ? 'opacity-50 pointer-events-none' : ''}`}>
             <div>
               <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms (Email)</label>
               <div className="relative">

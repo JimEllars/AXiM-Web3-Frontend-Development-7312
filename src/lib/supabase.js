@@ -15,6 +15,21 @@ const getEnv = (key, fallback) => {
 const supabaseUrl = getEnv('VITE_AXIM_CORE_URL', null);
 const supabaseKey = getEnv('VITE_AXIM_CORE_ANON_KEY', null);
 
-export const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseKey)
+  : {
+      auth: {
+        getSession: async () => ({ data: { session: null }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signOut: async () => ({ error: null }),
+        refreshSession: async () => ({ data: { session: null }, error: null }),
+        signInWithPassword: async () => ({ error: new Error('Database uplink offline. Authentication disabled.') }),
+        signUp: async () => ({ error: new Error('Database uplink offline. Registration disabled.') })
+      },
+      from: () => ({
+        insert: async () => ({ error: new Error('Database uplink offline.') }),
+        select: () => ({ eq: () => ({ single: async () => ({ data: null, error: null }) }) })
+      })
+    };
