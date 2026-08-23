@@ -1,18 +1,31 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAximStore } from '../store/useAximStore.js';
 import { logTelemetry } from '../lib/telemetry.js';
 import SEO from '../components/SEO.jsx';
 
 
 const SelldoneEmbed = ({ product, shelfTitle }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
       className="mt-auto pt-4 border-t border-white/10"
       onClick={() => logTelemetry('marketplace_category_viewed', { category: shelfTitle })}
     >
       <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
-         <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors">Load Storefront</span>
+         {isLoading ? (
+           <div className="absolute inset-0 bg-axim-purple/20 animate-pulse transition-opacity duration-500" />
+         ) : (
+           <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors relative z-10">Load Storefront</span>
+         )}
       </div>
     </div>
   );
@@ -28,6 +41,19 @@ SelldoneEmbed.propTypes = {
 
 export default function Store() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://selldone.com/sdk.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
 
   const seoData = {
@@ -87,8 +113,8 @@ export default function Store() {
         <div className="mb-4">
           {isWeb3Authenticated && (
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-4 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
-              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-              [MARKETPLACE_NODE: ARBITRUM_LEDGER_SYNCED]
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              <span className="animate-pulse">[MARKETPLACE_NODE: ARBITRUM_LEDGER_SYNCED]</span>
             </div>
           )}
         </div>

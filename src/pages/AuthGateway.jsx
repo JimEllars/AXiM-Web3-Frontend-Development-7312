@@ -179,8 +179,8 @@ export default function AuthGateway() {
 
 
           {!isSupabaseConfigured && (
-            <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[0.65rem] font-mono uppercase tracking-widest flex items-start gap-2 rounded-sm text-center justify-center">
-              <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-4 h-4 shrink-0" />
+            <div className="bg-amber-500/10 border border-amber-500/30 text-amber-400 p-4 rounded-sm font-mono text-xs uppercase tracking-widest flex items-center gap-3 backdrop-blur-md mb-4">
+              <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-5 h-5 shrink-0" />
               Web2 Database Uplink Offline. Please connect via Web3 Operator Wallet.
             </div>
           )}

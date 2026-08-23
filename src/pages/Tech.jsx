@@ -60,7 +60,9 @@ export default function Tech() {
                 <span className="text-[8px] font-mono text-yellow-500 border border-yellow-500/30 bg-yellow-500/10 px-1 py-0.5 rounded-sm">[INVITE ONLY]</span>
               </h3>
               <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Core operating system for distributed network management.</p>
-              <Link to="/consultation?app=nexus_crm" onClick={() => logTelemetry('app_access_intent', { app: 'nexus_crm', accessType: 'invite_only' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors self-start">Request Access →</Link>
+              <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'tech' })} viewport={{ once: true }} className="self-start">
+              <Link to="/consultation?app=nexus_crm" onClick={() => { logTelemetry('app_access_intent', { app: 'nexus_crm', accessType: 'invite_only' }); logTelemetry('cta_clicked', { location: 'hero', page: 'tech' }); }} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Request Access →</Link>
+              </motion.div>
             </div>
 
             <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors hover:bg-white/5">
