@@ -52,9 +52,22 @@ export default function Reviews({ category = "all" }) {
     }
   ];
 
-  const reviews = category === 'all'
+    const filteredReviews = category === 'all'
     ? allReviews
     : allReviews.filter(r => r.category === category);
+
+
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  const shuffledReviews = shuffleArray(filteredReviews);
+  const displayReviews = shuffledReviews.slice(0, 3);
 
   return (
     <div className="py-16">
@@ -79,7 +92,7 @@ export default function Reviews({ category = "all" }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((review, i) => (
+          {displayReviews.map((review, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}

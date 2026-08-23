@@ -66,7 +66,8 @@ export default function Business() {
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {/* Commercial Services Card */}
-          <Link to="/services/commercial-exterior" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+          <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'business' })} viewport={{ once: true }}>
+            <Link to="/services/commercial-exterior" onClick={() => logTelemetry('cta_clicked', { location: 'hero', page: 'business' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
             <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuBuilding2} className="w-8 h-8 text-axim-gold mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Commercial Services</h2>
@@ -76,6 +77,7 @@ export default function Business() {
               <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+          </motion.div>
 
           {/* B2B Intelligence & Articles Card */}
           <Link to="/articles" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">

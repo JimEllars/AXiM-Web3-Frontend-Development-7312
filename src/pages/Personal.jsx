@@ -59,7 +59,8 @@ export default function Personal() {
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Property & Home Services Card */}
-          <Link to="/services" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'property_home' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+          <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'personal' })} viewport={{ once: true }}>
+            <Link to="/services" onClick={() => { logTelemetry('personal_gateway_clicked', { gateway: 'property_home' }); logTelemetry('cta_clicked', { location: 'hero', page: 'personal' }); }} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuHouse} className="w-8 h-8 text-emerald-500 mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Property & Home</h2>
@@ -69,6 +70,7 @@ export default function Personal() {
               <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+          </motion.div>
 
           {/* Individual Utilities Card */}
           <Link to="/store" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
