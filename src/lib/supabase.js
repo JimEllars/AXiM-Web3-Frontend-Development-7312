@@ -12,9 +12,9 @@ const getEnv = (key, fallback) => {
     return fallback;
 };
 
-const supabaseUrl = getEnv('VITE_AXIM_CORE_URL', 'https://mock-core.axim.us.com');
-const supabaseKey = getEnv('VITE_AXIM_CORE_ANON_KEY', 'mock-anon-key');
+const supabaseUrl = getEnv('VITE_AXIM_CORE_URL', null);
+const supabaseKey = getEnv('VITE_AXIM_CORE_ANON_KEY', null);
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
-export const isSupabaseConfigured = !supabaseUrl.includes('mock-core') && supabaseKey !== 'mock-anon-key';
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);

@@ -40,9 +40,9 @@ export default function Articles() {
       const tags = (article?.tags || []).join(' ').toLowerCase();
       const term = activeFilter.toLowerCase();
 
-      if (term.includes('business')) return title.includes('business') || tags.includes('business');
-      if (term.includes('personal')) return title.includes('personal') || tags.includes('personal');
-      if (term.includes('tech')) return title.includes('tech') || tags.includes('tech');
+      if (term.includes('business')) return title.includes('business') || tags.includes('business') || article?.category_slug === 'business-development';
+      if (term.includes('personal')) return title.includes('personal') || tags.includes('personal') || article?.category_slug === 'personal-development';
+      if (term.includes('tech')) return title.includes('tech') || tags.includes('tech') || article?.category_slug === 'tech-development';
       return false;
     });
   };
