@@ -95,33 +95,6 @@ export default function Tech() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-black uppercase tracking-tight mb-8 border-b border-white/10 pb-4">Autonomous AI & Stream Systems</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
-              <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-              <h3 className="font-bold uppercase tracking-widest mb-2">Onyx Terminal</h3>
-              <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Internal swarm intelligence for DevSecOps and content management.</p>
-              <Link to="/admin" onClick={() => logTelemetry('tech_card_clicked', { section: 'Autonomous AI', name: 'Onyx Terminal' })} className="text-xs font-bold uppercase text-axim-purple hover:text-white transition-colors self-start">Access Terminal →</Link>
-            </div>
-
-            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
-              <SafeIcon icon={LuIcons.LuBot} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-              <h3 className="font-bold uppercase tracking-widest mb-2">Chatbase Integration</h3>
-              <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Public-facing AI concierge and support routing.</p>
-              <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Autonomous AI', name: 'Chatbase Integration' })} className="text-xs font-bold uppercase text-axim-purple hover:text-white transition-colors self-start">Engage Assistant →</button>
-            </div>
-
-            <div className="bg-[#050505] border border-white/10 p-6 rounded-lg shadow-lg flex flex-col hover:border-axim-purple/50 transition-colors group hover:bg-white/5">
-              <SafeIcon icon={LuIcons.LuServerCog} className="w-8 h-8 text-axim-purple mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-              <h3 className="font-bold uppercase tracking-widest mb-2">Edge Compute Workers</h3>
-              <p className="text-xs font-mono text-zinc-500 flex-grow mb-4">Cloudflare-powered decentralized routing and caching layer.</p>
-              <button onClick={() => logTelemetry('tech_card_clicked', { section: 'Autonomous AI', name: 'Edge Compute Workers' })} className="text-xs font-bold uppercase text-axim-purple hover:text-white transition-colors self-start">View Network Status →</button>
-            </div>
-
-          </div>
-        </section>
 
         <section>
           <div className="bg-[#050505] border border-axim-green/30 p-8 rounded-lg shadow-2xl relative overflow-hidden group hover:bg-white/5">

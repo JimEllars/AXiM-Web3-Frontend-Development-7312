@@ -33,7 +33,6 @@ describe('Tech Hub Page', () => {
 
     // Verify Sections
     expect(screen.getByText(/Enterprise Applications & Infrastructure/i)).toBeDefined();
-    expect(screen.getByText(/Autonomous AI & Stream Systems/i)).toBeDefined();
     expect(screen.getByText(/Games & Cognitive Interactive Engine/i)).toBeDefined();
 
     // Verify Games Arcade Link

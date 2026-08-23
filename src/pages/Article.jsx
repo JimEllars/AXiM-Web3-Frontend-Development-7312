@@ -239,7 +239,7 @@ const { slug } = useParams();
 
         {/* Vibrant Multi-Color Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/70 via-[#DB2777]/50 to-axim-gold/40 mix-blend-overlay z-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-void via-bg-void/80 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-void to-transparent z-10" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-20 w-full">
           <Link to="/articles" className="inline-flex items-center text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors mb-6 group">

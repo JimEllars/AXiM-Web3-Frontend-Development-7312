@@ -65,19 +65,7 @@ export default function Business() {
 
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {/* Commercial Services Card */}
-          <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'business' })} viewport={{ once: true }}>
-            <Link to="/services/commercial-exterior" onClick={() => logTelemetry('cta_clicked', { location: 'hero', page: 'business' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SafeIcon icon={LuIcons.LuBuilding2} className="w-8 h-8 text-axim-gold mb-4" />
-            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Commercial Services</h2>
-            <p className="text-sm text-zinc-400 mb-6 font-medium">High-grade property management, structural maintenance, and business exterior scaling.</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest">
-              <span>View Services</span>
-              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </Link>
-          </motion.div>
+
 
           {/* B2B Intelligence & Articles Card */}
           <Link to="/articles" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
@@ -93,11 +81,11 @@ export default function Business() {
         </div>
 
 
-        {/* Enterprise Systems & Intelligence Section */}
+        {/* Apps & Tools Section */}
         <div className="relative pt-8 mt-12 border-t border-white/5">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
             <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Enterprise Systems & Intelligence
+              Apps & Tools
             </span>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -158,11 +146,11 @@ export default function Business() {
           </div>
         </div>
 
-        {/* Digital Offerings & Training Section */}
+        {/* Courses Section */}
         <div className="relative pt-8 mt-12 border-t border-white/5">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
             <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Digital Offerings & Training
+              Courses
             </span>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -183,26 +171,22 @@ export default function Business() {
               </Link>
             </div>
 
-            {/* Financial Prospect Scaling Card */}
+            {/* Sales Modernization Course Card */}
             <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [IN DEVELOPMENT]
-              </div>
               <SafeIcon icon={LuIcons.LuTrendingUp} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Financial Prospect Scaling</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Focus on improving financial metrics.</p>
-              <button
-                onClick={() => {
-                  logTelemetry('web3_early_access_intent', { module: 'Financial Prospect Scaling' });
-                  if (isWeb3Authenticated) {
-                    console.log("[AXIM_NODE] Wallet queued for early access.");
-                  }
-                }}
+              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Sales Modernization Course</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Learn advanced sales techniques.</p>
+              <a
+                href="https://etsy.com/shop/aximdevelopment"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => logTelemetry('external_course_intent', { course: 'sales_modernization' })}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
               >
-                Join Waitlist
-              </button>
+                View on Etsy
+                <SafeIcon icon={LuIcons.LuExternalLink} className="w-3 h-3 ml-2" />
+              </a>
             </div>
 
           </div>
