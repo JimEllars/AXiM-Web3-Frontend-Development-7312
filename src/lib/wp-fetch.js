@@ -299,7 +299,21 @@ export const fetchPosts = async (params = {}) => {
   } else {
     // Allow edge caching
   }
-  const queryParams = new URLSearchParams(params).toString();
+
+  // Remove null/undefined values
+  const cleanParams = {};
+  for (const key in params) {
+    if (params[key] !== null && params[key] !== undefined && params[key] !== 'null') {
+      cleanParams[key] = params[key];
+    }
+  }
+
+  // Prevent duplicate _embed=1 if it was passed in params
+  if (cleanParams['_embed'] === 1 || cleanParams['_embed'] === '1') {
+      delete cleanParams['_embed'];
+  }
+
+  const queryParams = new URLSearchParams(cleanParams).toString();
   const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
   const fetchUrl = `https://wp.axim.us.com${endpoint}`;
 
