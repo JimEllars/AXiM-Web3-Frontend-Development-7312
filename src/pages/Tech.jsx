@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import SEO from '../components/SEO.jsx';
-import { logTelemetry } from '../lib/telemetry.js';
+import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry.js';
 import { useAximStore } from '../store/useAximStore.js';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
@@ -143,6 +143,17 @@ export default function Tech() {
         </section>
 
       </div>
-    </div>
+
+      <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
+        <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Tech infrastructure?</h2>
+        <Link
+          to="/consultation?pillar=tech"
+          onClick={() => logHighPriorityTelemetry('consultation_intent', { pillar: 'Tech' })}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-sm hover:bg-white transition-colors rounded-sm shadow-[0_0_20px_rgba(255,189,20,0.3)]"
+        >
+          Schedule Consultation <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
+        </Link>
+      </section>
+</div>
   );
 }
