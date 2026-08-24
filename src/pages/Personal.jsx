@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import PartnerPromo from '../components/PartnerPromo';
 import { useAximStore } from '../store/useAximStore';
 import SEO from '../components/SEO';
 import { logTelemetry } from '../lib/telemetry';
@@ -170,6 +171,16 @@ export default function Personal() {
         </div>
 
       </section>
+
+      <PartnerPromo
+        partnerName="Powur Solar"
+        title="Decentralize Your Energy"
+        description="Take control of your home's power grid with decentralized solar architecture."
+        learnMorePath="/partners/powur-solar"
+        startNowUrl="https://powur.com/james.ellars/discover"
+        theme="gold"
+        onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Powur Solar', location: 'Personal' })}
+      />
     </div>
   );
 }

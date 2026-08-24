@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import PartnerPromo from '../components/PartnerPromo';
 import SEO from '../components/SEO';
 import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
@@ -80,6 +81,15 @@ export default function Business() {
           </Link>
         </div>
 
+        <PartnerPromo
+          partnerName="Make.com"
+          title="Automate B2B Workflows"
+          description="Connect apps and build automated systems visually, designed specifically for growing business infrastructures."
+          learnMorePath="/partners/make"
+          startNowUrl="/partners/make"
+          theme="purple"
+          onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Make.com', location: 'Business' })}
+        />
 
         {/* Apps & Tools Section */}
         <div className="relative pt-8 mt-12 border-t border-white/5">

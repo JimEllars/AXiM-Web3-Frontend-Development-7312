@@ -218,3 +218,8 @@ export function setupTelemetryHooks() {
   // AI query hook
   window.addEventListener('ai_query', (e) => logTelemetry('ai_query', e.detail || {}));
 }
+
+export function logHighPriorityTelemetry(type, payload) {
+  logTelemetry(type, payload);
+  flushTelemetryQueue(true);
+}
