@@ -1,5 +1,6 @@
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from './telemetry';
+import { localStore } from './persistence';
 
 export const fetchCategoryBySlug = async (slug) => {
   try {
@@ -271,6 +272,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
       });
 
       fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
+      localStore.saveArticleCache(mappedPosts.slice(0, 15));
 
       return mappedPosts;
     } catch (error) {
@@ -279,7 +281,8 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         return existing.data;
       }
       fetchCache.delete(cacheKey);
-      return FALLBACK_ARTICLES;
+      const cachedArticles = localStore.getArticleCache();
+      return cachedArticles || FALLBACK_ARTICLES;
     }
   })();
 
@@ -325,7 +328,11 @@ export const fetchPosts = async (params = {}) => {
       });
 
       if (!res || !res.ok) throw new Error('Failed to fetch WordPress posts');
-      return await res.json();
+      const data = await res.json();
+      if (Array.isArray(data)) {
+         localStore.saveArticleCache(data.slice(0, 15));
+      }
+      return data;
     } catch (error) {
       if (retryCount === 0) {
         retryCount++;
@@ -335,7 +342,8 @@ export const fetchPosts = async (params = {}) => {
         console.error('[WP_FETCH] Fetch failed. Loading cached fallback data.', error);
         logTelemetry('wp_edge_proxy_retry_failed', { endpoint: fetchUrl });
         useAximStore.getState().addToast("Live feed unavailable. Loading cached data.", "warning");
-        return FALLBACK_ARTICLES;
+        const cachedArticles = localStore.getArticleCache();
+        return cachedArticles || FALLBACK_ARTICLES;
       }
     }
   }

@@ -8,7 +8,8 @@ const STORAGE_KEYS = {
   TELEMETRY_CACHE: 'axim_telemetry_cache',
   PROFILES: 'axm_local_profiles',
   LETTERS: 'axm_local_letters',
-  SAVED_BRIEFS: 'axm_local_saved_briefs'
+  SAVED_BRIEFS: 'axm_local_saved_briefs',
+  ARTICLE_CACHE: 'axim_article_cache'
 };
 
 // Internal memory cache to avoid redundant localStorage I/O and JSON parsing
@@ -46,6 +47,23 @@ function _getStoredData(key, defaultValue, cacheKey) {
 }
 
 export const localStore = {
+  saveArticleCache: (articles) => {
+    if (!articles) return;
+    try {
+      localStorage.setItem(STORAGE_KEYS.ARTICLE_CACHE, JSON.stringify(articles));
+    } catch(e) { /* ignore */ }
+  },
+  getArticleCache: () => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.ARTICLE_CACHE);
+      if (!stored) return null;
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      return null;
+    } catch(e) {
+      return null;
+    }
+  },
   saveTelemetryCache: (cache) => {
     if (!cache) return;
     try {
