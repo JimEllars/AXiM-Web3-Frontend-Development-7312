@@ -9,3 +9,7 @@ custom_domain = true
 [vars]
 SUPABASE_URL = "https://your-project.supabase.co"
 # Sensitive keys should be set via `wrangler secret put SUPABASE_SERVICE_ROLE_KEY`
+
+[[kv_namespaces]]
+binding = "TELEMETRY_DEADLETTER"
+id = "placeholder_telemetry_deadletter_id"

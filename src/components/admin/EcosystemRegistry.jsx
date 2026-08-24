@@ -11,7 +11,9 @@ const mockNodes = [
   { integration: 'Chatbase Edge AI', status: 'Active', type: 'LLM Service', protocol: 'Widget Injection' },
   { integration: 'SellDone Marketplace', status: 'Pending', type: 'E-Commerce', protocol: 'OAuth/SSO' },
   { integration: 'Nexus CRM', status: 'Active', type: 'Pipeline', protocol: 'Internal JWT' },
-  { integration: 'Thirdweb RPC', status: 'Active', type: 'Web3 Auth', protocol: 'Arbitrum One' }
+  { integration: 'Thirdweb RPC', status: 'Active', type: 'Web3 Auth', protocol: 'Arbitrum One' },
+  { integration: 'Cloudflare KV: WEB3_RPC_CACHE', status: 'Active', type: 'Edge Cache', protocol: 'wrangler.rpc.toml' },
+  { integration: 'Cloudflare KV: TELEMETRY_DEADLETTER', status: 'Active', type: 'Edge Queue', protocol: 'wrangler.telemetry.toml' }
 ];
 
 export default function EcosystemRegistry() {
