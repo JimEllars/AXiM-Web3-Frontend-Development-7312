@@ -5,6 +5,7 @@ import { useAximStore } from '../store/useAximStore.js';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon.jsx';
 import { Link } from 'react-router-dom';
+import PartnerPromo from '../components/PartnerPromo';
 import { motion } from 'framer-motion';
 import Reviews from '../components/Reviews.jsx';
 

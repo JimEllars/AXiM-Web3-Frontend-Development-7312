@@ -8,3 +8,7 @@ custom_domain = true
 
 # Configure securely with:
 # wrangler secret put ALCHEMY_RPC_URL
+
+[[kv_namespaces]]
+binding = "WEB3_RPC_CACHE"
+id = "1fe3e2e590094e638700b4b328ebabf0"
