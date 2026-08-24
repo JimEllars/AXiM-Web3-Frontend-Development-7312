@@ -20,7 +20,7 @@ const SelldoneEmbed = ({ product, shelfTitle }) => {
       className="mt-auto pt-4 border-t border-white/10"
       onClick={() => logTelemetry('marketplace_category_viewed', { category: shelfTitle })}
     >
-      <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
+      <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} data-selldone-product-id={product.title.replace(/\s+/g, '-').toLowerCase()} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
          {isLoading ? (
            <div className="absolute inset-0 bg-axim-purple/20 animate-pulse transition-opacity duration-500" />
          ) : (
@@ -67,14 +67,14 @@ export default function Store() {
       title: 'Business Development Suite',
       products: [
         {
-          title: 'Nexus CRM Masterclass',
-          category: 'COURSE',
+          title: 'The Nexus CRM Implementation Playbook',
+          category: 'DIGITAL COURSE',
           description: 'Complete automated sales routing and pipeline architecture course.'
         },
         {
-          title: 'Automated Canvassing Playbook',
-          category: 'BLUEPRINT',
-          description: 'Blueprint for deploying and managing high-velocity field teams.'
+          title: 'AXiM Executive Planners',
+          category: 'PHYSICAL',
+          description: 'Physical planner for high-velocity field teams.'
         }
       ]
     },
@@ -82,13 +82,13 @@ export default function Store() {
       title: 'Personal Development Frameworks',
       products: [
         {
-          title: 'Overcoming Imposter Syndrome',
-          category: 'AUDIO/WORKBOOK',
-          description: 'Audio/workbook system for high-performing professionals.'
+          title: '90-Day Cognitive Resilience Framework',
+          category: 'DIGITAL GUIDE',
+          description: 'System for high-performing professionals.'
         },
         {
-          title: 'Executive Inner Voice Calibration',
-          category: 'MODULE',
+          title: 'Operator Habit-Tracking Journals',
+          category: 'PHYSICAL',
           description: 'Mental recalibration and operational focus module.'
         }
       ]
@@ -97,9 +97,14 @@ export default function Store() {
       title: 'Tech Development Blueprints',
       products: [
         {
-          title: 'Cloudflare Edge Worker Starter Kit',
-          category: 'TEMPLATE',
+          title: 'Cloudflare Edge Worker Starter Kits',
+          category: 'DIGITAL ACCESS',
           description: 'Serverless proxy, SEO prerender, and telemetry worker templates.'
+        },
+        {
+          title: 'Network Topology Desk Mats',
+          category: 'PHYSICAL',
+          description: 'High quality desk mats.'
         }
       ]
     }

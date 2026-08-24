@@ -12,6 +12,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const location = useLocation();
 
   const { session, user, profile } = useAximAuth();
@@ -32,7 +33,18 @@ export default function Header() {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const handleOffline = () => setIsOffline(true);
+    const handleOnline = () => setIsOffline(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   // Close mobile menu automatically on route change
@@ -66,9 +78,18 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between gap-4 items-center">
 
         {/* Brand Logo Integration - White PNG */}
-        <Link to="/" className="flex items-center gap-3 group z-[60] flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
-          <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
-        </Link>
+        <div className="flex flex-col">
+          <Link to="/" className="flex items-center gap-3 group z-[60] flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
+            <img src="https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp" alt="AXiM Development" className="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
+          </Link>
+          {isOffline && (
+            <div className="mt-1 flex items-center justify-center px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-sm backdrop-blur-md animate-pulse">
+              <span className="text-[10px] font-mono font-bold text-amber-500 tracking-widest uppercase">
+                ⚡ OFFLINE MODE: Serving Local Cache
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-4 lg:gap-6">
