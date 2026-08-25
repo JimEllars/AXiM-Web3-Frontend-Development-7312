@@ -65,9 +65,9 @@ export default function ContentAnalytics() {
     return sessionIds.size;
   }, [filteredLogs]);
 
-  const conversionIntents = useMemo(() => filteredLogs.filter(log => ['consultation_intent', 'checkout_intent'].includes(log.type)).length, [filteredLogs]);
+  const conversionIntents = useMemo(() => filteredLogs.filter(log => ['consultation_intent', 'store_waitlist_intent'].includes(log.type)).length, [filteredLogs]);
 
-  const web3Logins = useMemo(() => filteredLogs.filter(log => log.type === 'web3_wallet_connected').length, [filteredLogs]);
+  const pageViews = useMemo(() => filteredLogs.filter(log => log.type === 'PAGE_VIEW' || log.type === 'page_view').length, [filteredLogs]);
 
   const exportCSV = () => {
     const csvContent = "data:text/csv;charset=utf-8,"
@@ -126,8 +126,8 @@ export default function ContentAnalytics() {
         </div>
         <div className="p-6 bg-[#0A0A0A] border border-emerald-500/30 rounded-sm flex flex-col items-center justify-center gap-2 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent z-0"></div>
-          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Web3 Logins</h3>
-          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={web3Logins} /></p>
+          <h3 className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest relative z-10">Page Views</h3>
+          <p className="text-4xl font-black text-white tracking-wider relative z-10"><AnimatedCounter value={pageViews} /></p>
         </div>
       </div>
       )}

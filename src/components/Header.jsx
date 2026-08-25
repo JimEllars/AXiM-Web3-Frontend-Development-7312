@@ -47,6 +47,19 @@ export default function Header() {
     };
   }, []);
 
+
+  // Command Palette Listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('open-global-search'));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Close mobile menu automatically on route change
   useEffect(() => {
     setMobileMenuOpen(false);

@@ -67,15 +67,7 @@ export default function GlobalSearch() {
           }
         }
       }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen((prev) => {
-          if (!prev) {
-            logTelemetry('globalsearch_opened', { origin: window.location.pathname });
-          }
-          return !prev;
-        });
-      }
+
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
       }
@@ -212,6 +204,13 @@ useEffect(() => {
     modalElement.addEventListener('keydown', handleTabKey);
     return () => modalElement.removeEventListener('keydown', handleTabKey);
   }, [isOpen, results, articleResults]);
+
+
+  useEffect(() => {
+    const handleOpenEvent = () => setIsOpen(true);
+    window.addEventListener('open-global-search', handleOpenEvent);
+    return () => window.removeEventListener('open-global-search', handleOpenEvent);
+  }, []);
 
   const handleOpenModal = () => {
     logTelemetry('globalsearch_opened', { origin: window.location.pathname });
