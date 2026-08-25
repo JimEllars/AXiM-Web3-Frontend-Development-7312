@@ -19,11 +19,12 @@ global.sessionStorage = {
 
 import { test, describe, beforeEach, afterEach } from 'vitest';
 import assert from 'assert';
-import { getWordPressPost, fetchPostsByCategory, fetchCache } from './wp-fetch.js';
+import { getWordPressPost, fetchPostsByCategory, fetchCache, __resetCircuitBreakerForTests } from './wp-fetch.js';
 
 describe('getWordPressPost', () => {
   afterEach(() => {
     fetchCache.clear();
+    __resetCircuitBreakerForTests();
   });
   let originalFetch;
   let originalConsoleError;
@@ -335,6 +336,7 @@ describe('fetchPostsByCategory', () => {
     originalConsoleLog = console.log;
     console.log = () => {}; // silence logs in tests
     fetchCache.clear();
+    __resetCircuitBreakerForTests();
   });
 
   afterEach(() => {
