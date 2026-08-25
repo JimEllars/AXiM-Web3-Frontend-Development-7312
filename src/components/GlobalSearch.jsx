@@ -180,22 +180,11 @@ export default function GlobalSearch() {
   };
 
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen((prev) => !prev);
-        logTelemetry('global_search_shortcut_triggered');
-      } else if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
-  useEffect(() => {
+useEffect(() => {
     if (!isOpen) return;
+
+    const searchInput = document.getElementById('omnibar-search-input');
+    if (searchInput) searchInput.focus();
 
     const modalElement = document.getElementById('global-search-modal');
     if (!modalElement) return;
@@ -278,6 +267,7 @@ export default function GlobalSearch() {
                 <input
                   aria-label="Search articles and tools"
                   role="searchbox"
+                  id="omnibar-search-input"
                   autoFocus
                   type="text"
                   value={isSynchronizing ? "Synchronizing..." : query}
