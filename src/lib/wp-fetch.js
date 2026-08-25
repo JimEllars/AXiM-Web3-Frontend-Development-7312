@@ -348,3 +348,18 @@ export const fetchPosts = async (params = {}) => {
     }
   }
 };
+
+export async function prefetchArticle(slug) {
+  if (!slug) return;
+  const cacheKey = `gql-post-${slug}`;
+  if (fetchCache.has(cacheKey)) {
+    return; // Already cached
+  }
+
+  try {
+    // Attempt to pre-fetch the article silently
+    await getWordPressPost(slug);
+  } catch (err) {
+    // Fail silently per requirements
+  }
+}
