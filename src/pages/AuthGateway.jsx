@@ -21,6 +21,7 @@ export default function AuthGateway() {
   const [isLogin, setIsLogin] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isHydrating, setIsHydrating] = useState(true);
   const [networkFault, setNetworkFault] = useState(false);
 
   const { connect } = useConnect();
@@ -34,6 +35,14 @@ export default function AuthGateway() {
   const showToast = useAximStore((state) => state.addToast);
 
   const from = location.state?.from?.pathname || '/admin';
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isMounted.current) setIsHydrating(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     isMounted.current = true;
@@ -133,6 +142,16 @@ export default function AuthGateway() {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-6">
         <DatabaseUplinkError onRetry={() => setNetworkFault(false)} />
+      </div>
+    );
+  }
+
+
+
+  if (isHydrating) {
+    return (
+      <div className="w-full min-h-screen bg-bg-void relative z-10 flex items-center justify-center p-6 pt-24 pb-32">
+        <div className="w-full max-w-md p-8 border border-white/5 bg-[#050505] rounded-sm animate-pulse h-96" />
       </div>
     );
   }

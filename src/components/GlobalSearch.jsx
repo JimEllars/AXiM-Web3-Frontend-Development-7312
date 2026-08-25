@@ -286,7 +286,7 @@ useEffect(() => {
                 </button>
               </form>
 
-              <div className="p-6 min-h-[150px] max-h-[60vh] overflow-y-auto">
+              <div className="p-6 min-h-[150px] max-h-[70vh] sm:max-h-[80vh] overflow-y-auto overflow-x-hidden custom-scrollbar">
                 {query.trim() && (results.length > 0 || articleResults.length > 0) ? (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
