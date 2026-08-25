@@ -42,6 +42,10 @@ export const getFeaturedImage = (article) => {
  * Adapted for Vite/React SPA fetching. 
  */
 
+export let consecutiveFailures = 0;
+export let isCircuitOpen = false;
+export let circuitOpenTime = 0;
+
 export const fetchCache = new Map();
 
 
@@ -68,6 +72,16 @@ const FALLBACK_ARTICLES = [
 
 
 export async function getWordPressPost(slug) {
+
+  if (isCircuitOpen) {
+    if (Date.now() - circuitOpenTime > 60000) {
+      isCircuitOpen = false;
+      consecutiveFailures = 0;
+    } else {
+      return localStore.getArticleCache() || FALLBACK_ARTICLES;
+    }
+  }
+
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
   const url = 'https://wp.axim.us.com/graphql';
   if (!url) return null;
@@ -107,6 +121,7 @@ export async function getWordPressPost(slug) {
       });
 
       const data = await res.json();
+      consecutiveFailures = 0;
 
       fetchCache.set(cacheKey, { data, timestamp: Date.now() });
 
@@ -114,6 +129,11 @@ export async function getWordPressPost(slug) {
     } catch (error) {
 
 
+      consecutiveFailures++;
+      if (consecutiveFailures >= 3) {
+        isCircuitOpen = true;
+        circuitOpenTime = Date.now();
+      }
       if (existingCache && existingCache.data) {
 
         // Revert cache to stale state so future calls can also try to use it if needed, or delete it?
@@ -197,6 +217,16 @@ async function getCategoryId(apiUrl, slug) {
  */
 export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
 
+  if (isCircuitOpen) {
+    if (Date.now() - circuitOpenTime > 60000) {
+      isCircuitOpen = false;
+      consecutiveFailures = 0;
+    } else {
+      return localStore.getArticleCache() || FALLBACK_ARTICLES;
+    }
+  }
+
+
 
   const cacheKey = `cat-posts-${categorySlug}-${limit}-page-${page}`;
   const existing = fetchCache.get(cacheKey);
@@ -251,6 +281,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
       try {
         posts = await tryFetch();
         console.info(`[wp-fetch] Successfully connected to WordPress API via proxy`);
+        consecutiveFailures = 0;
       } catch (err) {
         throw new Error("All WordPress API endpoints failed or were blocked by CORS.");
       }
@@ -281,6 +312,11 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         return existing.data;
       }
       fetchCache.delete(cacheKey);
+      consecutiveFailures++;
+      if (consecutiveFailures >= 3) {
+        isCircuitOpen = true;
+        circuitOpenTime = Date.now();
+      }
       const cachedArticles = localStore.getArticleCache();
       return cachedArticles || FALLBACK_ARTICLES;
     }
@@ -362,4 +398,10 @@ export async function prefetchArticle(slug) {
   } catch (err) {
     // Fail silently per requirements
   }
+}
+
+export function __resetCircuitBreakerForTests() {
+  consecutiveFailures = 0;
+  isCircuitOpen = false;
+  circuitOpenTime = 0;
 }

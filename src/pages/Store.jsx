@@ -5,8 +5,9 @@ import { logTelemetry } from '../lib/telemetry.js';
 import SEO from '../components/SEO.jsx';
 
 
-const SelldoneEmbed = ({ product, shelfTitle }) => {
+const SelldoneEmbed = ({ product, shelfTitle, isAdblocked }) => {
   const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,6 +21,11 @@ const SelldoneEmbed = ({ product, shelfTitle }) => {
       className="mt-auto pt-4 border-t border-white/10"
       onClick={() => logTelemetry('marketplace_category_viewed', { category: shelfTitle })}
     >
+      {isAdblocked ? (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-sm text-center">
+          <p className="text-xs font-bold text-red-400">Marketplace blocked by Tracking Protection. Please disable your Adblocker to view digital assets.</p>
+        </div>
+      ) : (
       <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} data-selldone-product-id={product.title.replace(/\s+/g, '-').toLowerCase()} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
          {isLoading ? (
            <div className="absolute inset-0 bg-axim-purple/20 animate-pulse transition-opacity duration-500" />
@@ -27,6 +33,7 @@ const SelldoneEmbed = ({ product, shelfTitle }) => {
            <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors relative z-10">Load Storefront</span>
          )}
       </div>
+      )}
     </div>
   );
 };
@@ -37,15 +44,18 @@ SelldoneEmbed.propTypes = {
     title: PropTypes.string.isRequired,
   }).isRequired,
   shelfTitle: PropTypes.string.isRequired,
+  isAdblocked: PropTypes.bool,
 };
 
 export default function Store() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const [isAdblocked, setIsAdblocked] = useState(false);
 
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://selldone.com/sdk.js';
     script.async = true;
+    script.onerror = () => setIsAdblocked(true);
     document.body.appendChild(script);
 
     return () => {
@@ -153,7 +163,7 @@ export default function Store() {
                   <p className="text-sm text-zinc-400 mb-6 flex-grow leading-relaxed">
                     {product.description}
                   </p>
-                  <SelldoneEmbed product={product} shelfTitle={shelf.title} />
+                  <SelldoneEmbed product={product} shelfTitle={shelf.title} isAdblocked={isAdblocked} />
                 </div>
               ))}
             </div>

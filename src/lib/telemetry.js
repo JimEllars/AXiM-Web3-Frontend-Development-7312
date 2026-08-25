@@ -5,14 +5,15 @@ import { localStore } from '../lib/persistence';
 let isFlushing = false;
 let batchQueue = []; // In-memory queue for dispatching batches
 
+let hasRehydrated = false;
+
 export function rehydrateTelemetry() {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || hasRehydrated) return;
+  hasRehydrated = true;
   try {
     const cached = localStore.getTelemetryCache();
-    // we handle cached as an array below now instead of string
     if (cached && Array.isArray(cached) && cached.length > 0) {
       const parsedCache = cached;
-        // Ensure Zustand persist is loaded by delaying slightly, or merge directly.
         setTimeout(() => {
           const store = useAximStore.getState();
           const currentCollection = store.telemetryCollection || [];
@@ -23,6 +24,7 @@ export function rehydrateTelemetry() {
             useAximStore.setState({ telemetryCollection: [...currentCollection, ...uniqueCached], telemetryQueue: [...(store.telemetryQueue || []), ...uniqueCached] });
             batchQueue = [...batchQueue, ...uniqueCached];
           }
+          localStore.saveTelemetryCache([]);
         }, 0);
       }
   } catch (err) {
@@ -185,6 +187,9 @@ export async function flushTelemetryQueue(force = false) {
     } else {
       // Put back in queue if failed
       batchQueue = [...currentBatch, ...batchQueue];
+      if (typeof window !== 'undefined') {
+        localStore.saveTelemetryCache(batchQueue);
+      }
     }
   } catch (err) {
     console.warn("[TELEMETRY] Sync failed silently.", err.message);
