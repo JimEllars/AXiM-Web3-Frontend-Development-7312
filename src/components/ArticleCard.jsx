@@ -9,6 +9,7 @@ import * as LuIcons from "react-icons/lu";
 import * as FiIcons from "react-icons/fi";
 import { decodeHtmlEntitiesAndStripTags } from "../lib/sanitize";
 import { localStore } from "../lib/persistence";
+import { prefetchArticle } from "../lib/wp-fetch";
 
 export default function ArticleCard({
   article,
@@ -164,6 +165,7 @@ export default function ArticleCard({
       <Link
         ref={cardRef}
         onMouseMove={handleMouseMove}
+        onMouseEnter={() => prefetchArticle(article.slug)}
         to={`/article/${article.slug}`}
         onClick={() => {
           if (onCardClick) onCardClick(article);
