@@ -123,31 +123,31 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   return (
-    <div className="bg-[#050505]/80 backdrop-blur-md p-3 rounded-lg border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+    <div className="bg-[#050505]/90 backdrop-blur-xl p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20">
       <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
         <span className="flex flex-wrap items-center gap-2">
           <span
-            className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative inline-block transition-transform duration-300 ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_20px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]' : ''}`}
           />
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
           </span>
-          <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
+          <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2 py-0.5 border border-white/5 rounded-sm select-none shadow-sm">
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
           </span>
 
           {isWeb3Authenticated && (
-            <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none shadow-sm">
-              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-md select-none pointer-events-none shadow-sm backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               [TELEMETRY_NODE: ARBITRUM_EDGE_ACTIVE]
             </span>
           )}
           {isWeb3Authenticated && (
-            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-sm select-none inline-flex items-center gap-1 shadow-sm">
-              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono text-[8px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 rounded-md select-none inline-flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               [PERF_NODE: CLS_STABILIZED // 0.00]
             </span>
           )}
