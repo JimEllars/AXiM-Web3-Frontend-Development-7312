@@ -12,7 +12,7 @@ const extractFromContent = (html) => {
 
 const FALLBACK_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp';
 
-export default function WPImage({ src, alt, className, post, ...props }) {
+export default function WPImage({ src, alt, className, post, priority, ...props }) {
   const [hasError, setHasError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
@@ -82,7 +82,7 @@ export default function WPImage({ src, alt, className, post, ...props }) {
         className="absolute inset-0 w-full h-full object-cover"
         onError={handleError}
         referrerPolicy="no-referrer"
-        loading="lazy"
+        loading={priority ? "eager" : "lazy"}
         {...props}
         />
     </div>
