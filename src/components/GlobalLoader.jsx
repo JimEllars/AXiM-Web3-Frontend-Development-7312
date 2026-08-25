@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 export default function GlobalLoader({ loadingMessage = 'Initializing Node Connection...' }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] relative z-[100] bg-bg-void/50 backdrop-blur-lg">
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(147,51,234,0.05)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] relative z-[100] bg-bg-void/80 backdrop-blur-md">
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(125,0,255,0.08)_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center p-8 rounded-xl bg-white/5 border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-xl animate-pulse">
         {/* Pulsing geometric node animation */}
         <div className="flex items-center justify-center gap-3 mb-6">
           <motion.div

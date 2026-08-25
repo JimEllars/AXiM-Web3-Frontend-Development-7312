@@ -121,11 +121,16 @@ export default {
               throw new Error('Failed to serialize payload');
             }
 
-            const fetchRes = await fetch(record.target_destination, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: payloadStr
-            });
+            let fetchRes;
+            try {
+              fetchRes = await fetch(record.target_destination, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payloadStr
+              });
+            } catch (networkErr) {
+              throw new Error(`Target network error: ${networkErr.message}`);
+            }
 
             if (fetchRes.status === 200 || fetchRes.status === 201) {
               // 4c. Update status to resolved

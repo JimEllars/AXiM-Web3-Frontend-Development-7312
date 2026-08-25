@@ -144,13 +144,13 @@ export async function flushTelemetryQueue(force = false) {
           if (isSupabaseConfigured) {
             console.warn("Falling back to direct Supabase insert");
             try {
-              const { error } = await supabase.from('telemetry_events').insert(currentBatch);
+              const { error } = await supabase.from('telemetry_ingress').insert(currentBatch);
               if (!error) {
                  success = true;
                  console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
               } else {
                  success = false;
-                 console.error('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error);
+                 console.warn('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error.message);
               }
             } catch (supabaseErr) {
               success = false;

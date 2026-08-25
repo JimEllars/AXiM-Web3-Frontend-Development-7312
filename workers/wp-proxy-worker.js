@@ -105,7 +105,11 @@ export default {
       });
 
       if (request.method === 'GET' && wpResponse.ok) {
-        ctx.waitUntil(cache.put(cacheKey, finalResponse.clone()));
+        ctx.waitUntil(
+          cache.put(cacheKey, finalResponse.clone()).catch(err => {
+            console.error('Cache put failed', err);
+          })
+        );
       }
 
       return finalResponse;
