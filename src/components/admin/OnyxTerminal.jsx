@@ -1,10 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry, flushTelemetryQueue } from '../../lib/telemetry';
 import { useAximStore } from '../../store/useAximStore';
 import { useOnyxStream } from '../../hooks/useOnyxStream';
 import DOMPurify from 'dompurify';
+
+
+const TerminalMessageItem = memo(({ item }) => (
+  <div className={`mt-2 ${item.type === 'error' ? 'text-red-500' : item.type === 'success' ? 'text-axim-green' : 'text-zinc-300'}`}>
+     <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.text, { USE_PROFILES: { html: true } }) }} />
+  </div>
+));
+
+const TelemetryEventItem = memo(({ event }) => (
+  <div className="mt-2 text-[10px] break-all border-l-2 border-axim-purple pl-2 py-1">
+     <span className="text-zinc-500">[{new Date(event.timestamp).toLocaleTimeString()}]</span>{" "}
+     <span className={`font-bold ${event.type.includes('error') || event.type.includes('failed') ? 'text-red-400' : 'text-axim-purple'}`}>{event.type.toUpperCase()}</span>
+     <span className="text-zinc-500"> - {JSON.stringify(event.payload)}</span>
+  </div>
+));
 
 export default function OnyxTerminal() {
   const [kvKey, setKvKey] = useState('');
@@ -20,12 +35,25 @@ export default function OnyxTerminal() {
   const connectionStatus = error ? 'Offline Buffer' : isStreaming ? 'Reconnecting...' : 'Edge Connected';
   const logContainerRef = useRef(null);
 
-  // Auto-scroll to bottom of log
+
+  const isUserScrolling = useRef(false);
+
   useEffect(() => {
-    if (logContainerRef.current) {
+    if (logContainerRef.current && !isUserScrolling.current) {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
   }, [terminalOutput, responseLog, telemetryQueue]);
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    // Check if user has scrolled up from the bottom
+    if (scrollHeight - Math.ceil(scrollTop) > clientHeight + 10) {
+      isUserScrolling.current = true;
+    } else {
+      isUserScrolling.current = false;
+    }
+  };
+
 
   const addTerminalOutput = (text, type = 'info') => {
     setTerminalOutput(prev => [...prev, { text, type, timestamp: new Date().toISOString() }]);
@@ -231,23 +259,18 @@ export default function OnyxTerminal() {
 
           <div
              ref={logContainerRef}
+             onScroll={handleScroll}
              className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2 scroll-smooth"
           >
              <div className="animate-pulse">{'> INITIALIZING TERMINAL UPLINK... OK'}</div>
              <div className="animate-pulse animation-delay-200">{'> AWAITING OPERATOR INPUT...'}</div>
 
              {terminalOutput.map((item, idx) => (
-                <div key={`term-${idx}`} className={`mt-2 ${item.type === 'error' ? 'text-red-500' : item.type === 'success' ? 'text-axim-green' : 'text-zinc-300'}`}>
-                   <span dangerouslySetInnerHTML={sanitizeAndRenderCode(item.text)} />
-                </div>
+                <TerminalMessageItem key={`term-${idx}`} item={item} />
              ))}
 
              {telemetryQueue && telemetryQueue.slice(0, 50).map((event) => (
-                <div key={event.id} className="mt-2 text-[10px] break-all border-l-2 border-axim-purple pl-2 py-1">
-                   <span className="text-zinc-500">[{new Date(event.timestamp).toLocaleTimeString()}]</span>{" "}
-                   <span className={`font-bold ${event.type.includes('error') || event.type.includes('failed') ? 'text-red-400' : 'text-axim-purple'}`}>{event.type.toUpperCase()}</span>
-                   <span className="text-zinc-500"> - {JSON.stringify(event.payload)}</span>
-                </div>
+                <TelemetryEventItem key={event.id} event={event} />
              ))}
           </div>
         </div>
