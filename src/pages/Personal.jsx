@@ -8,6 +8,7 @@ import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import Reviews from '../components/Reviews.jsx';
+import NewsFeed from '../components/NewsFeed.jsx';
 
 
 export default function Personal() {
@@ -181,6 +182,11 @@ export default function Personal() {
         theme="gold"
         onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Powur Solar', location: 'Personal' })}
       />
+
+
+      <section className="relative pt-12 pb-12 z-20">
+        <NewsFeed title="Latest Personal Growth Intelligence" categorySlug="personal-development" limit={3} />
+      </section>
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Personal infrastructure?</h2>

@@ -8,6 +8,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import Reviews from '../components/Reviews.jsx';
+import NewsFeed from '../components/NewsFeed.jsx';
 
 
 export default function Business() {
@@ -202,6 +203,11 @@ export default function Business() {
           </div>
         </div>
 
+      </section>
+
+
+      <section className="relative pt-12 pb-12 z-20">
+        <NewsFeed title="Latest Business Intelligence" categorySlug="business-development" limit={3} />
       </section>
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">

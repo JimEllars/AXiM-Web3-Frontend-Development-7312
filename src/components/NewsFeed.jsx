@@ -6,7 +6,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 
-export default function NewsFeed({ limit = null, title = null, onArticleClick, hidePagination = false }) {
+export default function NewsFeed({ limit = null, title = null, onArticleClick, hidePagination = false, categorySlug = null }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,16 +35,24 @@ export default function NewsFeed({ limit = null, title = null, onArticleClick, h
 
         let spotlightCategoryId = null;
         let appSoftwareCategoryId = null;
-        if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
-           spotlightCategoryId = await fetchCategoryBySlug('software-spotlight');
-           appSoftwareCategoryId = await fetchCategoryBySlug('app-software');
-           if (spotlightCategoryId) params.categories_exclude = spotlightCategoryId;
-        }
 
-        if (activeCategory !== 'All Intelligence') {
-          const categoryId = await fetchCategoryBySlug(activeCategory);
-          if (categoryId) {
-            params.categories = categoryId;
+        if (categorySlug) {
+          const catId = await fetchCategoryBySlug(categorySlug);
+          if (catId) {
+            params.categories = catId;
+          }
+        } else {
+          if (activeCategory === 'Daily News' || activeCategory === 'News & Articles') {
+             spotlightCategoryId = await fetchCategoryBySlug('software-spotlight');
+             appSoftwareCategoryId = await fetchCategoryBySlug('app-software');
+             if (spotlightCategoryId) params.categories_exclude = spotlightCategoryId;
+          }
+
+          if (activeCategory !== 'All Intelligence') {
+            const categoryId = await fetchCategoryBySlug(activeCategory);
+            if (categoryId) {
+              params.categories = categoryId;
+            }
           }
         }
 
@@ -200,6 +208,8 @@ export default function NewsFeed({ limit = null, title = null, onArticleClick, h
     );
   }
 
+  if (categorySlug && !loading && (!articles || articles.length === 0)) return null;
+
   if (error) {
     return (
       <div className="w-full py-12 text-center border border-red-500/20 bg-[#050505] rounded-sm max-w-7xl mx-auto px-6 lg:px-8 mt-8">
@@ -219,7 +229,7 @@ export default function NewsFeed({ limit = null, title = null, onArticleClick, h
       )}
 
       {/* Filter Pill-Bar */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      {!categorySlug && <div className="flex flex-wrap gap-2 mb-8">
         {filters.map(filter => (
           <button
             key={filter.id}
@@ -233,7 +243,7 @@ export default function NewsFeed({ limit = null, title = null, onArticleClick, h
             {filter.label}
           </button>
         ))}
-      </div>
+      </div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {(() => {
