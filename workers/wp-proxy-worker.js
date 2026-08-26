@@ -12,6 +12,43 @@ export default {
       });
     }
 
+
+    // 2. Handle AI Context Edge Endpoint
+    if (request.method === 'GET' && new URL(request.url).pathname === '/api/ai-context') {
+      try {
+        const wpResponse = await fetch('https://wp.axim.us.com/wp-json/wp/v2/posts?per_page=10', {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Cloudflare-WP-Proxy-AI-Context/1.0'
+          }
+        });
+
+        if (!wpResponse.ok) {
+           return new Response(JSON.stringify({ error: 'Failed to fetch AI context' }), { status: 500 });
+        }
+
+        const posts = await wpResponse.json();
+
+        const cleanPosts = posts.map(post => ({
+          title: (post.title?.rendered || '').replace(/<[^>]*>?/gm, ''),
+          excerpt: (post.excerpt?.rendered || '').replace(/<[^>]*>?/gm, ''),
+          slug: post.slug,
+          link: 'https://axim.us.com/article/' + post.slug
+        }));
+
+        return new Response(JSON.stringify(cleanPosts), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=3600',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: 'Internal Error fetching AI context' }), { status: 500 });
+      }
+    }
+
     try {
       const url = new URL(request.url);
       const endpoint = url.searchParams.get('endpoint');
