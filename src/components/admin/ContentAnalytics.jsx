@@ -40,13 +40,25 @@ export default function ContentAnalytics() {
     return () => clearTimeout(timer);
   }, []);
 
+  const [timeRange, setTimeRange] = useState('24H');
   const [selectedChannel, setSelectedChannel] = useState('All Channels');
   const channels = ['All Channels', 'Powur Solar', 'Chatbase Support', 'Make.com'];
 
   const filteredLogs = useMemo(() => {
-    if (selectedChannel === 'All Channels') return filteredLogsRaw;
+    let logs = filteredLogsRaw;
 
-    return filteredLogsRaw.filter(log => {
+    // Time Range Filtering
+    if (timeRange === '24H') {
+      const threshold = Date.now() - 86400000;
+      logs = logs.filter(log => new Date(log.timestamp).getTime() > threshold);
+    } else if (timeRange === '7D') {
+      const threshold = Date.now() - 604800000;
+      logs = logs.filter(log => new Date(log.timestamp).getTime() > threshold);
+    }
+
+    if (selectedChannel === 'All Channels') return logs;
+
+    return logs.filter(log => {
       if (!log.payload) return false;
       const partner = log.payload.partner || log.payload.source || '';
 
@@ -55,7 +67,7 @@ export default function ContentAnalytics() {
       if (selectedChannel === 'Make.com' && partner.toLowerCase().includes('make')) return true;
       return false;
     });
-  }, [filteredLogsRaw, selectedChannel]);
+  }, [filteredLogsRaw, selectedChannel, timeRange]);
 
   const totalActiveSessions = useMemo(() => {
     const sessionIds = new Set();
@@ -90,6 +102,15 @@ export default function ContentAnalytics() {
           <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Live Event Stream</p>
         </div>
         <div className="flex items-center gap-4">
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
+            className="bg-[#0A0A0A] border border-white/10 p-2 text-white text-xs font-mono focus:border-axim-purple outline-none rounded-sm uppercase tracking-widest cursor-pointer"
+          >
+            <option value="24H">24H</option>
+            <option value="7D">7D</option>
+            <option value="ALL">ALL</option>
+          </select>
           <select
             value={selectedChannel}
             onChange={(e) => setSelectedChannel(e.target.value)}

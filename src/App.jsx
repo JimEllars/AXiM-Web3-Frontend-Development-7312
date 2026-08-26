@@ -21,6 +21,11 @@ import ScrollToTop from './components/ScrollToTop';
 import Toast from './components/Toast';
 
 
+
+import { AutoConnect } from 'thirdweb/react';
+import { client } from './lib/thirdweb-client.js';
+import { createWallet, inAppWallet } from 'thirdweb/wallets';
+
 const Home = lazy(() => import('./pages/Home'));
 const Articles = lazy(() => import('./pages/Articles'));
 
@@ -177,6 +182,12 @@ function App() {
     <div className="w-full flex flex-col min-h-screen selection:bg-axim-gold/30 selection:text-white bg-bg-void overflow-x-hidden">
       <AnalyticsTracker />
       <BackgroundEffects />
+      <AutoConnect
+        client={client}
+        wallets={[inAppWallet(), createWallet("io.metamask"), createWallet("com.coinbase.wallet")]}
+        timeout={10000}
+      />
+
       <CookieConsent />
       <Toast />
 
