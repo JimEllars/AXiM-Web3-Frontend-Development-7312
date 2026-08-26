@@ -405,3 +405,40 @@ export function __resetCircuitBreakerForTests() {
   isCircuitOpen = false;
   circuitOpenTime = 0;
 }
+
+export async function getAiEgressPayload() {
+  try {
+    const posts = await fetchPosts({ per_page: 10 });
+    if (!posts || !Array.isArray(posts)) return [];
+
+    return posts.map(post => {
+      // Strip HTML using regex or standard logic
+      const rawTitle = post.title?.rendered || post.title || '';
+      const rawExcerpt = post.excerpt?.rendered || post.excerpt || '';
+
+      const cleanTitle = rawTitle.replace(/<[^>]*>?/gm, '').trim();
+      const cleanExcerpt = rawExcerpt.replace(/<[^>]*>?/gm, '').trim();
+
+      let category = 'Uncategorized';
+      if (post.category_slug) {
+        category = post.category_slug;
+      } else if (post._embedded && post._embedded['wp:term']) {
+        const categories = post._embedded['wp:term'][0];
+        if (categories && categories.length > 0) {
+          category = categories[0].slug;
+        }
+      }
+
+      return {
+        title: cleanTitle,
+        excerpt: cleanExcerpt,
+        slug: post.slug,
+        date: post.date,
+        category: category
+      };
+    });
+  } catch (error) {
+    console.error('[getAiEgressPayload] Error fetching payload:', error);
+    return [];
+  }
+}

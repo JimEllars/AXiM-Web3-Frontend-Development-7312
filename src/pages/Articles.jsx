@@ -28,9 +28,8 @@ const SkeletonCard = ({ isHero = false }) => (
 
 export default function Articles() {
   const { isWeb3Authenticated, walletAddress } = useAximStore();
-  const [catData, setCatData] = useState({ dailyNews: [], featured: [], appSpotlight: [] });
+  const [catData, setCatData] = useState({ business: [], personal: [], tech: [] });
   const [activeFilter, setActiveFilter] = useState('All Articles');
-  const [leadStory, setLeadStory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   // Helper to filter articles by category pill
   const filterArticles = (articles) => {
@@ -47,10 +46,9 @@ export default function Articles() {
     });
   };
 
-  const filteredDailyNews = filterArticles(catData.dailyNews);
-  const filteredFeatured = filterArticles(catData.featured);
-  const filteredAppSpotlight = filterArticles(catData.appSpotlight);
-  const filteredLeadStory = leadStory && filterArticles([leadStory]).length > 0 ? leadStory : null;
+  const filteredBusiness = filterArticles(catData.business);
+  const filteredPersonal = filterArticles(catData.personal);
+  const filteredTech = filterArticles(catData.tech);
 
 
 
@@ -58,49 +56,21 @@ export default function Articles() {
     let isMounted = true;
     const loadCategories = async () => {
       try {
-        const dailyNewsId = await fetchCategoryBySlug('daily-news');
-        const featuredId = await fetchCategoryBySlug('featured');
-        const appSpotlightId = await fetchCategoryBySlug('app-software');
+        const businessId = await fetchCategoryBySlug('business-development');
+        const personalId = await fetchCategoryBySlug('personal-development');
+        const techId = await fetchCategoryBySlug('tech-development');
 
-        const [dn, feat, app] = await Promise.all([
-          fetchPosts({ categories: dailyNewsId, per_page: 3, _embed: 1 }),
-          fetchPosts({ categories: featuredId, per_page: 6, _embed: 1 }),
-          fetchPosts({ categories: appSpotlightId, per_page: 6, _embed: 1 })
+        const [bus, per, tech] = await Promise.all([
+          fetchPosts({ categories: businessId, per_page: 6, _embed: 1 }),
+          fetchPosts({ categories: personalId, per_page: 6, _embed: 1 }),
+          fetchPosts({ categories: techId, per_page: 6, _embed: 1 })
         ]);
 
         if (isMounted) {
-          const dailyNewsIds = new Set((dn || []).map(post => post.id));
-
-
-          const targetDailyNewsIntId = parseInt(dailyNewsId);
-          const targetFeaturedIntId = parseInt(featuredId);
-          const targetAppSpotlightIntId = parseInt(appSpotlightId);
-
-          const dailyNewsArray = (dn || []).filter(post =>
-            (post.category_slug === 'daily-news' || (Array.isArray(post.categories) && post.categories.includes(targetDailyNewsIntId))) &&
-            (!Array.isArray(post.categories) || !post.categories.includes(targetAppSpotlightIntId)) &&
-            post.category_slug !== 'software-spotlight' &&
-            post.category_slug !== 'app-software'
-          );
-          if (dailyNewsArray.length > 0) {
-            setLeadStory(dailyNewsArray[0]);
-          } else {
-            setLeadStory(null);
-          }
-          const cleanFeat = (feat || []).filter(post => !dailyNewsIds.has(post.id) && (
-              post.category_slug === 'featured' ||
-              (Array.isArray(post.categories) && post.categories.includes(targetFeaturedIntId))
-          ));
-          const cleanApp = (app || []).filter(post => !dailyNewsIds.has(post.id) && (
-              post.category_slug === 'app-software' ||
-              (Array.isArray(post.categories) && post.categories.includes(targetAppSpotlightIntId))
-          ));
           setCatData({
-            dailyNews: dailyNewsArray.slice(1),
-
-            // Prevent content contamination across grids by isolating collections via explicit Sets
-            featured: cleanFeat.slice(0, 6),
-            appSpotlight: cleanApp.slice(0, 6)
+            business: bus || [],
+            personal: per || [],
+            tech: tech || []
           });
           setIsLoading(false);
         }
@@ -213,8 +183,8 @@ export default function Articles() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
 
-        {/* Section 0: Daily News */}
-        {(filteredLeadStory || filteredDailyNews.length > 0) && (
+        {/* Section: Business Development */}
+        {(!isLoading && filteredBusiness.length > 0) && (
           <section>
             <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
               <div>
@@ -223,41 +193,22 @@ export default function Articles() {
                   // INTEL_STREAM: ARBITRUM_SYNCED
                 </div>
                 <div className="flex items-center gap-3">
-                  <SafeIcon icon={LuIcons.LuNewspaper} className="w-6 h-6 text-axim-purple" />
-                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">News & Articles</h2>
+                  <SafeIcon icon={LuIcons.LuTrendingUp} className="w-6 h-6 text-axim-purple" />
+                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Business Development</h2>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-6">
-              {isLoading ? (
-                 <>
-                   <SkeletonCard isHero={true} />
-                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                     <SkeletonCard />
-                     <SkeletonCard />
-                   </div>
-                 </>
-              ) : (
-                 <>
-                   {filteredLeadStory && (
-                     <ArticleCard key={leadStory.id} article={filteredLeadStory} isHero={true} priority={true} />
-                   )}
-                   {filteredDailyNews.length > 0 && (
-                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                       {filteredDailyNews.map((article) => (
-                         <ArticleCard key={article.id} article={article} />
-                       ))}
-                     </div>
-                   )}
-                 </>
-              )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {filteredBusiness.slice(0, 6).map((article, idx) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
             </div>
           </section>
         )}
 
-        {/* Section 1: Featured Articles */}
-        {(!isLoading && filteredFeatured.length > 0) && (
+        {/* Section: Personal Development */}
+        {(!isLoading && filteredPersonal.length > 0) && (
         <section>
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
             <div>
@@ -266,32 +217,24 @@ export default function Articles() {
                 // INTEL_STREAM: ARBITRUM_SYNCED
               </div>
               <div className="flex items-center gap-3">
-                <SafeIcon icon={LuIcons.LuStar} className="w-6 h-6 text-axim-gold" />
-                <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Featured</h2>
+                <SafeIcon icon={LuIcons.LuUserCheck} className="w-6 h-6 text-emerald-500" />
+                <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Personal Development</h2>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {isLoading ? (
-               <>
-                 <SkeletonCard isHero={true} />
-                 <SkeletonCard />
-                 <SkeletonCard />
-               </>
-            ) : (
-               filteredFeatured.map((article, idx) => (
-                 <ArticleCard key={article.id} article={article} isHero={idx === 0} />
-               ))
-            )}
+            {filteredPersonal.slice(0, 6).map((article, idx) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
           </div>
         </section>
         )}
 
-        {/* Section 2: App Spotlight (Software Spotlight) */}
-        {(!isLoading && filteredAppSpotlight.length > 0) && (
+        {/* Section: Tech Development */}
+        {(!isLoading && filteredTech.length > 0) && (
           <motion.section
             onViewportEnter={() => {
-              logTelemetry('articles_page_spotlight_impression', { count: filteredAppSpotlight?.length || 0 });
+              logTelemetry('articles_page_tech_impression', { count: filteredTech?.length || 0 });
             }}
             viewport={{ once: true, amount: 0.2 }}
           >
@@ -302,32 +245,21 @@ export default function Articles() {
                   // INTEL_STREAM: ARBITRUM_SYNCED
                 </div>
                 <div className="flex items-center gap-3">
-                  <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-purple" />
-                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Software Spotlight</h2>
+                  <SafeIcon icon={LuIcons.LuCpu} className="w-6 h-6 text-axim-gold" />
+                  <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Tech Development</h2>
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10 w-full">
-              {isLoading ? (
-                <>
-                  <SkeletonCard />
-                  <SkeletonCard />
-                  <SkeletonCard />
-                  <SkeletonCard />
-                </>
-              ) : (
-                <>
-                  {filteredAppSpotlight.slice(0, 4).map((article, index) => (
-                    <ArticleCard article={article} index={index} key={article.id || index} />
-                  ))}
-                </>
-              )}
+              {filteredTech.slice(0, 6).map((article, index) => (
+                <ArticleCard article={article} index={index} key={article.id || index} />
+              ))}
             </div>
           </motion.section>
         )}
       </div>
 
-      {/* Section 3: All Articles (The Catch-All Firehose) */}
+      {/* Section: All Articles (The Catch-All Firehose) */}
       <div className="mt-12 bg-[#050505] border-t border-white/10 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] relative z-20">
          <HubNavigator title="Explore AXiM Development" />
          <NewsFeed limit={9} title="All Articles" />
