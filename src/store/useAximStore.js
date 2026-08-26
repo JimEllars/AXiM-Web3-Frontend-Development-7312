@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { supabase } from '../lib/supabase.js';
 
 export const useAximStore = create(
@@ -257,12 +257,12 @@ export const useAximStore = create(
   }
     }),
     {
-      name: 'axim-operator-storage',
+      name: 'axim-global-store',
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
-        telemetryCollection: state.telemetryCollection,
-        assets: state.assets,
-        vaultedArtifacts: state.vaultedArtifacts,
-        session: state.session
+        isWeb3Authenticated: state.isWeb3Authenticated,
+        walletAddress: state.walletAddress,
+        clearanceLevel: state.clearanceLevel
       }),
     }
   )
