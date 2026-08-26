@@ -21,7 +21,7 @@ export function useOnyxStream() {
     abortControllerRef.current = new AbortController();
 
     const userMessage = { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date().toISOString() };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage].slice(-500));
     setIsStreaming(true);
     setError(null);
 
@@ -32,7 +32,7 @@ export function useOnyxStream() {
       content: '',
       timestamp: new Date().toISOString(),
       isStreaming: true
-    }]);
+    }].slice(-500));
 
     logTelemetry('onyx_stream_initiated', { promptLength: text.length });
 
