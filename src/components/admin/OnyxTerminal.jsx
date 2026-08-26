@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
-import { logTelemetry } from '../../lib/telemetry';
+import { logTelemetry, flushTelemetryQueue } from '../../lib/telemetry';
 import { useAximStore } from '../../store/useAximStore';
 import { useOnyxStream } from '../../hooks/useOnyxStream';
 import DOMPurify from 'dompurify';
@@ -208,6 +208,17 @@ export default function OnyxTerminal() {
                 Transmitting to Edge...
               </div>
             ) : 'Deploy to Cloudflare KV'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              flushTelemetryQueue(true);
+              addTerminalOutput('DLQ Flush sequence initiated. Bypassing standard batching...', 'success');
+            }}
+            className="w-full mt-4 py-4 bg-[#DB2777] text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_rgba(219,39,119,0.3)] hover:bg-white hover:text-black flex items-center justify-center gap-2 rounded-sm"
+          >
+            FLUSH DEAD-LETTER QUEUE
           </button>
         </form>
 
