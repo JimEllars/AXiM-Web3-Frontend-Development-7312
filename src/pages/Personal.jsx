@@ -59,54 +59,9 @@ export default function Personal() {
       </section>
 
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Property & Home Services Card */}
-          <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'personal' })} viewport={{ once: true }}>
-            <Link to="/services" onClick={() => { logTelemetry('personal_gateway_clicked', { gateway: 'property_home' }); logTelemetry('cta_clicked', { location: 'hero', page: 'personal' }); }} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SafeIcon icon={LuIcons.LuHouse} className="w-8 h-8 text-emerald-500 mb-4" />
-            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Property & Home</h2>
-            <p className="text-sm text-zinc-400 mb-6 font-medium">Residential exterior services, pressure washing, and property value enhancement.</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-              <span>View Services</span>
-              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </Link>
-          </motion.div>
-
-          {/* Individual Utilities Card */}
-          <Link to="/store" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-emerald-500 mb-4" />
-            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Individual Utilities</h2>
-            <p className="text-sm text-zinc-400 mb-6 font-medium">Personal document generators, pay stubs, and individual legal tech tools.</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-              <span>Access Utilities</span>
-              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </Link>
-
-          {/* Growth Frameworks Card */}
-          <Link to="/articles" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'growth_frameworks' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SafeIcon icon={LuIcons.LuBookOpen} className="w-8 h-8 text-emerald-500 mb-4" />
-            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Growth Frameworks</h2>
-            <p className="text-sm text-zinc-400 mb-6 font-medium">Personal development articles, life-optimization strategies, and mental models.</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-              <span>Read Articles</span>
-              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </Link>
-        </div>
 
         {/* Growth & Psychology Frameworks Section */}
-        <div className="relative pt-8 mt-12 border-t border-white/5">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-500 border border-emerald-500/30 px-2 py-1 rounded-sm bg-emerald-500/5">
-              Growth & Psychology Frameworks
-            </span>
-          </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
 
             {/* Overcoming Imposter Syndrome Card */}
             <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
@@ -168,9 +123,55 @@ export default function Personal() {
               </button>
             </div>
 
-          </div>
         </div>
 
+
+        <div className="relative pt-8 mt-12 border-t border-white/5">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-500 border border-emerald-500/30 px-2 py-1 rounded-sm bg-emerald-500/5">
+              Utilities & Services
+            </span>
+          </div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Property & Home Services Card */}
+            <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'personal' })} viewport={{ once: true }}>
+              <Link to="/services" onClick={() => { logTelemetry('personal_gateway_clicked', { gateway: 'property_home' }); logTelemetry('cta_clicked', { location: 'hero', page: 'personal' }); }} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <SafeIcon icon={LuIcons.LuHouse} className="w-8 h-8 text-emerald-500 mb-4" />
+              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Property & Home</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium">Residential exterior services, pressure washing, and property value enhancement.</p>
+              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
+                <span>View Services</span>
+                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+            </motion.div>
+
+            {/* Individual Utilities Card */}
+            <Link to="/store" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-emerald-500 mb-4" />
+              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Individual Utilities</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium">Personal document generators, pay stubs, and individual legal tech tools.</p>
+              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
+                <span>Access Utilities</span>
+                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Growth Frameworks Card */}
+            <Link to="/articles" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'growth_frameworks' })} className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <SafeIcon icon={LuIcons.LuBookOpen} className="w-8 h-8 text-emerald-500 mb-4" />
+              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Growth Frameworks</h2>
+              <p className="text-sm text-zinc-400 mb-6 font-medium">Personal development articles, life-optimization strategies, and mental models.</p>
+              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
+                <span>Read Articles</span>
+                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
       </section>
 
       <PartnerPromo
