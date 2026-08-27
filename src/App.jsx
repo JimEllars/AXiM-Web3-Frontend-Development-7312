@@ -40,7 +40,6 @@ const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const DashboardAccessDenied = lazy(() => import('./components/DashboardAccessDenied'));
 import Article from './pages/Article';
-import NexusCrmCourse from './pages/products/NexusCrmCourse';
 const MakeLanding = lazy(() => import('./pages/partners/MakeLanding'));
 const PowurSolarLanding = lazy(() => import('./pages/partners/PowurSolarLanding'));
 const PowurJoinLanding = lazy(() => import('./pages/partners/PowurJoinLanding'));
@@ -247,7 +246,6 @@ function App() {
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
-<Route path="/products/nexus-crm-course" element={<PageTransition><NexusCrmCourse /></PageTransition>} />
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
