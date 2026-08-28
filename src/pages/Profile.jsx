@@ -22,7 +22,7 @@ export default function Profile() {
   const logoutWeb3Wallet = useAximStore((state) => state.logoutWeb3Wallet);
   const [activeTab, setActiveTab] = useState('vault');
   const usdcTokenAddress = import.meta.env.VITE_USDC_TOKEN_ADDRESS || '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'; // Default Arbitrum USDC address
-  const { data: balanceData, isLoading: isBalanceLoading } = useWalletBalance({
+  const { data: balance, isLoading: isBalanceLoading } = useWalletBalance({
     chain: arbitrum,
     address: walletAddress,
     client: client,
@@ -129,7 +129,7 @@ const [extractingId, setExtractingId] = useState(null);
                    <div className="animate-pulse bg-white/5 h-8 rounded-sm w-48"></div>
                 ) : (
                    <div className="font-mono text-xs uppercase tracking-widest text-zinc-300">
-                     ACCOUNT SETTLE BALANCE: <span className="text-white font-bold">{balanceData?.displayValue || '0.00'} {balanceData?.symbol || 'USDC'}</span> [ARBITRUM ONE]
+                     ACCOUNT SETTLE BALANCE: <span className="text-white font-bold">{balance?.displayValue || '0.00'} {balance?.symbol || 'USDC'}</span> [ARBITRUM ONE]
                    </div>
                 )}
                 {isWeb3Authenticated && (
@@ -289,28 +289,30 @@ const [extractingId, setExtractingId] = useState(null);
           </div>
         )}
 
-        {/* Tab 3: On-Chain Activity */}
+                {/* Tab 3: On-Chain Activity */}
         {activeTab === 'activity' && isWeb3Authenticated && (
           <div className="animate-fade-in">
-            <div className="space-y-4">
-              {profile?.transactions?.map((tx, idx) => (
-                <div key={idx} className="bg-[#0F172A] border border-white/5 p-6 rounded-sm shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded-sm">{tx.type}</span>
-                    </div>
-                    <h4 className="text-base font-black text-white uppercase tracking-wider font-mono">
-                      <a href="#" className="hover:text-axim-green transition-colors">{tx.hash}</a>
-                    </h4>
-                  </div>
-                  <div className="flex flex-col md:items-end">
-                    <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1">{tx.timestamp}</span>
-                    <span className="text-[0.65rem] font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" /> Verified
-                    </span>
-                  </div>
+            <div className="bg-[#0F172A] border border-white/5 p-6 rounded-sm shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-[0.6rem] font-mono text-zinc-500 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded-sm">Network Assets</span>
                 </div>
-              ))}
+                <h4 className="text-base font-black text-white uppercase tracking-wider font-mono">
+                  {isBalanceLoading ? (
+                    <div className="h-6 w-32 bg-white/5 animate-pulse rounded"></div>
+                  ) : (
+                    <span className="text-axim-green">
+                      {balance ? `${balance.displayValue} ${balance.symbol}` : '0 ETH'}
+                    </span>
+                  )}
+                </h4>
+              </div>
+              <div className="flex flex-col md:items-end">
+                <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1">Arbitrum ETH</span>
+                <span className="text-[0.65rem] font-bold text-axim-green uppercase tracking-widest flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" /> Verified
+                </span>
+              </div>
             </div>
           </div>
         )}

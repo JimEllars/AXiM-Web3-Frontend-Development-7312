@@ -310,9 +310,9 @@ export default function WindowCleaning() {
                                     <label className="block text-sm font-medium text-zinc-300 mb-3">Frequently Combined Add-Ons</label>
                                     <div className="space-y-3">
                                         {[
-                                            { label: 'Solar Panel Surface Wash (+$49)', value: 'solar_panel' },
-                                            { label: 'Driveway Pressure Wash (+$89)', value: 'driveway' },
-                                            { label: 'Screen Deep Detail & UV Barrier (+$29)', value: 'screen_detail' }
+                                            { label: 'Solar Panel Surface Wash (Custom Quote)', value: 'solar_panel' },
+                                            { label: 'Driveway Pressure Wash (Custom Quote)', value: 'driveway' },
+                                            { label: 'Screen Deep Detail & UV Barrier (Custom Quote)', value: 'screen_detail' }
                                         ].map(addon => (
                                             <label key={addon.value} className="flex items-center space-x-3 cursor-pointer">
                                                 <input

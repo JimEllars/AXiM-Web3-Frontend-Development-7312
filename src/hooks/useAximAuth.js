@@ -3,12 +3,6 @@ import { supabase } from '../lib/supabase.js';
 import { localStore } from '../lib/persistence.js';
 import { useAximStore } from '../store/useAximStore.js';
 
-const MOCK_ON_CHAIN_ACTIVITY = [
-  { hash: "0x1a2b...3c4d", type: "Contract Interaction", timestamp: "2 mins ago" },
-  { hash: "0x9f8e...7d6c", type: "Asset Transfer", timestamp: "1 hour ago" },
-  { hash: "0x5a4b...3c2d", type: "Protocol Upgrade", timestamp: "1 day ago" }
-];
-
 export function useAximAuth() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +20,7 @@ export function useAximAuth() {
         await supabase.auth.signOut();
         setSession(null);
         setProfile(null);
-        alert("Forbidden: Internal Access Only");
+        if (typeof window !== 'undefined' && window.alert) { window.alert('Forbidden: Internal Access Only'); }
         return false;
       }
     }
@@ -43,7 +37,7 @@ export function useAximAuth() {
        if (isMounted) {
            setSession(offline.session);
            if (offline.session && offline.session.user) {
-               setProfile({ email: offline.session.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
+               setProfile({ email: offline.session.user.email, clearance_level: 1});
            }
        }
     }
@@ -57,7 +51,7 @@ export function useAximAuth() {
           setSession(currentSession);
           localStore.saveOfflineSession(currentSession);
           if (currentSession) {
-             setProfile({ email: currentSession.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
+             setProfile({ email: currentSession.user.email, clearance_level: 1});
           }
         }
         setLoading(false);
@@ -80,7 +74,7 @@ export function useAximAuth() {
         if (isValid) {
           setSession(currentSession);
           if (currentSession) {
-              setProfile({ email: currentSession.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
+              setProfile({ email: currentSession.user.email, clearance_level: 1});
           } else {
               setProfile(null);
           }
@@ -167,7 +161,7 @@ export function useAximAuth() {
          if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
            setSession(offline.session);
            if (offline.session && offline.session.user) {
-             setProfile({ email: offline.session.user.email, clearance_level: 1, transactions: MOCK_ON_CHAIN_ACTIVITY });
+             setProfile({ email: offline.session.user.email, clearance_level: 1});
            }
          }
       }

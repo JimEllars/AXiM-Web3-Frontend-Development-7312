@@ -35,6 +35,7 @@ describe('useAximAuth Hook', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    vi.spyOn(window, 'alert').mockImplementation(() => {});
     localStore.clearCache();
     mockAccount = null;
     localStorage.clear();
