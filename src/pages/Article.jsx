@@ -11,6 +11,9 @@ import { logTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
+import AffiliateTable from '../components/AffiliateTable';
+import MicroAppBanner from '../components/MicroAppBanner';
+
 
 import HubNavigator from "../components/HubNavigator";
 import SystemBreadcrumb from '../components/SystemBreadcrumb'; // Adding this as user included it in their import list, though it may not be used or used in existing UI. Wait, let me check if it's used in the bottom part.
@@ -262,10 +265,52 @@ const { slug } = useParams();
         {/* Article Body */}
         <article className="lg:col-span-8">
               {/* WordPress Core Content Render (Restored Typography) */}
-              <div
-                className="prose prose-invert prose-axim max-w-3xl mx-auto prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content?.rendered || '') }}
-              />
+              {(() => {
+  const rawHtml = DOMPurify.sanitize(article.content?.rendered || '');
+
+  // Custom simple parser to handle shortcodes
+  let parsedContent = [];
+  const parts = rawHtml.split(/([AXIM_AFFILIATE_TABLE]|[AXIM_MICRO_APP])/);
+
+  const mockProducts = [
+    {
+      name: 'Make.com',
+      description: 'Advanced visual platform to design, build, and automate anything from tasks to workflows.',
+      features: ['Drag & drop workflow builder', 'Thousands of apps', 'Real-time execution'],
+      link: 'https://www.make.com/en/register?via=axim_hub',
+      isTopChoice: true
+    },
+    {
+      name: 'ActiveCampaign',
+      description: 'Customer experience automation platform that helps businesses connect and engage with their customers.',
+      features: ['Email marketing', 'Marketing automation', 'CRM & Sales automation'],
+      link: 'https://www.activecampaign.com/?via=axim_hub',
+      isTopChoice: false
+    }
+  ];
+
+  return (
+    <div className="prose prose-invert prose-axim max-w-3xl mx-auto prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md">
+      {parts.map((part, index) => {
+        if (part === '[AXIM_AFFILIATE_TABLE]') {
+          return (
+            <div key={index} className="not-prose my-12">
+              <AffiliateTable products={mockProducts} />
+            </div>
+          );
+        } else if (part === '[AXIM_MICRO_APP]') {
+          return (
+            <div key={index} className="not-prose my-12">
+              <MicroAppBanner />
+            </div>
+          );
+        } else {
+          return <div key={index} dangerouslySetInnerHTML={{ __html: part }} />;
+        }
+      })}
+    </div>
+  );
+})()}
         </article>
 
         {/* Dynamic High-Converting Sidebar */}
