@@ -170,6 +170,14 @@ export default function Header() {
 
 
           <GlobalSearch />
+
+          <button
+            onClick={() => logTelemetry('global_cart_clicked', { location: 'header' })}
+            className="selldone-cart-toggle p-2 text-zinc-400 hover:text-white transition-colors relative"
+            aria-label="View Cart"
+          >
+            <SafeIcon icon={LuIcons.LuShoppingBag} className="w-5 h-5" />
+          </button>
           {isAuthenticated ? (
             <div className="flex items-center gap-2 group">
               <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile"
@@ -206,6 +214,14 @@ export default function Header() {
 
         <div className="md:hidden flex items-center gap-2">
           <GlobalSearch />
+
+          <button
+            onClick={() => logTelemetry('global_cart_clicked', { location: 'header' })}
+            className="selldone-cart-toggle p-2 text-zinc-400 hover:text-white transition-colors relative"
+            aria-label="View Cart"
+          >
+            <SafeIcon icon={LuIcons.LuShoppingBag} className="w-5 h-5" />
+          </button>
         {/* Mobile Menu Toggle */}
         <button
           className="md:hidden relative z-[60] p-2 text-zinc-400 hover:text-[#004040] transition-colors"
