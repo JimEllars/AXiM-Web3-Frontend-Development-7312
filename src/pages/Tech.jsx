@@ -14,6 +14,17 @@ import NewsFeed from '../components/NewsFeed.jsx';
 export default function Tech() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
+  const techSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AXiM Technology Backbone",
+      "applicationCategory": "BusinessApplication",
+      "description": "Turning vision into execution requires scalable infrastructure. AXiM Tech provides the computational backbone, autonomous pipelines, and cognitive tools powering business and personal development."
+    }
+  ];
+
+
   const seoData = {
     title: 'AXiM Tech Hub',
     description: 'Explore AXiM\'s technical ecosystem, autonomous AI, and enterprise applications.',
@@ -23,7 +34,7 @@ export default function Tech() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-6 bg-bg-void text-white overflow-hidden">
-      <SEO customMeta={seoData} />
+      <SEO customMeta={seoData} customSchema={techSchema} />
 
       <motion.section
         className="max-w-7xl mx-auto relative z-10 text-center mb-16"

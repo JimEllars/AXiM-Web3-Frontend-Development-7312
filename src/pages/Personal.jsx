@@ -14,6 +14,16 @@ import NewsFeed from '../components/NewsFeed.jsx';
 export default function Personal() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
+  const personalSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Growth and Psychology Frameworks",
+      "description": "Aligning internal systems for high-performance output. Explore cognitive frameworks, personal utility tools, and foundational development strategies."
+    }
+  ];
+
+
   useEffect(() => {
     logTelemetry('category_hub_viewed', { category: 'personal' });
   }, []);

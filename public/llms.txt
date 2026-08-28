@@ -3,9 +3,12 @@
 > AXiM Development provides practical automation, decentralized infrastructure, operational intelligence, and business tools.
 
 ### Core Pillars
-- **Business Development**: Enterprise sales systems, workforce operations, B2B services.
+- **Business Development**: Enterprise sales systems, workforce operations, B2B services, Quick Demand Letter Generator, and Nexus CRM.
 - **Personal Development**: Purpose discovery, life frameworks, property/home services.
 - **Tech Development**: Software backbone, AI pipelines, cognitive tools, and interactive games.
+
+## Target Audience & Solutions
+AXiM Development serves enterprise operators, decentralized network engineers, and high-performance individuals looking to eliminate operational friction.
 
 ## Canonical resources
 - [AXiM Hub Homepage](https://axim.us.com/)

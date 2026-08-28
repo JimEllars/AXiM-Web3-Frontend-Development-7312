@@ -16,10 +16,7 @@ import { createWallet, inAppWallet } from "thirdweb/wallets";
 export default function AuthGateway() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
-  const [errorMsg, setErrorMsg] = useState(null);
+        const [errorMsg, setErrorMsg] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isHydrating, setIsHydrating] = useState(true);
   const [networkFault, setNetworkFault] = useState(false);
@@ -48,6 +45,32 @@ export default function AuthGateway() {
     isMounted.current = true;
     return () => { isMounted.current = false; };
   }, []);
+
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    if (token) {
+      // Simulate saving token for AXiM passport
+      logTelemetry('operator_clearance_success', { method: 'passport_sso' });
+      if (isMounted.current) {
+        setNotification('Authentication successful via AXiM Passport.');
+
+        // Scrub token from URL
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+
+        navigate(from, { replace: true });
+      }
+    }
+  }, [navigate, from, setNotification]);
+
+  const handlePassportAuth = () => {
+    logTelemetry('auth_login_attempted', { method: 'passport_sso' });
+    const redirectUrl = encodeURIComponent(window.location.origin + '/auth/callback');
+    window.location.href = `https://passport.axim.us.com?redirect=${redirectUrl}`;
+  };
 
   const handleWeb3Login = async () => {
     setIsWeb3Connecting(true);
@@ -92,51 +115,6 @@ export default function AuthGateway() {
     }
   };
 
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    logTelemetry('auth_login_attempted', { method: 'email_password' });
-    setIsProcessing(true);
-    setErrorMsg(null);
-
-    const cleanEmail = sanitizeInput(email).toLowerCase();
-    logTelemetry("auth_attempt_initiated", { method: isLogin ? "login" : "signup" });
-    const authPromise = isLogin
-        ? supabase.auth.signInWithPassword({ email: cleanEmail, password: password })
-        : supabase.auth.signUp({ email: cleanEmail, password: password });
-
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth_timeout_fault")), 15000)); // Increased timeout to 15s to be safer
-
-    try {
-      const { data, error } = await Promise.race([authPromise, timeoutPromise]);
-      if (error) throw error;
-
-      // Route directly to the Operator Vault on success
-      logTelemetry('operator_clearance_success', {
-        method: 'email_key',
-        identity: cleanEmail
-      });
-      if (isMounted.current) {
-        setNotification('Authentication successful.');
-        navigate(from, { replace: true });
-      }
-    } catch (err) {
-      if (err.message === "auth_timeout_fault" || err.message === "Failed to fetch") {
-        logTelemetry('auth_timeout_fault', { method: isLogin ? 'login' : 'signup', email: cleanEmail });
-        if (isMounted.current) setNetworkFault(true);
-      } else {
-        console.error("[AXiM_AUTH] Clearance rejected:", err);
-        logTelemetry('operator_clearance_denied', {
-          method: 'email_key',
-          identity: cleanEmail,
-          reason: err.message || 'Clearance rejected'
-        });
-        if (isMounted.current) setErrorMsg(err.message || "Authentication failed. Verify credentials and try again.");
-      }
-    } finally {
-      if (isMounted.current) setIsProcessing(false);
-    }
-  };
-
 
   if (networkFault) {
     return (
@@ -162,7 +140,7 @@ export default function AuthGateway() {
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md" onViewportEnter={() => { logTelemetry("auth_gateway_viewed", { initialMode: isLogin ? "login" : "signup" }); }} viewport={{ once: true, amount: 0.2 }}>
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md" onViewportEnter={() => { logTelemetry("auth_gateway_viewed", { initialMode: "login" }); }} viewport={{ once: true, amount: 0.2 }}>
 
         <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
           <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
@@ -180,7 +158,7 @@ export default function AuthGateway() {
               System <span className="text-axim-purple">Clearance.</span>
             </h1>
             <p className="text-[0.7rem] font-mono text-zinc-400 uppercase tracking-widest">
-              {isLogin ? 'Enter credentials to access your Operator Vault.' : 'Establish a secure profile to encrypt your assets.'}
+              Establish a secure connection to access your Operator Vault.
             </p>
           </div>
 
@@ -204,41 +182,17 @@ export default function AuthGateway() {
             </div>
           )}
 
-          <form onSubmit={handleAuth} className={`space-y-5 relative z-10 ${!isSupabaseConfigured ? 'opacity-50 pointer-events-none' : ''}`}>
-            <div>
-              <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Secure Comms (Email)</label>
-              <div className="relative">
-                <SafeIcon icon={LuIcons.LuMail} className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <input
-                  required
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#0A0A0A] border border-white/10 pl-11 pr-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
-                  placeholder="operator@domain.com"
-                />
-              </div>
-            </div>
 
-            <div>
-              <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Decryption Key (Password)</label>
-              <div className="relative">
-                <SafeIcon icon={LuIcons.LuKey} className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <input
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#0A0A0A] border border-white/10 pl-11 pr-4 py-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
-                  placeholder="••••••••••••"
-                />
-              </div>
-            </div>
-
-            <button disabled={isProcessing} type="submit" className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-4">
-              {isProcessing ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> Verifying...</> : (isLogin ? 'Authenticate' : 'Initialize Profile')}
+          <div className={`space-y-5 relative z-10 ${!isSupabaseConfigured ? 'opacity-50 pointer-events-none' : ''}`}>
+            <button
+              type="button"
+              onClick={handlePassportAuth}
+              className="w-full py-4 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] flex justify-center items-center gap-2 mt-4"
+            >
+              Authenticate via AXiM Passport
             </button>
-          </form>
+          </div>
+
 
           {/* NEW: Web3 Authentication Bridge */}
           <div className="relative flex items-center justify-center mt-8 mb-6 z-10">
@@ -264,11 +218,6 @@ export default function AuthGateway() {
             </button>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
-            <button type="button" onClick={() => { const nextMode = !isLogin ? "login" : "signup"; setIsLogin(!isLogin); setErrorMsg(null); setEmail(''); setPassword(''); logTelemetry("auth_mode_switched", { targetMode: nextMode }); }} className="text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors underline decoration-white/20 underline-offset-4">
-              {isLogin ? "Need clearance? Request an account." : "Already have clearance? Authenticate here."}
-            </button>
-          </div>
 
         </div>
       </motion.div>

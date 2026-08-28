@@ -41,6 +41,6 @@ describe('AuthGateway Component', () => {
 
     expect(screen.getAllByText(/System/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Clearance/i).length).toBeGreaterThan(0);
-    expect(screen.getByPlaceholderText(/operator@domain.com/i)).toBeTruthy();
+    expect(screen.getByText(/Authenticate via AXiM Passport/i)).toBeTruthy();
   });
 });
