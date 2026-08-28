@@ -34,7 +34,8 @@ export default {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: reqBody
+        body: reqBody,
+        signal: AbortSignal.timeout(5000)
       });
 
       const data = await response.text();
@@ -49,6 +50,12 @@ export default {
 
     } catch (error) {
       console.error("RPC Worker Error:", error);
+      if (error.name === 'TimeoutError') {
+        return new Response(JSON.stringify({ error: "Gateway Timeout" }), {
+          status: 504,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        });
+      }
       return new Response(JSON.stringify({ error: "Internal Server Error" }), {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
