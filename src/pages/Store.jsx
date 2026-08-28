@@ -50,6 +50,7 @@ SelldoneEmbed.propTypes = {
 export default function Store() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const [isAdblocked, setIsAdblocked] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('digital-ip');
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -147,6 +148,32 @@ export default function Store() {
         </p>
       </div>
 
+
+      <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-8 relative z-10">
+        <div className="flex gap-4 p-1 bg-black/50 border border-white/10 rounded-sm backdrop-blur-md">
+          <button
+            onClick={() => setActiveCategory('digital-ip')}
+            className={`px-6 py-2 text-xs font-bold uppercase tracking-widest transition-colors rounded-sm ${
+              activeCategory === 'digital-ip'
+                ? 'bg-axim-purple/20 text-axim-purple border border-axim-purple/50'
+                : 'text-zinc-400 hover:text-white border border-transparent'
+            }`}
+          >
+            Digital IP & Playbooks
+          </button>
+          <button
+            onClick={() => setActiveCategory('hardware-merch')}
+            className={`px-6 py-2 text-xs font-bold uppercase tracking-widest transition-colors rounded-sm ${
+              activeCategory === 'hardware-merch'
+                ? 'bg-axim-purple/20 text-axim-purple border border-axim-purple/50'
+                : 'text-zinc-400 hover:text-white border border-transparent'
+            }`}
+          >
+            Hardware & Merch
+          </button>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto space-y-16 relative z-10">
         {shelves.map((shelf, sIdx) => (
           <div key={sIdx} className="space-y-6">
@@ -154,7 +181,7 @@ export default function Store() {
               {shelf.title}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {shelf.products.map((product, pIdx) => (
+              {shelf.products.filter(p => activeCategory === 'digital-ip' ? p.category !== 'PHYSICAL' : p.category === 'PHYSICAL').map((product, pIdx) => (
                 <div key={pIdx} className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-xl hover:border-axim-purple/50 transition-colors flex flex-col">
                   <div className="text-[10px] font-mono text-axim-purple uppercase tracking-widest mb-3">
                     [{product.category}]
@@ -163,7 +190,7 @@ export default function Store() {
                   <p className="text-sm text-zinc-400 mb-6 flex-grow leading-relaxed">
                     {product.description}
                   </p>
-                  <SelldoneEmbed product={product} shelfTitle={shelf.title} isAdblocked={isAdblocked} />
+                  <SelldoneEmbed product={product} shelfTitle={activeCategory === 'digital-ip' ? 'Digital IP' : 'Merchandise'} isAdblocked={isAdblocked} />
                 </div>
               ))}
             </div>

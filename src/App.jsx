@@ -93,6 +93,23 @@ function App() {
     startTelemetryPolling();
   }, []);
 
+
+  useEffect(() => {
+    try {
+      const scriptId = "selldone-global";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://selldone.com/sdk.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    } catch (e) {
+      console.warn("Selldone script blocked or failed to load");
+    }
+  }, []);
+
+
   useEffect(() => {
     const handleBeforeUnload = () => {
       flushTelemetryQueue(true);
