@@ -11,28 +11,31 @@ export const FALLBACK_RPCS = [
 ];
 
 export async function verifyWeb3Connection() {
-  try {
-    const rpc = FALLBACK_RPCS[0];
-    const res = await fetch(rpc, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        method: "eth_blockNumber",
-        params: [],
-        id: 1,
-      }),
-      signal: AbortSignal.timeout(3000),
-    });
+  for (const rpc of FALLBACK_RPCS) {
+    try {
+      const res = await fetch(rpc, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "eth_blockNumber",
+          params: [],
+          id: 1,
+        }),
+        signal: AbortSignal.timeout(3000),
+      });
 
-    if (!res.ok) {
+      if (!res.ok) {
         throw new Error(`RPC status ${res.status}`);
-    }
+      }
 
-    await res.json();
-    return true;
-  } catch (err) {
-    logTelemetry('web3_rpc_fallback_triggered', { fallback: true, error: err.message });
-    return false; // Indicating fallback logic or unhealthy state
+      await res.json();
+      return true;
+    } catch (err) {
+      logTelemetry('web3_rpc_fallback_triggered', { fallback: true, error: err.message, rpc: rpc });
+      // Continue to next RPC
+    }
   }
+
+  return false; // Indicating fallback logic or unhealthy state after all RPCs failed
 }
