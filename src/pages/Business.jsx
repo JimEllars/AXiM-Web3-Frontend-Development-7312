@@ -14,6 +14,22 @@ import NewsFeed from '../components/NewsFeed.jsx';
 export default function Business() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
+  const businessSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Enterprise Business Development",
+      "description": "Scaling enterprise revenue and B2B systems. Access our suite of commercial services, intelligence articles, and dedicated apps & tools."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "B2B Legal Automation",
+      "description": "Generate external legal documentation rapidly."
+    }
+  ];
+
+
   useEffect(() => {
     logTelemetry('category_hub_viewed', { category: 'business' });
   }, []);
