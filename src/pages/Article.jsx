@@ -270,7 +270,7 @@ const { slug } = useParams();
 
   // Custom simple parser to handle shortcodes
   let parsedContent = [];
-  const parts = rawHtml.split(/([AXIM_AFFILIATE_TABLE]|[AXIM_MICRO_APP])/);
+  const parts = rawHtml.split(/(\\[AXIM_AFFILIATE_TABLE\\]|\\[AXIM_MICRO_APP\\])/);
 
   const mockProducts = [
     {
