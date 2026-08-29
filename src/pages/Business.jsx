@@ -137,20 +137,18 @@ export default function Business() {
             {/* Automated Canvassing Masterclass Card */}
             <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [COMING SOON]
-              </div>
+
               <SafeIcon icon={LuIcons.LuMapPin} className="w-8 h-8 text-axim-gold mb-4" />
               <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Automated Canvassing Masterclass</h2>
               <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Deploy ground game teams efficiently.</p>
               <Link
-                to="/business"
+                to="/store"
                 onClick={() => {
-                  logTelemetry('waitlist_intent', { module: 'canvassing_masterclass' });
+                  logTelemetry('store_category_intent', { module: 'canvassing_masterclass' });
                 }}
                 className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
               >
-                Join Waitlist
+                View Details
               </Link>
             </div>
 
