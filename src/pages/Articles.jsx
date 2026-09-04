@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import DOMPurify from 'isomorphic-dompurify';
 import { fetchPosts, fetchCategoryBySlug } from '../lib/wp-fetch';
 import SEO from '../components/SEO';
@@ -31,6 +32,15 @@ export default function Articles() {
   const [catData, setCatData] = useState({ business: [], personal: [], tech: [] });
   const [activeFilter, setActiveFilter] = useState('All Articles');
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    if (cat === 'business-development') setActiveFilter('Business Development');
+    else if (cat === 'personal-development') setActiveFilter('Personal Development');
+    else if (cat === 'tech-development') setActiveFilter('Tech Development');
+  }, [location.search]);
   // Helper to filter articles by category pill
   const filterArticles = (articles) => {
     if (activeFilter === 'All Articles') return articles;

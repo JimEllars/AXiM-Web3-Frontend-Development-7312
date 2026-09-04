@@ -9,6 +9,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import Reviews from '../components/Reviews.jsx';
 import NewsFeed from '../components/NewsFeed.jsx';
+import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
 export default function Personal() {
@@ -198,6 +199,14 @@ export default function Personal() {
       <section className="relative pt-12 pb-12 z-20">
         <NewsFeed title="Latest Personal Growth Intelligence" categorySlug="personal-development" limit={3} />
       </section>
+
+
+      <CategoryArticleFeed
+        categorySlug="personal-development"
+        sectionTitle="Personal Growth & Mastery"
+        sectionSubtitle="High-performance habits, leadership philosophy, and resilience architectures."
+        limit={3}
+      />
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Personal infrastructure?</h2>

@@ -163,8 +163,6 @@ export async function getWordPressPost(slug) {
 async function getCategoryId(apiUrl, slug) {
   if (!slug || !apiUrl) return null;
 
-  // We use a global cache key for the slug because all AXiM WordPress URLs
-  // are expected to share the same database and IDs.
   const cacheKey = `cat-id-${slug}`;
   const existing = fetchCache.get(cacheKey);
 
@@ -173,10 +171,16 @@ async function getCategoryId(apiUrl, slug) {
     return existing.data;
   }
 
+  if (typeof sessionStorage !== 'undefined') {
+    const sessionCached = sessionStorage.getItem(cacheKey);
+    if (sessionCached) {
+      return parseInt(sessionCached, 10);
+    }
+  }
+
   const fetchPromise = (async () => {
     try {
       const ts = Date.now();
-      // Normalize URL to prevent cache misses due to trailing slashes
       const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}&_ts=${ts}`, {
         signal: AbortSignal.timeout(10000)
       });
@@ -187,10 +191,11 @@ async function getCategoryId(apiUrl, slug) {
       const id = (categories && Array.isArray(categories) && categories.length > 0) ? categories[0].id : null;
 
       fetchCache.set(cacheKey, { data: id, timestamp: Date.now() });
+      if (id && typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem(cacheKey, id.toString());
+      }
       return id;
     } catch (error) {
-
-      // Fallback to stale data if available on error
       if (existing && existing.data !== undefined) {
         fetchCache.set(cacheKey, { data: existing.data, timestamp: existing.timestamp });
         return existing.data;
@@ -208,7 +213,6 @@ async function getCategoryId(apiUrl, slug) {
 
   return fetchPromise;
 }
-
 /**
  * Fetch latest posts by category slug
  * @param {string} categorySlug - The slug of the category (e.g., 'apps')
@@ -439,6 +443,53 @@ export async function getAiEgressPayload() {
     });
   } catch (error) {
     console.error('[getAiEgressPayload] Error fetching payload:', error);
+    return [];
+  }
+}
+
+
+/**
+ * Fetch latest posts by category slug explicitly (with cache and normalized format)
+ * @param {string} categorySlug - The slug of the category
+ * @param {number} limit - Number of posts to fetch
+ * @returns {Promise<Array>} Array of mapped posts
+ */
+export async function fetchArticlesByCategory(categorySlug, limit = 3) {
+  try {
+    const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
+    if (!categoryId) return [];
+
+    const postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1`, { signal: AbortSignal.timeout(10000) });
+    if (!postsRes.ok) return [];
+
+    const posts = await postsRes.json();
+    return posts.map(post => {
+      let featuredImage = getFeaturedImage(post);
+
+      let categoryName = 'Uncategorized';
+      if (post._embedded && post._embedded['wp:term']) {
+        const categories = post._embedded['wp:term'][0];
+        if (categories && categories.length > 0) {
+          categoryName = categories[0].name;
+        }
+      }
+
+      const rawReadingTime = Math.max(1, Math.ceil((post.content?.rendered?.split(' ').length || 0) / 200));
+
+      return {
+        id: post.id,
+        slug: post.slug,
+        title: post.title?.rendered,
+        excerpt: post.excerpt?.rendered,
+        date: post.date,
+        featuredImage,
+        author: post._embedded?.author?.[0]?.name || 'AXiM Systems',
+        readingTime: `${rawReadingTime} min read`,
+        categoryName
+      };
+    });
+  } catch (err) {
+    console.error(`[wp-fetch] fetchArticlesByCategory error:`, err);
     return [];
   }
 }
