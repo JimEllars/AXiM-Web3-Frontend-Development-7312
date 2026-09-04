@@ -31,8 +31,8 @@ export default function OnyxTerminal() {
   const [terminalOutput, setTerminalOutput] = useState([]);
 
   const telemetryQueue = useAximStore((state) => state.telemetryQueue);
-  const { isStreaming, error } = useOnyxStream();
-  const connectionStatus = error ? 'Offline Buffer' : isStreaming ? 'Reconnecting...' : 'Edge Connected';
+  const { isStreaming, error, isEdgeCached } = useOnyxStream();
+  const connectionStatus = error ? 'Offline Buffer' : isStreaming ? 'Reconnecting...' : (isEdgeCached ? 'EDGE-CACHED' : 'Live Core Connected');
   const logContainerRef = useRef(null);
 
 

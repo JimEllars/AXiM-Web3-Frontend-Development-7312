@@ -48,8 +48,11 @@ describe('getWordPressPost', () => {
   });
 
   test('should return null if VITE_WORDPRESS_URL is not set', async () => {
+    const origFetch = global.fetch;
+    global.fetch = async () => ({ ok: false });
     const result = await getWordPressPost('some-slug');
     assert.strictEqual(result, null);
+    global.fetch = origFetch;
   });
 
   test('should use import.meta.env if available (mocked implicitly)', async () => {

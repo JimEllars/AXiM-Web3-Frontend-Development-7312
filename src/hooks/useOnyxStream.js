@@ -6,6 +6,7 @@ export function useOnyxStream() {
   const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState(null);
+  const [isEdgeCached, setIsEdgeCached] = useState(false);
   const abortControllerRef = useRef(null);
 
   const token = useAximStore((state) => state.token);
@@ -57,6 +58,13 @@ export function useOnyxStream() {
 
         if (!response.ok) {
            throw new Error(`Edge connection failed: ${response.status}`);
+        }
+
+        // Inspect headers/response for synthetic flag to determine if response is edge-cached
+        if (response.headers.get('x-axim-synthetic') === 'true') {
+           setIsEdgeCached(true);
+        } else {
+           setIsEdgeCached(false);
         }
 
         const reader = response.body.getReader();
@@ -151,5 +159,5 @@ export function useOnyxStream() {
     }
   }, []);
 
-  return { messages, isStreaming, error, sendMessage, abortStream };
+  return { messages, isStreaming, error, isEdgeCached, sendMessage, abortStream };
 }

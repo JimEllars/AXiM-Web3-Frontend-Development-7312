@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAximStore } from "../store/useAximStore";
-import { supabase } from "../lib/supabase";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 export default function TelemetryBar({ label, color, initialValue }) {
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
@@ -137,6 +137,9 @@ export default function TelemetryBar({ label, color, initialValue }) {
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
+          </span>
+          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+            {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}
           </span>
 
           {isWeb3Authenticated && (

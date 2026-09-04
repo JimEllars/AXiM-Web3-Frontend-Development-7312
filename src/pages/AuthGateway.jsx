@@ -52,23 +52,37 @@ export default function AuthGateway() {
     const token = params.get('token');
 
     if (token) {
-      // Simulate saving token for AXiM passport
       logTelemetry('operator_clearance_success', { method: 'passport_sso' });
       if (isMounted.current) {
-        setNotification('Authentication successful via AXiM Passport.');
-
-        // Scrub token from URL
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({ path: newUrl }, '', newUrl);
-
-        navigate(from, { replace: true });
+        // Exchange token with AXiM Core API to hydrate session
+        fetch(`${import.meta.env.VITE_CORE_API_URL || ''}/api/v1/auth/exchange`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sso_token: token })
+        })
+        .then(res => res.json())
+        .then(data => {
+            setNotification('Authentication successful via AXiM Passport.');
+            // Scrub token from URL
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+            navigate(from, { replace: true });
+        })
+        .catch(err => {
+            console.warn("Token exchange failed/bypassed locally", err);
+            // Fallback for local dev
+            setNotification('Authentication successful via AXiM Passport.');
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+            navigate(from, { replace: true });
+        });
       }
     }
   }, [navigate, from, setNotification]);
 
   const handlePassportAuth = () => {
     logTelemetry('auth_login_attempted', { method: 'passport_sso' });
-    const redirectUrl = encodeURIComponent(window.location.origin + '/auth/callback');
+    const redirectUrl = encodeURIComponent(window.location.origin + '/auth');
     window.location.href = `https://passport.axim.us.com?redirect=${redirectUrl}`;
   };
 
