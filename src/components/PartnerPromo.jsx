@@ -24,7 +24,7 @@ export default function PartnerPromo({ partnerName, title, description, learnMor
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto shrink-0 relative z-10">
-        <Link to={learnMorePath} aria-label={partnerName === "Teachable" ? "Learn more about Teachable" : partnerName === "Make.com" ? "Learn more about Make.com workflow automation" : partnerName.includes("Powur") ? "Learn more about Powur Solar energy solutions" : `Learn more about ${partnerName}`} className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors text-center flex justify-center items-center"
+        <Link to={learnMorePath} aria-label={partnerName === "Teachable" ? "Learn more about Teachable" : partnerName.includes("Powur") ? "Learn more about Powur Solar energy solutions" : `Learn more about ${partnerName}`} className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors text-center flex justify-center items-center"
           onClick={(e) => {
             logTelemetry('partner_promo_action_triggered', { partner: partnerName, action: 'learn_more', path: learnMorePath });
           }}>
