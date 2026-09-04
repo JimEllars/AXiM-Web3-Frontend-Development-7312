@@ -8,7 +8,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import Reviews from '../components/Reviews.jsx';
-import NewsFeed from '../components/NewsFeed.jsx';
+
 import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
@@ -189,9 +189,7 @@ export default function Business() {
       </section>
 
 
-      <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Business Intelligence & Strategy Insights" categorySlug="business" limit={3} />
-      </section>
+
 
 
       <CategoryArticleFeed

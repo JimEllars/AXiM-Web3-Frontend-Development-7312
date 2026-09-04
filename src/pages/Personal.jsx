@@ -8,7 +8,7 @@ import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import Reviews from '../components/Reviews.jsx';
-import NewsFeed from '../components/NewsFeed.jsx';
+
 import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
@@ -196,9 +196,7 @@ export default function Personal() {
       />
 
 
-      <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Personal Development & Growth Protocols" categorySlug="personal" limit={3} />
-      </section>
+
 
 
       <CategoryArticleFeed

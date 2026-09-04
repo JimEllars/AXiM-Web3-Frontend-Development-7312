@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import PartnerPromo from '../components/PartnerPromo';
 import { motion } from 'framer-motion';
 import Reviews from '../components/Reviews.jsx';
-import NewsFeed from '../components/NewsFeed.jsx';
+
 import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
@@ -158,9 +158,7 @@ export default function Tech() {
       </div>
 
 
-      <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Autonomous Systems & Edge Technology" categorySlug="tech" limit={3} />
-      </section>
+
 
 
       <CategoryArticleFeed
