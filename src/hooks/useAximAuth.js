@@ -20,7 +20,7 @@ export function useAximAuth() {
         await supabase.auth.signOut();
         setSession(null);
         setProfile(null);
-        if (typeof window !== 'undefined' && window.alert) { window.alert('Forbidden: Internal Access Only'); }
+        console.warn('Forbidden: Internal Access Only');
         return false;
       }
     }

@@ -75,7 +75,8 @@ export default function WPImage({ src, alt, className, post, priority, ...props 
 
   // Ensure aspect ratio to prevent CLS
   return (
-    <div className={`relative overflow-hidden aspect-video ${className || ''}`}>
+    <div className={`relative overflow-hidden aspect-video bg-white/5 ${className || ''}`}>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
         <motion.img layoutId={`post-image-${post?.id}`} width="1200" height="675"
         src={imageSrc}
         alt={alt || ''}

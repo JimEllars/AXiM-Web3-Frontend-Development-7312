@@ -41,7 +41,7 @@ export default {
       return new Response('Not Found or Method Not Allowed', { status: 404, headers: CORS_HEADERS });
     }
 
-    if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!env.AXIM_CORE_URL || !env.AXIM_GATEWAY_TOKEN) {
       return jsonResponse({ error: 'Telemetry ingestion is not configured.' }, 503);
     }
 
@@ -84,21 +84,38 @@ export default {
     ctx.waitUntil(
       (async () => {
         try {
-          const response = await fetch(`${env.SUPABASE_URL}/rest/v1/telemetry_ingress`, {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+          const response = await fetch(`${env.AXIM_CORE_URL}/api/v1/telemetry/ingest`, {
             method: 'POST',
             headers: {
-              apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-              Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
-              'Content-Type': 'application/json',
-              Prefer: 'return=minimal'
+              'X-Axim-Gateway-Token': env.AXIM_GATEWAY_TOKEN,
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify(events)
+            body: JSON.stringify(events),
+            signal: controller.signal
           });
+
+          clearTimeout(timeoutId);
+
           if (!response.ok) {
-            console.error('Telemetry ingestion failed', response.status);
+            throw new Error(`Gateway returned ${response.status}`);
           }
         } catch (err) {
-          console.error('Telemetry ingestion error', err);
+          console.warn('Telemetry Gateway ingestion failed, falling back to KV buffer', err);
+          if (env.TELEMETRY_BUFFER_KV) {
+            try {
+              const batchId = crypto.randomUUID();
+              await env.TELEMETRY_BUFFER_KV.put(
+                `telemetry_batch_${Date.now()}_${batchId}`,
+                JSON.stringify(events),
+                { expirationTtl: 86400 } // Keep for 24h
+              );
+            } catch (kvErr) {
+              console.error('Failed to write to KV buffer', kvErr);
+            }
+          }
         }
       })()
     );

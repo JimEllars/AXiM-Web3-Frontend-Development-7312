@@ -1,5 +1,3 @@
-// workers/rpc-worker.js
-
 export default {
   async fetch(request, env) {
     const corsHeaders = {
@@ -18,25 +16,38 @@ export default {
     }
 
     try {
-      const rpcUrl = env.ALCHEMY_RPC_URL;
-      if (!rpcUrl) {
-         return new Response(JSON.stringify({ error: "RPC URL not configured" }), {
-           status: 500,
-           headers: { 'Content-Type': 'application/json', ...corsHeaders }
-         });
-      }
+      const primaryRpcUrl = env.ALCHEMY_RPC_URL;
+      const secondaryRpcUrl = "https://arb1.arbitrum.io/rpc";
 
       const reqBody = await request.text();
 
-      const response = await fetch(rpcUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: reqBody,
-        signal: AbortSignal.timeout(5000)
-      });
+      let response;
+      try {
+        if (!primaryRpcUrl) throw new Error("Primary RPC not configured");
+        response = await fetch(primaryRpcUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: reqBody,
+          signal: AbortSignal.timeout(3500)
+        });
+        if (!response.ok) {
+           throw new Error(`Primary RPC returned ${response.status}`);
+        }
+      } catch (err) {
+        console.warn("RPC Worker Primary Failed, trying Secondary:", err);
+        response = await fetch(secondaryRpcUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: reqBody,
+          signal: AbortSignal.timeout(5000)
+        });
+      }
 
       const data = await response.text();
 

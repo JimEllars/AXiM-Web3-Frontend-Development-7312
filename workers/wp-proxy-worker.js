@@ -101,25 +101,44 @@ export default {
       const cacheKey = new Request(fetchUrl, request);
       const cache = caches.default;
 
+      let cachedResponse = null;
       if (request.method === 'GET') {
-        let cachedResponse = await cache.match(cacheKey);
-        if (cachedResponse) {
-          const newHeaders = new Headers(cachedResponse.headers);
-          newHeaders.set('X-Cache-Status', 'HIT');
-          return new Response(cachedResponse.body, {
-            status: cachedResponse.status,
-            statusText: cachedResponse.statusText,
-            headers: newHeaders
-          });
-        }
+        cachedResponse = await cache.match(cacheKey);
+        // If not stale-while-revalidate we could just return, but we want to revalidate in background if needed.
+        // The standard Cache API doesn't handle stale-while-revalidate automatically, so we'll fetch.
       }
-      const wpResponse = await fetch(fetchUrl, {
-        method: request.method,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'Cloudflare-WP-Proxy/1.0'
+
+      let wpResponse;
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout for origin
+        wpResponse = await fetch(fetchUrl, {
+          method: request.method,
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Cloudflare-WP-Proxy/1.0'
+          },
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!wpResponse.ok && wpResponse.status >= 500 && cachedResponse) {
+          // If 5xx and we have cache, fallback to cache
+          throw new Error(`Origin returned 5xx status: ${wpResponse.status}`);
         }
-      });
+      } catch (err) {
+        if (cachedResponse) {
+           const newHeaders = new Headers(cachedResponse.headers);
+           newHeaders.set('X-Cache-Status', 'STALE_FALLBACK');
+           return new Response(cachedResponse.body, {
+             status: cachedResponse.status,
+             statusText: cachedResponse.statusText,
+             headers: newHeaders
+           });
+        }
+        throw err;
+      }
+
       const duration = Date.now() - startTime;
 
       // 5. Build Response with Permissive CORS and Caching
@@ -131,7 +150,7 @@ export default {
       if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600'); // 5 minutes edge caching, 1 hour CDN caching
+        headers.set('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
       }
 
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);
