@@ -159,13 +159,13 @@ export default function Tech() {
 
 
       <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Latest Tech Intelligence" categorySlug="tech-development" limit={3} />
+        <NewsFeed title="Autonomous Systems & Edge Technology" categorySlug="tech" limit={3} />
       </section>
 
 
       <CategoryArticleFeed
-        categorySlug="tech-development"
-        sectionTitle="Technical Architecture & Intelligence"
+        categorySlug="tech"
+        sectionTitle="Autonomous Systems & Edge Technology"
         sectionSubtitle="Cloudflare edge networks, autonomous AI agents, and enterprise systems."
         limit={3}
       />

@@ -66,14 +66,13 @@ export default function Header() {
     setActiveDropdown(null);
   }, [location.pathname]);
 
-  // STRICT ORDERING: Business -> Personal -> Tech -> Articles -> Store -> Support
+  // STRICT ORDERING: Business -> Personal -> Tech -> Articles -> Support
   const navLinks = [
     { name: 'Business', path: '/business' },
     { name: 'Personal', path: '/personal' },
     { name: 'Tech', path: '/tech' },
     { name: 'Articles', path: '/articles' },
-    { name: 'Store', path: '/store' },
-    { name: 'Support', path: '/support' }
+        { name: 'Support', path: '/support' }
   ];
 
   const toggleDropdown = (name) => {
