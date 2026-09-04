@@ -9,6 +9,7 @@ import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import Reviews from '../components/Reviews.jsx';
 import NewsFeed from '../components/NewsFeed.jsx';
+import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
 export default function Business() {
@@ -191,6 +192,14 @@ export default function Business() {
       <section className="relative pt-12 pb-12 z-20">
         <NewsFeed title="Latest Business Intelligence" categorySlug="business-development" limit={3} />
       </section>
+
+
+      <CategoryArticleFeed
+        categorySlug="business-development"
+        sectionTitle="Business Development Insights"
+        sectionSubtitle="Executive playbooks, market expansion strategies, and capital allocation models."
+        limit={3}
+      />
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Business infrastructure?</h2>

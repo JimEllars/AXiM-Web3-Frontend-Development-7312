@@ -9,6 +9,7 @@ import PartnerPromo from '../components/PartnerPromo';
 import { motion } from 'framer-motion';
 import Reviews from '../components/Reviews.jsx';
 import NewsFeed from '../components/NewsFeed.jsx';
+import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
 export default function Tech() {
@@ -160,6 +161,14 @@ export default function Tech() {
       <section className="relative pt-12 pb-12 z-20">
         <NewsFeed title="Latest Tech Intelligence" categorySlug="tech-development" limit={3} />
       </section>
+
+
+      <CategoryArticleFeed
+        categorySlug="tech-development"
+        sectionTitle="Technical Architecture & Intelligence"
+        sectionSubtitle="Cloudflare edge networks, autonomous AI agents, and enterprise systems."
+        limit={3}
+      />
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Tech infrastructure?</h2>
