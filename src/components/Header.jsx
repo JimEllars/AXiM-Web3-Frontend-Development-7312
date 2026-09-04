@@ -286,15 +286,19 @@ export default function Header() {
 
               <GlobalSearch />
           {isAuthenticated ? (
-                <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile" className="mt-2 w-full py-4 flex justify-center items-center gap-2 bg-axim-purple/20 border border-axim-purple/50 text-white text-sm font-mono uppercase tracking-widest rounded-sm transition-colors group">
+                <div className="mt-auto pt-4 flex flex-col gap-2">
+                  <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile" className="w-full py-4 flex justify-center items-center gap-2 bg-axim-purple/20 border border-axim-purple/50 text-white text-sm font-mono uppercase tracking-widest rounded-sm transition-colors group">
                   <SafeIcon className="w-4 h-4 text-axim-purple group-hover:text-white" icon={LuIcons.LuUserCheck} />
                   <span>Hi {getDisplayName()}</span>
-                </Link>
+                  </Link>
+                </div>
               ) : (
-                <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth" className="mt-2 w-full py-4 flex justify-center items-center gap-2 bg-axim-purple text-white font-black text-sm uppercase tracking-widest rounded-sm transition-colors group">
+                <div className="mt-auto pt-4 flex flex-col gap-2">
+                  <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth" className="w-full py-4 flex justify-center items-center gap-2 bg-axim-purple text-white font-black text-sm uppercase tracking-widest rounded-sm transition-colors group">
                   <SafeIcon className="w-4 h-4" icon={LuIcons.LuLogIn} />
                   <span>Login</span>
-                </Link>
+                  </Link>
+                </div>
               )}
 
             </div>

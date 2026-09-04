@@ -7,13 +7,13 @@ export default function AffiliateTable({ products = [] }) {
   if (!products || products.length === 0) return null;
 
   return (
-    <div className="w-full my-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="w-full my-12 grid grid-cols-[85%_85%] md:grid-cols-2 gap-6 overflow-x-auto snap-x snap-mandatory pb-4 md:overflow-visible md:snap-none no-scrollbar">
       {products.map((product, index) => {
         const isTop = product.isTopChoice;
         return (
           <div
             key={index}
-            className={`relative flex flex-col p-6 rounded-sm bg-[#050505] shadow-xl ${isTop ? 'border border-axim-gold shadow-[0_0_20px_rgba(240,255,0,0.15)]' : 'border border-white/10'}`}
+            className={`relative flex flex-col p-6 rounded-sm bg-[#050505] shadow-xl snap-center shrink-0 ${isTop ? 'border border-axim-gold shadow-[0_0_20px_rgba(240,255,0,0.15)]' : 'border border-white/10'}`}
           >
             {isTop && (
               <div className="absolute -top-3 left-6 px-3 py-1 bg-axim-gold text-black text-[10px] font-black uppercase tracking-widest rounded-sm shadow-md flex items-center gap-2">

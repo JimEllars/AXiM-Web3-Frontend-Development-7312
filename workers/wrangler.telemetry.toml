@@ -7,8 +7,12 @@ pattern = "telemetry.axim.us.com"
 custom_domain = true
 
 [vars]
-SUPABASE_URL = "https://your-project.supabase.co"
-# Sensitive keys should be set via `wrangler secret put SUPABASE_SERVICE_ROLE_KEY`
+AXIM_CORE_URL = "https://core.axim.us.com"
+# Sensitive keys should be set via `wrangler secret put AXIM_GATEWAY_TOKEN`
+
+[[kv_namespaces]]
+binding = "TELEMETRY_BUFFER_KV"
+id = "placeholder_telemetry_buffer_kv_id"
 
 [[kv_namespaces]]
 binding = "TELEMETRY_DEADLETTER"

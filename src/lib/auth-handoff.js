@@ -45,3 +45,35 @@ export function generateCrossAppHandoffUrl(targetAppUrl, sessionData) {
   url.searchParams.set('sso_token', sessionData?.token || 'guest');
   return url.toString();
 }
+
+/**
+ * Exchanges a Passport SSO token with AXiM Core API, handling exponential backoff.
+ * @param {string} token - The SSO token from URL
+ * @returns {Promise<any>}
+ */
+export async function exchangePassportToken(token) {
+  const url = `${import.meta.env.VITE_CORE_API_URL || ''}/api/v1/auth/exchange`;
+  let retries = 2;
+  let delay = 400;
+
+  while (retries >= 0) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sso_token: token })
+      });
+      if (!response.ok) {
+        throw new Error(`Token exchange returned ${response.status}`);
+      }
+      return await response.json();
+    } catch (err) {
+      if (retries === 0) {
+        throw err;
+      }
+      retries--;
+      await new Promise(r => setTimeout(r, delay));
+      delay *= 2;
+    }
+  }
+}
