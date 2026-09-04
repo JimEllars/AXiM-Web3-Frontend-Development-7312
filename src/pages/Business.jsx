@@ -100,13 +100,13 @@ export default function Business() {
         </div>
 
         <PartnerPromo
-          partnerName="Make.com"
-          title="Automate B2B Workflows"
-          description="Connect apps and build automated systems visually, designed specifically for growing business infrastructures."
-          learnMorePath="/partners/make"
-          startNowUrl="/partners/make"
+          partnerName="Teachable"
+          title="Build and Scale Your Knowledge Business with Teachable"
+          description="Turn your expertise into courses, coaching, and digital products on the leading creator platform."
+          learnMorePath="https://swiy.co/Teach1"
+          startNowUrl="https://swiy.co/Teach1"
           theme="purple"
-          onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Make.com', location: 'Business' })}
+          onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Teachable', location: 'Business' })}
         />
 
         {/* Apps & Tools Section */}
@@ -190,13 +190,13 @@ export default function Business() {
 
 
       <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Latest Business Intelligence" categorySlug="business-development" limit={3} />
+        <NewsFeed title="Business Intelligence & Strategy Insights" categorySlug="business" limit={3} />
       </section>
 
 
       <CategoryArticleFeed
-        categorySlug="business-development"
-        sectionTitle="Business Development Insights"
+        categorySlug="business"
+        sectionTitle="Business Intelligence & Strategy Insights"
         sectionSubtitle="Executive playbooks, market expansion strategies, and capital allocation models."
         limit={3}
       />

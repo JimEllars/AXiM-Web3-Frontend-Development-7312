@@ -197,13 +197,13 @@ export default function Personal() {
 
 
       <section className="relative pt-12 pb-12 z-20">
-        <NewsFeed title="Latest Personal Growth Intelligence" categorySlug="personal-development" limit={3} />
+        <NewsFeed title="Personal Development & Growth Protocols" categorySlug="personal" limit={3} />
       </section>
 
 
       <CategoryArticleFeed
-        categorySlug="personal-development"
-        sectionTitle="Personal Growth & Mastery"
+        categorySlug="personal"
+        sectionTitle="Personal Development & Growth Protocols"
         sectionSubtitle="High-performance habits, leadership philosophy, and resilience architectures."
         limit={3}
       />

@@ -195,13 +195,13 @@ export default function Home() {
 
         {/* 3. Partner Break: Make */}
         <PartnerPromo
-          partnerName="Make.com"
-          title="Scale Your Systems With Visual Automation"
-          description="Connect your apps and automate your workflows without writing a single line of code. Leverage the backend engine that powers AXiM."
-          learnMorePath="/partners/make"
-          startNowUrl="/partners/make"
+          partnerName="Teachable"
+          title="Build and Scale Your Knowledge Business with Teachable"
+          description="Turn your expertise into courses, coaching, and digital products on the leading creator platform."
+          learnMorePath="https://swiy.co/Teach1"
+          startNowUrl="https://swiy.co/Teach1"
           theme="purple"
-          onClick={() => logTelemetry('partner_click', { partner: 'make', zone: 'homepage_promo' })}
+          onClick={() => logTelemetry('partner_click', { partner: 'teachable', zone: 'homepage_promo' })}
         />
 
         {/* 4. Spotlight Category (Strictly Isolated) */}

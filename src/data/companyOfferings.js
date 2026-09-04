@@ -52,3 +52,15 @@ export const coreLinks = [
     externalUrl: "https://axim.us.com/courses/"
   }
 ];
+
+
+export const affiliateProducts = [
+  {
+    name: "Teachable",
+    category: "Education / Course Creation",
+    link: "https://swiy.co/Teach1",
+    description: "The comprehensive LMS platform for course creators and educators.",
+    features: ["Drag & drop builder", "AI course creation tools", "Integrated payments"],
+    isTopChoice: true
+  }
+];

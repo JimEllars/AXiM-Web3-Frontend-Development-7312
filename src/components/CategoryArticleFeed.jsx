@@ -46,12 +46,18 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
   if (!loading && articles.length === 0) return null;
 
   const categoryColor = {
+    'business': 'text-amber-500 border-amber-500/30 bg-amber-500/10',
+    'personal': 'text-emerald-500 border-emerald-500/30 bg-emerald-500/10',
+    'tech': 'text-cyan-500 border-cyan-500/30 bg-cyan-500/10',
     'business-development': 'text-amber-500 border-amber-500/30 bg-amber-500/10',
     'personal-development': 'text-emerald-500 border-emerald-500/30 bg-emerald-500/10',
     'tech-development': 'text-cyan-500 border-cyan-500/30 bg-cyan-500/10',
   }[categorySlug] || 'text-axim-purple border-axim-purple/30 bg-axim-purple/10';
 
   const titleColor = {
+    'business': 'text-amber-500',
+    'personal': 'text-emerald-500',
+    'tech': 'text-cyan-500',
     'business-development': 'text-amber-500',
     'personal-development': 'text-emerald-500',
     'tech-development': 'text-cyan-500',
@@ -139,8 +145,8 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
 }
 
 function articleCategoryName(slug) {
-  if (slug === 'business-development') return 'Business';
-  if (slug === 'personal-development') return 'Personal';
-  if (slug === 'tech-development') return 'Tech';
+  if (slug === 'business' || slug === 'business-development') return 'Business';
+  if (slug === 'personal' || slug === 'personal-development') return 'Personal';
+  if (slug === 'tech' || slug === 'tech-development') return 'Tech';
   return '';
 }
