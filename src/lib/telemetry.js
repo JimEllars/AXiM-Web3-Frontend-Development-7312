@@ -28,7 +28,7 @@ export function rehydrateTelemetry() {
         }, 0);
       }
   } catch (err) {
-    console.error("Failed to rehydrate telemetry from local cache", err);
+    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.error("Failed to rehydrate telemetry from local cache", err); }
   }
 }
 
@@ -63,7 +63,7 @@ export function logTelemetry(type, payload) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event: type, payload, timestamp: event.timestamp })
-    }).catch(err => console.warn("[WEBHOOK] Make.com Forwarding Failed silently."));
+    }).catch(err => { if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[WEBHOOK] Make.com Forwarding Failed silently."); } })
   }
 
   useAximStore.getState().logTelemetryEvent(event);
@@ -80,7 +80,7 @@ export function logTelemetry(type, payload) {
       window.dispatchEvent(new window.CustomEvent('axim-telemetry-update', { detail: event }));
     }
   } catch (e) {
-    console.error("Telemetry error", e);
+    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.error("Telemetry error", e); }
   }
 
   console.log(`[TELEMETRY: ${type}]`, payload);
@@ -100,7 +100,7 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue]; // Restore on fail
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
       return;
     }
 
@@ -109,7 +109,13 @@ export async function flushTelemetryQueue(force = false) {
     if (typeof window !== 'undefined') {
       if (window.navigator?.sendBeacon && force) {
         const blob = new Blob([payload], { type: 'application/json' });
-        success = window.navigator.sendBeacon(endpoint, blob);
+
+        try {
+          success = window.navigator.sendBeacon(endpoint, blob);
+        } catch(e) {
+          success = false;
+        }
+
       } else if (window.fetch) {
         try {
           const fetchPromise = fetch(endpoint, {
@@ -133,18 +139,18 @@ export async function flushTelemetryQueue(force = false) {
                 console.log('[TELEMETRY_SYNC_SUCCESS]', responseData);
               }
             } catch (jsonErr) {
-              console.warn("Could not parse telemetry response JSON", jsonErr);
+              if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Could not parse telemetry response JSON", jsonErr); }
             }
           } else {
             success = false;
           }
         } catch (fetchErr) {
-          console.warn("Edge telemetry failed", fetchErr);
+          if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Edge telemetry failed", fetchErr); }
 
           // Using imported isSupabaseConfigured
 
           if (isSupabaseConfigured) {
-            console.warn("Falling back to direct Supabase insert");
+            if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Falling back to direct Supabase insert"); }
             try {
               const { error } = await supabase.from('telemetry_ingress').insert(currentBatch);
               if (!error) {
@@ -152,11 +158,11 @@ export async function flushTelemetryQueue(force = false) {
                  console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
               } else {
                  success = false;
-                 console.warn('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error.message);
+                 if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error.message); }
               }
             } catch (supabaseErr) {
               success = false;
-              console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message);
+              if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message); }
             }
           } else {
             success = false;
@@ -186,13 +192,13 @@ export async function flushTelemetryQueue(force = false) {
       }
     } else {
       // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue];
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
       if (typeof window !== 'undefined') {
         localStore.saveTelemetryCache(batchQueue);
       }
     }
   } catch (err) {
-    console.warn("[TELEMETRY] Sync failed silently.", err.message);
+    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", err.message); }
   } finally {
     isFlushing = false;
   }
