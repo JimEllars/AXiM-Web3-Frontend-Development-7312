@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchArticlesByCategory } from '../lib/wp-fetch';
+import { fetchPostsByCategorySlug } from '../lib/wp-fetch';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { motion } from 'framer-motion';
+import WPImage from '../components/WPImage';
 
 const SkeletonCard = () => (
   <div className="flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-2xl animate-pulse min-h-[320px]">
@@ -28,7 +29,7 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
     let isMounted = true;
     async function loadArticles() {
       try {
-        const data = await fetchArticlesByCategory(categorySlug, limit);
+        const data = await fetchPostsByCategorySlug(categorySlug, limit);
         if (isMounted) {
           setArticles(data || []);
           setLoading(false);
@@ -86,12 +87,7 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
               >
                 <div className="relative h-48 overflow-hidden bg-black/40">
                   {article.featuredImage ? (
-                    <img
-                      src={article.featuredImage}
-                      alt={article.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      loading="lazy"
-                    />
+                    <WPImage src={article.featuredImage} alt={article.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-onyx-800 to-onyx-950">
                        <SafeIcon icon={LuIcons.LuImage} className="w-8 h-8 text-white/10" />

@@ -493,3 +493,87 @@ export async function fetchArticlesByCategory(categorySlug, limit = 3) {
     return [];
   }
 }
+
+
+/**
+ * Fetch latest posts by category slug (used for development hubs)
+ * @param {string} categorySlug - The slug of the category
+ * @param {number} perPage - Number of posts to fetch
+ * @returns {Promise<Array>} Array of formatted article objects
+ */
+export async function fetchPostsByCategorySlug(categorySlug, perPage = 3) {
+  const cacheKey = `dev-hub-posts-${categorySlug}-${perPage}`;
+  const existing = fetchCache.get(cacheKey);
+
+  if (existing && (Date.now() - existing.timestamp < 300000)) { // 5 min cache
+    if (existing.promise) return existing.promise;
+    return existing.data;
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
+      if (!categoryId) {
+        console.warn(`[wp-fetch] Category not found for slug: ${categorySlug}`);
+        return [];
+      }
+
+      const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?_embed=1&per_page=${perPage}&categories=${categoryId}`, {
+        headers: { 'Cache-Control': 'stale-while-revalidate=86400' },
+        signal: AbortSignal.timeout(10000)
+      });
+
+      if (!res.ok) throw new Error(`Failed to fetch posts for ${categorySlug}: ${res.statusText}`);
+
+      const posts = await res.json();
+
+      if (!posts || posts.length === 0) return [];
+
+      const mappedPosts = posts.map(post => {
+        let featuredImage = getFeaturedImage(post);
+        let categoryName = 'Uncategorized';
+
+        if (post._embedded && post._embedded['wp:term']) {
+          const categories = post._embedded['wp:term'][0];
+          if (categories && categories.length > 0) {
+            categoryName = categories[0].name;
+          }
+        }
+
+        const rawReadingTime = Math.max(1, Math.ceil((post.content?.rendered?.split(' ').length || 0) / 200));
+
+        return {
+          id: post.id,
+          slug: post.slug,
+          title: post.title?.rendered || post.title,
+          excerpt: post.excerpt?.rendered || post.excerpt,
+          link: post.link,
+          date: post.date,
+          featuredImage,
+          author: post._embedded?.author?.[0]?.name || 'AXiM Systems',
+          readingTime: `${rawReadingTime} min read`,
+          categoryName
+        };
+      });
+
+      fetchCache.set(cacheKey, { data: mappedPosts, timestamp: Date.now() });
+      return mappedPosts;
+    } catch (err) {
+      console.error(`[wp-fetch] Error fetching posts by slug ${categorySlug}:`, err);
+      if (existing && existing.data) {
+        fetchCache.set(cacheKey, { data: existing.data, timestamp: existing.timestamp });
+        return existing.data;
+      }
+      fetchCache.delete(cacheKey);
+      return [];
+    }
+  })();
+
+  fetchCache.set(cacheKey, {
+    promise: fetchPromise,
+    timestamp: Date.now(),
+    data: existing ? existing.data : undefined
+  });
+
+  return fetchPromise;
+}

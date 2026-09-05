@@ -200,9 +200,9 @@ export default function Personal() {
 
 
       <CategoryArticleFeed
-        categorySlug="personal"
-        sectionTitle="Personal Development & Growth Protocols"
-        sectionSubtitle="High-performance habits, leadership philosophy, and resilience architectures."
+        categorySlug="personal-development"
+        sectionTitle="Personal Development & Cognitive Mastery"
+        sectionSubtitle="Psychometrics, continuous growth protocols, and performance psychology."
         limit={3}
       />
 

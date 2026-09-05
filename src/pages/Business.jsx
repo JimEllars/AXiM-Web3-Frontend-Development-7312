@@ -193,9 +193,9 @@ export default function Business() {
 
 
       <CategoryArticleFeed
-        categorySlug="business"
-        sectionTitle="Business Intelligence & Strategy Insights"
-        sectionSubtitle="Executive playbooks, market expansion strategies, and capital allocation models."
+        categorySlug="business-development"
+        sectionTitle="Business Development & Enterprise Intelligence"
+        sectionSubtitle="Strategic insights, automation playbooks, and operational blueprints."
         limit={3}
       />
 
