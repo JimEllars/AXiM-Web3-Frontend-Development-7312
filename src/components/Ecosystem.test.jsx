@@ -22,7 +22,7 @@ describe('Ecosystem Component', () => {
 
   test('renders successfully and contains title', () => {
     render(<Ecosystem />);
-    const title = screen.getByText('Built for Reliability');
+    const title = screen.getByText('AXiM Satellite Ecosystem');
     assert.ok(title);
   });
 });

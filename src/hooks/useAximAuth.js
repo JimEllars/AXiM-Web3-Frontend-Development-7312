@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { localStore } from '../lib/persistence.js';
 import { useAximStore } from '../store/useAximStore.js';
+import { checkPassportSsoSession } from '../lib/auth-handoff.js';
 
 export function useAximAuth() {
   const [profile, setProfile] = useState(null);
@@ -40,6 +41,16 @@ export function useAximAuth() {
                setProfile({ email: offline.session.user.email, clearance_level: 1});
            }
        }
+    } else {
+       // Attempt silent passport SSO auto-login
+       checkPassportSsoSession().then((ssoData) => {
+         if (isMounted && ssoData && ssoData.session) {
+            setSession(ssoData.session);
+            setProfile(ssoData.profile || { email: ssoData.session?.user?.email, clearance_level: 1 });
+            const store = useAximStore.getState();
+            if (store.setUserSession) store.setUserSession(ssoData.session); // Hydrate Zustand silently
+         }
+       }).catch(() => { /* Silent fail */ });
     }
 
     supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {

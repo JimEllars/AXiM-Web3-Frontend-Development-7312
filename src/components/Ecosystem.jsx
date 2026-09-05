@@ -3,14 +3,24 @@ import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
+import { generateSsoLaunchUrl } from '../lib/auth-handoff';
 
 const features = [
-  { icon: LuIcons.LuZap, title: "Instant Generation", desc: "Create professional-grade documents and business tools in seconds." },
-  { icon: LuIcons.LuShieldCheck, title: "Secure & Private", desc: "Your data is encrypted and vaulted locally for maximum privacy." },
-  { icon: LuIcons.LuRefreshCw, title: "Always Available", desc: "Our resilient architecture means you never lose access to your work." }
+  { icon: LuIcons.LuZap, title: "Support", desc: "Access the AXiM Support System and ticket dashboard.", url: "https://support.axim.us.com" },
+  { icon: LuIcons.LuShieldCheck, title: "Asguard", desc: "Enterprise security cockpit and threat management.", url: "https://asguard.axim.us.com" },
+  { icon: LuIcons.LuRefreshCw, title: "Green Machine", desc: "Automated scaling and instance deployment system.", url: "https://greenmachine.axim.us.com" },
+  { icon: LuIcons.LuPhone, title: "Voice", desc: "Voice Telephony Core for operational communications.", url: "https://voice.axim.us.com" },
+  { icon: LuIcons.LuGlobe, title: "Ground Game", desc: "Canvassing and field operations logistics hub.", url: "https://groundgame.axim.us.com" },
+  { icon: LuIcons.LuBriefcase, title: "CEO Dept", desc: "Executive metrics and macro-level dashboards.", url: "https://ceodept.axim.us.com" }
 ];
 
 export default function Ecosystem() {
+  const handleLaunch = async (url, title) => {
+    logTelemetry('ecosystem_feature_clicked', { title });
+    const launchUrl = await generateSsoLaunchUrl(url);
+    window.location.href = launchUrl;
+  };
+
   return (
     <motion.div
       className="w-full max-w-7xl mx-auto py-20 px-6 border-t border-white/10 mt-10"
@@ -20,14 +30,14 @@ export default function Ecosystem() {
       viewport={{ once: true, amount: 0.2 }}
     >
       <div className="text-center mb-16">
-        <h2 className="text-3xl font-black text-white tracking-tighter mb-4">Built for Reliability</h2>
-        <p className="text-zinc-400 max-w-2xl mx-auto text-sm">We build tools that meet you where you are, delivering high-value outputs without the complex learning curve.</p>
+        <h2 className="text-3xl font-black text-white tracking-tighter mb-4">AXiM Satellite Ecosystem</h2>
+        <p className="text-zinc-400 max-w-2xl mx-auto text-sm">One-click secure access to all integrated operational cockpits and systems.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {features.map((feat, i) => (
           <motion.div
             key={i}
-            onClick={() => logTelemetry('ecosystem_feature_clicked', { title: feat.title })}
+            onClick={() => handleLaunch(feat.url, feat.title)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
