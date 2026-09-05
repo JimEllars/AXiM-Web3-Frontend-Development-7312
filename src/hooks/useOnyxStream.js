@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
 
@@ -22,7 +22,7 @@ export function useOnyxStream() {
     abortControllerRef.current = new AbortController();
 
     const userMessage = { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date().toISOString() };
-    setMessages(prev => [...prev, userMessage].slice(-500));
+    setMessages(prev => [...prev, userMessage].slice(-200));
     setIsStreaming(true);
     setError(null);
 
@@ -33,7 +33,7 @@ export function useOnyxStream() {
       content: '',
       timestamp: new Date().toISOString(),
       isStreaming: true
-    }].slice(-500));
+    }].slice(-200));
 
     logTelemetry('onyx_stream_initiated', { promptLength: text.length });
 
@@ -159,5 +159,15 @@ export function useOnyxStream() {
     }
   }, []);
 
+
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   return { messages, isStreaming, error, isEdgeCached, sendMessage, abortStream };
+
 }

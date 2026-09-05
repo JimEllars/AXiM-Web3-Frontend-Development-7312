@@ -87,7 +87,7 @@ export default function Business() {
 
 
           {/* B2B Intelligence & Articles Card */}
-          <Link to="/articles" className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+          <Link to="/articles" className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
             <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <SafeIcon icon={LuIcons.LuChartLine} className="w-8 h-8 text-axim-gold mb-4" />
             <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">B2B Intelligence</h2>
@@ -118,7 +118,7 @@ export default function Business() {
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
+            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-axim-gold mb-4" />
               <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Quick Demand Letter</h2>
@@ -136,7 +136,7 @@ export default function Business() {
             </div>
 
             {/* Automated Canvassing Masterclass Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
+            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <SafeIcon icon={LuIcons.LuMapPin} className="w-8 h-8 text-axim-gold mb-4" />
@@ -166,7 +166,7 @@ export default function Business() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             {/* Sales Modernization Course Card */}
-            <div className="group relative bg-[#050505] border border-white/10 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
+            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <SafeIcon icon={LuIcons.LuTrendingUp} className="w-8 h-8 text-axim-gold mb-4" />
               <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Sales Modernization Course</h2>
@@ -199,7 +199,7 @@ export default function Business() {
         limit={3}
       />
 
-      <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10">
+      <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-cyan-500/20 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Business infrastructure?</h2>
         <Link
           to="/consultation?pillar=business"

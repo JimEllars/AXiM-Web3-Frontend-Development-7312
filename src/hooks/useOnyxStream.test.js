@@ -5,13 +5,13 @@ import * as telemetry from '../lib/telemetry';
 
 // Mock Zustand store
 vi.mock('../store/useAximStore', () => ({
-  useAximStore: vi.fn((selector) => {
+  useAximStore: Object.assign(vi.fn((selector) => {
     const mockStore = {
       token: 'mock-token',
       addToast: vi.fn()
     };
-    return selector(mockStore);
-  })
+    return selector ? selector(mockStore) : mockStore;
+  }), { getState: () => ({ logTelemetryEvent: vi.fn() }) })
 }));
 
 describe('useOnyxStream', () => {
@@ -88,5 +88,18 @@ describe('useOnyxStream', () => {
     const assistantMessage = messages.find(m => m.role === 'assistant');
     expect(assistantMessage.isFallback).toBe(true);
     expect(assistantMessage.content).toContain('[SYSTEM OFFLINE]');
+  });
+
+  it('truncates messages when exceeding max bounds', async () => {
+    const { result } = renderHook(() => useOnyxStream());
+
+    // Simulate multiple messages being sent to exceed 200 limit
+    await act(async () => {
+      for (let i = 0; i < 101; i++) {
+        result.current.sendMessage('test message ' + i);
+      }
+    });
+
+    expect(result.current.messages.length).toBeLessThanOrEqual(200);
   });
 });

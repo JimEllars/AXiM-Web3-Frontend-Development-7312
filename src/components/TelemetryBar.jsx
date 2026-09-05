@@ -31,11 +31,16 @@ export default function TelemetryBar({ label, color, initialValue }) {
       navigator.connection.addEventListener('change', updateConnection);
 
       fetch('/', { method: 'HEAD' }).then(res => {
+        if (!res.ok) {
+          setEdgeRegion('OFFLINE');
+          setLatencyInfo({ rtt: 0, type: 'LOCAL' });
+          return;
+        }
         const ray = res.headers.get('cf-ray');
         if (ray) {
             setEdgeRegion(ray.split('-')[1] || ray);
         }
-      }).catch(() => {});
+      }).catch(() => { setEdgeRegion('OFFLINE'); setLatencyInfo({ rtt: 0, type: 'LOCAL' }); });
       return () => {
         navigator.connection.removeEventListener('change', updateConnection);
       };

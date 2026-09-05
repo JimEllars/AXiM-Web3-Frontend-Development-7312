@@ -34,7 +34,10 @@ describe('Telemetry', () => {
 
   it('should buffer events when fetch rejects and batch flush on reconnect', async () => {
     // Override fetch to fail
+
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     global.fetch.mockRejectedValueOnce(new Error('Network error'));
+
 
     // Override supabase insert to also fail so it stays in queue
     const { supabase } = await import('../lib/supabase.js');
@@ -58,6 +61,7 @@ describe('Telemetry', () => {
 
     store = getTelemetryStore();
     expect(store.length).toBe(0);
+    consoleSpy.mockRestore();
   });
 
 });
