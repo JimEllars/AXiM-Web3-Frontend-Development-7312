@@ -2,39 +2,78 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
+import { generateSsoLaunchUrl } from '../lib/auth-handoff';
 
-const { LuZap, LuGlobe, LuCpu, LuFileText } = LuIcons;
+const { LuZap, LuGlobe, LuCpu, LuFileText, LuPhone, LuShieldCheck, LuBriefcase } = LuIcons;
 
 export default function DashboardNodes({ nodeStatuses, selectedNode, setSelectedNode }) {
   const nodes = [
     {
-      id: 'Demand Letter',
-      type: 'Micro-App',
-      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.demand === 'operational' ? 'Operational' : 'Degraded',
-      metrics: [['Latency', '42ms'], ['Uptime', '99.9%']],
+      id: 'Support',
+      type: 'Satellite App',
+      url: 'https://support.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.support === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '22ms'], ['Uptime', '99.9%']],
       icon: LuGlobe,
-      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.demand === 'operational' ? 'axim-gold' : 'red-500',
-      pulse: !nodeStatuses || nodeStatuses?.demand !== 'operational'
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.support === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.support !== 'operational'
     },
     {
-      id: 'NDA Generator',
-      type: 'Micro-App',
-      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.nda === 'operational' ? 'Operational' : 'Degraded',
-      metrics: [['Latency', '38ms'], ['Uptime', '99.9%']],
-      icon: LuZap,
-      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.nda === 'operational' ? 'axim-gold' : 'red-500',
-      pulse: !nodeStatuses || nodeStatuses?.nda !== 'operational'
+      id: 'Voice',
+      type: 'Satellite App',
+      url: 'https://voice.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.voice === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '18ms'], ['Uptime', '99.9%']],
+      icon: LuPhone,
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.voice === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.voice !== 'operational'
     },
     {
-      id: 'Pay Stub',
-      type: 'Micro-App',
-      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.stub === 'operational' ? 'Operational' : 'Degraded',
-      metrics: [['Latency', '35ms'], ['Uptime', '99.9%']],
-      icon: LuFileText,
-      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.stub === 'operational' ? 'axim-gold' : 'red-500',
-      pulse: !nodeStatuses || nodeStatuses?.stub !== 'operational'
+      id: 'Asguard',
+      type: 'Satellite App',
+      url: 'https://asguard.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.asguard === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '30ms'], ['Uptime', '99.9%']],
+      icon: LuShieldCheck,
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.asguard === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.asguard !== 'operational'
+    },
+    {
+      id: 'Green Machine',
+      type: 'Satellite App',
+      url: 'https://greenmachine.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.greenmachine === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '45ms'], ['Uptime', '99.9%']],
+      icon: LuCpu,
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.greenmachine === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.greenmachine !== 'operational'
+    },
+    {
+      id: 'Ground Game',
+      type: 'Satellite App',
+      url: 'https://groundgame.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.groundgame === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '32ms'], ['Uptime', '99.9%']],
+      icon: LuGlobe,
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.groundgame === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.groundgame !== 'operational'
+    },
+    {
+      id: 'CEO Dept',
+      type: 'Satellite App',
+      url: 'https://ceodept.axim.us.com',
+      status: !nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.ceodept === 'operational' ? 'Operational' : 'Degraded',
+      metrics: [['Latency', '25ms'], ['Uptime', '99.9%']],
+      icon: LuBriefcase,
+      color: !nodeStatuses ? 'zinc-500' : nodeStatuses?.ceodept === 'operational' ? 'axim-gold' : 'red-500',
+      pulse: !nodeStatuses || nodeStatuses?.ceodept !== 'operational'
     }
   ];
+
+  const handleLaunch = async (url) => {
+    const launchUrl = await generateSsoLaunchUrl(url);
+    window.location.href = launchUrl;
+  };
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -42,7 +81,10 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
         <motion.div
           key={node.id}
           whileHover={{ y: -5 }}
-          onClick={() => setSelectedNode && setSelectedNode(node)}
+          onClick={() => {
+             if (setSelectedNode) setSelectedNode(node);
+             handleLaunch(node.url);
+          }}
           className={`cursor-pointer p-4 border transition-all duration-300 ${selectedNode?.id === node.id ? 'bg-axim-gold/10 border-axim-gold shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'bg-glass backdrop-blur-xl saturate-150 border-subtle hover:border-white/30'}`}
         >
           <div className="flex justify-between items-start mb-6">

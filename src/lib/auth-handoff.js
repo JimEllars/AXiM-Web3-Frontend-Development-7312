@@ -77,3 +77,78 @@ export async function exchangePassportToken(token) {
     }
   }
 }
+
+/**
+ * Performs a background check against AXiM Passport for an active session.
+ */
+export async function checkPassportSsoSession() {
+  const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/session`;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2500); // 2.5s timeout
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data; // Expected to contain session/profile data
+    }
+    return null;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    console.warn('[AXiM_SSO] Silent SSO check failed or timed out:', err.message);
+    return null; // Fail silently to guest mode
+  }
+}
+
+/**
+ * Generates an SSO launch URL for satellite apps by requesting a delegation token.
+ */
+export async function generateSsoLaunchUrl(targetAppBaseUrl) {
+  const { useAximStore } = await import('../store/useAximStore.js');
+  const store = useAximStore.getState();
+
+  // Checking for web3 session or normal passport session in Zustand
+  // We can look for whatever signifies logged in
+  const isAuth = store.isWeb3Authenticated || !!store.walletAddress || !!store.userSession;
+
+  if (!isAuth) {
+    return targetAppBaseUrl;
+  }
+
+  try {
+    const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/auth/delegation-token`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Using whichever session token exists to auth the request
+      body: JSON.stringify({
+        walletAddress: store.walletAddress,
+        sessionToken: store.userSession?.token || store.userSession?.access_token || null
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.token; // short-lived token
+
+      const targetUrl = new URL(`${targetAppBaseUrl}/auth/callback`);
+      targetUrl.searchParams.set('token', token);
+      return targetUrl.toString();
+    }
+  } catch (err) {
+    console.warn('[AXiM_SSO] Failed to generate delegation token:', err);
+  }
+
+  return targetAppBaseUrl;
+}
