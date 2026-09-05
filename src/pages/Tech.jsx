@@ -162,9 +162,9 @@ export default function Tech() {
 
 
       <CategoryArticleFeed
-        categorySlug="tech"
-        sectionTitle="Autonomous Systems & Edge Technology"
-        sectionSubtitle="Cloudflare edge networks, autonomous AI agents, and enterprise systems."
+        categorySlug="tech-development"
+        sectionTitle="Tech Development & Autonomous Engineering"
+        sectionSubtitle="Edge-first architectures, Web3 mechanics, and distributed systems."
         limit={3}
       />
 
