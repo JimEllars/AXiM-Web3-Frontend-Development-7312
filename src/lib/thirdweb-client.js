@@ -39,3 +39,30 @@ export async function verifyWeb3Connection() {
 
   return false; // Indicating fallback logic or unhealthy state after all RPCs failed
 }
+
+
+export async function requestSiweChallenge(address, chainId) {
+  const endpoint = `${import.meta.env.VITE_CORE_API_URL || 'https://api.axim.us.com'}/api/v1/auth/siwe/challenge`;
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, chainId }),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to request SIWE challenge');
+  }
+  return res.json();
+}
+
+export async function verifySiweSignature(signature, message) {
+  const endpoint = `${import.meta.env.VITE_CORE_API_URL || 'https://api.axim.us.com'}/api/v1/auth/siwe/verify`;
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ signature, message }),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to verify SIWE signature');
+  }
+  return res.json();
+}

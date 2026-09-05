@@ -43,7 +43,7 @@ export function useOnyxStream() {
 
     const connectStream = async () => {
       try {
-        const endpoint = import.meta.env.VITE_ONYX_WORKER_URL || '/api/onyx/chat';
+        const endpoint = import.meta.env.VITE_ONYX_WORKER_URL || '/api/v1/onyx/stream';
 
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -121,7 +121,7 @@ export function useOnyxStream() {
         if (retryCount < maxRetries) {
           retryCount++;
           const backoff = currentBackoff;
-          currentBackoff = Math.min(currentBackoff * 2, 8000);
+          currentBackoff = Math.min(currentBackoff * 2 + Math.random() * 1000, 8000);
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           logTelemetry('onyx_stream_retry', { retryCount, backoff });
           setTimeout(connectStream, backoff);
