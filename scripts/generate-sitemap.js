@@ -16,7 +16,7 @@ async function fetchAllPosts() {
 
   while (hasMore) {
     try {
-      const res = await fetch(`${WP_REST_ENDPOINT}/posts?per_page=100&page=${page}`);
+      const res = await fetch(`${WP_REST_ENDPOINT}/posts?per_page=100&page=${page}&_fields=slug,modified`);
       if (!res.ok) {
         hasMore = false;
         break;

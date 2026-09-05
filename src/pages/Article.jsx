@@ -12,6 +12,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
 import AffiliateTable from '../components/AffiliateTable';
+import { affiliateProducts } from '../data/companyOfferings';
 import MicroAppBanner from '../components/MicroAppBanner';
 
 
@@ -270,7 +271,7 @@ const { slug } = useParams();
 
   // Custom simple parser to handle shortcodes
   let parsedContent = [];
-  const parts = rawHtml.split(/(\\[AXIM_AFFILIATE_TABLE\\]|\\[AXIM_MICRO_APP\\])/);
+  const parts = rawHtml.split(/(\\?\[AXIM_AFFILIATE_TABLE\\?\]|\\?\[AXIM_MICRO_APP\\?\])/g);
 
   const mockProducts = [
     {

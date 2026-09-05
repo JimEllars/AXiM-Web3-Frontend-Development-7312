@@ -8,32 +8,38 @@ export default function Chatbot() {
   useEffect(() => {
     if (!isBotConfigured) return;
 
-    window.chatbaseConfig = {
-      chatbotId: botId,
-    };
+    try {
+      window.chatbaseConfig = {
+        chatbotId: botId,
+      };
 
-    const script = document.createElement('script');
-    script.src = "https://www.chatbase.co/embed.min.js";
-    script.id = botId;
-    script.domain = "www.chatbase.co";
-    script.defer = true;
+      const script = document.createElement('script');
+      script.src = "https://www.chatbase.co/embed.min.js";
+      script.id = botId;
+      script.domain = "www.chatbase.co";
+      script.defer = true;
+      script.async = true; // Ensure asynchronous non-blocking load
 
-    document.body.appendChild(script);
+      document.body.appendChild(script);
 
-    return () => {
-      // Clean up script on unmount if needed
-      const existingScript = document.getElementById(botId);
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-      // Also attempt to remove the embedded iframe/container chatbase creates
-      const chatbaseContainer = document.getElementById('chatbase-bubble');
-      if (chatbaseContainer) {
-          chatbaseContainer.remove();
-      }
-    };
+      return () => {
+        try {
+          const existingScript = document.getElementById(botId);
+          if (existingScript) {
+            document.body.removeChild(existingScript);
+          }
+          const chatbaseContainer = document.getElementById('chatbase-bubble');
+          if (chatbaseContainer) {
+              chatbaseContainer.remove();
+          }
+        } catch (e) {
+          console.warn('Failed to cleanup Chatbase component', e);
+        }
+      };
+    } catch (e) {
+      console.warn('Chatbase failed to load, non-blocking error handled', e);
+    }
   }, [botId, isBotConfigured]);
 
-  if (!isBotConfigured) return null;
-  return null; // Chatbase injects its own floating bubble when configured
+  return null;
 }
