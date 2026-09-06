@@ -130,7 +130,9 @@ export default function OnyxTerminal() {
           {isStreaming && (
             <div className="flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 rounded-sm shadow-[0_0_10px_rgba(147,51,234,0.2)] animate-pulse">
               <div className="w-2 h-2 rounded-full bg-axim-purple shadow-[0_0_8px_rgba(147,51,234,0.8)]" />
-              <span className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest">{connectionStatus}</span>
+              <span className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest">
+                {connectionStatus === 'STREAMING' ? 'UPLINK ACTIVE' : connectionStatus}
+              </span>
             </div>
           )}
           <SafeIcon icon={LuIcons.LuTerminal} className="w-8 h-8 text-zinc-600" />

@@ -102,7 +102,7 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
+      batchQueue = [...currentBatch, ...batchQueue]; // Restore on fail
       return;
     }
 
@@ -120,20 +120,41 @@ export async function flushTelemetryQueue(force = false) {
 
       } else if (window.fetch) {
         try {
-          const fetchPromise = fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || 'UNSET_DEV_KEY'
-            },
-            body: payload,
-            keepalive: true,
-          });
+          let retries = 3;
+          let backoff = 1000;
+          let response = null;
 
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
-          const response = await Promise.race([fetchPromise, timeoutPromise]);
+          while (retries > 0) {
+            try {
+              const fetchPromise = fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || 'UNSET_DEV_KEY'
+                },
+                body: payload,
+                keepalive: true,
+              });
 
-          if (response.status === 200 || response.status === 202 || response.status === 204) {
+              const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
+              response = await Promise.race([fetchPromise, timeoutPromise]);
+
+              if (response.status === 200 || response.status === 202 || response.status === 204) {
+                 break;
+              } else if (response.status === 429) {
+                 throw new Error('Rate limited');
+              } else {
+                 break;
+              }
+            } catch(e) {
+               retries--;
+               if (retries === 0) throw e;
+               await new Promise(r => setTimeout(r, backoff));
+               backoff *= 2;
+            }
+          }
+
+          if (response && (response.status === 200 || response.status === 202 || response.status === 204)) {
             success = true;
             try {
               if (response.status !== 204 && response.status !== 202) {
@@ -194,7 +215,7 @@ export async function flushTelemetryQueue(force = false) {
       }
     } else {
       // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
+      batchQueue = [...currentBatch, ...batchQueue];
       if (typeof window !== 'undefined') {
         localStore.saveTelemetryCache(batchQueue);
       }

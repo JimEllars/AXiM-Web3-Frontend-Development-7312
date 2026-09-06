@@ -69,7 +69,14 @@ export default function DigitalProductLayout({ title, description, price, type, 
                </div>
 
                <button
-                 onClick={onPrimaryAction}
+                 onClick={() => {
+                    logTelemetry('checkout_intent', { product: title, price });
+                    useAximStore.getState().submitPartnerLead({
+                       type: 'PRODUCT_CHECKOUT_INTENT',
+                       payload: { product: title, price }
+                    });
+                    if (onPrimaryAction) onPrimaryAction();
+                 }}
                  className="w-full py-4 bg-axim-gold text-black font-bold uppercase tracking-widest text-sm hover:bg-white transition-colors flex items-center justify-center gap-3 rounded-sm shadow-[0_0_20px_rgba(240,255,0,0.2)]"
                >
                   Unlock Access - {price}
@@ -78,7 +85,13 @@ export default function DigitalProductLayout({ title, description, price, type, 
 
                {isWeb3Authenticated && (
                  <button
-                   onClick={() => console.log("Init Web3 Tx")}
+                   onClick={() => {
+                     logTelemetry('web3_checkout_intent', { product: title, price });
+                     useAximStore.getState().submitPartnerLead({
+                        type: 'WEB3_CHECKOUT_INTENT',
+                        payload: { product: title, price }
+                     });
+                   }}
                    className="mt-3 w-full py-3 bg-blue-500/20 border border-blue-500/50 text-blue-400 font-mono text-xs uppercase tracking-widest rounded-sm hover:bg-blue-500/30 transition-colors flex items-center justify-center gap-2"
                  >
                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
