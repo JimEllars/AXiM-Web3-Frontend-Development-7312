@@ -83,7 +83,9 @@ export function logTelemetry(type, payload) {
     if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.error("Telemetry error", e); }
   }
 
-  console.log(`[TELEMETRY: ${type}]`, payload);
+  if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
+    console.log(`[TELEMETRY: ${type}]`, payload);
+  }
 }
 
 export async function flushTelemetryQueue(force = false) {
@@ -131,10 +133,10 @@ export async function flushTelemetryQueue(force = false) {
           const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
           const response = await Promise.race([fetchPromise, timeoutPromise]);
 
-          if (response.status === 200 || response.status === 204) {
+          if (response.status === 200 || response.status === 202 || response.status === 204) {
             success = true;
             try {
-              if (response.status !== 204) {
+              if (response.status !== 204 && response.status !== 202) {
                 const responseData = await response.json();
                 console.log('[TELEMETRY_SYNC_SUCCESS]', responseData);
               }
@@ -228,6 +230,21 @@ export function setupTelemetryHooks() {
 
   // AI query hook
   window.addEventListener('ai_query', (e) => logTelemetry('ai_query', e.detail || {}));
+
+  // Core metrics
+  window.addEventListener('error', (e) => logTelemetry('route_error', { message: e.message, filename: e.filename, lineno: e.lineno }));
+
+  if (window.performance) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const perfData = window.performance.timing;
+        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        if (pageLoadTime > 0) {
+          logTelemetry('page_latency', { durationMs: pageLoadTime });
+        }
+      }, 0);
+    });
+  }
 }
 
 export function logHighPriorityTelemetry(type, payload) {

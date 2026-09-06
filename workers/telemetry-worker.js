@@ -1,18 +1,29 @@
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client',
-  'Cache-Control': 'no-store, max-age=0',
-  Vary: 'Origin'
-};
+const ALLOWED_ORIGINS = [
+  'https://axim.us.com',
+  'https://www.axim.us.com',
+  'http://localhost:3000',
+  'http://localhost:5173'
+];
 
-function jsonResponse(payload, status) {
+function getCorsHeaders(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client',
+    'Cache-Control': 'no-store, max-age=0',
+    Vary: 'Origin'
+  };
+}
+
+function jsonResponse(payload, status, request) {
   if (payload && payload.error) {
     payload = { success: false, error: payload.error, code: status, timestamp: new Date().toISOString() };
   }
   return new Response(JSON.stringify(payload), {
     status,
-    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+    headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' }
   });
 }
 
@@ -33,23 +44,28 @@ function isValidEvent(event) {
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: getCorsHeaders(request) });
     }
 
     const url = new URL(request.url);
     if (request.method !== 'POST' || (url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
-      return new Response('Not Found or Method Not Allowed', { status: 404, headers: CORS_HEADERS });
+      return new Response('Not Found or Method Not Allowed', { status: 404, headers: getCorsHeaders(request) });
+    }
+
+    const origin = request.headers.get('Origin');
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+      return new Response('Forbidden', { status: 403, headers: getCorsHeaders(request) });
     }
 
     if (!env.AXIM_CORE_URL || !env.AXIM_GATEWAY_TOKEN) {
-      return jsonResponse({ error: 'Telemetry ingestion is not configured.' }, 503);
+      return jsonResponse({ error: 'Telemetry ingestion is not configured.' }, 503, request);
     }
 
     let events;
     try {
       events = await request.json();
     } catch {
-      return jsonResponse({ error: 'Invalid JSON payload.' }, 400);
+      return jsonResponse({ error: 'Invalid JSON payload.' }, 400, request);
     }
 
     if (!Array.isArray(events)) {
@@ -57,11 +73,11 @@ export default {
     }
 
     if (events.length === 0 || events.length > 50) {
-      return jsonResponse({ error: 'Expected between 1 and 50 telemetry events.' }, 400);
+      return jsonResponse({ error: 'Expected between 1 and 50 telemetry events.' }, 400, request);
     }
 
     if (!events.every(isValidEvent)) {
-      return jsonResponse({ error: 'Telemetry event validation failed.' }, 400);
+      return jsonResponse({ error: 'Telemetry event validation failed.' }, 400, request);
     }
 
     // Capture request CF details (client IP/geo tagging)
@@ -120,6 +136,7 @@ export default {
       })()
     );
 
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    // Changed to 202 Accepted to signal graceful burst handling per requirements
+    return new Response(null, { status: 202, headers: getCorsHeaders(request) });
   }
 };
