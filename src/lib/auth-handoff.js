@@ -113,7 +113,7 @@ export async function checkPassportSsoSession() {
  * Generates an SSO launch URL for satellite apps by requesting a delegation token.
  */
 export async function generateSsoLaunchUrl(targetAppBaseUrl) {
-  const { useAximStore } = await import('../store/useAximStore.js');
+  const { useAximStore } = await import('../store/useAximStore.js').catch(() => ({ useAximStore: require('../store/useAximStore.js').useAximStore }));
   const store = useAximStore.getState();
 
   // Checking for web3 session or normal passport session in Zustand

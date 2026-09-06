@@ -18,7 +18,11 @@ export function useAximAuth() {
     // Basic domain check, real logic would use secure server claims.
     if (currentSession && currentSession.user && currentSession.user.email) {
       if (!currentSession.user.email.endsWith('@axim.us.com')) {
-        await supabase.auth.signOut();
+        try {
+          await supabase.auth.signOut();
+        } catch (e) {
+          // ignore signout errors if network is down
+        }
         setSession(null);
         setProfile(null);
         console.warn('Forbidden: Internal Access Only');
@@ -53,29 +57,46 @@ export function useAximAuth() {
        }).catch(() => { /* Silent fail */ });
     }
 
-    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
-      if (isMounted) {
+    const initAuth = async () => {
+      try {
         setIsBackgroundSyncing(true);
-        const isValid = await checkDomain(currentSession);
-        setIsBackgroundSyncing(false);
-        if (isValid) {
-          setSession(currentSession);
-          localStore.saveOfflineSession(currentSession);
-          if (currentSession) {
-             setProfile({ email: currentSession.user.email, clearance_level: 1});
+        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          throw error;
+        }
+
+        if (isMounted) {
+          const isValid = await checkDomain(currentSession);
+          if (isValid) {
+            setSession(currentSession);
+            localStore.saveOfflineSession(currentSession);
+            if (currentSession) {
+               setProfile({ email: currentSession.user.email, clearance_level: 1});
+            }
           }
         }
-        setLoading(false);
-        setIsHydrating(false);
+      } catch (err) {
+        // Fallback to offline session on network error
+        if (isMounted) {
+          const cachedSession = localStore.getOfflineSession();
+          if (cachedSession && cachedSession.timestamp && Date.now() - cachedSession.timestamp < 15 * 60 * 1000) {
+            setSession(cachedSession.session);
+            if (cachedSession.session && cachedSession.session.user) {
+               setProfile({ email: cachedSession.session.user.email, clearance_level: 1});
+            }
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsBackgroundSyncing(false);
+          setLoading(false);
+          setIsHydrating(false);
+        }
       }
-    }).catch((err) => {
-      // In case of 500 error or similar
-      if (isMounted) {
-        // We already checked offline cache above, so if it failed just finish loading
-        setLoading(false);
-        setIsHydrating(false);
-      }
-    });
+    };
+
+    initAuth();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
       if (isMounted && !isRefreshing.current) {
@@ -86,6 +107,7 @@ export function useAximAuth() {
           setSession(currentSession);
           if (currentSession) {
               setProfile({ email: currentSession.user.email, clearance_level: 1});
+              localStore.saveOfflineSession(currentSession);
           } else {
               setProfile(null);
           }
@@ -112,12 +134,16 @@ export function useAximAuth() {
       // Retry mechanism for connection hiccups
       let currentSession = null;
       let retries = 3;
+      let fetchError = null;
+
       while (retries > 0) {
         try {
-          const { data } = await supabase.auth.getSession();
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
           currentSession = data?.session;
           break; // success
         } catch (err) {
+          fetchError = err;
           retries -= 1;
           if (retries === 0) {
              console.warn("[AXiM_AUTH] Session fetch failed after retries.");
@@ -126,6 +152,21 @@ export function useAximAuth() {
           }
         }
       }
+
+      if (fetchError && !currentSession) {
+        // Network fault during heartbeat: rely on cache
+        const offline = localStore.getOfflineSession();
+        if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+           if (isMounted) {
+             setSession(offline.session);
+             if (offline.session && offline.session.user) {
+               setProfile({ email: offline.session.user.email, clearance_level: 1});
+             }
+           }
+        }
+        return;
+      }
+
       if (currentSession) {
         try {
           isRefreshing.current = true;
@@ -137,7 +178,7 @@ export function useAximAuth() {
               console.warn("Retaining session optimistically due to recent offline stamp");
               setSession(offline.session);
             } else {
-              await supabase.auth.signOut();
+              try { await supabase.auth.signOut(); } catch(e) { /* ignore */ }
               setSession(null);
               setProfile(null);
               // Avoid hard redirect, let router handle unauthorized state
@@ -158,7 +199,7 @@ export function useAximAuth() {
               console.warn("Retaining session optimistically after exception");
               setSession(offline.session);
             } else {
-              await supabase.auth.signOut();
+              try { await supabase.auth.signOut(); } catch(e) { /* ignore */ }
               setSession(null);
               setProfile(null);
               // Avoid hard redirect

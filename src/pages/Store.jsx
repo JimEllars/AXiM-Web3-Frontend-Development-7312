@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useAximStore } from '../store/useAximStore.js';
 import { logTelemetry } from '../lib/telemetry.js';
 import SEO from '../components/SEO.jsx';
+import PageTransition from '../components/PageTransition';
+import BackgroundEffects from '../components/BackgroundEffects';
 
 
 const SelldoneEmbed = ({ product, shelfTitle, isAdblocked }) => {
   const [isLoading, setIsLoading] = useState(true);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -66,7 +67,6 @@ export default function Store() {
     };
   }, []);
 
-
   const seoData = {
     title: 'AXiM Digital Marketplace',
     description: 'The enterprise storefront for digital courses, gaming assets, and software tools is currently booting up.',
@@ -122,8 +122,10 @@ export default function Store() {
   ];
 
   return (
-    <div className="min-h-screen pt-32 pb-24 px-6 bg-[#050505]">
+    <PageTransition>
+    <div className="min-h-screen pt-32 pb-24 px-6 bg-bg-void">
       <SEO customMeta={seoData} />
+      <BackgroundEffects />
 
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-16 relative z-10">
         <div className="mb-4">
@@ -147,7 +149,6 @@ export default function Store() {
           The enterprise storefront for digital courses, gaming assets, and software tools is currently booting up.
         </p>
       </div>
-
 
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-8 relative z-10">
         <div className="flex gap-4 p-1 bg-black/50 border border-white/10 rounded-sm backdrop-blur-md">
@@ -182,7 +183,7 @@ export default function Store() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {shelf.products.filter(p => activeCategory === 'digital-ip' ? p.category !== 'PHYSICAL' : p.category === 'PHYSICAL').map((product, pIdx) => (
-                <div key={pIdx} className="bg-onyx-900/40 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-xl hover:border-axim-purple/50 transition-colors flex flex-col">
+                <div key={pIdx} className="bg-onyx-900/80 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-xl hover:border-axim-purple/50 transition-colors flex flex-col">
                   <div className="text-[10px] font-mono text-axim-purple uppercase tracking-widest mb-3">
                     [{product.category}]
                   </div>
@@ -198,5 +199,6 @@ export default function Store() {
         ))}
       </div>
     </div>
+    </PageTransition>
   );
 }
