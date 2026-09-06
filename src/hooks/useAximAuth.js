@@ -178,10 +178,9 @@ export function useAximAuth() {
               console.warn("Retaining session optimistically due to recent offline stamp");
               setSession(offline.session);
             } else {
-              try { await supabase.auth.signOut(); } catch(e) { /* ignore */ }
-              setSession(null);
-              setProfile(null);
-              // Avoid hard redirect, let router handle unauthorized state
+              // Instead of logging out when refresh fails temporarily (which causes UI flicker or boots user), we preserve the session to allow graceful degraded state unless forced.
+              console.warn("Session refresh failed, but retaining session optimistically to avoid disrupting user workflow.");
+              // Do not setSession(null) here.
             }
           } else if (data.session) {
             localStore.saveOfflineSession(data.session);
@@ -199,10 +198,7 @@ export function useAximAuth() {
               console.warn("Retaining session optimistically after exception");
               setSession(offline.session);
             } else {
-              try { await supabase.auth.signOut(); } catch(e) { /* ignore */ }
-              setSession(null);
-              setProfile(null);
-              // Avoid hard redirect
+              console.warn("Network exception during refresh, retaining session optimistically to avoid disrupting user workflow.");
             }
         } finally {
             isRefreshing.current = false;

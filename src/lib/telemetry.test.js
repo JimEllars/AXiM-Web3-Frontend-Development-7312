@@ -36,7 +36,7 @@ describe('Telemetry', () => {
     // Override fetch to fail
 
     const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    global.fetch.mockRejectedValueOnce(new Error('Network error'));
+    global.fetch.mockRejectedValue(new Error('Network error'));
 
 
     // Override supabase insert to also fail so it stays in queue
@@ -56,7 +56,7 @@ describe('Telemetry', () => {
     expect(store.length).toBeGreaterThan(0);
 
     // Now simulate success
-    global.fetch.mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve({ success: true }) });
+    global.fetch.mockResolvedValue({ ok: true, status: 200, json: () => Promise.resolve({ success: true }) });
     await flushTelemetryQueue();
 
     store = getTelemetryStore();

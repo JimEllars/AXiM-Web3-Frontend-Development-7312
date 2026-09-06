@@ -124,6 +124,13 @@ export function useOnyxStream() {
           currentBackoff = Math.min(currentBackoff * 2 + Math.random() * 1000, 8000);
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           logTelemetry('onyx_stream_retry', { retryCount, backoff });
+
+          setMessages(prev => prev.map(msg =>
+            msg.id === onyxMessageId
+              ? { ...msg, content: msg.content + '\n[SYSTEM] Reconnecting Uplink...' }
+              : msg
+          ));
+
           setTimeout(connectStream, backoff);
         } else {
           console.error('[Onyx Stream] Max retries reached.', err);
@@ -161,12 +168,25 @@ export function useOnyxStream() {
 
 
   useEffect(() => {
+    let intervalId;
+    if (isStreaming) {
+      intervalId = setInterval(() => {
+        // Send a simulated heartbeat to keep stream alive in UI and potentially trigger server keepalive
+        setMessages(prev => {
+           // We don't want to actually print the heartbeat to the screen, but we can update state to trigger re-renders or logs
+           logTelemetry('onyx_stream_heartbeat', { status: 'alive' });
+           return prev;
+        });
+      }, 15000);
+    }
+
     return () => {
+      clearInterval(intervalId);
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
     };
-  }, []);
+  }, [isStreaming]);
 
   return { messages, isStreaming, error, isEdgeCached, sendMessage, abortStream };
 
