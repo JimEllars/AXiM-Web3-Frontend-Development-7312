@@ -8,9 +8,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import Reviews from '../components/Reviews.jsx';
-
 import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
-
 
 export default function Business() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -29,7 +27,6 @@ export default function Business() {
       "description": "Generate external legal documentation rapidly."
     }
   ];
-
 
   useEffect(() => {
     logTelemetry('category_hub_viewed', { category: 'business' });
@@ -107,12 +104,19 @@ export default function Business() {
             <p className="text-sm text-zinc-400 mb-4 font-medium">
               High-performing organizations run on cognitive diversity. Utilize the AXiM Personality Assessment to evaluate leadership styles, enhance cross-functional communication, resolve team friction, and align executives with their natural cognitive strengths.
             </p>
-            <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source: 'business_page' })} className="inline-flex items-center text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mt-2">
+            <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source_page: 'business' })} className="inline-flex items-center text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mt-2">
               Explore Team & Leadership Profiling →
             </a>
           </div>
 
         </div>
+
+        <CategoryArticleFeed
+          categorySlug="business-development"
+          sectionTitle="Business Development Briefings & Strategy"
+          sectionSubtitle="Field operations, enterprise scaling models, and market intelligence."
+          limit={6}
+        />
 
         <PartnerPromo
           partnerName="Teachable"
@@ -123,96 +127,7 @@ export default function Business() {
           theme="purple"
           onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Teachable', location: 'Business' })}
         />
-
-        {/* Apps & Tools Section */}
-        <div className="relative pt-8 mt-12 border-t border-white/5">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Apps & Tools
-            </span>
-          </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Quick Demand Letter</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Generate external legal documentation rapidly.</p>
-              <a
-                href="https://quickdemandletter.com/start?via=axim_hub"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => logTelemetry('external_tool_intent', { tool: 'quick_demand_letter' })}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
-              >
-                Open Tool
-                <SafeIcon icon={LuIcons.LuExternalLink} className="w-3 h-3 ml-2" />
-              </a>
-            </div>
-
-            {/* Automated Canvassing Masterclass Card */}
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-              <SafeIcon icon={LuIcons.LuMapPin} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Automated Canvassing Masterclass</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Deploy ground game teams efficiently.</p>
-              <Link
-                to="/store"
-                onClick={() => {
-                  logTelemetry('store_category_intent', { module: 'canvassing_masterclass' });
-                }}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
-              >
-                View Details
-              </Link>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Courses Section */}
-        <div className="relative pt-8 mt-12 border-t border-white/5">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-axim-gold border border-axim-gold/30 px-2 py-1 rounded-sm bg-axim-gold/5">
-              Courses
-            </span>
-          </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            {/* Sales Modernization Course Card */}
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <SafeIcon icon={LuIcons.LuTrendingUp} className="w-8 h-8 text-axim-gold mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-axim-gold transition-colors">Sales Modernization Course</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Learn advanced sales techniques.</p>
-              <a
-                href="https://etsy.com/shop/aximdevelopment"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => logTelemetry('external_course_intent', { course: 'sales_modernization' })}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-axim-gold/30 bg-axim-gold/10 text-axim-gold hover:bg-axim-gold hover:text-black mt-auto"
-              >
-                View on Etsy
-                <SafeIcon icon={LuIcons.LuExternalLink} className="w-3 h-3 ml-2" />
-              </a>
-            </div>
-
-          </div>
-        </div>
-
       </section>
-
-
-
-
-
-      <CategoryArticleFeed
-        categorySlug="business-development"
-        sectionTitle="Business Development & Enterprise Intelligence"
-        sectionSubtitle="Strategic insights, automation playbooks, and operational blueprints."
-        limit={3}
-      />
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-cyan-500/20 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Business infrastructure?</h2>
@@ -224,6 +139,6 @@ export default function Business() {
           Schedule Consultation <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
         </Link>
       </section>
-</div>
+    </div>
   );
 }

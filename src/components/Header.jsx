@@ -87,12 +87,12 @@ export default function Header() {
         isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-[#004040]/30 py-4 md:py-5' : 'bg-transparent py-6 md:py-7'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between gap-4 items-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between gap-4 items-center min-h-[72px]">
 
         {/* Brand Logo Integration - White PNG */}
         <div className="flex flex-col">
           <Link to="/" className="flex items-center gap-3 group z-[60] flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
-            <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
+            <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[42px] md:h-[52px] w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
           </Link>
           {isOffline && (
             <div className="mt-1 flex items-center justify-center px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-sm backdrop-blur-md animate-pulse">
