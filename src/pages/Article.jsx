@@ -12,7 +12,7 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import WPImage from '../components/WPImage';
 import AffiliateTable from '../components/AffiliateTable';
-import { affiliateProducts } from '../data/companyOfferings';
+import { affiliateProducts } from '../data/companyOfferings.js';
 import MicroAppBanner from '../components/MicroAppBanner';
 
 
@@ -273,22 +273,7 @@ const { slug } = useParams();
   let parsedContent = [];
   const parts = rawHtml.split(/(\\?\[AXIM_AFFILIATE_TABLE\\?\]|\\?\[AXIM_MICRO_APP\\?\])/g);
 
-  const mockProducts = [
-    {
-      name: 'Teachable',
-      description: 'The comprehensive LMS platform for course creators and educators.',
-      features: ['Drag & drop builder', 'AI course creation tools', 'Integrated payments'],
-      link: 'https://swiy.co/Teach1',
-      isTopChoice: true
-    },
-    {
-      name: 'ActiveCampaign',
-      description: 'Customer experience automation platform that helps businesses connect and engage with their customers.',
-      features: ['Email marketing', 'Marketing automation', 'CRM & Sales automation'],
-      link: 'https://www.activecampaign.com/?via=axim_hub',
-      isTopChoice: false
-    }
-  ];
+
 
   return (
     <div className="prose prose-invert prose-axim max-w-3xl mx-auto prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md">
@@ -296,7 +281,7 @@ const { slug } = useParams();
         if (part === '[AXIM_AFFILIATE_TABLE]') {
           return (
             <div key={index} className="not-prose my-12">
-              <AffiliateTable products={mockProducts} />
+              <AffiliateTable products={affiliateProducts || []} />
             </div>
           );
         } else if (part === '[AXIM_MICRO_APP]') {
