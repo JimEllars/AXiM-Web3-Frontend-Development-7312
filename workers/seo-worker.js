@@ -1,6 +1,6 @@
 import { HTMLRewriter } from 'html-rewriter-wasm';
 
-const DEFAULT_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp';
+const DEFAULT_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp';
 const BOT_AGENTS = ['googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'slurp', 'twitterbot', 'facebookexternalhit', 'linkedinbot', 'embedly', 'baiduspider', 'pinterest', 'slackbot', 'vkShare', 'facebot', 'outbrain', 'W3C_Validator', 'whatsapp'];
 
 function stripHtml(html) {
@@ -32,7 +32,7 @@ const defaultOrgSchema = {
   "@type": "Organization",
   "name": "AXiM Development",
   "url": "https://axim.us.com",
-  "logo": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp",
+  "logo": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
   "sameAs": [
     "https://twitter.com/AximSystems",
     "https://linkedin.com/company/axim-systems"
@@ -190,7 +190,7 @@ export default {
         publisher: {
           '@type': 'Organization',
           name: 'AXiM Development',
-          logo: { '@type': 'ImageObject', url: 'https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-1200x628-layout1284-axim-infrastructure-axim-axim-1l7kujc-e1786418301264.webp' }
+          logo: { '@type': 'ImageObject', url: 'https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp' }
         }
       });
 
