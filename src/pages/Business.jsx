@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PartnerPromo from '../components/PartnerPromo';
 import SEO from '../components/SEO';
-import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry';
+import { logTelemetry, trackEvent, logHighPriorityTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
@@ -97,6 +97,21 @@ export default function Business() {
               <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+
+          {/* Executive Cognitive Synergy Card */}
+          <div className="group relative bg-slate-900/40 border border-slate-800 rounded-xl p-6 lg:p-8 hover:border-slate-700 transition-colors overflow-hidden shadow-xl">
+            <div className="absolute top-4 right-4">
+              <span className="px-2.5 py-0.5 text-xs font-medium text-cyan-400 bg-cyan-950/40 border border-cyan-800/40 rounded-md">Organizational Diagnostics</span>
+            </div>
+            <h2 className="text-xl font-black uppercase tracking-wider mb-3 text-white">Executive Cognitive Synergy: Team & Leadership Diagnostics</h2>
+            <p className="text-sm text-zinc-400 mb-4 font-medium">
+              High-performing organizations run on cognitive diversity. Utilize the AXiM Personality Assessment to evaluate leadership styles, enhance cross-functional communication, resolve team friction, and align executives with their natural cognitive strengths.
+            </p>
+            <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source: 'business_page' })} className="inline-flex items-center text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mt-2">
+              Explore Team & Leadership Profiling →
+            </a>
+          </div>
+
         </div>
 
         <PartnerPromo

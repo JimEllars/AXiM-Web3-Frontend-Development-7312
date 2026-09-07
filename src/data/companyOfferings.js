@@ -1,5 +1,15 @@
 export const generators = [
   {
+    id: "axim-personality-test",
+    title: "AXiM Personality Assessment",
+    category: "Personal Development",
+    secondaryCategory: "Business Development",
+    url: "https://axim.us.com/personalitytest/",
+    description: "Next-generation Jungian 8-function psychometric assessment for personal self-discovery and executive team alignment.",
+    badge: "Psychometric Core",
+    isExternal: true
+  },
+  {
     id: "G_DEMAND",
     title: "Demand Letter",
     desc: "Instant legal demand letter generation ($4.00).",
