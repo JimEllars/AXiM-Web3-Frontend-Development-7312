@@ -204,146 +204,18 @@ export default function Personal() {
             </div>
           </div>
 
-          <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source: 'personal_page' })} className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 transform hover:-translate-y-0.5">Take the Personality Test →</a>
+          <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source_page: 'personal' })} className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 transform hover:-translate-y-0.5">Take the Personality Test →</a>
         </div>
       </section>
-
-      <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
-
-        {/* Growth & Psychology Frameworks Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-
-            {/* Overcoming Imposter Syndrome Card */}
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [IN DEVELOPMENT]
-              </div>
-              <SafeIcon icon={LuIcons.LuBrain} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Overcoming Imposter Syndrome</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Masterclass on dealing with corporate anxiety and owning your achievements.</p>
-              <button
-                onClick={() => {
-                  logTelemetry('growth_module_intent', { module: 'imposter_syndrome' });
-                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
-                }}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
-              >
-                Join Waitlist
-              </button>
-            </div>
-
-            {/* Core Personality Type Quiz Card */}
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [IN DEVELOPMENT]
-              </div>
-              <SafeIcon icon={LuIcons.LuClipboardCheck} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Core Personality Type Quiz</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Interactive assessment to discover your operational strengths and weaknesses.</p>
-              <button
-                onClick={() => {
-                  logTelemetry('growth_module_intent', { module: 'personality_quiz' });
-                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
-                }}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
-              >
-                Join Waitlist
-              </button>
-            </div>
-
-            {/* Inner Voice Calibration Card */}
-            <div className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden flex flex-col h-full shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4 px-2 py-1 bg-yellow-500/10 border border-yellow-500/30 text-[8px] font-mono text-yellow-500 uppercase tracking-widest rounded-sm">
-                [IN DEVELOPMENT]
-              </div>
-              <SafeIcon icon={LuIcons.LuActivity} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-lg font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Inner Voice Calibration</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium flex-grow">Audio/text module for self-alignment and mental recalibration.</p>
-              <button
-                onClick={() => {
-                  logTelemetry('growth_module_intent', { module: 'inner_voice' });
-                  useAximStore.getState().addToast({ message: "Added to waitlist", type: "success" });
-                }}
-                className="w-full relative z-10 inline-flex items-center justify-center px-4 py-2 font-bold uppercase tracking-widest text-xs transition-colors rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black mt-auto"
-              >
-                Join Waitlist
-              </button>
-            </div>
-
-        </div>
-
-
-        <div className="relative pt-8 mt-12 border-t border-white/5">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-bg-void">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-500 border border-emerald-500/30 px-2 py-1 rounded-sm bg-emerald-500/5">
-              Utilities & Services
-            </span>
-          </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Property & Home Services Card */}
-            <motion.div onViewportEnter={() => logTelemetry('cta_visible', { location: 'hero', page: 'personal' })} viewport={{ once: true }}>
-              <Link to="/services" onClick={() => { logTelemetry('personal_gateway_clicked', { gateway: 'property_home' }); logTelemetry('cta_clicked', { location: 'hero', page: 'personal' }); }} className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5 block h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <SafeIcon icon={LuIcons.LuHouse} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Property & Home</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium">Residential exterior services, pressure washing, and property value enhancement.</p>
-              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-                <span>View Services</span>
-                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-            </motion.div>
-
-            {/* Individual Utilities Card */}
-            <Link to="/store" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'individual_utilities' })} className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Individual Utilities</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium">Personal document generators, pay stubs, and individual legal tech tools.</p>
-              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-                <span>Access Utilities</span>
-                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-
-            {/* Growth Frameworks Card */}
-            <Link to="/articles" onClick={() => logTelemetry('personal_gateway_clicked', { gateway: 'growth_frameworks' })} className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <SafeIcon icon={LuIcons.LuBookOpen} className="w-8 h-8 text-emerald-500 mb-4" />
-              <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors">Growth Frameworks</h2>
-              <p className="text-sm text-zinc-400 mb-6 font-medium">Personal development articles, life-optimization strategies, and mental models.</p>
-              <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest mt-auto">
-                <span>Read Articles</span>
-                <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <PartnerPromo
-        partnerName="Powur Solar"
-        title="Decentralize Your Energy"
-        description="Take control of your home's power grid with decentralized solar architecture."
-        learnMorePath="/partners/powur-solar"
-        startNowUrl="https://powur.com/james.ellars/discover"
-        theme="gold"
-        onClick={() => logTelemetry('partner_promo_viewed', { partner: 'Powur Solar', location: 'Personal' })}
-      />
-
-
-
-
 
       <CategoryArticleFeed
         categorySlug="personal-development"
-        sectionTitle="Personal Development & Cognitive Mastery"
-        sectionSubtitle="Psychometrics, continuous growth protocols, and performance psychology."
-        limit={3}
+        sectionTitle="Personal Development Insights & Guides"
+        sectionSubtitle="In-depth perspectives on cognitive functions, emotional mastery, and individual actualization."
+        limit={6}
       />
+
+
 
       <section className="w-full bg-gradient-to-r from-[#050505] to-[#0A0A0A] border-t border-b border-cyan-500/20 py-16 text-center relative z-10">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8">Ready to deploy your Personal infrastructure?</h2>

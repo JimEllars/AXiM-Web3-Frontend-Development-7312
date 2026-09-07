@@ -173,10 +173,9 @@ export default function Tech() {
 
       <CategoryArticleFeed
         categorySlug="tech-development"
-        sectionTitle="Tech Development & Autonomous Engineering"
-        sectionSubtitle="Edge-first architectures, Web3 mechanics, and distributed systems."
-        limit={3}
-        onError={() => setNetworkFault(true)}
+        sectionTitle="Technology, AI & Web3 Architecture"
+        sectionSubtitle="Edge computing, decentralized mesh networks, and autonomous AI systems."
+        limit={6}
       />
 
       <section className="w-full bg-gradient-to-r from-onyx-900 to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10 mt-16">

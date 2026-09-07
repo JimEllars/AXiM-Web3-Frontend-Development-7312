@@ -99,7 +99,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6 group">
-               <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-11 md:h-14 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
+               <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[52px] w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
