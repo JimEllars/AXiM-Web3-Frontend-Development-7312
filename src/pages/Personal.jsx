@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import PartnerPromo from '../components/PartnerPromo';
 import { useAximStore } from '../store/useAximStore';
 import SEO from '../components/SEO';
-import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry';
+import { logTelemetry, trackEvent, logHighPriorityTelemetry } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import Reviews from '../components/Reviews.jsx';
@@ -66,6 +66,34 @@ export default function Personal() {
               Maximizing individual efficiency and property value. Explore our residential services, utility apps, and personal growth frameworks.
             </p>
           </motion.div>
+        </div>
+      </section>
+      <section className="w-full py-16 relative z-10 max-w-7xl mx-auto px-6 lg:px-8 mt-12 mb-8">
+        <div className="backdrop-blur-md bg-slate-900/60 border border-emerald-500/30 shadow-2xl rounded-2xl p-8 lg:p-12 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-6">
+            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 rounded-full">Core Psychometric Assessment</span>
+          </div>
+          <h2 className="text-3xl font-black uppercase tracking-tight mb-4 text-white">Discover Your Cognitive Blueprint: The AXiM Personality Assessment</h2>
+          <p className="text-zinc-300 text-lg mb-8 max-w-3xl">
+            Move beyond rigid four-letter stereotypes. The AXiM Personality Test measures all eight Jungian cognitive functions on a continuous spectrum to reveal your authentic mental processing style, shadow functions under stress, and personalized growth trajectory.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div className="border border-white/5 bg-black/40 p-5 rounded-xl">
+              <h3 className="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">Continuous Trait Precision</h3>
+              <p className="text-sm text-zinc-400">Graded response scoring across Thinking, Feeling, Sensing, and Intuition.</p>
+            </div>
+            <div className="border border-white/5 bg-black/40 p-5 rounded-xl">
+              <h3 className="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">Shadow & Stress Mapping</h3>
+              <p className="text-sm text-zinc-400">Understand unconscious behavior patterns and triggers.</p>
+            </div>
+            <div className="border border-white/5 bg-black/40 p-5 rounded-xl">
+              <h3 className="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">Personal Growth Pathways</h3>
+              <p className="text-sm text-zinc-400">Actionable developmental guidance tailored to your cognitive archetype.</p>
+            </div>
+          </div>
+
+          <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('personality_test_click', { source: 'personal_page' })} className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 transform hover:-translate-y-0.5">Take the Personality Test →</a>
         </div>
       </section>
 

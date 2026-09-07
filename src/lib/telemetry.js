@@ -272,3 +272,20 @@ export function logHighPriorityTelemetry(type, payload) {
   logTelemetry(type, payload);
   flushTelemetryQueue(true);
 }
+
+export function trackEvent(type, payload) {
+  logTelemetry(type, payload);
+  if (type === 'personality_test_click') {
+    // Forward the interaction payload to AXiM Core telemetry (POST /satellite-telemetry)
+    const CORE_TELEMETRY_ENDPOINT = import.meta.env.VITE_CORE_TELEMETRY_ENDPOINT || 'https://api.axim.us.com/satellite-telemetry';
+    fetch(CORE_TELEMETRY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: type, payload, timestamp: new Date().toISOString() })
+    }).catch(err => {
+      if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
+        console.warn("[WEBHOOK] AXiM Core Telemetry Forwarding Failed silently.", err);
+      }
+    });
+  }
+}

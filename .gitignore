@@ -28,3 +28,4 @@ dist-ssr
 .env
 test-results/
 *.py
+\n*.cjs\nscripts/archive/
