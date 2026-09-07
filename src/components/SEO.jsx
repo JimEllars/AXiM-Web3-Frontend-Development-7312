@@ -12,7 +12,9 @@ export default function SEO({
   url,
   customSchema = [],
   publishedTime = null,
-  noindex = false
+  noindex = false,
+  imageWidth,
+  imageHeight
 }) {
   const location = useLocation();
 
@@ -38,7 +40,6 @@ export default function SEO({
 
   return (
     <Helmet>
-
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
       <meta name="bingbot" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
       <meta name="chatgpt-crawler" content="index, follow" />
@@ -56,6 +57,8 @@ export default function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={metaImage} />
       <meta property="og:site_name" content="AXiM Development" />
+      {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+      {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
 
       {/* Conditional News/Article Tags */}
       {type === 'article' && publishedTime && (
