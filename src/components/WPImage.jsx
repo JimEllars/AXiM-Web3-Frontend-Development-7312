@@ -10,7 +10,6 @@ const extractFromContent = (html) => {
   return match ? match[1] : null;
 };
 
-const FALLBACK_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp';
 
 export default function WPImage({ src, alt, className, post, priority, ...props }) {
   const [hasError, setHasError] = useState(false);
@@ -42,8 +41,6 @@ export default function WPImage({ src, alt, className, post, priority, ...props 
 
   const handleError = (e) => {
     console.warn('[WP_MEDIA_ERROR] Failed to load asset:', imageSrc || src);
-    e.currentTarget.onerror = null;
-    e.currentTarget.src = FALLBACK_IMAGE;
     logTelemetry('article_image_fallback_triggered', { slug: post?.slug, originalSrc: imageSrc || src });
     setHasError(true);
   };
@@ -57,8 +54,9 @@ export default function WPImage({ src, alt, className, post, priority, ...props 
 
   if (hasError || !imageSrc) {
     return (
-      <div className={`w-full h-full aspect-video bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/5 flex items-center justify-center relative overflow-hidden ${className || ''}`}>
-        <SafeIcon icon={LuIcons.LuHexagon} className="text-white/5 text-6xl absolute -bottom-4 -right-4" />
+      <div className={`w-full h-full aspect-video bg-gradient-to-br from-slate-900 via-onyx-950 to-black border-b border-white/10 relative overflow-hidden flex items-center justify-center ${className || ''}`}>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(147,51,234,0.15),transparent_70%)] pointer-events-none" />
+        <SafeIcon icon={LuIcons.LuHexagon} className="w-16 h-16 text-white/5 absolute -bottom-3 -right-3" />
         {imageSrc && (
           <button
             onClick={handleRetry}

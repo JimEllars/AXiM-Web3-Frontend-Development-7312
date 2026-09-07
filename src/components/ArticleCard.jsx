@@ -49,9 +49,8 @@ export default function ArticleCard({
   if (mediaUrl && mediaUrl.startsWith("http://")) {
     mediaUrl = mediaUrl.replace("http://", "https://");
   }
-  const defaultImage =
-    "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
-  const finalImage = mediaUrl || defaultImage;
+  const [imageError, setImageError] = useState(false);
+  const finalImage = mediaUrl;
 
   const date = article?.date
     ? new Date(article.date).toLocaleDateString("en-US", {
@@ -192,19 +191,24 @@ export default function ArticleCard({
 
         {/* Top Container */}
         <div className="relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask">
-          <motion.img
-            width="1200" height="675"
-            src={finalImage}
-            alt={cleanTitle}
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
-              logTelemetry('article_image_fallback_triggered', { slug: article?.slug, originalSrc: mediaUrl });
-            }}
-            loading={priority ? "eager" : "lazy"}
-
-          />
+          {(!finalImage || imageError) ? (
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-onyx-950 to-black border-b border-white/10 relative overflow-hidden flex items-center justify-center">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(147,51,234,0.15),transparent_70%)] pointer-events-none" />
+              <SafeIcon className="w-16 h-16 text-white/5 absolute -bottom-3 -right-3" icon={LuIcons.LuHexagon}/>
+            </div>
+          ) : (
+            <motion.img
+              width="1200" height="675"
+              src={finalImage}
+              alt={cleanTitle}
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
+              onError={() => {
+                setImageError(true);
+                logTelemetry('article_image_fallback_triggered', { slug: article?.slug, originalSrc: mediaUrl });
+              }}
+              loading={priority ? "eager" : "lazy"}
+            />
+          )}
           {/* Top Corner Badges */}
           <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
             <span className="font-mono font-bold text-[10px] tracking-widest text-purple-300 bg-axim-purple/20 border-axim-purple/40 backdrop-blur-sm border px-2.5 py-1 rounded-sm uppercase">
