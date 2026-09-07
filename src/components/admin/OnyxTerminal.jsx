@@ -28,7 +28,20 @@ export default function OnyxTerminal() {
   const [responseLog, setResponseLog] = useState('');
   const [replaySpeed, setReplaySpeed] = useState(1);
   const [batchToast, setBatchToast] = useState(null);
-  const [terminalOutput, setTerminalOutput] = useState([]);
+  const [terminalOutput, setTerminalOutput] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('AXIM_ONYX_SESSION_LOGS');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('AXIM_ONYX_SESSION_LOGS', JSON.stringify(terminalOutput.slice(-200)));
+    } catch (e) { /* ignore */ }
+  }, [terminalOutput]);
 
   const telemetryQueue = useAximStore((state) => state.telemetryQueue);
   const { isStreaming, error, isEdgeCached } = useOnyxStream();

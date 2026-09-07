@@ -3,7 +3,20 @@ import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from '../lib/telemetry';
 
 export function useOnyxStream() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('AXIM_ONYX_STREAM_MESSAGES');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('AXIM_ONYX_STREAM_MESSAGES', JSON.stringify(messages.slice(-200)));
+    } catch (e) { /* ignore */ }
+  }, [messages]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState(null);
   const [isEdgeCached, setIsEdgeCached] = useState(false);

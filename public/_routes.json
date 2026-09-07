@@ -5,6 +5,9 @@
   ],
   "exclude": [
     "/api/*",
+    "/_api/*",
+    "/telemetry/*",
+    "/rpc/*",
     "/assets/*",
     "/favicon.ico",
     "/manifest.json",

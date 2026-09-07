@@ -132,7 +132,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
       <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
         <span className="flex flex-wrap items-center gap-2">
           <span
-            className={`w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]' : ''}`}
           />
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
