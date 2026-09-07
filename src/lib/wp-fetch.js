@@ -29,11 +29,18 @@ export const getFeaturedImage = (article) => {
     url = article.yoast_head_json?.og_image?.[0]?.url ||
           article.jetpack_featured_media_url ||
           article.featured_image_src ||
-          article.featured_media_src_url ||
-          null;
+          article.featured_media_src_url;
   }
 
-  // 3. Force HTTPS to avoid mixed-content blocks
+  // 3. Fallback: Regex extraction of the first src from post.content?.rendered
+  if (!url && article.content?.rendered) {
+    const match = article.content?.rendered?.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i);
+    if (match && match[1]) {
+      url = match[1];
+    }
+  }
+
+  // 4. Force HTTPS to avoid mixed-content blocks
   return url ? url.replace('http:', 'https:') : null;
 };
 
