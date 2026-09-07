@@ -12,6 +12,117 @@ import Reviews from '../components/Reviews.jsx';
 import CategoryArticleFeed from '../components/CategoryArticleFeed.jsx';
 
 
+
+const AssessmentModule = () => {
+  const [step, setStep] = React.useState(0);
+  const [scores, setScores] = React.useState({ strategic: 0, execution: 0, risk: 0, sovereignty: 0, resilience: 0 });
+  const [result, setResult] = React.useState(null);
+
+  const questions = [
+    { id: 'strategic', text: 'How far ahead do you typically plan your primary objectives?', options: [{ label: '1-3 Months', val: 1 }, { label: '1 Year', val: 2 }, { label: '3-5 Years', val: 3 }, { label: 'Decades', val: 4 }] },
+    { id: 'execution', text: 'When faced with a complex roadblock, your first reaction is to:', options: [{ label: 'Research', val: 1 }, { label: 'Delegate', val: 2 }, { label: 'Build a prototype', val: 3 }, { label: 'Force through it', val: 4 }] },
+    { id: 'risk', text: 'Your approach to high-stakes decisions is best described as:', options: [{ label: 'Highly Cautious', val: 1 }, { label: 'Calculated', val: 2 }, { label: 'Opportunistic', val: 3 }, { label: 'Aggressive', val: 4 }] },
+    { id: 'sovereignty', text: 'How important is absolute ownership (data, finance, IP) to your operations?', options: [{ label: 'Nice to have', val: 1 }, { label: 'Important', val: 2 }, { label: 'Critical', val: 3 }, { label: 'Non-negotiable', val: 4 }] },
+    { id: 'resilience', text: 'After a significant failure, how long does it take you to deploy a v2?', options: [{ label: 'Months', val: 1 }, { label: 'Weeks', val: 2 }, { label: 'Days', val: 3 }, { label: 'Hours', val: 4 }] }
+  ];
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem('axim_assessment_result');
+    if (saved) setResult(JSON.parse(saved));
+  }, []);
+
+  const handleSelect = (val, qId) => {
+    setScores(prev => ({ ...prev, [qId]: val }));
+    if (step === 0) {
+      trackEvent('personality_test_started');
+    }
+
+    if (step < questions.length - 1) {
+      setStep(s => s + 1);
+    } else {
+      computeResult({ ...scores, [qId]: val });
+    }
+  };
+
+  const computeResult = (finalScores) => {
+    const total = Object.values(finalScores).reduce((a, b) => a + b, 0);
+    let archetype = 'Strategist';
+    if (total > 16) archetype = 'Architect';
+    else if (total > 12) archetype = 'Vanguard';
+    else if (total > 8) archetype = 'Catalyst';
+
+    const res = { archetype, scores: finalScores, completedAt: new Date().toISOString() };
+    setResult(res);
+    localStorage.setItem('axim_assessment_result', JSON.stringify(res));
+    trackEvent('personality_test_completed', { archetype });
+  };
+
+  const reset = () => {
+    setStep(0);
+    setScores({ strategic: 0, execution: 0, risk: 0, sovereignty: 0, resilience: 0 });
+    setResult(null);
+    localStorage.removeItem('axim_assessment_result');
+  };
+
+  if (result) {
+    return (
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-8 backdrop-blur-md bg-slate-900/60 border border-cyan-500/20 rounded-xl max-w-2xl mx-auto my-12 text-center">
+        <h3 className="text-xl text-cyan-400 font-mono mb-2">ASSESSMENT COMPLETE</h3>
+        <h2 className="text-4xl font-bold text-white mb-6 uppercase tracking-wider">{result.archetype}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          {Object.entries(result.scores).map(([key, val]) => (
+            <div key={key} className="bg-black/40 p-4 rounded-lg border border-white/5">
+              <div className="text-xs text-slate-400 uppercase mb-2">{key}</div>
+              <div className="text-2xl font-mono text-axim-purple">{val * 25}%</div>
+            </div>
+          ))}
+        </div>
+        <p className="text-slate-300 mb-8">
+          Your profile indicates a strong leaning towards {result.archetype.toLowerCase()} methodologies. Integrate your findings with the AXiM ecosystem to maximize output velocity.
+        </p>
+        <button onClick={reset} className="px-6 py-2 border border-white/10 hover:bg-white/5 rounded transition-colors text-sm font-mono text-slate-300">
+          RECALIBRATE
+        </button>
+      </motion.div>
+    );
+  }
+
+  const currentQ = questions[step];
+
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-8 backdrop-blur-md bg-slate-900/60 border border-cyan-500/20 rounded-xl max-w-2xl mx-auto my-12">
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-lg text-cyan-400 font-mono">SYSTEM CALIBRATION</h3>
+        <div className="text-sm text-slate-500 font-mono">PHASE 0{step + 1} // 05</div>
+      </div>
+
+      <div className="w-full bg-black/40 h-1 mb-8 rounded overflow-hidden">
+        <motion.div
+          className="h-full bg-cyan-500"
+          initial={{ width: `${(step / 5) * 100}%` }}
+          animate={{ width: `${((step + 1) / 5) * 100}%` }}
+        />
+      </div>
+
+      <h2 className="text-2xl font-medium text-white mb-8">{currentQ.text}</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentQ.options.map((opt, i) => (
+          <button
+            key={i}
+            onClick={() => handleSelect(opt.val, currentQ.id)}
+            className="p-4 bg-black/40 border border-white/5 rounded-lg hover:border-cyan-500/50 hover:bg-cyan-900/20 transition-all text-left group"
+          >
+            <div className="text-xs font-mono text-cyan-700 mb-1 group-hover:text-cyan-400">OPT_{i+1}</div>
+            <div className="text-slate-300 group-hover:text-white">{opt.label}</div>
+          </button>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+
 export default function Personal() {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 

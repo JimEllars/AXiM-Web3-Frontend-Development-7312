@@ -1,7 +1,7 @@
 import { HTMLRewriter } from 'html-rewriter-wasm';
 
-const DEFAULT_IMAGE = 'https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp';
-const BOT_AGENTS = ['googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'slurp', 'twitterbot', 'facebookexternalhit', 'linkedinbot', 'embedly', 'baiduspider', 'pinterest', 'slackbot', 'vkShare', 'facebot', 'outbrain', 'W3C_Validator', 'whatsapp'];
+const DEFAULT_IMAGE = '/axim-og-banner.png';
+const BOT_REGEX = /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Pinterest|Slackbot|TelegramBot|Discordbot|WhatsApp|Googlebot|bingbot/i;
 
 function stripHtml(html) {
   if (!html) return '';
@@ -22,106 +22,10 @@ async function fetchPagesOrigin(url) {
 
 function cacheHeaders() {
   return {
-    'Cache-Control': 'public, max-age=86400',
+    'Cache-Control': 'public, max-age=600',
     'Vary': 'User-Agent'
   };
 }
-
-const defaultOrgSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "AXiM Development",
-  "url": "https://axim.us.com",
-  "logo": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
-  "sameAs": [
-    "https://twitter.com/AximSystems",
-    "https://linkedin.com/company/axim-systems"
-  ]
-};
-
-const serviceSchemas = {
-  '/services/window-cleaning': {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Commercial & Residential Window Cleaning",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Development"
-    },
-    "areaServed": {
-      "@type": "State",
-      "name": "Florida"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Window Cleaning Services",
-      "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Exterior Window Washing" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "High-Rise Glass Cleaning" } }
-      ]
-    }
-  },
-  '/services/pressure-washing': {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Industrial & Home Pressure Washing",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Development"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "89",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Sarah M." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Highly recommend their pressure washing service. They restored our driveway and it looks brand new."
-      }
-    ]
-  },
-  '/services/commercial-exterior': {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Enterprise Commercial Exterior & Facility Maintenance",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Development"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "James R." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Exceptional commercial exterior cleaning for our corporate campus. They handled our multi-site contract with ease."
-      }
-    ]
-  },
-  '/products/nexus-crm': {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Nexus CRM",
-    "operatingSystem": "Web",
-    "applicationCategory": "BusinessApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-};
 
 export default {
   async fetch(request, env) {
@@ -133,8 +37,8 @@ export default {
       return fetchPagesOrigin(url);
     }
 
-    const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
-    const isBot = BOT_AGENTS.some((bot) => userAgent.includes(bot));
+    const userAgent = (request.headers.get('user-agent') || '');
+    const isBot = BOT_REGEX.test(userAgent);
 
     if (!isBot) {
       return fetchPagesOrigin(url);
@@ -147,16 +51,15 @@ export default {
       return new Response(cached, { status: 200, headers: cacheHeaders() });
     }
 
-    if (url.pathname.startsWith('/article/')) {
-      const slug = url.pathname.slice('/article/'.length).split('/')[0];
-      if (!slug) {
-        return fetchPagesOrigin(url);
-      }
+    const articleMatch = url.pathname.match(/^\/articles?\/([a-zA-Z0-9_-]+)$/);
+    if (articleMatch) {
+      const slug = articleMatch[1];
 
       let article;
       try {
+        const wpUrl = typeof env.WP_API_URL !== 'undefined' ? env.WP_API_URL : 'https://wp.axim.us.com';
         const response = await fetch(
-          `https://wp.axim.us.com/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed=1`,
+          `${wpUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed=1`,
           { signal: AbortSignal.timeout(3000) }
         );
         if (response.ok) {
@@ -194,49 +97,37 @@ export default {
         }
       });
 
-      const rawResponse = await fetchPagesOrigin(url);
-      const rewrittenResponse = new HTMLRewriter()
-        .on('title', { element(element) { element.setInnerContent(title); } })
-        .on('meta[name="description"]', { element(element) { element.setAttribute('content', description); } })
-        .on('link[rel="canonical"]', { element(element) { element.setAttribute('href', canonicalUrl); } })
-        .on('meta[property="og:url"]', { element(element) { element.setAttribute('content', canonicalUrl); } })
-        .on('meta[property="og:title"]', { element(element) { element.setAttribute('content', title); } })
-        .on('meta[property="og:description"]', { element(element) { element.setAttribute('content', description); } })
-        .on('meta[property="og:image"]', { element(element) { element.setAttribute('content', image); } })
-        .on('meta[property="twitter:url"]', { element(element) { element.setAttribute('content', canonicalUrl); } })
-        .on('meta[property="twitter:title"]', { element(element) { element.setAttribute('content', title); } })
-        .on('meta[property="twitter:description"]', { element(element) { element.setAttribute('content', description); } })
-        .on('meta[property="twitter:image"]', { element(element) { element.setAttribute('content', image); } })
-        .on('head', {
-          element(element) {
-            element.append(`<script type="application/ld+json">${schema}</script>`, { html: true });
-          }
-        })
-        .transform(rawResponse);
+      const lightweightHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <meta name="description" content="${description}">
+  <link rel="canonical" href="${canonicalUrl}">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:image" content="${image}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${canonicalUrl}">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${description}">
+  <meta name="twitter:image" content="${image}">
+  <script type="application/ld+json">${schema}</script>
+</head>
+<body>
+  <h1>${title}</h1>
+  <p>${description}</p>
+  <img src="${image}" alt="${title}">
+</body>
+</html>`;
 
-      const html = await rewrittenResponse.text();
-      await env.FRONTEND_SEO_CACHE.put(cacheKey, html, { expirationTtl: 86400 });
-      return new Response(html, { status: rawResponse.status, headers: cacheHeaders() });
+      await env.FRONTEND_SEO_CACHE.put(cacheKey, lightweightHtml, { expirationTtl: 600 });
+      return new Response(lightweightHtml, { status: 200, headers: { 'Content-Type': 'text/html', ...cacheHeaders() } });
     }
 
-    // Default handling for other bots
-    let additionalSchemaStr = '';
-    if (serviceSchemas[url.pathname]) {
-      additionalSchemaStr = `<script type="application/ld+json">${toSafeJson(serviceSchemas[url.pathname])}</script>`;
-    }
-    const defaultSchemaStr = `<script type="application/ld+json">${toSafeJson(defaultOrgSchema)}</script>`;
-
+    // Default handling for other pages if bot
     const rawResponse = await fetchPagesOrigin(url);
-    const rewrittenResponse = new HTMLRewriter()
-      .on('head', {
-        element(element) {
-          element.append(`${defaultSchemaStr}${additionalSchemaStr}`, { html: true });
-        }
-      })
-      .transform(rawResponse);
-
-    const html = await rewrittenResponse.text();
-    await env.FRONTEND_SEO_CACHE.put(cacheKey, html, { expirationTtl: 86400 });
-    return new Response(html, { status: rawResponse.status, headers: cacheHeaders() });
+    return rawResponse;
   }
 };

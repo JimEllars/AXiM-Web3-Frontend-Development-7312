@@ -11,18 +11,13 @@ const extractFromContent = (html) => {
 };
 
 
+import { getArticleThumbnail } from '../lib/wp-fetch';
+
 export default function WPImage({ src, alt, className, post, priority, ...props }) {
   const [hasError, setHasError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
-  let mediaUrl =
-    post?.featuredImage ||
-    post?.featured_image_src ||
-    post?.yoast_head_json?.og_image?.[0]?.url ||
-    extractFromContent(post?.content?.rendered) ||
-    post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    post?.jetpack_featured_media_url ||
-    null;
+  let mediaUrl = getArticleThumbnail(post);
 
   let imageSrc = src ? src : mediaUrl;
 

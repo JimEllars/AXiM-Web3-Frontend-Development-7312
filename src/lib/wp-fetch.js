@@ -51,6 +51,31 @@ export const getFeaturedImage = (article) => {
 
 export let consecutiveFailures = 0;
 export let isCircuitOpen = false;
+
+export const getArticleThumbnail = (post, targetSize = 'large') => {
+  if (!post) return '/images/placeholders/unified-article-fallback.webp';
+
+  let url = post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.[targetSize]?.source_url ||
+            post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+            post.jetpack_featured_media_url;
+
+  if (url) {
+    return url.replace('http:', 'https:');
+  }
+
+  const categories = (post._embedded?.['wp:term']?.[0] || []).map(t => (t.slug || '').toLowerCase());
+
+  // Checking category names as fallback
+  const catNames = (post._embedded?.['wp:term']?.[0] || []).map(t => (t.name || '').toLowerCase());
+  const hasKeyword = (word) => categories.includes(word) || catNames.includes(word);
+
+  if (hasKeyword('ai')) return '/images/placeholders/ai-card.webp';
+  if (hasKeyword('crypto') || hasKeyword('web3')) return '/images/placeholders/web3-card.webp';
+  if (hasKeyword('business')) return '/images/placeholders/business-card.webp';
+
+  return '/images/placeholders/unified-article-fallback.webp';
+};
+
 export let circuitOpenTime = 0;
 
 export const fetchCache = new Map();
