@@ -147,10 +147,12 @@ export default {
       headers.set('Access-Control-Allow-Origin', '*');
       headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
-      if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
+      if (wpResponse.status >= 500 || wpResponse.status === 429) {
+        headers.set('Cache-Control', 'no-store');
+      } else if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        headers.set('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
+        headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
       }
 
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);

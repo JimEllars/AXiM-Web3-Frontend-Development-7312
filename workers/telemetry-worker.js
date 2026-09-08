@@ -7,10 +7,15 @@ const ALLOWED_ORIGINS = [
 
 function getCorsHeaders(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const isAllowedOrigin = origin && (
+    ALLOWED_ORIGINS.includes(origin) ||
+    origin.endsWith('.pages.dev') ||
+    origin.endsWith('.axim.us.com')
+  );
+  const allowedOrigin = isAllowedOrigin ? origin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client',
     'Cache-Control': 'no-store, max-age=0',
     Vary: 'Origin'
@@ -48,12 +53,17 @@ export default {
     }
 
     const url = new URL(request.url);
+
+    if (request.method === 'GET' && url.pathname === '/health') {
+      return new Response(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString(), edgeRegion: request.cf?.colo || 'local' }), { status: 200, headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' } });
+    }
     if (request.method !== 'POST' || (url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
       return new Response('Not Found or Method Not Allowed', { status: 404, headers: getCorsHeaders(request) });
     }
 
     const origin = request.headers.get('Origin');
-    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    const isAllowedOrigin = origin && (ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.pages.dev') || origin.endsWith('.axim.us.com'));
+    if (origin && !isAllowedOrigin) {
       return new Response('Forbidden', { status: 403, headers: getCorsHeaders(request) });
     }
 
