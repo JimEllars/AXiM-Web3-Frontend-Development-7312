@@ -102,7 +102,10 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue]; // Restore on fail
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
+      if (typeof window !== 'undefined') {
+        try { sessionStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(batchQueue)); } catch (e) { /* ignore */ }
+      }
       return;
     }
 
@@ -215,8 +218,11 @@ export async function flushTelemetryQueue(force = false) {
       }
     } else {
       // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue];
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
       if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(batchQueue));
+        } catch (e) { /* ignore */ }
         localStore.saveTelemetryCache(batchQueue);
       }
     }
@@ -238,6 +244,8 @@ if (typeof window !== 'undefined') {
 
   window.addEventListener('visibilitychange', handleVisibilityChange);
   window.addEventListener('pagehide', () => flushTelemetryQueue(true));
+  window.addEventListener('beforeunload', () => flushTelemetryQueue(true));
+  window.addEventListener('unload', () => flushTelemetryQueue(true));
   window.addEventListener('online', () => flushTelemetryQueue(true));
 }
 
