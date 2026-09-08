@@ -179,7 +179,7 @@ id = "ce6cf5a77ca2415a9941cc0247b86d6e"
 
 To deploy the Telemetry Edge Worker located at `workers/telemetry-worker.js`, create or update a `wrangler.toml` file in the `workers` directory (or use your project's main wrangler config) and map it to your desired route for telemetry, such as `telemetry.axim.us.com`.
 
-**Reminder:** Ensure you use `wrangler secret put AXIM_INTERNAL_KEY` during production initialization pipelines to prevent keys from leaking into git commits.
+**Reminder:** Set `AXIM_GATEWAY_TOKEN` as a Worker secret during production initialization. `AXIM_CORE_URL` is a non-secret variable already configured in `wrangler.telemetry.toml`.
 
 Example `wrangler.toml` for the telemetry worker:
 ```toml
@@ -222,9 +222,13 @@ This proxy specifically looks for the `?endpoint=` parameter and strictly forwar
 
 ## 6. Edge SEO Interceptor Worker Deployment
 
-To ensure social media crawlers and bots see dynamic meta tags for individual articles without needing to render the React app, deploy the SEO Worker located at `workers/seo-worker.js`. This worker uses `HTMLRewriter` to modify meta tags inflight and includes a fail-open safeguard (800ms timeout on API fetch).
+To ensure social media crawlers and bots see dynamic meta tags for individual articles without needing to render the React app, deploy the SEO Worker located at `workers/seo-worker.js`. It serves generated metadata to bots and proxies all other requests to the Pages deployment origin.
 
-1. **Create/Update `wrangler.seo.toml`**:
+1. **Configure the Pages origin**: the SEO Worker is routed on the public site domain and must forward non-bot traffic to the Pages `pages.dev` deployment domain. Never use `https://axim.us.com` as `PAGES_ORIGIN`, because this recurses through the Worker route.
+
+   The current Pages origin, `https://axim-web3-frontend-development-7312.pages.dev`, is configured in `workers/wrangler.seo.toml`.
+
+2. **Create/Update `wrangler.seo.toml`**:
    In the `workers` directory, ensure a configuration file maps to your main frontend domain (e.g., `axim.us.com`), specifically intercepting the `/*` or `/article/*` paths. Since it serves as a middleware, we typically deploy it as the main frontend worker, or use Route mappings in Cloudflare Dashboard.
 
    ```toml
@@ -242,12 +246,9 @@ To ensure social media crawlers and bots see dynamic meta tags for individual ar
    binding = "FRONTEND_SEO_CACHE"
    id = "ce6cf5a77ca2415a9941cc0247b86d6e"
 
-   [[kv_namespaces]]
-   binding = "AXIM_CONFIG"
-   id = "<YOUR_NAMESPACE_ID_HERE>"
    ```
 
-2. **Deployment Command**:
+3. **Deployment Command**:
    Run the following from the root or `workers` directory:
    ```bash
    wrangler deploy -c workers/wrangler.seo.toml

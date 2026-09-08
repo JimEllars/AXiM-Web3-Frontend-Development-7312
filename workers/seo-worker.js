@@ -1,5 +1,3 @@
-import { HTMLRewriter } from 'html-rewriter-wasm';
-
 const DEFAULT_IMAGE = '/axim-og-banner.png';
 const BOT_REGEX = /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Pinterest|Slackbot|TelegramBot|Discordbot|WhatsApp|Googlebot|bingbot/i;
 
@@ -8,16 +6,30 @@ function stripHtml(html) {
   return html.replace(/<[^>]+>/g, '').replace(/&[a-z]+;/gi, '').trim();
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function toSafeJson(obj) {
   return JSON.stringify(obj).replace(/</g, '\\u003c');
 }
 
-async function fetchPagesOrigin(url) {
-  const originUrl = new URL(url.toString());
-  const originResponse = await fetch(originUrl, {
-    headers: { 'x-axim-worker-bypass': 'true' }
-  });
-  return originResponse;
+async function fetchPagesOrigin(request, env) {
+  if (!env.PAGES_ORIGIN) {
+    throw new Error('PAGES_ORIGIN is not configured');
+  }
+
+  const origin = new URL(env.PAGES_ORIGIN);
+  const requestedUrl = new URL(request.url);
+  origin.pathname = requestedUrl.pathname;
+  origin.search = requestedUrl.search;
+
+  return fetch(new Request(origin, request));
 }
 
 function cacheHeaders() {
@@ -34,14 +46,14 @@ export default {
       /\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json)$/i.test(url.pathname);
 
     if (isStaticAsset) {
-      return fetchPagesOrigin(url);
+      return fetchPagesOrigin(request, env);
     }
 
     const userAgent = (request.headers.get('user-agent') || '');
     const isBot = BOT_REGEX.test(userAgent);
 
     if (!isBot) {
-      return fetchPagesOrigin(url);
+      return fetchPagesOrigin(request, env);
     }
 
     // Serve from cache if available
@@ -70,12 +82,12 @@ export default {
       }
 
       if (!article) {
-        return fetchPagesOrigin(url);
+        return fetchPagesOrigin(request, env);
       }
 
-      const title = `${stripHtml(article.title?.rendered) || 'AXiM Intelligence Briefing'} | AXiM Systems`;
-      const description = (stripHtml(article.excerpt?.rendered) || 'AXiM Development Intelligence Briefing').slice(0, 160);
-      const image = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || DEFAULT_IMAGE;
+      const title = escapeHtml(`${stripHtml(article.title?.rendered) || 'AXiM Intelligence Briefing'} | AXiM Systems`);
+      const description = escapeHtml((stripHtml(article.excerpt?.rendered) || 'AXiM Development Intelligence Briefing').slice(0, 160));
+      const image = escapeHtml(article._embedded?.['wp:featuredmedia']?.[0]?.source_url || DEFAULT_IMAGE);
       const canonicalUrl = url.origin + url.pathname;
       const schema = toSafeJson({
         '@context': 'https://schema.org',
@@ -127,7 +139,7 @@ export default {
     }
 
     // Default handling for other pages if bot
-    const rawResponse = await fetchPagesOrigin(url);
+    const rawResponse = await fetchPagesOrigin(request, env);
     return rawResponse;
   }
 };

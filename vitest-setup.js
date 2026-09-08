@@ -1,5 +1,6 @@
 import { expect, vi } from 'vitest';
 global.expect = expect;
+window.scrollTo = vi.fn();
 
 // Mock IntersectionObserver globally
 global.IntersectionObserver = class IntersectionObserver {
