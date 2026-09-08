@@ -14,15 +14,21 @@ VITE_THIRDWEB_CLIENT_ID=<public thirdweb client ID>
 VITE_TURNSTILE_SITE_KEY=<public Turnstile site key>
 ```
 
-Deploy the Workers after setting their secrets:
+Deploy the Workers after setting their required configuration:
 
 ```text
 axim-wp-proxy-worker: no secrets required
-axim-seo-worker: no secrets required
+axim-seo-worker: PAGES_ORIGIN=https://axim-web3-frontend-development-7312.pages.dev
 axim-rpc-worker: ALCHEMY_RPC_URL
-axim-telemetry-worker: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+axim-telemetry-worker: AXIM_GATEWAY_TOKEN
 ```
 
 Use the matching `npm run cf:deploy:*` script for each Worker. The WordPress origin at
 `https://wp.axim.us.com` must return healthy WordPress REST responses; the proxy cannot recover
 content when that upstream service returns an error.
+
+The SEO Worker must proxy to the Pages project's `pages.dev` origin, not `axim.us.com`; using the
+public custom domain causes the Worker to invoke itself recursively. Set its non-secret origin
+when deploying:
+
+`PAGES_ORIGIN` is committed in `workers/wrangler.seo.toml` and points to the current production Pages project.
