@@ -6,12 +6,10 @@ import Tech from './Tech';
 
 // Mock the Zustand store
 vi.mock('../store/useAximStore.js', () => ({
-  useAximStore: vi.fn((selector) => {
-    return selector({
-      isWeb3Authenticated: true,
-      walletAddress: '0x123',
-    });
-  }),
+  useAximStore: Object.assign(
+    vi.fn((selector) => selector({ isWeb3Authenticated: true, walletAddress: '0x123' })),
+    { getState: () => ({ logTelemetryEvent: vi.fn(), telemetryCollection: [], telemetryQueue: [] }) }
+  )
 }));
 
 describe('Tech Hub Page', () => {

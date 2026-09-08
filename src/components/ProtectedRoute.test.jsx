@@ -11,7 +11,7 @@ vi.mock('../hooks/useAximAuth', () => ({
 vi.mock('../store/useAximStore', () => ({
   useAximStore: vi.fn()
 }));
-vi.mock('../lib/telemetry', () => ({
+vi.mock('../lib/telemetry.js', () => ({
   logTelemetry: vi.fn()
 }));
 
@@ -37,7 +37,8 @@ describe('ProtectedRoute Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Validating Clearance Matrix...')).toBeTruthy();
+    // test checking for skeleton loader instead of exact text
+    expect(document.querySelector('.animate-pulse')).toBeTruthy();
     expect(screen.queryByTestId('content')).toBeNull();
   });
 
@@ -53,6 +54,6 @@ describe('ProtectedRoute Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Validating Clearance Matrix...')).toBeTruthy();
+    expect(document.querySelector('.animate-pulse')).toBeTruthy();
   });
 });

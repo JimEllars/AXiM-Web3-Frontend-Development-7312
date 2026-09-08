@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase.js';
 import { localStore } from '../lib/persistence.js';
 import { useAximStore } from '../store/useAximStore.js';
 import { checkPassportSsoSession } from '../lib/auth-handoff.js';
+import { trackEvent } from '../lib/telemetry.js';
 
 export function useAximAuth() {
   const [profile, setProfile] = useState(null);
@@ -43,6 +44,7 @@ export function useAximAuth() {
            setSession(offline.session);
            if (offline.session && offline.session.user) {
                setProfile({ email: offline.session.user.email, clearance_level: 1});
+trackEvent('auth_success', { method: 'offline_cache' });
            }
        }
     } else {
@@ -51,6 +53,7 @@ export function useAximAuth() {
          if (isMounted && ssoData && ssoData.session) {
             setSession(ssoData.session);
             setProfile(ssoData.profile || { email: ssoData.session?.user?.email, clearance_level: 1 });
+trackEvent('auth_success', { method: 'passport_sso' });
             const store = useAximStore.getState();
             if (store.setUserSession) store.setUserSession(ssoData.session); // Hydrate Zustand silently
          }
@@ -73,6 +76,7 @@ export function useAximAuth() {
             localStore.saveOfflineSession(currentSession);
             if (currentSession) {
                setProfile({ email: currentSession.user.email, clearance_level: 1});
+trackEvent('auth_success', { method: 'supabase' });
             }
           }
         }

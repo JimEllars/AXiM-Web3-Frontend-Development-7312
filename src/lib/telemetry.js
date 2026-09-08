@@ -285,6 +285,7 @@ export function logHighPriorityTelemetry(type, payload) {
 }
 
 export function trackEvent(type, payload) {
+  if (!type || typeof type !== 'string') return;
   logTelemetry(type, payload);
   if (type === 'personality_test_click') {
     // Forward the interaction payload to AXiM Core telemetry (POST /satellite-telemetry)

@@ -95,6 +95,8 @@ export default {
       ip: request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown',
       country: request.cf?.country || 'unknown',
       city: request.cf?.city || 'unknown',
+      colo: request.cf?.colo || 'unknown',
+      tlsVersion: request.cf?.tlsVersion || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown'
     };
 

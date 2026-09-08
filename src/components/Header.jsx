@@ -233,7 +233,7 @@ export default function Header() {
 
         {/* Mobile Full-Screen Overlay Navigation */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 bg-[#050505] z-40 flex flex-col pt-24 pb-6 px-6 overflow-y-auto animate-fade-in">
+          <div className="fixed inset-0 bg-[#050505]/95 backdrop-blur-xl z-40 flex flex-col pt-24 pb-6 px-6 overflow-y-auto animate-fade-in transition-all duration-300">
             <div className="flex-1 flex flex-col gap-6">
               {navLinks.map((link) => (
                 <div key={link.name} className="flex flex-col border-b border-[#004040]/30 pb-4">
