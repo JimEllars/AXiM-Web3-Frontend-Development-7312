@@ -128,8 +128,11 @@ export function useOnyxStream() {
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log('Stream aborted by user.');
+          logTelemetry('onyx_stream_interrupted', { reason: 'user_aborted' });
           return;
         }
+
+        logTelemetry('onyx_stream_interrupted', { reason: err.message });
 
         if (retryCount < maxRetries) {
           retryCount++;
@@ -139,7 +142,7 @@ export function useOnyxStream() {
           logTelemetry('onyx_stream_retry', { retryCount, backoff });
 
           setMessages(prev => prev.map(msg =>
-            msg.id === onyxMessageId
+            msg.id === onyxMessageId && !msg.content.includes('[SYSTEM] Reconnecting Uplink...')
               ? { ...msg, content: msg.content + '\n[SYSTEM] Reconnecting Uplink...' }
               : msg
           ));

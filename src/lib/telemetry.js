@@ -97,8 +97,8 @@ export async function flushTelemetryQueue(force = false) {
 
   try {
     const payload = JSON.stringify(currentBatch);
-    const rawEndpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL;
-    const isValidRemote = rawEndpoint && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
+    const rawEndpoint = (typeof import.meta !== 'undefined' && import.meta.env) ? (import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL) : undefined;
+    const isValidRemote = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
@@ -124,7 +124,9 @@ export async function flushTelemetryQueue(force = false) {
       } else if (window.fetch) {
         try {
           let retries = 3;
-          let backoff = 1000;
+          const backoffs = [1000, 2000, 4000];
+          let attempt = 0;
+
           let response = null;
 
           while (retries > 0) {
@@ -152,8 +154,9 @@ export async function flushTelemetryQueue(force = false) {
             } catch(e) {
                retries--;
                if (retries === 0) throw e;
-               await new Promise(r => setTimeout(r, backoff));
-               backoff *= 2;
+               await new Promise(r => setTimeout(r, backoffs[attempt] || 4000));
+               attempt++;
+
             }
           }
 
