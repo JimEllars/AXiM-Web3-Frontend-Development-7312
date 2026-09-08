@@ -16,7 +16,7 @@ export default function Hero() {
            hidden: { opacity: 0 },
            visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
          }}
-         className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-bg-void pt-24 md:pt-30"
+         className="relative min-h-[85vh] w-full flex flex-col justify-start overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 pt-24 md:pt-30"
          onViewportEnter={() => {
            logTelemetry('home_hero_viewed', { timestamp: Date.now() });
          }}

@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAximStore } from '../store/useAximStore';
-import { logTelemetry } from '../lib/telemetry';
+import { logTelemetry, trackEvent } from '../lib/telemetry';
 
 export function useOnyxStream() {
   const [messages, setMessages] = useState(() => {
@@ -48,7 +48,8 @@ export function useOnyxStream() {
       isStreaming: true
     }].slice(-200));
 
-    logTelemetry('onyx_stream_initiated', { promptLength: text.length });
+    trackEvent('onyx_stream_initiated', { promptLength: text.length });
+    const startTime = Date.now();
 
     let retryCount = 0;
     const maxRetries = 4;
@@ -123,12 +124,16 @@ export function useOnyxStream() {
             ? { ...msg, isStreaming: false }
             : msg
         ));
-        logTelemetry('onyx_stream_completed', { responseLength: messages.find(m => m.id === onyxMessageId)?.content?.length || 0 });
+        const endTime = Date.now();
+        trackEvent('onyx_stream_completed', {
+          responseLength: messages.find(m => m.id === onyxMessageId)?.content?.length || 0,
+          latencyMs: endTime - startTime
+        });
 
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log('Stream aborted by user.');
-          logTelemetry('onyx_stream_interrupted', { reason: 'user_aborted' });
+          trackEvent('onyx_stream_interrupted', { reason: 'user_aborted' });
           return;
         }
 
@@ -139,7 +144,7 @@ export function useOnyxStream() {
           const backoff = currentBackoff;
           currentBackoff = Math.min(currentBackoff * 2 + Math.random() * 1000, 8000);
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
-          logTelemetry('onyx_stream_retry', { retryCount, backoff });
+          trackEvent('onyx_stream_retry', { retryCount, backoff });
 
           setMessages(prev => prev.map(msg =>
             msg.id === onyxMessageId && !msg.content.includes('[SYSTEM] Reconnecting Uplink...')
@@ -159,7 +164,7 @@ export function useOnyxStream() {
               ? { ...msg, content: msg.content || `[SYSTEM OFFLINE] Edge uplink failed after ${maxRetries} attempts. Diagnostics: ${err.message}`, isStreaming: false, isFallback: true }
               : msg
           ));
-          logTelemetry('onyx_stream_failed', { error: err.message });
+          trackEvent('onyx_stream_failed', { error: err.message });
           if(addToast) addToast(`Onyx connection failed: ${err.message}`, 'error');
         }
       }
@@ -190,7 +195,7 @@ export function useOnyxStream() {
         // Send a simulated heartbeat to keep stream alive in UI and potentially trigger server keepalive
         setMessages(prev => {
            // We don't want to actually print the heartbeat to the screen, but we can update state to trigger re-renders or logs
-           logTelemetry('onyx_stream_heartbeat', { status: 'alive' });
+           trackEvent('onyx_stream_heartbeat', { status: 'alive' });
            return prev;
         });
       }, 15000);

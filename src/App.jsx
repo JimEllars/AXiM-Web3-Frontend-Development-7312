@@ -16,7 +16,7 @@ import CookieConsent from './components/CookieConsent';
 import Chatbot from './components/Chatbot';
 import { useAximStore } from './store/useAximStore';
 import { supabase } from './lib/supabase';
-import { logTelemetry, flushTelemetryQueue } from './lib/telemetry';
+import { logTelemetry, trackEvent, flushTelemetryQueue } from './lib/telemetry';
 import ScrollToTop from './components/ScrollToTop';
 import Toast from './components/Toast';
 
@@ -181,7 +181,7 @@ function App() {
         document.head.appendChild(clickRankAi);
     }
 
-    logTelemetry("PAGE_VIEW", { path: location.pathname });
+    trackEvent("PAGE_VIEW", { path: location.pathname });
 
     // Do not remove script on unmount
   }, [location.pathname]);

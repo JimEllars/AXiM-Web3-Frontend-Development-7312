@@ -141,7 +141,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            EDGE_UPLINK: {isTelemetryPolling ? 'ACTIVE' : 'STANDBY'}
+            EDGE_UPLINK: {isTelemetryPolling && edgeRegion !== 'OFFLINE' ? 'ACTIVE' : 'DEGRADED'}
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}

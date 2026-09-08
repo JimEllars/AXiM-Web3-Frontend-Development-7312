@@ -1,5 +1,5 @@
 import React from 'react';
-import { logTelemetry } from '../lib/telemetry';
+import { trackEvent } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
@@ -13,7 +13,7 @@ export default function AffiliateTable({ products = [] }) {
         return (
           <div
             key={index}
-            className={`relative flex flex-col p-6 rounded-sm bg-[#050505] shadow-xl snap-center shrink-0 ${isTop ? 'border border-axim-gold shadow-[0_0_20px_rgba(240,255,0,0.15)]' : 'border border-white/10'}`}
+            className={`relative flex flex-col p-6 rounded-sm bg-[#050505] shadow-xl snap-center shrink-0 transition-all duration-300 hover:ring-1 hover:ring-cyan-500/20 ${isTop ? 'border border-axim-gold shadow-[0_0_20px_rgba(240,255,0,0.15)] bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 hover:-translate-y-1' : 'border border-white/10 hover:-translate-y-1 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950'}`}
           >
             {isTop && (
               <div className="absolute -top-3 left-6 px-3 py-1 bg-axim-gold text-black text-[10px] font-black uppercase tracking-widest rounded-sm shadow-md flex items-center gap-2">
@@ -43,7 +43,7 @@ export default function AffiliateTable({ products = [] }) {
                 href={product.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => logTelemetry('affiliate_outbound_click', { product: product.name })}
+                onClick={() => trackEvent('affiliate_outbound_click', { product: product.name })}
                 className={`flex items-center justify-center w-full py-3 px-4 text-xs font-black uppercase tracking-widest transition-all rounded-sm shadow-lg ${isTop ? 'bg-axim-gold text-black hover:bg-white hover:text-black' : 'bg-white/10 text-white hover:bg-white/20'}`}
               >
                 Get Started <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-4 h-4" />

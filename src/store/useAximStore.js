@@ -6,6 +6,9 @@ export const useAximStore = create(
   persist(
     (set, get) => ({
 
+  isChatbotOpen: false,
+  setIsChatbotOpen: (isOpen) => set({ isChatbotOpen: isOpen }),
+
   globalLoading: false,
   globalLoadingMessage: '',
   setGlobalLoading: (isLoading, message = '') => set({ globalLoading: isLoading, globalLoadingMessage: message }),
@@ -59,7 +62,12 @@ export const useAximStore = create(
 
   logoutWeb3Wallet: () => {
     sessionStorage.removeItem('axim_wallet_session');
-    set({ walletAddress: null, isWeb3Authenticated: false });
+    // Ensure we preserve cached read-only dashboard metrics like activeTelemetry, nodeStatuses
+    set((state) => ({
+      walletAddress: null,
+      isWeb3Authenticated: false
+      // Do not clear assets, tickets, historical data, etc. unless explicitly requested via clearStore
+    }));
   },
 
 

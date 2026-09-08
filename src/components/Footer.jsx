@@ -85,7 +85,7 @@ export default function Footer() {
 
   return (
     <motion.footer
-         className="bg-[#050505] border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden min-h-[320px] contain-layout"
+         className="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 border-t border-white/10 pt-20 pb-10 relative z-10 overflow-hidden min-h-[320px] contain-layout"
          onViewportEnter={() => {
            logTelemetry('footer_viewed', { path: location.pathname });
          }}

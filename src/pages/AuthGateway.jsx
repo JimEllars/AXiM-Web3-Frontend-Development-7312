@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
 import SEO from '../components/SEO';
-import { logTelemetry } from '../lib/telemetry';
+import { logTelemetry, trackEvent } from '../lib/telemetry';
 import { sanitizeInput } from '../lib/sanitize';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import { useAximStore } from '../store/useAximStore';
@@ -52,7 +52,7 @@ export default function AuthGateway() {
     const token = params.get('token');
 
     if (token) {
-      logTelemetry('operator_clearance_success', { method: 'passport_sso' });
+      trackEvent('operator_clearance_success', { method: 'passport_sso' });
       if (isMounted.current) {
         // Exchange token with AXiM Core API to hydrate session
 
@@ -80,7 +80,7 @@ export default function AuthGateway() {
   }, [navigate, from, setNotification]);
 
   const handlePassportAuth = () => {
-    logTelemetry('auth_login_attempted', { method: 'passport_sso' });
+    trackEvent('auth_login_attempted', { method: 'passport_sso' });
     const redirectUrl = encodeURIComponent(window.location.origin + '/auth');
     window.location.href = `https://passport.axim.us.com?redirect=${redirectUrl}`;
   };
@@ -88,7 +88,7 @@ export default function AuthGateway() {
   const handleWeb3Login = async () => {
     setIsWeb3Connecting(true);
     setErrorMsg(null);
-    logTelemetry('auth_web3_login_attempted', { provider: 'inAppWallet' });
+    trackEvent('auth_web3_login_attempted', { provider: 'inAppWallet' });
 
     try {
       const wallet = inAppWallet();
@@ -101,7 +101,7 @@ export default function AuthGateway() {
       });
 
       if (account) {
-        logTelemetry('AUTH_WEB3_WALLET_CONNECTED', {
+        trackEvent('AUTH_WEB3_WALLET_CONNECTED', {
           address: account.address,
         });
 
@@ -116,10 +116,10 @@ export default function AuthGateway() {
       }
     } catch (err) {
       if (err.message && (err.message.includes('User rejected') || err.message.includes('rejected'))) {
-         logTelemetry('AUTH_WEB3_REJECTED', { error: err.message });
+         trackEvent('AUTH_WEB3_REJECTED', { error: err.message });
          showToast("Signature Rejected", "error");
       } else {
-         logTelemetry('auth_timeout_fault', { method: 'web3_connect', error: err.message });
+         trackEvent('auth_timeout_fault', { method: 'web3_connect', error: err.message });
          showToast("Wallet Connection Failed", "error");
       }
       if (isMounted.current) {
@@ -153,7 +153,7 @@ export default function AuthGateway() {
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.05),transparent_50%)] pointer-events-none" />
 
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md" onViewportEnter={() => { logTelemetry("auth_gateway_viewed", { initialMode: "login" }); }} viewport={{ once: true, amount: 0.2 }}>
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md" onViewportEnter={() => { trackEvent("auth_gateway_viewed", { initialMode: "login" }); }} viewport={{ once: true, amount: 0.2 }}>
 
         <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white font-mono text-[0.65rem] uppercase tracking-widest transition-colors mb-8 group">
           <SafeIcon icon={LuIcons.LuArrowLeft} className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />

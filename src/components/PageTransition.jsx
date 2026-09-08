@@ -16,12 +16,15 @@ const pageTransition = {
   duration: 0.4
 };
 
+import { trackEvent } from '../lib/telemetry';
+
 export default function PageTransition({ children }) {
   const location = useLocation();
   const { pathname } = location;
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    trackEvent('page_transition_started', { path: pathname });
   }, [pathname]);
 
   return (

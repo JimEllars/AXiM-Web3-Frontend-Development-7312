@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAximStore } from '../store/useAximStore';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { logTelemetry } from '../lib/telemetry';
 
 export default function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = useAximStore((state) => state.isChatbotOpen);
+  const setIsOpen = useAximStore((state) => state.setIsChatbotOpen);
 
   return (
     <>

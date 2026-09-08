@@ -7,6 +7,10 @@ export const theme = {
     purple: '#7D00FF', // axim-purple
     background: '#050505', // bg-void
   },
+  glowTokens: {
+    primary: 'ring-cyan-500/20',
+    ambientGradient: 'bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950'
+  },
   wpRestEndpoint: "https://axim.us.com/wp-json/wp/v2",
   chatbaseBotId: null,
 };

@@ -111,7 +111,7 @@ export default {
       let wpResponse;
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout for origin
+        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout for origin
         wpResponse = await fetch(fetchUrl, {
           method: request.method,
           headers: {

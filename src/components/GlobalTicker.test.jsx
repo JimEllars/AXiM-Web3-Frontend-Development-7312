@@ -6,8 +6,9 @@ import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
 
 // Mock telemetry dependency
-vi.mock('../lib/telemetry', () => ({
+vi.mock('../lib/telemetry.js', () => ({
   logTelemetry: vi.fn(),
+  trackEvent: vi.fn(),
 }));
 
 describe('GlobalTicker Component', () => {

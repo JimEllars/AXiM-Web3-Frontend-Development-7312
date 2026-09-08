@@ -4,8 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Support from './Support.jsx';
 
-vi.mock('../lib/telemetry.js', () => ({
+vi.mock('../lib/telemetry', () => ({
   logTelemetry: vi.fn(),
+  trackEvent: vi.fn(),
 }));
 
 describe('Support Component', () => {
