@@ -57,14 +57,13 @@ export default function OnyxTerminal() {
     }
   }, [terminalOutput, responseLog, telemetryQueue]);
 
+  const isAutoScrolling = React.useRef(true);
+
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
-    // Check if user has scrolled up from the bottom
-    if (scrollHeight - Math.ceil(scrollTop) > clientHeight + 10) {
-      isUserScrolling.current = true;
-    } else {
-      isUserScrolling.current = false;
-    }
+    // Check if user has scrolled up from the bottom (with a small 10px buffer)
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 10;
+    isAutoScrolling.current = isAtBottom;
   };
 
 

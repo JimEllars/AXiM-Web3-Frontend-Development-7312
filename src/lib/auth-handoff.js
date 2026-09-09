@@ -19,6 +19,10 @@ export function generateWorkerLaunchUrl(workerSubdomain, userSession) {
       url.searchParams.append('auth_token', userSession.access_token);
     }
 
+    // Preserve user roles during handoffs
+    const role = userSession?.user?.role || userSession?.user?.app_metadata?.role || 'member';
+    url.searchParams.append('role', role);
+
     // Try to extract an address from the userSession or fallback
     const walletAddress = userSession?.user?.id || userSession?.user?.user_metadata?.wallet_address || 'unknown';
 
@@ -43,6 +47,9 @@ export function generateCrossAppHandoffUrl(targetAppUrl, sessionData) {
   });
   const url = new URL(targetAppUrl);
   url.searchParams.set('sso_token', sessionData?.token || 'guest');
+  // Preserve roles for cross-app SSO
+  const role = sessionData?.user?.role || sessionData?.user?.app_metadata?.role || 'member';
+  url.searchParams.set('role', role);
   return url.toString();
 }
 
