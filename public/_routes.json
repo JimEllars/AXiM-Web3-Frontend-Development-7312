@@ -4,11 +4,8 @@
     "/*"
   ],
   "exclude": [
-    "/api/*",
-    "/_api/*",
-    "/telemetry/*",
-    "/rpc/*",
     "/assets/*",
+    "/images/*",
     "/favicon.ico",
     "/manifest.json",
     "/robots.txt",
