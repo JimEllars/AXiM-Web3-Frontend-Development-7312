@@ -92,7 +92,7 @@ export default function Header() {
         {/* Brand Logo Integration - White PNG */}
         <div className="flex flex-col">
           <Link to="/" className="flex items-center gap-3 group z-[60] flex-shrink-0 min-w-[140px] md:min-w-[200px] max-w-[50vw] overflow-hidden mr-4">
-            <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[42px] md:h-[52px] w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
+            <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[55px] md:h-[68px] w-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
           </Link>
           {isOffline && (
             <div className="mt-1 flex items-center justify-center px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-sm backdrop-blur-md animate-pulse">

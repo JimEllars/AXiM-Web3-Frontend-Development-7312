@@ -83,7 +83,7 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group flex flex-col bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-cyan-500/40 transition-all shadow-lg hover:shadow-cyan-500/10"
+                className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
               >
                 <div className="relative h-48 overflow-hidden bg-black/40">
                   {article.featuredImage ? (

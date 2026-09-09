@@ -22,13 +22,14 @@ export const getFeaturedImage = (article) => {
   const media = article._embedded?.['wp:featuredmedia']?.[0];
   let url = media?.source_url ||
             media?.media_details?.sizes?.large?.source_url ||
+            media?.media_details?.sizes?.medium_large?.source_url ||
             media?.media_details?.sizes?.full?.source_url;
 
   // 2. Secondary: Hunt for SEO/Plugin "Ghost" Fields if _embedded was stripped
   if (!url) {
     url = article.yoast_head_json?.og_image?.[0]?.url ||
           article.jetpack_featured_media_url ||
-          article.featured_image_src ||
+          article.featured_image_url ||
           article.featured_media_src_url;
   }
 
