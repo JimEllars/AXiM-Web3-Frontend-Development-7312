@@ -6,7 +6,7 @@ describe('telemetry-worker', () => {
     const req = new Request('https://telemetry.axim.us.com', { method: 'OPTIONS', headers: { Origin: 'https://axim.us.com' } });
     const res = await worker.fetch(req, {}, { waitUntil: () => {} });
     expect(res.status).toBe(204);
-    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('https://axim.us.com');
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*');
     expect(res.headers.get('Access-Control-Allow-Headers')).toContain('X-AXiM-Internal-Key');
     expect(res.headers.get('Access-Control-Allow-Headers')).toContain('x-axim-client');
   });

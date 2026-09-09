@@ -49,7 +49,11 @@ function isValidEvent(event) {
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: getCorsHeaders(request) });
+      const headers = getCorsHeaders(request);
+      headers['Access-Control-Allow-Origin'] = '*'; // Ensure broad CORS support on OPTIONS
+      headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      headers['Access-Control-Allow-Headers'] = 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client';
+      return new Response(null, { status: 204, headers });
     }
 
     const url = new URL(request.url);
@@ -149,6 +153,9 @@ export default {
     );
 
     // Changed to 202 Accepted to signal graceful burst handling per requirements
-    return new Response(null, { status: 202, headers: getCorsHeaders(request) });
+    // Return 204 No Content to signal successful ingestion/queuing and handle anomalies silently
+    const responseHeaders = getCorsHeaders(request);
+    responseHeaders['Access-Control-Allow-Origin'] = '*';
+    return new Response(null, { status: 204, headers: responseHeaders });
   }
 };

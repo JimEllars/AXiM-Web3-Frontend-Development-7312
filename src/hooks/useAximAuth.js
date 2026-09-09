@@ -11,6 +11,7 @@ export function useAximAuth() {
   const [isHydrating, setIsHydrating] = useState(true);
   const [session, setSession] = useState(null);
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
+  const [isReconnecting, setIsReconnecting] = useState(false);
 
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const isRefreshing = useRef(false);
@@ -139,6 +140,7 @@ trackEvent('auth_success', { method: 'supabase' });
       let currentSession = null;
       let retries = 3;
       let fetchError = null;
+      setIsReconnecting(true); // Non-blocking reconnect state
 
       while (retries > 0) {
         try {
@@ -158,6 +160,7 @@ trackEvent('auth_success', { method: 'supabase' });
         }
       }
 
+      setIsReconnecting(false);
       if (fetchError && !currentSession) {
         // Network fault during heartbeat: rely on cache
         const offline = localStore.getOfflineSession();
@@ -232,5 +235,5 @@ trackEvent('auth_success', { method: 'supabase' });
       }
   }, [isWeb3Authenticated, loading]);
 
-  return { profile, loading, isLoading: loading, isHydrating, session, checkDomain, isBackgroundSyncing };
+  return { profile, loading, isLoading: loading, isHydrating, session, checkDomain, isBackgroundSyncing, isReconnecting };
 }

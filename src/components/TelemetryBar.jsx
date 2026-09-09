@@ -128,8 +128,18 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   return (
-    <div className="bg-[#050505]/90 backdrop-blur-xl p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20">
-      <div className="flex justify-between text-[0.6rem] mb-2 uppercase items-center">
+    <div className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20">
+      {/* Mobile view */}
+      <div className="md:hidden flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_16px_rgba(16,185,129,1)]' : ''}`} />
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">{label}</span>
+        </div>
+        <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>
+      </div>
+
+      {/* Desktop/Tablet view */}
+      <div className="hidden md:flex justify-between text-[0.6rem] mb-2 uppercase items-center">
         <span className="flex flex-wrap items-center gap-2">
           <span
             className={`w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]' : ''}`}
@@ -164,7 +174,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
         </span>
         <span className={`${textColor} font-bold drop-shadow-md`}>{value}%</span>
       </div>
-      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden shadow-inner">
+      <div className="h-1 bg-white/10 rounded-full overflow-hidden shadow-inner mt-2 md:mt-0 md:h-1.5">
         <motion.div
           initial={{ width: `${initialValue}%` }}
           animate={{ width: `${value}%` }}

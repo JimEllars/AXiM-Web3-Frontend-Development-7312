@@ -113,7 +113,7 @@ export default function Header() {
               onMouseLeave={() => link.dropdown && setActiveDropdown(null)}
             >
               <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })}
-                to={link.path}
+                aria-current={location.pathname === link.path || location.pathname.startsWith(link.path + '/') ? "page" : undefined} to={link.path}
                 className={`text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-1 pb-1 border-b-2 ${
                   location.pathname === link.path || location.pathname.startsWith(link.path + '/')
                     ? 'text-white border-[#004040]'
@@ -131,7 +131,7 @@ export default function Header() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#004040]/10 blur-[30px] pointer-events-none" />
 
                     {/* Top Level Hub Link */}
-                    <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })} to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
+                    <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })} aria-current={location.pathname === link.path || location.pathname.startsWith(link.path + '/') ? "page" : undefined} to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
                       View All {link.name}
                     </Link>
 
@@ -239,7 +239,7 @@ export default function Header() {
                 <div key={link.name} className="flex flex-col border-b border-[#004040]/30 pb-4">
                   <div className="flex justify-between items-center">
                     <Link
-                      to={link.path}
+                      aria-current={location.pathname === link.path || location.pathname.startsWith(link.path + '/') ? "page" : undefined} to={link.path}
                       className="text-xl font-black text-white uppercase tracking-tight"
                     >
                       {link.name}

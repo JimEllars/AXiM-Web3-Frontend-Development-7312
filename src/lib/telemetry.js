@@ -3,7 +3,9 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { localStore } from '../lib/persistence';
 
 let isFlushing = false;
-let batchQueue = []; // In-memory queue for dispatching batches
+let batchQueue = [];
+let isCircuitOpen = false;
+let circuitCooldownUntil = 0; // In-memory queue for dispatching batches
 
 let hasRehydrated = false;
 
@@ -89,6 +91,24 @@ export function logTelemetry(type, payload) {
 }
 
 export async function flushTelemetryQueue(force = false) {
+  if (isCircuitOpen) {
+    if (Date.now() > circuitCooldownUntil) {
+      isCircuitOpen = false;
+    } else {
+      const currentBatch = [...batchQueue];
+      batchQueue = []; // Clear current queue to prevent endless growing in memory
+
+      // Buffer up to 50 events in localStorage silently
+      if (typeof window !== 'undefined') {
+        try {
+          const existing = JSON.parse(localStorage.getItem('axim_telemetry_offline_queue') || '[]');
+          const updated = [...existing, ...currentBatch].slice(-50);
+          localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(updated));
+        } catch (e) { /* ignore */ }
+      }
+      return;
+    }
+  }
   if (isFlushing || batchQueue.length === 0) return;
   isFlushing = true;
 
@@ -141,17 +161,25 @@ export async function flushTelemetryQueue(force = false) {
                 keepalive: true,
               });
 
-              const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
+              const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
               response = await Promise.race([fetchPromise, timeoutPromise]);
 
               if (response.status === 200 || response.status === 202 || response.status === 204) {
                  break;
+              } else if (response.status >= 500) {
+                 isCircuitOpen = true;
+                 circuitCooldownUntil = Date.now() + 60000; // 1 minute cooldown
+                 throw new Error('Server error 5xx');
               } else if (response.status === 429) {
                  throw new Error('Rate limited');
               } else {
                  break;
               }
             } catch(e) {
+               if (e.message === 'timeout' || e.message === 'Server error 5xx') {
+                  isCircuitOpen = true;
+                  circuitCooldownUntil = Date.now() + 60000;
+               }
                retries--;
                if (retries === 0) throw e;
                await new Promise(r => setTimeout(r, backoffs[attempt] || 4000));
@@ -174,7 +202,7 @@ export async function flushTelemetryQueue(force = false) {
             success = false;
           }
         } catch (fetchErr) {
-          if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Edge telemetry failed", fetchErr); }
+          if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Edge telemetry failed", fetchErr); }
 
           // Using imported isSupabaseConfigured
 
@@ -191,7 +219,7 @@ export async function flushTelemetryQueue(force = false) {
               }
             } catch (supabaseErr) {
               success = false;
-              if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message); }
+              if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message); }
             }
           } else {
             success = false;
@@ -224,13 +252,15 @@ export async function flushTelemetryQueue(force = false) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
       if (typeof window !== 'undefined') {
         try {
-          sessionStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(batchQueue));
+          const existing = JSON.parse(localStorage.getItem('axim_telemetry_offline_queue') || '[]');
+          const updated = [...existing, ...batchQueue].slice(-50);
+          localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(updated));
         } catch (e) { /* ignore */ }
         localStore.saveTelemetryCache(batchQueue);
       }
     }
   } catch (err) {
-    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", err.message); }
+    if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", err.message); }
   } finally {
     isFlushing = false;
   }
