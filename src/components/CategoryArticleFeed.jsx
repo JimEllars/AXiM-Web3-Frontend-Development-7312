@@ -72,7 +72,7 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
           {sectionSubtitle && <p className="text-zinc-400 text-sm max-w-2xl">{sectionSubtitle}</p>}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 min-h-[400px]">
           {loading ? (
             Array(limit).fill(0).map((_, i) => <SkeletonCard key={i} />)
           ) : (

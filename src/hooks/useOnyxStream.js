@@ -142,7 +142,8 @@ export function useOnyxStream() {
         if (retryCount < maxRetries) {
           retryCount++;
           const backoff = currentBackoff;
-          currentBackoff = Math.min(currentBackoff * 2 + Math.random() * 1000, 8000);
+          const jitter = currentBackoff * 0.2 * (Math.random() * 2 - 1);
+          currentBackoff = Math.min(currentBackoff * 2 + jitter, 8000);
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           trackEvent('onyx_stream_retry', { retryCount, backoff });
 

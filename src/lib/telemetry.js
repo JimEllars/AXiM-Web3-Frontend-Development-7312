@@ -112,16 +112,16 @@ export async function flushTelemetryQueue(force = false) {
     let success = false;
 
     if (typeof window !== 'undefined') {
-      if (window.navigator?.sendBeacon && force) {
+      if (window.navigator?.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
-
         try {
           success = window.navigator.sendBeacon(endpoint, blob);
         } catch(e) {
           success = false;
         }
+      }
 
-      } else if (window.fetch) {
+      if (!success && window.fetch) {
         try {
           let retries = 3;
           const backoffs = [1000, 2000, 4000];

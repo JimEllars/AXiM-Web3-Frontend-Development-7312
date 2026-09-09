@@ -107,7 +107,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 min-h-[500px]">
       {nodes.map((node) => (
         <motion.div
           key={node.id}

@@ -151,6 +151,7 @@ trackEvent('auth_success', { method: 'supabase' });
           retries -= 1;
           if (retries === 0) {
              console.warn("[AXiM_AUTH] Session fetch failed after retries.");
+             trackEvent('edge_telemetry_warning', { reason: 'session_fetch_failed', error: fetchError?.message });
           } else {
              await new Promise(r => setTimeout(r, 1000)); // wait 1s before retry
           }
@@ -184,6 +185,7 @@ trackEvent('auth_success', { method: 'supabase' });
             } else {
               // Instead of logging out when refresh fails temporarily (which causes UI flicker or boots user), we preserve the session to allow graceful degraded state unless forced.
               console.warn("Session refresh failed, but retaining session optimistically to avoid disrupting user workflow.");
+              trackEvent('edge_telemetry_warning', { reason: 'session_refresh_failed', error: error?.message });
               // Do not setSession(null) here.
             }
           } else if (data.session) {
@@ -203,6 +205,7 @@ trackEvent('auth_success', { method: 'supabase' });
               setSession(offline.session);
             } else {
               console.warn("Network exception during refresh, retaining session optimistically to avoid disrupting user workflow.");
+              trackEvent('edge_telemetry_warning', { reason: 'session_refresh_exception', error: e?.message });
             }
         } finally {
             isRefreshing.current = false;
