@@ -37,14 +37,7 @@ export default function ArticleCard({
     return match ? match[1] : null;
   };
 
-  let mediaUrl =
-    article?.featuredImage ||
-    article?.featured_image_src ||
-    article?.yoast_head_json?.og_image?.[0]?.url ||
-    extractFromContent(article?.content?.rendered) ||
-    article?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    article?.jetpack_featured_media_url ||
-    null;
+  let mediaUrl = article?.thumbnail || article?.featuredImage || null;
 
   if (mediaUrl && mediaUrl.startsWith("http://")) {
     mediaUrl = mediaUrl.replace("http://", "https://");
@@ -197,8 +190,8 @@ export default function ArticleCard({
               <SafeIcon className="w-16 h-16 text-white/5 absolute -bottom-3 -right-3" icon={LuIcons.LuHexagon}/>
             </div>
           ) : (
-            <motion.img
-              width="1200" height="675"
+            <WPImage
+              post={article}
               src={finalImage}
               alt={cleanTitle}
               className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-85 transition-all duration-700"
@@ -206,7 +199,6 @@ export default function ArticleCard({
                 setImageError(true);
                 logTelemetry('article_image_fallback_triggered', { slug: article?.slug, originalSrc: mediaUrl });
               }}
-              loading={priority ? "eager" : "lazy"}
             />
           )}
           {/* Top Corner Badges */}

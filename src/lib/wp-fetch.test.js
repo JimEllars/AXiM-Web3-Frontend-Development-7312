@@ -401,11 +401,13 @@ test('should return mapped posts if fetch is successful', async () => {
     assert.deepStrictEqual(result, [{
       id: 1909,
       slug: 'test-slug',
-        title: 'Test Title',
+      title: 'Test Title',
       excerpt: 'Test Excerpt',
       link: 'https://axim.us.com/test-link',
       date: '2026-03-25T13:14:48',
-      featuredImage: 'https://example.com/image.png'
+      featuredImage: 'https://example.com/image.png',
+      thumbnail: 'https://example.com/image.png',
+      altText: 'Test Title'
     }]);
   });
 
@@ -441,11 +443,13 @@ test('should return mapped posts if fetch is successful', async () => {
     assert.deepStrictEqual(result, [{
       id: 1910,
       slug: 'test-slug',
-        title: 'No Image Title',
+      title: 'No Image Title',
       excerpt: 'No Image Excerpt',
       link: 'https://axim.us.com/no-image-link',
       date: '2026-03-26T10:00:00',
-      featuredImage: null
+      featuredImage: null,
+      thumbnail: null,
+      altText: 'No Image Title'
     }]);
   });
 

@@ -15,33 +15,46 @@ export const fetchCategoryBySlug = async (slug) => {
 };
 
 
+
+export const normalizeWordPressPost = (rawPost) => {
+  if (!rawPost) return null;
+
+  const media = rawPost._embedded?.['wp:featuredmedia']?.[0];
+
+  // Extract thumbnail
+  const thumbnail = media?.media_details?.sizes?.medium?.source_url || media?.source_url || null;
+
+  // Extract full/hero image
+  const featuredImage = media?.media_details?.sizes?.large?.source_url || media?.source_url || null;
+
+  // Extract alt text
+  const altText = media?.alt_text || rawPost.title?.rendered || '';
+
+  return {
+    ...rawPost,
+    thumbnail: thumbnail ? thumbnail.replace('http:', 'https:') : null,
+    featuredImage: featuredImage ? featuredImage.replace('http:', 'https:') : null,
+    altText
+  };
+};
+
 export const getFeaturedImage = (article) => {
-  if (!article) return null;
+  const normalized = normalizeWordPressPost(article);
+  if (normalized && normalized.featuredImage) return normalized.featuredImage;
 
-  // 1. Primary: Native WP Embed
-  const media = article._embedded?.['wp:featuredmedia']?.[0];
-  let url = media?.source_url ||
-            media?.media_details?.sizes?.large?.source_url ||
-            media?.media_details?.sizes?.medium_large?.source_url ||
-            media?.media_details?.sizes?.full?.source_url;
+  // Secondary fallback logic
+  let url = article?.yoast_head_json?.og_image?.[0]?.url ||
+          article?.jetpack_featured_media_url ||
+          article?.featured_image_url ||
+          article?.featured_media_src_url;
 
-  // 2. Secondary: Hunt for SEO/Plugin "Ghost" Fields if _embedded was stripped
-  if (!url) {
-    url = article.yoast_head_json?.og_image?.[0]?.url ||
-          article.jetpack_featured_media_url ||
-          article.featured_image_url ||
-          article.featured_media_src_url;
-  }
-
-  // 3. Fallback: Regex extraction of the first src from post.content?.rendered
-  if (!url && article.content?.rendered) {
-    const match = article.content?.rendered?.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i);
+  if (!url && article?.content?.rendered) {
+    const match = article.content?.rendered?.match(/<img[^>]+(?:src|data-src|data-lazy-src)=["']([^"']+)["']/i);
     if (match && match[1]) {
       url = match[1];
     }
   }
 
-  // 4. Force HTTPS to avoid mixed-content blocks
   return url ? url.replace('http:', 'https:') : null;
 };
 
@@ -326,7 +339,10 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
       // 3. Map the properties and ensure the explicit absolute URL link is included
       const mappedPosts = posts.map(post => {
         // Get featured image if available
-        let featuredImage = getFeaturedImage(post);
+        const normalized = normalizeWordPressPost(post);
+        let featuredImage = normalized.featuredImage;
+        let thumbnail = normalized.thumbnail;
+        let altText = normalized.altText;
 
         return {
           id: post.id,
@@ -336,6 +352,8 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
           link: post.link, // CRITICAL: explicit absolute URL mapping
           date: post.date,
           featuredImage,
+          thumbnail,
+          altText,
         };
       });
 
@@ -497,7 +515,10 @@ export async function fetchArticlesByCategory(categorySlug, limit = 3) {
 
     const posts = await postsRes.json();
     return posts.map(post => {
-      let featuredImage = getFeaturedImage(post);
+      const normalized = normalizeWordPressPost(post);
+        let featuredImage = normalized.featuredImage;
+        let thumbnail = normalized.thumbnail;
+        let altText = normalized.altText;
 
       let categoryName = 'Uncategorized';
       if (post._embedded && post._embedded['wp:term']) {
@@ -516,6 +537,8 @@ export async function fetchArticlesByCategory(categorySlug, limit = 3) {
         excerpt: post.excerpt?.rendered,
         date: post.date,
         featuredImage,
+          thumbnail,
+          altText,
         author: post._embedded?.author?.[0]?.name || 'AXiM Systems',
         readingTime: `${rawReadingTime} min read`,
         categoryName
@@ -563,7 +586,10 @@ export async function fetchPostsByCategorySlug(categorySlug, perPage = 3) {
       if (!posts || posts.length === 0) return [];
 
       const mappedPosts = posts.map(post => {
-        let featuredImage = getFeaturedImage(post);
+        const normalized = normalizeWordPressPost(post);
+        let featuredImage = normalized.featuredImage;
+        let thumbnail = normalized.thumbnail;
+        let altText = normalized.altText;
         let categoryName = 'Uncategorized';
 
         if (post._embedded && post._embedded['wp:term']) {
@@ -583,6 +609,8 @@ export async function fetchPostsByCategorySlug(categorySlug, perPage = 3) {
           link: post.link,
           date: post.date,
           featuredImage,
+          thumbnail,
+          altText,
           author: post._embedded?.author?.[0]?.name || 'AXiM Systems',
           readingTime: `${rawReadingTime} min read`,
           categoryName
