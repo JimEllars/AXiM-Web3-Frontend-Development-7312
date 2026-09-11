@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { fetchPosts, getArticleThumbnail } from '../lib/wp-fetch';
+import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import SEO from '../components/SEO';
@@ -169,7 +169,7 @@ const { slug } = useParams();
   // 3. SAFE EXECUTION: The component will ONLY reach this point if `article` is a fully loaded object.
   // It is now safe to declare variables that rely on the article object.
   const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
-  const imageUrl = getArticleThumbnail(article);
+  const imageUrl = article.featuredImage || article.thumbnail || fallbackImage;
   const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
   const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 

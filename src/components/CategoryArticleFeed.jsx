@@ -4,6 +4,7 @@ import { fetchPostsByCategorySlug } from '../lib/wp-fetch';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { motion } from 'framer-motion';
+import { logTelemetry } from '../lib/telemetry';
 import WPImage from '../components/WPImage';
 
 const SkeletonCard = () => (
@@ -44,7 +45,21 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
     };
   }, [categorySlug, limit]);
 
-  if (!loading && articles.length === 0) return null;
+
+  if (!loading && articles.length === 0) {
+    return (
+      <section className="py-16 relative z-10 w-full border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/5 rounded-full mb-4">
+             <SafeIcon icon={LuIcons.LuRadioTower} className="w-8 h-8 text-zinc-500" />
+          </div>
+          <h3 className="text-xl font-bold text-zinc-400 uppercase tracking-widest mb-2">No Transmissions Found</h3>
+          <p className="text-sm text-zinc-500 max-w-md mx-auto">There are currently no active transmissions for this sector. Please check back later.</p>
+        </div>
+      </section>
+    );
+  }
+
 
   const categoryColor = {
     'business': 'text-amber-500 border-amber-500/30 bg-amber-500/10',
@@ -82,6 +97,9 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                onViewportEnter={() => {
+                  logTelemetry('category_feed_item_impression', { category: categorySlug, slug: article.slug });
+                }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
               >

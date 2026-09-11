@@ -152,7 +152,7 @@ export default {
       } else if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
+        headers.set('Cache-Control', 'public, max-age=120, s-maxage=300, stale-while-revalidate=600');
       }
 
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);

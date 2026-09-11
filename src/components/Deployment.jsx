@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
+import CategoryArticleFeed from './CategoryArticleFeed';
 
 const { LuArrowRight } = LuIcons;
 
@@ -15,8 +16,7 @@ export default function Deployment() {
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, ease: "circOut",
-                }}
+            transition={{ duration: 0.4, ease: "circOut" }}
           >
             <span className="section-label">Operational Deployment</span>
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-black uppercase mb-6 tracking-tight">Physical & Virtual Performance</h2>
@@ -51,9 +51,7 @@ export default function Deployment() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, ease: "circOut",
-                  delay: 0.2  ,
-                }}
+            transition={{ duration: 0.4, ease: "circOut", delay: 0.2 }}
             className="bg-[#080808] p-10 border border-subtle rounded-sm"
           >
             <svg width="100%" height="300" viewBox="0 0 100 100" fill="none" className="stroke-axim-gold stroke-[0.5]">
@@ -70,6 +68,15 @@ export default function Deployment() {
             </div>
           </motion.div>
 
+        </div>
+
+        <div className="mt-20">
+          <CategoryArticleFeed
+            categorySlug="tech"
+            sectionTitle="Infrastructure Updates"
+            sectionSubtitle="Latest transmissions on AXiM deployments."
+            limit={3}
+          />
         </div>
       </div>
     </section>
