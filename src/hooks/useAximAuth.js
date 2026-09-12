@@ -6,10 +6,26 @@ import { checkPassportSsoSession } from '../lib/auth-handoff.js';
 import { trackEvent } from '../lib/telemetry.js';
 
 export function useAximAuth() {
-  const [profile, setProfile] = useState(null);
+  const [session, setSession] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const offline = localStore.getOfflineSession();
+    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+       return offline.session;
+    }
+    return null;
+  });
+
+  const [profile, setProfile] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const offline = localStore.getOfflineSession();
+    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+       return { email: offline.session?.user?.email, clearance_level: 1};
+    }
+    return null;
+  });
+
   const [loading, setLoading] = useState(true);
   const [isHydrating, setIsHydrating] = useState(true);
-  const [session, setSession] = useState(null);
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
 

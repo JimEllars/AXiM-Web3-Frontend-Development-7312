@@ -21,6 +21,7 @@ export function useOnyxStream() {
   const [error, setError] = useState(null);
   const [isEdgeCached, setIsEdgeCached] = useState(false);
   const abortControllerRef = useRef(null);
+  const retryTimeoutRef = useRef(null);
 
   const token = useAximStore((state) => state.token);
   const addToast = useAximStore((state) => state.addToast);
@@ -153,7 +154,7 @@ export function useOnyxStream() {
               : msg
           ));
 
-          setTimeout(connectStream, backoff);
+          retryTimeoutRef.current = setTimeout(connectStream, backoff);
         } else {
           console.error('[Onyx Stream] Max retries reached.', err);
           setError(err.message);
@@ -175,6 +176,7 @@ export function useOnyxStream() {
   }, [token, addToast, messages]);
 
   const abortStream = useCallback(() => {
+    if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -204,6 +206,7 @@ export function useOnyxStream() {
 
     return () => {
       clearInterval(intervalId);
+      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
