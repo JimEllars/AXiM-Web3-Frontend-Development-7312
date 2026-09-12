@@ -156,6 +156,6 @@ export default {
     // Return 204 No Content to signal successful ingestion/queuing and handle anomalies silently
     const responseHeaders = getCorsHeaders(request);
     responseHeaders['Access-Control-Allow-Origin'] = '*';
-    return new Response(null, { status: 204, headers: responseHeaders });
+    return new Response(null, { status: 202, headers: responseHeaders });
   }
 };

@@ -1,6 +1,7 @@
 import { useAximStore } from '../store/useAximStore';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { localStore } from '../lib/persistence';
+import { onFCP, onCLS, onLCP } from 'web-vitals';
 
 let isFlushing = false;
 let batchQueue = [];
@@ -41,12 +42,19 @@ export function getTelemetryStore() {
   return [...useAximStore.getState().telemetryCollection];
 }
 
+let globalPerfMetrics = {};
+if (typeof window !== 'undefined') {
+  onFCP((metric) => { globalPerfMetrics.FCP = metric.value; });
+  onCLS((metric) => { globalPerfMetrics.CLS = metric.value; });
+  onLCP((metric) => { globalPerfMetrics.LCP = metric.value; });
+}
+
 export function logTelemetry(type, payload) {
   const event = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
     type,
-    payload,
+    payload: { ...payload, perf: globalPerfMetrics },
     sessionId: typeof window !== 'undefined' ? sessionStorage.getItem('axim_session_id') : undefined,
   };
 
@@ -151,6 +159,7 @@ export async function flushTelemetryQueue(force = false) {
 
           while (retries > 0) {
             try {
+              const startFetch = Date.now();
               const fetchPromise = fetch(endpoint, {
                 method: 'POST',
                 headers: {
@@ -165,6 +174,8 @@ export async function flushTelemetryQueue(force = false) {
               response = await Promise.race([fetchPromise, timeoutPromise]);
 
               if (response.status === 200 || response.status === 202 || response.status === 204) {
+                 const rtt = Date.now() - startFetch;
+                 globalPerfMetrics.worker_rtt = rtt;
                  break;
               } else if (response.status >= 500) {
                  isCircuitOpen = true;
