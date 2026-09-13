@@ -67,7 +67,7 @@
     "vite": "^5.4.21",
     "vite-node": "^3.2.4",
     "vitest": "^4.1.11",
-    "wrangler": "^4.25.0"
+    "wrangler": "^4.131.1"
   },
   "overrides": {
     "@emotion/react": "^11.13.3",
