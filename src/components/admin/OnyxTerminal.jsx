@@ -67,9 +67,23 @@ export default function OnyxTerminal() {
   };
 
 
-  const addTerminalOutput = (text, type = 'info') => {
-    setTerminalOutput(prev => [...prev, { text, type, timestamp: new Date().toISOString() }]);
-  };
+
+  const pendingOutputs = React.useRef([]);
+  const outputTimer = React.useRef(null);
+  const addTerminalOutput = React.useCallback((text, type = 'info') => {
+    pendingOutputs.current.push({ text, type, timestamp: new Date().toISOString() });
+    if (!outputTimer.current) {
+      outputTimer.current = setTimeout(() => {
+        setTerminalOutput(prev => {
+          const combined = [...prev, ...pendingOutputs.current];
+          pendingOutputs.current = [];
+          return combined.slice(-200); // keep max 200 items
+        });
+        outputTimer.current = null;
+      }, 100);
+    }
+  }, []);
+
 
   const handleKvWrite = async (e) => {
     e.preventDefault();
@@ -112,10 +126,12 @@ export default function OnyxTerminal() {
         setResponseLog(`[SUCCESS] KV Sync successful. Latency: ${latencyMilli}ms`);
         addTerminalOutput(`> [SUCCESS] SYNC COMPLETE. LATENCY: ${latencyMilli}ms`, 'success');
         logTelemetry('onyx_kv_write_success', { key: kvKey, latency: latencyMilli });
+        logTelemetry('command_executed', { command: 'kv_write', key: kvKey });
       } else {
         setResponseLog(`[FAILED] Edge rejected write payload. Err: ${data.error}. Latency: ${latencyMilli}ms`);
         addTerminalOutput(`> [FAILED] SYNC FAILED. ERR: ${data.error}. LATENCY: ${latencyMilli}ms`, 'error');
         logTelemetry('onyx_kv_write_failed', { key: kvKey, error: data.error });
+        logTelemetry('command_error', { command: 'kv_write', error: data.error });
       }
     } catch (err) {
       setResponseLog(`[PARSE ERROR] Invalid JSON payload or network failure.`);

@@ -136,8 +136,14 @@ trackEvent('auth_success', { method: 'supabase' });
       }
     });
 
+    const handleWalletDisconnect = () => {
+      console.log('Wallet disconnected cleanly');
+    };
+    if (typeof window !== 'undefined') { window.addEventListener('wallet_disconnect_clean', handleWalletDisconnect); }
+
     return () => {
       isMounted = false;
+      if (typeof window !== 'undefined') { window.removeEventListener('wallet_disconnect_clean', handleWalletDisconnect); }
       if (authListener && authListener.subscription) {
         authListener.subscription.unsubscribe();
       }

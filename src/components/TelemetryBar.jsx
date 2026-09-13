@@ -128,7 +128,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   return (
-    <div className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20">
+    <div className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]">
       {/* Mobile view */}
       <div className="md:hidden flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
