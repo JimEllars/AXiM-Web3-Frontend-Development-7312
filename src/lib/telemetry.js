@@ -109,9 +109,9 @@ export async function flushTelemetryQueue(force = false) {
       // Buffer up to 50 events in localStorage silently
       if (typeof window !== 'undefined') {
         try {
-          const existing = JSON.parse(localStorage.getItem('axim_telemetry_offline_queue') || '[]');
+          const existing = JSON.parse(localStorage.getItem('axim_telemetry_queue') || '[]');
           const updated = [...existing, ...currentBatch].slice(-50);
-          localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(updated));
+          localStorage.setItem('axim_telemetry_queue', JSON.stringify(updated));
         } catch (e) { /* ignore */ }
       }
       return;
@@ -132,7 +132,7 @@ export async function flushTelemetryQueue(force = false) {
     if (!endpoint) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
       if (typeof window !== 'undefined') {
-        try { sessionStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(batchQueue)); } catch (e) { /* ignore */ }
+        try { sessionStorage.setItem('axim_telemetry_queue', JSON.stringify(batchQueue)); } catch (e) { /* ignore */ }
       }
       return;
     }
@@ -140,7 +140,8 @@ export async function flushTelemetryQueue(force = false) {
     let success = false;
 
     if (typeof window !== 'undefined') {
-      if (window.navigator?.sendBeacon) {
+      // Only use sendBeacon as a fallback on unload/pagehide where 'force' is true
+      if (force && window.navigator?.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
         try {
           success = window.navigator.sendBeacon(endpoint, blob);
@@ -263,9 +264,9 @@ export async function flushTelemetryQueue(force = false) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
       if (typeof window !== 'undefined') {
         try {
-          const existing = JSON.parse(localStorage.getItem('axim_telemetry_offline_queue') || '[]');
+          const existing = JSON.parse(localStorage.getItem('axim_telemetry_queue') || '[]');
           const updated = [...existing, ...batchQueue].slice(-50);
-          localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify(updated));
+          localStorage.setItem('axim_telemetry_queue', JSON.stringify(updated));
         } catch (e) { /* ignore */ }
         localStore.saveTelemetryCache(batchQueue);
       }

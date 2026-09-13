@@ -34,6 +34,9 @@ export default {
           signal: AbortSignal.timeout(3500)
         });
         if (!response.ok) {
+           if (response.status === 429) {
+               throw new Error('Primary RPC rate limited (429)');
+           }
            throw new Error(`Primary RPC returned ${response.status}`);
         }
       } catch (err) {
