@@ -10,6 +10,7 @@
 ## Target Audience & Solutions
 AXiM Development serves enterprise operators, decentralized network engineers, and high-performance individuals looking to eliminate operational friction.
 
+
 ## Canonical resources
 - [AXiM Hub Homepage](https://axim.us.com/)
 - [Intelligence Hub & Briefings](https://axim.us.com/articles)
@@ -18,6 +19,18 @@ AXiM Development serves enterprise operators, decentralized network engineers, a
 - [Services](https://axim.us.com/services)
 - [Make.com Automation Solutions](https://axim.us.com/partners/make)
 - [Powur Solar Infrastructure](https://axim.us.com/partners/powur-solar)
+
+### Specialized Pillars
+- [Business Development Hub](https://axim.us.com/business)
+- [Personal Development Hub](https://axim.us.com/personal)
+- [Tech Development Hub](https://axim.us.com/tech)
+
+### Core Apps & Ecosystem
+- [AXiM Core](https://core.axim.us.com)
+- [AXiM ARC Remote Command](https://arc.axim.us.com)
+- [AXiM Coding Lab](https://coder.axim.us.com)
+- [AXiM Support System](https://support.axim.us.com)
+- [AXiM Passport SSO](https://passport.axim.us.com)
 
 ## Crawling and citations
 
