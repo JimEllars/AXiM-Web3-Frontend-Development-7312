@@ -87,59 +87,112 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
           {sectionSubtitle && <p className="text-zinc-400 text-sm max-w-2xl">{sectionSubtitle}</p>}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 min-h-[400px]">
+        <div className="flex flex-col gap-8 mb-12 min-h-[400px]">
           {loading ? (
-            Array(limit).fill(0).map((_, i) => <SkeletonCard key={i} />)
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               {Array(limit).fill(0).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
           ) : (
-            articles.map((article, i) => (
-              <motion.div
-                key={article.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                onViewportEnter={() => {
-                  logTelemetry('category_feed_item_impression', { category: categorySlug, slug: article.slug });
-                }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
-              >
-                <div className="relative h-48 overflow-hidden bg-black/40">
-                  {article.featuredImage ? (
-                    <WPImage src={article.featuredImage} alt={article.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-onyx-800 to-onyx-950">
-                       <SafeIcon icon={LuIcons.LuImage} className="w-8 h-8 text-white/10" />
+            <>
+              {articles.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  onViewportEnter={() => {
+                    logTelemetry('category_feed_item_impression', { category: categorySlug, slug: articles[0].slug });
+                  }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col lg:flex-row relative w-full h-full lg:h-[400px]"
+                >
+                  <div className="relative w-full lg:w-1/2 h-64 lg:h-full overflow-hidden bg-black/40 shrink-0">
+                    {articles[0].featuredImage ? (
+                      <WPImage src={articles[0].featuredImage} alt={articles[0].title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    ) : (
+                      <WPImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" categorySlug={categorySlug} categoryName={articles[0].categoryName} />
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${categoryColor}`}>
+                        {articles[0].categoryName}
+                      </span>
                     </div>
-                  )}
-                  <div className="absolute top-4 left-4">
-                    <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${categoryColor}`}>
-                      {article.categoryName}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex items-center gap-3 text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">
-                    <span>{new Date(article.date).toLocaleDateString()}</span>
-                    <span>•</span>
-                    <span>{article.readingTime}</span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-3 leading-snug group-hover:text-cyan-400 transition-colors line-clamp-2">
-                    {article.title}
-                  </h3>
+                  <div className="p-8 flex flex-col flex-grow justify-center">
+                    <div className="flex items-center gap-3 text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">
+                      <span>{new Date(articles[0].date).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <span>{articles[0].readingTime}</span>
+                    </div>
 
-                  <p className="text-sm text-zinc-400 line-clamp-3 mb-6 flex-grow" dangerouslySetInnerHTML={{ __html: article.excerpt }} />
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-snug group-hover:text-cyan-400 transition-colors line-clamp-3">
+                      {articles[0].title}
+                    </h3>
 
-                  <Link
-                    to={`/articles/${article.slug}`}
-                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white hover:text-cyan-400 transition-colors mt-auto"
-                  >
-                    Read Article <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
-                  </Link>
+                    <p className="text-base text-zinc-400 line-clamp-4 mb-8" dangerouslySetInnerHTML={{ __html: articles[0].excerpt }} />
+
+                    <Link
+                      to={`/articles/${articles[0].slug}`}
+                      className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-white hover:text-cyan-400 transition-colors mt-auto w-fit"
+                    >
+                      Read Featured Article <SafeIcon icon={LuIcons.LuArrowRight} className="w-5 h-5" />
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+
+              {articles.length > 1 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {articles.slice(1).map((article, i) => (
+                    <motion.div
+                      key={article.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      onViewportEnter={() => {
+                        logTelemetry('category_feed_item_impression', { category: categorySlug, slug: article.slug });
+                      }}
+                      transition={{ duration: 0.5, delay: (i + 1) * 0.1 }}
+                      className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
+                    >
+                      <div className="relative h-48 overflow-hidden bg-black/40">
+                        {article.featuredImage ? (
+                          <WPImage src={article.featuredImage} alt={article.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        ) : (
+                           <WPImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" categorySlug={categorySlug} categoryName={article.categoryName} />
+                        )}
+                        <div className="absolute top-4 left-4">
+                          <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${categoryColor}`}>
+                            {article.categoryName}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-6 flex flex-col flex-grow">
+                        <div className="flex items-center gap-3 text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">
+                          <span>{new Date(article.date).toLocaleDateString()}</span>
+                          <span>•</span>
+                          <span>{article.readingTime}</span>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-white mb-3 leading-snug group-hover:text-cyan-400 transition-colors line-clamp-2">
+                          {article.title}
+                        </h3>
+
+                        <p className="text-sm text-zinc-400 line-clamp-3 mb-6 flex-grow" dangerouslySetInnerHTML={{ __html: article.excerpt }} />
+
+                        <Link
+                          to={`/articles/${article.slug}`}
+                          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white hover:text-cyan-400 transition-colors mt-auto"
+                        >
+                          Read Article <SafeIcon icon={LuIcons.LuArrowRight} className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-              </motion.div>
-            ))
+              )}
+            </>
           )}
         </div>
 

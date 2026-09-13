@@ -187,21 +187,20 @@ const { slug } = useParams();
     },
     "headline": cleanTitle,
     "image": [imageUrl],
-    "datePublished": article.date,
-    "dateModified": article.modified || article.date,
-    "author": {
+    "datePublished": new Date(article.date).toISOString(),
+    "dateModified": new Date(article.modified || article.date).toISOString(),
+    "author": [{
       "@type": "Person",
       "name": authorName,
       "url": "https://axim.us.com/"
-    },
+    }],
     "publisher": {
       "@type": "Organization",
-      "name": "AXiM Development",
+      "name": "AXiM Systems",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://wp.axim.us.com/wp-content/uploads/2026/08/AXiM-Business-Development-cropped.png"
-      }
-    ,
+        "url": "https://axim.us.com/icon.svg"
+      },
       "knowsAbout": [
         "Business Automation",
         "Make.com",
@@ -211,8 +210,33 @@ const { slug } = useParams();
         "Home Solar",
         "Powur Solar"
       ]
-},
+    },
     "description": cleanExcerpt
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://axim.us.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": article.categories?.includes(707) ? 'Daily News' : 'Briefing',
+        "item": "https://axim.us.com/articles"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": cleanTitle,
+        "item": window.location.href
+      }
+    ]
   };
 
   return (
@@ -233,34 +257,52 @@ const { slug } = useParams();
         image={imageUrl}
         type="article"
         url={window.location.href}
-        customSchema={[articleSchema]}
+        customSchema={[articleSchema, breadcrumbSchema]}
         publishedTime={new Date(article.date).toISOString()}
         imageWidth={1200}
         imageHeight={630}
       />
 
-      {/* Hero Header with Multi-Color Overlay */}
-      <section className="relative w-full h-[50vh] min-h-[400px] flex items-end pb-16 border-b border-white/10">
-        <WPImage post={article} src={imageUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover grayscale-[30%]" />
+      {/* Full-Width Immersive Magazine Hero */}
+      <div className="relative w-full min-h-[55vh] flex items-end justify-center overflow-hidden bg-[#0A0D14]">
+        {/* Background Featured Image */}
+        <WPImage
+          post={article}
+          src={imageUrl}
+          alt={cleanTitle}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Cybernetic Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-[#0A0D14]/85 to-black/40" />
 
-        {/* Vibrant Multi-Color Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-axim-purple/70 via-[#DB2777]/50 to-axim-gold/40 mix-blend-overlay z-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-void to-transparent z-10" />
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-20 w-full">
+        {/* Title & Metadata Overlay */}
+        <div className="relative z-10 w-full max-w-4xl px-4 sm:px-6 lg:px-8 pb-12 pt-28 text-left">
           <Link to="/articles" className="inline-flex items-center text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors mb-6 group">
             <SafeIcon icon={LuIcons.LuArrowLeft} className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Hub
           </Link>
           {isWeb3Authenticated && (
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none">
+            <div className="mb-4 flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               [ARTICLE_HASH: VERIFIED_ON_CHAIN // ARBITRUM_ONE]
             </div>
           )}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight max-w-4xl" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
+          <div className="flex items-center gap-2 mb-4">
+            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-[#FDD023]/20 text-[#FDD023] border border-[#FDD023]/40 uppercase tracking-wider">
+              {article.categories?.includes(707) ? 'Daily News' : 'Briefing'}
+            </span>
+            <span className="text-xs text-slate-400 font-mono">
+              {Math.max(1, Math.ceil((article.content?.rendered?.replace(/<[^>]+>/g, '').split(' ').length || 0) / 200))} min read
+            </span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight break-words" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
+          <div className="mt-6 flex items-center gap-4 text-sm text-slate-400 border-t border-slate-800/80 pt-4">
+            <span>By {authorName}</span>
+            <span>•</span>
+            <span>{formattedDate}</span>
+          </div>
         </div>
-      </section>
+      </div>
 
       {/* Main Content & Sidebar Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 grid grid-cols-1 lg:grid-cols-12 gap-16">
@@ -344,46 +386,72 @@ const { slug } = useParams();
              </a>
            </div>
 
-          {/* Ecosystem Tools */}
+          {/* Ecosystem Apps */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
              <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
-               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Ecosystem Tools
+               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> AXiM Apps
              </h4>
              <div className="space-y-4">
-               <Link to="/store"
-                 onClick={() => logTelemetry('sidebar_tool_click', { tool: 'nda', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+               <a href="https://core.axim.us.com"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'core', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuShieldCheck} className="w-4 h-4 text-white" />
+                    <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Mutual NDA</span>
-               </Link>
-               <Link to="/store"
-                 onClick={() => logTelemetry('sidebar_tool_click', { tool: 'paystub', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
-                 <div className="w-8 h-8 rounded bg-gradient-to-br from-[#DB2777] to-red-600 flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuFileText} className="w-4 h-4 text-white" />
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">AXiM Core</span>
+               </a>
+               <a href="https://passport.axim.us.com"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'passport', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-600 to-cyan-400 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuKey} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Auto Pay Stub</span>
-               </Link>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Passport SSO</span>
+               </a>
+               <a href="https://arc.axim.us.com"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'arc', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuTerminal} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">ARC Remote</span>
+               </a>
+               <a href="https://coder.axim.us.com"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'coder', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuCode} className="w-4 h-4 text-black" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Coding Lab</span>
+               </a>
              </div>
           </div>
 
           {/* Partner Network */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
              <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
-               <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-zinc-500" /> Partner Network
+               <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-zinc-500" /> Strategic Partners
              </h4>
              <div className="space-y-4">
-               <a href="https://swiy.co/Teach1" onClick={(e) => handlePartnerClick(e, 'https://swiy.co/Teach1')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
-                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-indigo-600 flex items-center justify-center shrink-0">
+               <a href="/goto/make" onClick={(e) => handlePartnerClick(e, '/goto/make')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuWorkflow} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Make.com</span>
+               </a>
+               <a href="/goto/teachable" onClick={(e) => handlePartnerClick(e, '/goto/teachable')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuGraduationCap} className="w-4 h-4 text-white" />
                  </div>
                  <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Teachable</span>
                </a>
-               <a href="https://powur.com/axim" onClick={(e) => handlePartnerClick(e, 'https://powur.com/axim')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
-                 <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuSun} className="w-4 h-4 text-black" />
+               <a href="/goto/taja-ai" onClick={(e) => handlePartnerClick(e, '/goto/taja-ai')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-600 to-cyan-400 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuBot} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Powur Solar</span>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Taja AI</span>
+               </a>
+               <a href="/goto/clickrank" onClick={(e) => handlePartnerClick(e, '/goto/clickrank')} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="w-8 h-8 rounded bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0">
+                    <SafeIcon icon={LuIcons.LuTrendingUp} className="w-4 h-4 text-white" />
+                 </div>
+                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">ClickRank</span>
                </a>
              </div>
           </div>
