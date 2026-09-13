@@ -26,6 +26,10 @@ export default function Chatbot() {
 
       {isOpen && (
         <div className="fixed bottom-40 right-6 w-80 bg-onyx-900/90 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl z-[90] overflow-hidden animate-fade-in-up">
+          {/* Fallback Banner */}
+          <div className="bg-red-900/80 p-2 flex justify-center text-[10px] text-white font-mono uppercase tracking-widest border-b border-red-500/50">
+            [DEGRADED MODE - UPLINK OFFLINE]
+          </div>
           <div className="bg-axim-purple p-4 flex items-center gap-3">
             <SafeIcon icon={LuIcons.LuHeadphones} className="w-5 h-5 text-white" />
             <h3 className="text-sm font-black uppercase tracking-widest text-white">Support & Inquiry</h3>

@@ -27,7 +27,7 @@
   Cache-Control: no-store, no-cache, must-revalidate
 
 /api/wp-proxy/*
-  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+  Cache-Control: public, max-age=300, stale-while-revalidate=60
 
 /api/telemetry/*
   Access-Control-Allow-Origin: https://axim.us.com

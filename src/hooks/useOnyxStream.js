@@ -53,7 +53,7 @@ export function useOnyxStream() {
     const startTime = Date.now();
 
     let retryCount = 0;
-    const maxRetries = 4;
+    const maxRetries = 3;
     let currentBackoff = 1000;
 
     const connectStream = async () => {
