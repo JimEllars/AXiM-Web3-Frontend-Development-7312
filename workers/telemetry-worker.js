@@ -18,7 +18,10 @@ function getCorsHeaders(request) {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client',
     'Cache-Control': 'no-store, max-age=0',
-    Vary: 'Origin'
+    Vary: 'Origin',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin'
   };
 }
 
@@ -39,9 +42,9 @@ function isValidEvent(event) {
     event.id.length <= 128 &&
     typeof event.timestamp === 'string' &&
     !Number.isNaN(Date.parse(event.timestamp)) &&
-    typeof event.type === 'string' &&
+    (typeof event.type === 'string' || typeof event.event_type === 'string') &&
     (event.sessionId === undefined || typeof event.sessionId === 'string') &&
-    event.type.length <= 128 &&
+    ((event.type || event.event_type).length <= 128) &&
     JSON.stringify(event.payload ?? null).length <= 16384
   );
 }
@@ -156,6 +159,6 @@ export default {
     // Return 204 No Content to signal successful ingestion/queuing and handle anomalies silently
     const responseHeaders = getCorsHeaders(request);
     responseHeaders['Access-Control-Allow-Origin'] = '*';
-    return new Response(null, { status: 204, headers: responseHeaders });
+    return new Response(null, { status: 202, headers: responseHeaders });
   }
 };

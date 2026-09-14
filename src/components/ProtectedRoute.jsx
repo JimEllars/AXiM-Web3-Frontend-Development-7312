@@ -1,3 +1,4 @@
+import GlobalLoader from './GlobalLoader';
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAximAuth } from '../hooks/useAximAuth';
@@ -29,14 +30,8 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
 
   if (isLoading || isHydrating) {
     return (
-      <div className="min-h-screen bg-[#050505] p-6 pt-24 max-w-7xl mx-auto flex flex-col gap-8 w-full animate-pulse">
-         <div className="w-1/3 h-8 bg-white/5 rounded-sm"></div>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="h-40 bg-white/5 rounded-sm"></div>
-            <div className="h-40 bg-white/5 rounded-sm"></div>
-            <div className="h-40 bg-white/5 rounded-sm"></div>
-         </div>
-         <div className="w-full h-96 bg-white/5 rounded-sm"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <GlobalLoader />
       </div>
     );
   }

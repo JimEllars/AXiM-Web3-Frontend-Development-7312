@@ -59,6 +59,9 @@ export function generateCrossAppHandoffUrl(targetAppUrl, sessionData) {
  * @returns {Promise<any>}
  */
 export async function exchangePassportToken(token) {
+  if (!token || typeof token !== 'string' || token.length > 512 || token.length < 10) {
+     throw new Error("Invalid or malformed handoff token.");
+  }
   const url = `${import.meta.env.VITE_CORE_API_URL || ''}/api/v1/auth/exchange`;
   let retries = 2;
   let delay = 400;

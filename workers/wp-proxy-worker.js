@@ -146,6 +146,9 @@ export default {
       const headers = new Headers(wpResponse.headers);
       headers.set('Access-Control-Allow-Origin', '*');
       headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      headers.set('X-Content-Type-Options', 'nosniff');
+      headers.set('X-Frame-Options', 'SAMEORIGIN');
+      headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
       if (wpResponse.status >= 500 || wpResponse.status === 429) {
         headers.set('Cache-Control', 'no-store');
