@@ -46,7 +46,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.support === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuGlobe,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.support === 'operational' ? 'axim-gold' : 'red-500'),
+      color: liveMetrics.isReconnecting ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.support === 'operational' ? 'emerald-500' : 'red-500'),
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.support !== 'operational'
     },
     {

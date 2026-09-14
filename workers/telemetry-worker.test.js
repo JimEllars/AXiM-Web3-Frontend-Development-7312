@@ -47,3 +47,16 @@ describe('telemetry-worker', () => {
     expect(body.error).toBe('Telemetry event validation failed.');
   });
 });
+
+  it('validates payload and returns 400 for too many events', async () => {
+    const events = Array.from({ length: 101 }, (_, i) => ({ id: `event_${i}`, type: 'test', timestamp: new Date().toISOString() }));
+    const req = new Request('https://telemetry.axim.us.com/api/telemetry', {
+      method: 'POST',
+      headers: { Origin: 'https://axim.us.com' },
+      body: JSON.stringify(events)
+    });
+    const res = await worker.fetch(req, { AXIM_CORE_URL: 'http://test', AXIM_GATEWAY_TOKEN: 'token' }, { waitUntil: () => {} });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toBe('Expected between 1 and 100 telemetry events.');
+  });

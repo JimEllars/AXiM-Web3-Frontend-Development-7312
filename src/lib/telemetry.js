@@ -106,11 +106,11 @@ export async function flushTelemetryQueue(force = false) {
       const currentBatch = [...batchQueue];
       batchQueue = []; // Clear current queue to prevent endless growing in memory
 
-      // Buffer up to 50 events in localStorage silently
+      // buffer up to 100 events in localStorage silently
       if (typeof window !== 'undefined') {
         try {
           const existing = localStore.getTelemetryCache() || [];
-          const updated = [...existing, ...currentBatch].slice(-50);
+          const updated = [...existing, ...currentBatch].slice(-100);
           localStore.saveTelemetryCache(updated);
         } catch (e) { /* ignore */ }
       }
@@ -130,7 +130,7 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
 
     if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 100); // Restore on fail
       if (typeof window !== 'undefined') {
         try { localStore.saveTelemetryCache(batchQueue); } catch (e) { /* ignore */ }
       }
@@ -261,11 +261,11 @@ export async function flushTelemetryQueue(force = false) {
       }
     } else {
       // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 100);
       if (typeof window !== 'undefined') {
         try {
           const existing = localStore.getTelemetryCache() || [];
-          const updated = [...existing, ...batchQueue].slice(-50);
+          const updated = [...existing, ...batchQueue].slice(-100);
           localStore.saveTelemetryCache(updated);
         } catch (e) { /* ignore */ }
       }
