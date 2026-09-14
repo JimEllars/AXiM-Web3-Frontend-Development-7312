@@ -4,7 +4,10 @@ export default {
       'Access-Control-Allow-Origin': 'https://axim.us.com',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      Vary: 'Origin'
+      Vary: 'Origin',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'SAMEORIGIN',
+      'Referrer-Policy': 'strict-origin-when-cross-origin'
     };
 
     if (request.method === 'OPTIONS') {
@@ -65,12 +68,12 @@ export default {
     } catch (error) {
       console.error("RPC Worker Error:", error);
       if (error.name === 'TimeoutError') {
-        return new Response(JSON.stringify({ error: "Gateway Timeout" }), {
+        return new Response(JSON.stringify({ success: false, error: { code: 504, message: "Gateway Timeout" } }), {
           status: 504,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
         });
       }
-      return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      return new Response(JSON.stringify({ success: false, error: { code: 500, message: "Internal Server Error" } }), {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });

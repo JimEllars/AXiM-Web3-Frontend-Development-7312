@@ -24,6 +24,7 @@ const TelemetryEventItem = memo(({ event }) => (
 export default function OnyxTerminal() {
   const [kvKey, setKvKey] = useState('');
   const [kvValue, setKvValue] = useState('');
+  const [autoScroll, setAutoScroll] = useState(true);
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [responseLog, setResponseLog] = useState('');
   const [replaySpeed, setReplaySpeed] = useState(1);
@@ -60,6 +61,7 @@ export default function OnyxTerminal() {
   const isAutoScrolling = React.useRef(true);
 
   const handleScroll = (e) => {
+    if (!autoScroll) return;
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     // Check if user has scrolled up from the bottom (with a small 10px buffer)
     const isAtBottom = scrollHeight - scrollTop - clientHeight < 10;
@@ -279,12 +281,27 @@ export default function OnyxTerminal() {
             FLUSH DEAD-LETTER QUEUE
           </button>
         </form>
+        <button
+          type="button"
+          onClick={() => {
+            const blob = new Blob([JSON.stringify({ output: terminalOutput, telemetry: telemetryQueue }, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `onyx_logs_${Date.now()}.json`;
+            a.click();
+          }}
+          className="w-full mt-4 py-4 bg-zinc-800 text-white text-xs font-black uppercase tracking-widest transition-colors hover:bg-zinc-700 flex items-center justify-center gap-2 rounded-sm"
+        >
+          EXPORT LOGS
+        </button>
 
         {/* Console Output */}
         <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden hover:border-axim-purple/30 transition-colors">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-axim-purple via-[#DB2777] to-transparent opacity-50" />
-          <div className="text-zinc-600 mb-4 uppercase tracking-widest border-b border-white/5 pb-2 flex items-center gap-2">
-            <SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log
+          <div className="text-zinc-600 mb-4 uppercase tracking-widest border-b border-white/5 pb-2 flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log</span>
+            <button onClick={() => setAutoScroll(!autoScroll)} className={`text-[9px] px-2 py-1 rounded-sm border ${autoScroll ? 'border-axim-purple text-axim-purple bg-axim-purple/10' : 'border-zinc-700 text-zinc-500'}`}>Auto-scroll: {autoScroll ? 'ON' : 'OFF'}</button>
           </div>
 
           <div

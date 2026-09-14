@@ -109,9 +109,9 @@ export async function flushTelemetryQueue(force = false) {
       // Buffer up to 50 events in localStorage silently
       if (typeof window !== 'undefined') {
         try {
-          const existing = JSON.parse(localStorage.getItem('axim_telemetry_queue') || '[]');
+          const existing = localStore.getTelemetryCache() || [];
           const updated = [...existing, ...currentBatch].slice(-50);
-          localStorage.setItem('axim_telemetry_queue', JSON.stringify(updated));
+          localStore.saveTelemetryCache(updated);
         } catch (e) { /* ignore */ }
       }
       return;
@@ -132,7 +132,7 @@ export async function flushTelemetryQueue(force = false) {
     if (!endpoint) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 50); // Restore on fail
       if (typeof window !== 'undefined') {
-        try { sessionStorage.setItem('axim_telemetry_queue', JSON.stringify(batchQueue)); } catch (e) { /* ignore */ }
+        try { localStore.saveTelemetryCache(batchQueue); } catch (e) { /* ignore */ }
       }
       return;
     }
@@ -264,11 +264,10 @@ export async function flushTelemetryQueue(force = false) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
       if (typeof window !== 'undefined') {
         try {
-          const existing = JSON.parse(localStorage.getItem('axim_telemetry_queue') || '[]');
+          const existing = localStore.getTelemetryCache() || [];
           const updated = [...existing, ...batchQueue].slice(-50);
-          localStorage.setItem('axim_telemetry_queue', JSON.stringify(updated));
+          localStore.saveTelemetryCache(updated);
         } catch (e) { /* ignore */ }
-        localStore.saveTelemetryCache(batchQueue);
       }
     }
   } catch (err) {
@@ -279,7 +278,7 @@ export async function flushTelemetryQueue(force = false) {
 }
 
 if (typeof window !== 'undefined') {
-  setInterval(() => flushTelemetryQueue(false), 5000);
+  setInterval(() => flushTelemetryQueue(false), 30000);
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {

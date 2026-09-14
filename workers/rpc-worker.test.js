@@ -14,6 +14,6 @@ describe('rpc-worker', () => {
     const response = await rpcWorker.fetch(request, env);
     expect(response.status).toBe(504);
     const data = await response.json();
-    expect(data.error).toBe('Gateway Timeout');
+    expect(data.error.message).toBe('Gateway Timeout');
   });
 });

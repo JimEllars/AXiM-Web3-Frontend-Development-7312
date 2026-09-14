@@ -93,7 +93,7 @@ export default function Games() {
         transition={{ duration: 0.5 }}
       >
         {isWeb3Authenticated || session ? (
-          <div className="w-full bg-glass backdrop-blur-xl saturate-150 border-subtle border border-axim-green/30 p-6 flex flex-col md:flex-row items-center justify-between shadow-[0_0_30px_rgba(255,234,0,0.05)] rounded-sm">
+          <div className="w-full bg-onyx-500/80 backdrop-blur-md border-subtle border border-axim-green/30 p-6 flex flex-col md:flex-row items-center justify-between shadow-[0_0_30px_rgba(255,234,0,0.05)] rounded-sm">
             <div className="flex items-center gap-4 mb-4 md:mb-0">
               <div className="w-12 h-12 bg-axim-green/20 rounded-full flex items-center justify-center border border-axim-green">
                 <SafeIcon icon={LuIcons.LuGamepad2} className="w-6 h-6 text-axim-green" />

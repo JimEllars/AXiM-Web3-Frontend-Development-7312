@@ -116,7 +116,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
              if (setSelectedNode) setSelectedNode(node);
              handleLaunch(node.url);
           }}
-          className={`cursor-pointer p-4 border transition-all duration-300 ${selectedNode?.id === node.id ? 'bg-axim-gold/10 border-axim-gold shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'bg-glass backdrop-blur-xl saturate-150 border-subtle hover:border-white/30'}`}
+          className={`cursor-pointer p-4 border transition-all duration-300 ${selectedNode?.id === node.id ? 'bg-axim-gold/10 border-axim-gold shadow-[0_0_30px_rgba(255,234,0,0.1)]' : 'bg-onyx-500/80 backdrop-blur-md border-subtle hover:border-white/30'}`}
         >
           <div className="flex justify-between items-start mb-6">
             <div className={`p-3 rounded-sm ${selectedNode?.id === node.id ? 'bg-axim-gold text-black' : 'bg-white/5 text-white'}`}>
