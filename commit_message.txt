@@ -1,0 +1,6 @@
+feat(frontend): harden telemetry ingestion, auth session continuity, and telemetry UI indicators
+
+- Expanded `telemetry.js` buffer to 100 max length
+- Adjusted `telemetry-worker.js` to accept 100 max payloads and return 202 Accepted
+- Hardened `useAximAuth` to prioritize Web3 Auth to prevent race-condition loaders, and fall back securely to local storage session caches on 500 Network errors without UI flashes
+- Polished `TelemetryBar.jsx` and `DashboardNodes.jsx` UI indicators to gracefully ping edge node states.

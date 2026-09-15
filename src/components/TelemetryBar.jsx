@@ -127,12 +127,19 @@ export default function TelemetryBar({ label, color, initialValue }) {
         ? "text-axim-gold"
         : "text-axim-gold";
 
+  const isOffline = edgeRegion === 'OFFLINE';
+  const isBuffering = telemetryQueue?.length > 0;
+
+  const statusDotClass = isOffline
+    ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.6)]"
+    : (isBuffering ? "bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]" : "bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]");
+
   return (
     <div className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]">
       {/* Mobile view */}
       <div className="md:hidden flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_16px_rgba(16,185,129,1)]' : ''}`} />
+          <span className={`w-2 h-2 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 brightness-150' : ''}`} />
           <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">{label}</span>
         </div>
         <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>

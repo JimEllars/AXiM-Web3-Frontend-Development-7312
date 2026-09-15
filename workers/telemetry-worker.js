@@ -89,8 +89,8 @@ export default {
       events = [events];
     }
 
-    if (events.length === 0 || events.length > 50) {
-      return jsonResponse({ error: 'Expected between 1 and 50 telemetry events.' }, 400, request);
+    if (events.length === 0 || events.length > 100) {
+      return jsonResponse({ error: 'Expected between 1 and 100 telemetry events.' }, 400, request);
     }
 
     if (!events.every(isValidEvent)) {
