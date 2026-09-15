@@ -50,7 +50,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.support !== 'operational'
     },
     {
-      id: 'Voice',
+      id: 'B2B Scraping Services',
       type: 'Satellite App',
       url: 'https://voice.axim.us.com',
       status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.voice === 'operational' ? 'Operational' : 'Degraded'),
@@ -60,7 +60,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.voice !== 'operational'
     },
     {
-      id: 'Asguard',
+      id: 'Nexus CRM',
       type: 'Satellite App',
       url: 'https://asguard.axim.us.com',
       status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.asguard === 'operational' ? 'Operational' : 'Degraded'),
@@ -70,7 +70,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.asguard !== 'operational'
     },
     {
-      id: 'Green Machine',
+      id: 'Onboard1',
       type: 'Satellite App',
       url: 'https://greenmachine.axim.us.com',
       status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.greenmachine === 'operational' ? 'Operational' : 'Degraded'),
@@ -90,7 +90,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.groundgame !== 'operational'
     },
     {
-      id: 'CEO Dept',
+      id: 'Personality Test',
       type: 'Satellite App',
       url: 'https://ceodept.axim.us.com',
       status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.ceodept === 'operational' ? 'Operational' : 'Degraded'),

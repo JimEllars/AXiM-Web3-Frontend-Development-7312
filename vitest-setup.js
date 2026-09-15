@@ -1,3 +1,4 @@
+import React from 'react';
 import { expect, vi } from 'vitest';
 global.expect = expect;
 window.scrollTo = vi.fn();
@@ -27,3 +28,37 @@ vi.mock('./src/lib/supabase.js', () => ({
   },
   isSupabaseConfigured: true
 }));
+
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
+// Mock Turnstile
+vi.mock('@marsidev/react-turnstile', () => {
+  const MockTurnstile = ({ onSuccess, ...props }) => {
+    React.useEffect(() => {
+      if (onSuccess) onSuccess('mock-turnstile-token');
+    }, [onSuccess]);
+    return React.createElement('div', {
+      'data-testid': 'mock-turnstile',
+      ...props
+    });
+  };
+  return {
+    __esModule: true,
+    default: MockTurnstile,
+    Turnstile: MockTurnstile,
+  };
+});
+
+Object.defineProperty(window, 'turnstile', {
+  value: {
+    render: vi.fn(),
+    reset: vi.fn(),
+    remove: vi.fn(),
+    getResponse: vi.fn(() => 'mock-token')
+  },
+  writable: true
+});

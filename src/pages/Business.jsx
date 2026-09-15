@@ -80,6 +80,38 @@ export default function Business() {
       </section>
 
       <section className="py-12 max-w-7xl mx-auto px-6 lg:px-8">
+
+        {/* Business Tools Showcase */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Demand Letter Generator */}
+          <a href="https://quickdemandletter.com" target="_blank" rel="noopener noreferrer" className="group relative bg-[#050505] border border-white/10 p-6 rounded-sm hover:border-axim-purple/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <SafeIcon icon={LuIcons.LuFileText} className="w-8 h-8 text-axim-purple mb-4" />
+            <h3 className="text-lg font-black uppercase tracking-wider mb-2 text-white">Demand Letter Generator</h3>
+            <p className="text-xs text-zinc-400 font-medium">Generate professional, legally-sound demand letters rapidly to accelerate debt recovery and dispute resolution.</p>
+          </a>
+
+          {/* NDA Generator */}
+          <a href="https://nda.axim.us.com" target="_blank" rel="noopener noreferrer" className="group relative bg-[#050505] border border-white/10 p-6 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <SafeIcon icon={LuIcons.LuShieldCheck} className="w-8 h-8 text-axim-gold mb-4" />
+            <h3 className="text-lg font-black uppercase tracking-wider mb-2 text-white">NDA Generator</h3>
+            <p className="text-xs text-zinc-400 font-medium">Protect your intellectual property with ironclad Non-Disclosure Agreements ready in minutes.</p>
+          </a>
+
+          {/* Ground Game Canvassing */}
+          <div className="group relative bg-[#050505] border border-white/10 p-6 rounded-sm transition-all duration-300 overflow-hidden shadow-xl opacity-80 cursor-not-allowed">
+            <div className="absolute top-4 right-4">
+              <span className="px-2 py-1 text-[10px] font-bold text-white bg-white/10 uppercase tracking-widest rounded-sm border border-white/20">
+                🚀 Coming Soon
+              </span>
+            </div>
+            <SafeIcon icon={LuIcons.LuGlobe} className="w-8 h-8 text-zinc-500 mb-4" />
+            <h3 className="text-lg font-black uppercase tracking-wider mb-2 text-zinc-400">Ground Game Canvassing</h3>
+            <p className="text-xs text-zinc-500 font-medium">Deploy targeted field operations and local political/business canvassing data pipelines.</p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
 
 

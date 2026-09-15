@@ -1,8 +1,28 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Support from './Support.jsx';
+
+vi.mock('@marsidev/react-turnstile', () => {
+  const MockTurnstile = ({ onSuccess, ...props }) => {
+    React.useEffect(() => {
+      if (onSuccess) onSuccess('mock-turnstile-token');
+    }, [onSuccess]);
+
+    return React.createElement('div', {
+      'data-testid': 'mock-turnstile',
+      ...props
+    });
+  };
+
+  return {
+    __esModule: true,
+    default: MockTurnstile,
+    Turnstile: MockTurnstile,
+  };
+});
 
 vi.mock('../lib/telemetry', () => ({
   logTelemetry: vi.fn(),

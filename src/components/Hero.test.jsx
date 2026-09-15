@@ -1,4 +1,3 @@
-import 'global-jsdom/register';
 import { test, describe, afterEach, beforeEach, vi } from 'vitest';
 import assert from 'assert';
 import { render, screen, cleanup, act } from '@testing-library/react';
@@ -48,8 +47,9 @@ describe('Hero Component', () => {
     assert.ok(screen.getByText(/Accelerate Your Personal, Professional, and Business Systems with the AXiM Development Advantage./));
 
     // Check CTA buttons exist
-    assert.ok(screen.getAllByText(/Explore Marketplace/)[0]);
-    assert.ok(screen.getByText(/Consultation/));
+    assert.ok(screen.getAllByText(/Explore Business/)[0]);
+    assert.ok(screen.getByText(/Personality Test/));
+    assert.ok(screen.getByText(/Tech & Games/));
   });
 
 });

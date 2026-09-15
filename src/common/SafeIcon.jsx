@@ -10,7 +10,7 @@ const SafeIcon = ({ icon: IconComponent, name, ...props }) => {
   }
 
   // If a name is passed, try to find it in supported libraries
-  if (name) {
+  if (name && typeof name === 'string') {
     try {
       const Icon = LuIcons[name] || FiIcons[name];
       if (Icon) return <Icon {...props} />;

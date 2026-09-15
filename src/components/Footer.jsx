@@ -99,7 +99,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6 group">
-               <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[52px] w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
+               <img src="https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp" alt="AXiM Development" className="h-[68px] w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed mb-6 font-mono uppercase tracking-widest">
               Builders of a new era. Integrating decentralized energy, logical connectivity, and autonomous intelligence.
@@ -139,12 +139,13 @@ export default function Footer() {
           {/* Store Marketplace */}
           <div>
             <h2 className="text-white font-black uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-              <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Personal & Home
+              <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Personal Development
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/services/window-cleaning" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Window Cleaning</Link></li>
-              <li><Link to="/services/pressure-washing" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Pressure Washing</Link></li>
-              <li><Link to={"/tools/nda-generator"} className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Legal Utilities</Link></li>
+              <li><Link to="/personal#personality-test" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personality Test</Link></li>
+              <li><Link to="/personal" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personal Growth Articles</Link></li>
+              <li><Link to="/consultation" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Consultation</Link></li>
+              <li><Link to="/early-access" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Early Access</Link></li>
               <li><Link to="/personal" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Personal Hub →</Link></li>
             </ul>
           </div>

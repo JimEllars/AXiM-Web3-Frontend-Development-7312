@@ -7,11 +7,11 @@ import { generateSsoLaunchUrl } from '../lib/auth-handoff';
 
 const features = [
   { icon: LuIcons.LuZap, title: "Support", desc: "Access the AXiM Support System and ticket dashboard.", url: "https://support.axim.us.com" },
-  { icon: LuIcons.LuShieldCheck, title: "Asguard", desc: "Enterprise security cockpit and threat management.", url: "https://asguard.axim.us.com" },
-  { icon: LuIcons.LuRefreshCw, title: "Green Machine", desc: "Automated scaling and instance deployment system.", url: "https://greenmachine.axim.us.com" },
-  { icon: LuIcons.LuPhone, title: "Voice", desc: "Voice Telephony Core for operational communications.", url: "https://voice.axim.us.com" },
+  { icon: LuIcons.LuShieldCheck, title: "Nexus CRM", desc: "Enterprise security cockpit and threat management.", url: "https://asguard.axim.us.com" },
+  { icon: LuIcons.LuRefreshCw, title: "Onboard1", desc: "Automated scaling and instance deployment system.", url: "https://greenmachine.axim.us.com" },
+  { icon: LuIcons.LuPhone, title: "B2B Scraping Services", desc: "B2B Scraping Services Telephony Core for operational communications.", url: "https://voice.axim.us.com" },
   { icon: LuIcons.LuGlobe, title: "Ground Game", desc: "Canvassing and field operations logistics hub.", url: "https://groundgame.axim.us.com" },
-  { icon: LuIcons.LuBriefcase, title: "CEO Dept", desc: "Executive metrics and macro-level dashboards.", url: "https://ceodept.axim.us.com" }
+  { icon: LuIcons.LuBriefcase, title: "Personality Test", desc: "Executive metrics and macro-level dashboards.", url: "https://ceodept.axim.us.com" }
 ];
 
 export default function Ecosystem() {
