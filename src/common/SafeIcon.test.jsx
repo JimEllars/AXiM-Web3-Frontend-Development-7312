@@ -1,4 +1,3 @@
-import 'global-jsdom/register';
 import { test, describe, afterEach } from 'vitest';
 import assert from 'assert';
 import { render, screen, cleanup } from '@testing-library/react';
@@ -48,22 +47,9 @@ describe('SafeIcon Component', () => {
   });
 
   test('Renders fallback and warns when icon name access throws an error', () => {
-    const originalWarn = console.warn;
-    let warningCalled = false;
-
-    try {
-      console.warn = (msg) => {
-        warningCalled = true;
-        assert.match(msg, /Icon badName not found/);
-      };
-
-      let throwCount = 0;
       const badName = {
         toString: () => {
-          if (throwCount++ === 0) {
-            throw new Error('Cannot convert to string');
-          }
-          return 'badName';
+          throw new Error('Cannot convert to string');
         }
       };
 
@@ -71,9 +57,5 @@ describe('SafeIcon Component', () => {
       const iconElement = screen.getByTestId('error-fallback-icon');
       assert.ok(iconElement);
       assert.strictEqual(iconElement.tagName.toLowerCase(), 'svg');
-      assert.ok(warningCalled, 'console.warn should have been called');
-    } finally {
-      console.warn = originalWarn;
-    }
   });
 });

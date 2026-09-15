@@ -10,6 +10,7 @@ import PageTransition from '../components/PageTransition';
 import BackgroundEffects from '../components/BackgroundEffects';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
 import { sanitizeInput } from '../lib/sanitize';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Support() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,8 @@ export default function Support() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [networkFault, setNetworkFault] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState(null);
+  const [attachmentError, setAttachmentError] = useState(false);
 
   const showToast = useAximStore((state) => state.showToast);
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
@@ -230,6 +233,21 @@ export default function Support() {
                   <p className="text-xs text-zinc-400 font-mono mb-6">
                     Your request has been securely transmitted and queued for analysis by the AXiM Core.
                   </p>
+
+                  <div className="flex justify-center mt-4">
+                    <Turnstile
+                      siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => {
+                        setTurnstileToken(null);
+                        logTelemetry('security_audit', { event_type: 'security_audit', reason: 'turnstile_error' });
+                      }}
+                      onExpire={() => setTurnstileToken(null)}
+                      options={{
+                        theme: 'dark'
+                      }}
+                    />
+                  </div>
                   <button
                     onClick={() => { setIsSuccess(false); setFormData({ name: '', email: '', subject: '', priority: 'Technical', issue: '', attachment: null }); }}
                     className="px-6 py-2 bg-axim-purple text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm"
@@ -353,6 +371,21 @@ export default function Support() {
                     </div>
                   </div>
 
+
+                  <div className="flex justify-center mt-4">
+                    <Turnstile
+                      siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => {
+                        setTurnstileToken(null);
+                        logTelemetry('security_audit', { event_type: 'security_audit', reason: 'turnstile_error' });
+                      }}
+                      onExpire={() => setTurnstileToken(null)}
+                      options={{
+                        theme: 'dark'
+                      }}
+                    />
+                  </div>
                   <button
                     disabled={isSubmitting}
                     type="submit"

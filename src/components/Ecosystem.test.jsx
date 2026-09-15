@@ -1,4 +1,3 @@
-import 'global-jsdom/register';
 import {  test, describe, afterEach, before , beforeAll } from 'vitest';
 import assert from 'assert';
 import { render, screen, cleanup } from '@testing-library/react';
