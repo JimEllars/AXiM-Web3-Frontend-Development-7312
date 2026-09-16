@@ -37,6 +37,22 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   }
 
   if (!isAuthenticated) {
+    if (isReconnecting || isHydrating || isLoading) {
+      return (
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center flex-col gap-4">
+          <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-axim-purple animate-spin" />
+          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Re-establishing Uplink...</p>
+        </div>
+      );
+    }
+    if (isReconnecting || isHydrating || isLoading) {
+      return (
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center flex-col gap-4">
+          <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-axim-purple animate-spin" />
+          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Re-establishing Uplink...</p>
+        </div>
+      );
+    }
     if (isReconnecting) {
       // Graceful degraded state while attempting to reconnect silently
       return (

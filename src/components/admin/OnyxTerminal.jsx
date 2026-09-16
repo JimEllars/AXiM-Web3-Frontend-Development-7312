@@ -307,7 +307,7 @@ export default function OnyxTerminal() {
           <div
              ref={logContainerRef}
              onScroll={handleScroll}
-             className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2 scroll-smooth"
+             aria-live="polite" className="flex-1 text-zinc-400 space-y-2 overflow-y-auto max-h-[300px] pr-2 scroll-smooth"
           >
              <div className="animate-pulse">{'> INITIALIZING TERMINAL UPLINK... OK'}</div>
              <div className="animate-pulse animation-delay-200">{'> AWAITING OPERATOR INPUT...'}</div>
