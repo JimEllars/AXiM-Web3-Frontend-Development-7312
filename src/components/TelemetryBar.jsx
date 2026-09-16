@@ -32,7 +32,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       const pingHealth = () => {
         const start = Date.now();
-        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
+        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) }, { signal: AbortSignal.timeout(3000) })
           .then(res => {
             if (!res.ok) throw new Error('Worker not 200');
             const ray = res.headers.get('cf-ray');

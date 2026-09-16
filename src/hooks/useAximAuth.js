@@ -9,9 +9,7 @@ export function useAximAuth() {
   const [session, setSession] = useState(() => {
     if (typeof window === 'undefined') return null;
     const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
     if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
        return offline.session;
@@ -22,9 +20,7 @@ export function useAximAuth() {
   const [profile, setProfile] = useState(() => {
     if (typeof window === 'undefined') return null;
     const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
     if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
        return { email: offline.session?.user?.email, clearance_level: 1};
@@ -35,25 +31,17 @@ export function useAximAuth() {
   const [loading, setLoading] = useState(() => {
     if (typeof window === 'undefined') return true;
     const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
 
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
+
     return true;
   });
   const [isHydrating, setIsHydrating] = useState(() => {
     if (typeof window === 'undefined') return true;
     const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
 
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
+
     return true;
   });
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
@@ -86,9 +74,7 @@ export function useAximAuth() {
     // Fast-path rehydration before network call to prevent race condition
     // between Thirdweb wallet connection and Supabase auth state
     const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
     if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
        if (isMounted) {
@@ -220,9 +206,7 @@ trackEvent('auth_success', { method: 'supabase' });
       if (fetchError && !currentSession) {
         // Network fault during heartbeat: rely on cache
         const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
         if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
            if (isMounted) {
@@ -242,9 +226,7 @@ trackEvent('auth_success', { method: 'supabase' });
           const { data, error } = await supabase.auth.refreshSession();
           if (error || !data.session) {
             const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
             if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
               console.warn("Retaining session optimistically due to recent offline stamp");
@@ -263,9 +245,7 @@ trackEvent('auth_success', { method: 'supabase' });
         } catch (e) {
             const isNetworkError = e.message === 'Failed to fetch' || !navigator.onLine;
             const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
 
             if (isNetworkError && offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
@@ -284,9 +264,7 @@ trackEvent('auth_success', { method: 'supabase' });
         }
       } else {
          const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return false;
-    }
+
 
          if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
            setSession(offline.session);
