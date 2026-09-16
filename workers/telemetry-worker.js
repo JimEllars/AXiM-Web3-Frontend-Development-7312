@@ -65,11 +65,12 @@ export default {
     }
 
     const url = new URL(request.url);
+    const receivedTime = Date.now();
 
-    if (request.method === 'GET' && url.pathname === '/health') {
-      return new Response(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString(), edgeRegion: request.cf?.colo || 'local' }), { status: 200, headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' } });
+    if (request.method === 'GET' && url.pathname === '/api/telemetry/health') {
+      return new Response(JSON.stringify({ status: 'OPERATIONAL', node: request.cf?.colo || 'local', timestamp: new Date().toISOString() }), { status: 200, headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' } });
     }
-    if (request.method !== 'POST' || (url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
+    if (request.method !== 'POST' || (url.pathname !== '/api/telemetry/ingest' && url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
       return new Response('Not Found or Method Not Allowed', { status: 404, headers: getCorsHeaders(request) });
     }
 
@@ -108,16 +109,21 @@ export default {
       country: request.cf?.country || 'unknown',
       city: request.cf?.city || 'unknown',
       colo: request.cf?.colo || 'unknown',
+      asn: request.cf?.asn || 'unknown',
       tlsVersion: request.cf?.tlsVersion || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown'
     };
+
+    // Calculate edge latency as time from request receipt to this point
+    const edge_latency = Date.now() - receivedTime;
 
     // Append geo/client data to each event payload securely
     events = events.map(event => ({
       ...event,
       payload: {
          ...(event.payload || {}),
-         _cf_geo: geoData
+         _cf_geo: geoData,
+         edge_latency
       }
     }));
 
@@ -160,8 +166,6 @@ export default {
       })()
     );
 
-    // Changed to 202 Accepted to signal graceful burst handling per requirements
-    // Return 204 No Content to signal successful ingestion/queuing and handle anomalies silently
     const responseHeaders = getCorsHeaders(request);
     responseHeaders['Access-Control-Allow-Origin'] = '*';
 

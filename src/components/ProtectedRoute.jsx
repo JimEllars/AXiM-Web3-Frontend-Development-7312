@@ -1,5 +1,5 @@
 import GlobalLoader from './GlobalLoader';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAximAuth } from '../hooks/useAximAuth';
 import { useAximStore } from '../store/useAximStore';
@@ -10,25 +10,33 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const location = useLocation();
 
+  const [gracePeriodActive, setGracePeriodActive] = useState(true);
+
+  useEffect(() => {
+    let timer;
+    if (!isLoading && !isHydrating) {
+      timer = setTimeout(() => {
+        setGracePeriodActive(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [isLoading, isHydrating]);
+
   const isAuthenticated = session || isWeb3Authenticated;
 
-  // Note: For a real system we would verify roles via JWT claims or a DB call.
-  // For now, if adminOnly is true but we only have a general session, we block.
-  // We'll mock role checking with an email condition for demonstration,
-  // or default to true if we just need them authenticated.
   const isRoleAuthorized = adminOnly ? session?.user?.email?.includes('@axim.us.com') : true;
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !gracePeriodActive) {
       if (isAuthenticated && isRoleAuthorized) {
         logTelemetry('vault_access_granted', { path: location.pathname });
       } else {
         logTelemetry('vault_access_denied', { path: location.pathname, reason: !isAuthenticated ? 'unauthenticated' : 'unauthorized_role' });
       }
     }
-  }, [isAuthenticated, isRoleAuthorized, isLoading, location.pathname]);
+  }, [isAuthenticated, isRoleAuthorized, isLoading, gracePeriodActive, location.pathname]);
 
-  if (isLoading || isHydrating) {
+  if (isLoading || isHydrating || (gracePeriodActive && !isAuthenticated)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <GlobalLoader />
@@ -45,29 +53,16 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
         </div>
       );
     }
-    if (isReconnecting || isHydrating || isLoading) {
-      return (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center flex-col gap-4">
-          <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-axim-purple animate-spin" />
-          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Re-establishing Uplink...</p>
-        </div>
-      );
-    }
-    if (isReconnecting) {
-      // Graceful degraded state while attempting to reconnect silently
-      return (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center flex-col gap-4">
-          <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-axim-purple animate-spin" />
-          <p className="text-zinc-500 font-mono text-[0.65rem] uppercase tracking-widest">Re-establishing Uplink...</p>
-        </div>
-      );
-    }
-        // Preserve intended destination for post-login redirect
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   if (adminOnly && !isRoleAuthorized) {
-    return <Navigate to="/dashboard/access-denied" replace />;
+    return (
+        <div className="min-h-screen flex items-center justify-center flex-col">
+            <span className="text-red-500 border border-red-500/50 bg-red-500/10 px-3 py-1 text-xs font-mono mb-4 rounded">OFFLINE/DEGRADED MODE - READ ONLY</span>
+            <Navigate to="/dashboard/access-denied" replace />
+        </div>
+    );
   }
 
 
@@ -80,6 +75,11 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   return (
     <>
       {syncingBar}
+      {isReconnecting && (
+         <div className="fixed top-2 right-2 z-50 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[10px] uppercase font-mono px-2 py-1 rounded">
+             Degraded / Offline Mode
+         </div>
+      )}
       {children}
     </>
   );
