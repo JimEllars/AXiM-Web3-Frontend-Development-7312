@@ -1,15 +1,13 @@
 {
   "version": 1,
   "include": [
-    "/api/*"
+    "/*"
   ],
   "exclude": [
     "/assets/*",
     "/images/*",
-    "/favicon.ico",
-    "/manifest.json",
-    "/robots.txt",
-    "/sitemap.xml",
-    "/llms.txt"
+    "/*.ico",
+    "/*.png",
+    "/*.svg"
   ]
 }

@@ -155,7 +155,7 @@ export default {
       } else if (fetchUrl.match(/\.(webp|png|jpg|jpeg|svg)$/i)) {
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        headers.set('Cache-Control', 'public, max-age=120, s-maxage=300, stale-while-revalidate=60');
+        headers.set('Cache-Control', 'public, max-age=60, s-maxage=300');
       }
 
       headers.set('X-AXiM-Edge-Latency', `${duration}ms`);
@@ -176,8 +176,10 @@ export default {
       return finalResponse;
 
     } catch (error) {
-      return new Response(JSON.stringify({ success: false, error: 'Internal Server Error', code: 500, timestamp: new Date().toISOString() }), {
-        status: 500,
+
+    return new Response(JSON.stringify({ success: false, error: 'GATEWAY_DEGRADED' }), {
+
+        status: 503,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'

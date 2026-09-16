@@ -30,18 +30,36 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       navigator.connection.addEventListener('change', updateConnection);
 
-      fetch('/', { method: 'HEAD' }).then(res => {
-        if (!res.ok) {
-          setEdgeRegion('OFFLINE');
-          setLatencyInfo({ rtt: 0, type: 'LOCAL' });
-          return;
-        }
-        const ray = res.headers.get('cf-ray');
-        if (ray) {
-            setEdgeRegion(ray.split('-')[1] || ray);
-        }
-      }).catch(() => { setEdgeRegion('OFFLINE'); setLatencyInfo({ rtt: 0, type: 'LOCAL' }); });
+      const pingHealth = () => {
+        const start = Date.now();
+        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
+          .then(res => {
+            if (!res.ok) throw new Error('Worker not 200');
+            const ray = res.headers.get('cf-ray');
+            if (ray) setEdgeRegion(ray.split('-')[1] || ray);
+            setLatencyInfo(prev => ({ ...prev, rtt: Date.now() - start }));
+          })
+          .catch(() => {
+            fetch('/', { method: 'HEAD', signal: AbortSignal.timeout(3000) })
+              .then(res => {
+                if (!res.ok) {
+                  setEdgeRegion('OFFLINE');
+                  setLatencyInfo({ rtt: 0, type: 'LOCAL' });
+                  return;
+                }
+                const ray = res.headers.get('cf-ray');
+                if (ray) setEdgeRegion(ray.split('-')[1] || ray);
+              })
+              .catch(() => {
+                setEdgeRegion('OFFLINE');
+                setLatencyInfo({ rtt: 0, type: 'LOCAL' });
+              });
+          });
+      };
+      pingHealth();
+      const interval = setInterval(pingHealth, 15000);
       return () => {
+        clearInterval(interval);
         navigator.connection.removeEventListener('change', updateConnection);
       };
     }
@@ -135,7 +153,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
     : (isBuffering ? "bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]" : "bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]");
 
   return (
-    <div className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]">
+    <div aria-live="polite" className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]">
       {/* Mobile view */}
       <div className="md:hidden flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">

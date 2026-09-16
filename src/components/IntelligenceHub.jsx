@@ -20,7 +20,7 @@ export default function IntelligenceHub() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: "circOut" }}
-          className="w-full flex-grow flex flex-col bg-onyx-500/80 backdrop-blur-md border border-subtle hover:border-active transition duration-300 group rounded-sm overflow-hidden shadow-2xl relative z-0"
+          className="w-full flex-grow flex flex-col bg-[#050505]/90 backdrop-blur-xl border border-white/10 hover:border-white/20 transition duration-300 group rounded-sm overflow-hidden shadow-2xl relative z-0"
         >
           {/* Chatbase Iframe Embed */}
           <iframe
