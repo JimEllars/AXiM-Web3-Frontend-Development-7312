@@ -264,19 +264,20 @@ const { slug } = useParams();
       />
 
       {/* Full-Width Immersive Magazine Hero */}
-      <div className="relative w-full min-h-[55vh] flex items-end justify-center overflow-hidden bg-[#0A0D14]">
+      <div className="relative w-full min-h-[55vh] md:min-h-[70vh] flex items-end justify-start overflow-hidden bg-gradient-to-br from-gray-950 via-purple-950/40 to-black">
         {/* Background Featured Image */}
         <WPImage
           post={article}
           src={imageUrl}
           alt={cleanTitle}
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Cybernetic Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-[#0A0D14]/85 to-black/40" />
+        {/* Scrim Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f17] via-[#0b0f17]/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-none" />
 
         {/* Title & Metadata Overlay */}
-        <div className="relative z-10 w-full max-w-4xl px-4 sm:px-6 lg:px-8 pb-12 pt-28 text-left">
+        <div className="relative z-10 w-full max-w-5xl px-4 sm:px-6 lg:px-8 pb-12 pt-28 text-left">
           <Link to="/articles" className="inline-flex items-center text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors mb-6 group">
             <SafeIcon icon={LuIcons.LuArrowLeft} className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Hub
@@ -287,28 +288,39 @@ const { slug } = useParams();
               [ARTICLE_HASH: VERIFIED_ON_CHAIN // ARBITRUM_ONE]
             </div>
           )}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-[#FDD023]/20 text-[#FDD023] border border-[#FDD023]/40 uppercase tracking-wider">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-500 border border-amber-500/40 uppercase tracking-wider">
               {article.categories?.includes(707) ? 'Daily News' : 'Briefing'}
             </span>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-slate-300 font-mono font-medium">
               {Math.max(1, Math.ceil((article.content?.rendered?.replace(/<[^>]+>/g, '').split(' ').length || 0) / 200))} min read
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight break-words" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
-          <div className="mt-6 flex items-center gap-4 text-sm text-slate-400 border-t border-slate-800/80 pt-4">
-            <span>By {authorName}</span>
-            <span>•</span>
-            <span>{formattedDate}</span>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] max-w-5xl break-words" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
+          <div className="mt-6 flex items-center gap-4 text-sm text-slate-300">
+            <span className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center shrink-0 border border-white/10">
+                <SafeIcon icon={LuIcons.LuUser} className="w-4 h-4 text-slate-400" />
+              </div>
+              <span className="font-semibold">{authorName}</span>
+            </span>
+            <span className="text-slate-500">•</span>
+            <span className="font-medium tracking-wide">{formattedDate}</span>
+            <span className="text-slate-500 hidden sm:inline">•</span>
+            <div className="hidden sm:flex items-center gap-2 ml-2">
+               <button onClick={handleShare} className="text-zinc-400 hover:text-white transition-colors" title="Share Article">
+                 <SafeIcon icon={LuIcons.LuShare2} className="w-4 h-4" />
+               </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content & Sidebar Grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 grid grid-cols-1 lg:grid-cols-12 gap-16">
-
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-16">
         {/* Article Body */}
         <article className="lg:col-span-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
               {/* WordPress Core Content Render (Restored Typography) */}
               {(() => {
   const rawHtml = DOMPurify.sanitize(article.content?.rendered || '');
@@ -320,7 +332,7 @@ const { slug } = useParams();
 
 
   return (
-    <div className="prose prose-invert prose-axim max-w-3xl mx-auto prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md">
+    <div className="prose prose-invert prose-axim max-w-none prose-a:text-axim-purple prose-headings:font-black prose-img:rounded-md">
       {parts.map((part, index) => {
         if (part === '[AXIM_AFFILIATE_TABLE]') {
           return (
@@ -341,6 +353,7 @@ const { slug } = useParams();
     </div>
   );
 })()}
+          </div>
         </article>
 
         {/* Dynamic High-Converting Sidebar */}

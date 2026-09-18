@@ -169,7 +169,7 @@ export default {
     const responseHeaders = getCorsHeaders(request);
     responseHeaders['Access-Control-Allow-Origin'] = '*';
 
-    return new Response(null, { status: 204, headers: responseHeaders });
+    return new Response(JSON.stringify({ status: 'accepted' }), { status: 202, headers: responseHeaders });
 
   }
 };

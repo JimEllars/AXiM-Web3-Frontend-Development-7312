@@ -140,7 +140,7 @@ export async function flushTelemetryQueue(force = false) {
     let success = false;
 
     if (typeof window !== 'undefined') {
-      // Only use sendBeacon as a fallback on unload/pagehide where 'force' is true
+      // Use sendBeacon during page unloads or background batch flushes to prevent network cancellation
       if (force && window.navigator?.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
         try {
