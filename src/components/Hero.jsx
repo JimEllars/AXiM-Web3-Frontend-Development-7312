@@ -55,13 +55,15 @@ export default function Hero() {
           >
             Explore Business <SafeIcon icon={LuIcons.LuWrench} className="ml-3 w-4 h-4" />
           </Link>
-          <Link
-            to="/personal#personality-test"
-            onClick={() => logTelemetry('hero_cta_clicked', { target: 'consultation' })}
+          <a
+            href="https://axim.us.com/personalitytest/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => logTelemetry('hero_cta_clicked', { target: 'personality_test_direct' })}
             className="inline-flex items-center justify-center px-10 py-4 bg-transparent border border-white/20 text-white text-xs font-black uppercase tracking-widest hover:bg-[#004040] hover:border-[#004040] transition-colors rounded-sm w-full sm:w-auto text-center"
           >
-            Personality Test <SafeIcon icon={LuIcons.LuPhone} className="ml-3 w-4 h-4" />
-          </Link>
+            Personality Test <SafeIcon icon={LuIcons.LuBrain} className="ml-3 w-4 h-4" />
+          </a>
           <Link
             onClick={() => logTelemetry('hero_cta_clicked', { target: 'web3_games' })}
             to="/tech"

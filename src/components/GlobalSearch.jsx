@@ -34,7 +34,7 @@ export default function GlobalSearch() {
   const [isSynchronizing, setIsSynchronizing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const debouncedSearchTerm = useDebounce(query, 300);
+  const debouncedSearchTerm = useDebounce(query, 150);
   const [results, setResults] = useState([]);
 
   const [articleResults, setArticleResults] = useState([]);
