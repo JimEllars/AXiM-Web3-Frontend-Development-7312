@@ -94,30 +94,45 @@ export async function exchangePassportToken(token) {
 export async function checkPassportSsoSession() {
   const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/session`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 2500); // 2.5s timeout
+  let retries = 1;
+  let delay = 500;
+  let lastErr;
 
-  try {
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal
-    });
+  while (retries >= 0) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500); // 2.5s timeout
 
-    clearTimeout(timeoutId);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data; // Expected to contain session/profile data
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        return data; // Expected to contain session/profile data
+      }
+      return null;
+    } catch (err) {
+      clearTimeout(timeoutId);
+      lastErr = err;
+      retries--;
+      if (retries >= 0) {
+        await new Promise(r => setTimeout(r, delay));
+        delay *= 2;
+      }
     }
-    return null;
-  } catch (err) {
-    clearTimeout(timeoutId);
-    console.warn('[AXiM_SSO] Silent SSO check failed or timed out:', err.message);
-    return null; // Fail silently to guest mode
   }
+
+  console.warn('[AXiM_SSO] Silent SSO check failed or timed out:', lastErr?.message);
+  return null; // Fail silently to guest mode
 }
+
+
 
 /**
  * Generates an SSO launch URL for satellite apps by requesting a delegation token.

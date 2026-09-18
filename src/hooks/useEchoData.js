@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { replayRecords } from '../services/echoService.js';
 import { useAximStore } from '../store/useAximStore.js';
 
+import { localStore } from '../lib/persistence.js';
 export const useEchoData = () => {
   const [isReplaying, setIsReplaying] = useState(false);
   const [replayError, setReplayError] = useState(null);

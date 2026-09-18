@@ -39,6 +39,14 @@ export default function OnyxTerminal() {
   });
 
   useEffect(() => {
+    logTelemetry('onyx_terminal_mounted', { timestamp: new Date().toISOString() });
+
+    return () => {
+      logTelemetry('onyx_terminal_disconnected', { timestamp: new Date().toISOString() });
+    };
+  }, []);
+
+  useEffect(() => {
     try {
       sessionStorage.setItem('AXIM_ONYX_SESSION_LOGS', JSON.stringify(terminalOutput.slice(-200)));
     } catch (e) { /* ignore */ }

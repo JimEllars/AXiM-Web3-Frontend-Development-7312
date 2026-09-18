@@ -23,11 +23,11 @@ describe('Chatbot Component', () => {
 
     const button = screen.getByRole('button', { name: /Inquire \/ Support/i });
     fireEvent.click(button);
-    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_opened');
+    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_opened', expect.objectContaining({ timestamp: expect.any(String) }));
 
     const supportLink = screen.getByText('Technical Support');
     fireEvent.click(supportLink);
-    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_support_clicked');
+    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_support_clicked', expect.objectContaining({ timestamp: expect.any(String) }));
   });
 
   it('opens support drawer and clicks consultation', () => {
@@ -42,6 +42,6 @@ describe('Chatbot Component', () => {
 
     const consultationLink = screen.getByText('Book Consultation');
     fireEvent.click(consultationLink);
-    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_consultation_clicked');
+    expect(telemetry.logTelemetry).toHaveBeenCalledWith('support_drawer_consultation_clicked', expect.objectContaining({ timestamp: expect.any(String) }));
   });
 });

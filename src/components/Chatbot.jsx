@@ -15,7 +15,7 @@ export default function Chatbot() {
         onClick={() => {
           setIsOpen(!isOpen);
           if (!isOpen) {
-            logTelemetry('support_drawer_opened');
+            logTelemetry('support_drawer_opened', { timestamp: new Date().toISOString() });
           }
         }}
         className="fixed bottom-24 right-6 z-[90] bg-axim-purple text-white p-4 rounded-full shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:bg-white hover:text-black transition-colors border border-white/10 flex items-center justify-center group"
@@ -45,7 +45,7 @@ export default function Chatbot() {
                 to="/support"
                 onClick={() => {
                   setIsOpen(false);
-                  logTelemetry('support_drawer_support_clicked');
+                  logTelemetry('support_drawer_support_clicked', { timestamp: new Date().toISOString() });
                 }}
                 className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-axim-purple/50 rounded-sm transition-colors group"
               >
@@ -57,7 +57,7 @@ export default function Chatbot() {
                 to="/consultation"
                 onClick={() => {
                   setIsOpen(false);
-                  logTelemetry('support_drawer_consultation_clicked');
+                  logTelemetry('support_drawer_consultation_clicked', { timestamp: new Date().toISOString() });
                 }}
                 className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-axim-gold/50 rounded-sm transition-colors group"
               >
