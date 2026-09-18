@@ -164,8 +164,7 @@ export async function flushTelemetryQueue(force = false) {
               const fetchPromise = fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
-                  'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || 'UNSET_DEV_KEY'
+                  'Content-Type': 'application/json'
                 },
                 body: payload,
                 keepalive: true,
