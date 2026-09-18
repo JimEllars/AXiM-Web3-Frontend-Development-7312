@@ -181,6 +181,11 @@ To deploy the Telemetry Edge Worker located at `workers/telemetry-worker.js`, cr
 
 **Reminder:** Set `AXIM_GATEWAY_TOKEN` as a Worker secret during production initialization. `AXIM_CORE_URL` is a non-secret variable already configured in `wrangler.telemetry.toml`.
 
+The repository's telemetry configuration binds `AXIM_TELEMETRY_BUFFER` as
+`TELEMETRY_BUFFER_KV`. The namespace is used only when AXiM Core ingestion fails and retains a
+batch for 24 hours. It does not automatically replay buffered events; configure the Core recovery
+process to drain this namespace.
+
 Example `wrangler.toml` for the telemetry worker:
 ```toml
 name = "axim-telemetry-worker"

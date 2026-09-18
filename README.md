@@ -32,3 +32,8 @@ public custom domain causes the Worker to invoke itself recursively. Set its non
 when deploying:
 
 `PAGES_ORIGIN` is committed in `workers/wrangler.seo.toml` and points to the current production Pages project.
+
+`AXIM_GATEWAY_TOKEN` and `ALCHEMY_RPC_URL` are Cloudflare Worker secrets and must never use
+a `VITE_` prefix or be added to the Pages environment. The telemetry Worker is configured with
+the `AXIM_TELEMETRY_BUFFER` KV namespace to preserve accepted events for 24 hours when AXiM Core
+is temporarily unavailable.

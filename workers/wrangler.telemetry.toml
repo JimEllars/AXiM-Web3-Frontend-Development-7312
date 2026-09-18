@@ -9,3 +9,7 @@ custom_domain = true
 [vars]
 AXIM_CORE_URL = "https://core.axim.us.com"
 # Sensitive keys should be set via `wrangler secret put AXIM_GATEWAY_TOKEN`
+
+[[kv_namespaces]]
+binding = "TELEMETRY_BUFFER_KV"
+id = "9ffc4100c706497c9f571a441825a9b1"
