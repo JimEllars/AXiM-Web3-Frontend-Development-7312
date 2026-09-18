@@ -277,7 +277,19 @@ export async function flushTelemetryQueue(force = false) {
 }
 
 if (typeof window !== 'undefined') {
-  setInterval(() => flushTelemetryQueue(false), 30000);
+  setInterval(() => {
+
+  if (typeof window !== 'undefined' && navigator.onLine) {
+    const systemStatus = {
+       path: window.location.pathname,
+       timestamp: new Date().toISOString(),
+       uplink: navigator.onLine ? 'ONLINE' : 'OFFLINE'
+    };
+    logTelemetry('system_heartbeat', systemStatus);
+  }
+
+    flushTelemetryQueue(false);
+  }, 30000);
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {

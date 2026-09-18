@@ -1,11 +1,7 @@
 {
   "version": 1,
   "include": [
-    "/*",
-    "/api/telemetry",
-    "/api/telemetry/*",
-    "/api/rpc",
-    "/api/wp/*"
+    "/*"
   ],
   "exclude": [
     "/assets/*",
@@ -17,6 +13,12 @@
     "/robots.txt",
     "/sitemap.xml",
     "/sw.js",
-    "/favicon.ico"
+    "/favicon.ico",
+    "/api/telemetry",
+    "/api/telemetry/*",
+    "/api/rpc",
+    "/api/rpc/*",
+    "/api/wp/*",
+    "/api/workers/*"
   ]
 }
