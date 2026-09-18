@@ -10,19 +10,33 @@ export const replayRecords = async (recordIds) => {
     console.warn('VITE_AXIM_INTERNAL_KEY is not set. Replay may fail.');
   }
 
-  const response = await fetch(`${workerUrl}/api/v1/replay`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${internalKey}`
-    },
-    body: JSON.stringify({ recordIds })
-  });
+  let retryCount = 0;
+  while (retryCount <= 2) {
+    try {
+      const response = await fetch(`${workerUrl}/api/v1/replay`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${internalKey}`
+        },
+        body: JSON.stringify({ recordIds }),
+        signal: AbortSignal.timeout(3000)
+      });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Failed to replay records: ${response.status} ${response.statusText} - ${errText}`);
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Failed to replay records: ${response.status} ${response.statusText} - ${errText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (retryCount < 2) {
+        retryCount++;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        continue;
+      } else {
+        throw error;
+      }
+    }
   }
-
-  return response.json();
 };

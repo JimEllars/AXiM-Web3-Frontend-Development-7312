@@ -36,14 +36,7 @@ export function useAximAuth() {
 
     return true;
   });
-  const [isHydrating, setIsHydrating] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const offline = localStore.getOfflineSession();
-
-
-
-    return true;
-  });
+  const [isHydrating, setIsHydrating] = useState(true);
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
 

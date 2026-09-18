@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAximStore } from "../store/useAximStore";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { theme } from "../config/theme";
 
 export default function TelemetryBar({ label, color, initialValue }) {
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
@@ -32,7 +33,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       const pingHealth = () => {
         const start = Date.now();
-        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) }, { signal: AbortSignal.timeout(3000) })
+        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
           .then(res => {
             if (!res.ok) throw new Error('Worker not 200');
             const ray = res.headers.get('cf-ray');
@@ -133,10 +134,10 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
   const colorClass =
     color === "axim-purple"
-      ? "text-axim-purple bg-axim-purple shadow-[0_0_10px_#00E5FF]"
+      ? "bg-axim-purple"
       : color === "axim-gold"
-        ? "text-axim-gold bg-axim-gold shadow-[0_0_10px_#FFEA00]"
-        : "text-axim-gold bg-axim-gold shadow-[0_0_10px_#00FF88]";
+        ? "bg-axim-gold"
+        : "bg-axim-gold";
 
   const textColor =
     color === "axim-purple"
@@ -149,25 +150,29 @@ export default function TelemetryBar({ label, color, initialValue }) {
   const isBuffering = telemetryQueue?.length > 0;
 
   const statusDotClass = isOffline
-    ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.6)]"
+    ? "bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
     : (isBuffering ? "bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]" : "bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]");
 
+  const statusDotPulse = isOffline
+    ? "!bg-rose-300 !shadow-[0_0_24px_rgba(244,63,94,1)]"
+    : (isBuffering ? "!bg-amber-300 !shadow-[0_0_24px_rgba(245,158,11,1)]" : "!bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]");
+
   return (
-    <div aria-live="polite" className="bg-[#050505]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]">
+    <div aria-live="polite" className={`bg-[${theme.colors.background}]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]`}>
       {/* Mobile view */}
       <div className="md:hidden flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 brightness-150' : ''}`} />
+          <span className={`w-2 h-2 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 brightness-150 ${statusDotPulse}` : ''}`} />
           <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">{label}</span>
         </div>
         <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>
       </div>
 
       {/* Desktop/Tablet view */}
-      <div className="hidden md:flex justify-between text-[0.6rem] mb-2 uppercase items-center">
+      <div className="hidden md:flex justify-between text-[0.6rem] mb-2 uppercase items-center min-h-[20px]">
         <span className="flex flex-wrap items-center gap-2">
           <span
-            className={`w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] relative inline-block transition-all duration-300 ease-in-out ${pulse ? 'scale-150 !bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]' : ''}`}
+            className={`w-2.5 h-2.5 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 ${statusDotPulse}` : ''}`}
           />
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
@@ -176,7 +181,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-red-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
+            EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}
@@ -204,7 +209,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
           initial={{ width: `${initialValue}%` }}
           animate={{ width: `${value}%` }}
           transition={{ duration: 0.4, ease: "circOut" }}
-          className={`h-full ${colorClass.split(" ")[1]} ${colorClass.split(" ")[2]}`}
+          className={`h-full ${colorClass} shadow-[0_0_10px_currentColor]`}
         />
       </div>
     </div>

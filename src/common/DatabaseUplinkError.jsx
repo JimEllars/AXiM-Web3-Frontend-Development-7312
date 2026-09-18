@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { logTelemetry } from '../lib/telemetry';
 
-export default function DatabaseUplinkError({ onRetry }) {
+export default function DatabaseUplinkError({ onRetry, embedded = false }) {
   useEffect(() => {
     logTelemetry('SYSTEM_FAULT', {
       component: 'DatabaseUplinkError',
@@ -9,8 +9,10 @@ export default function DatabaseUplinkError({ onRetry }) {
     });
   }, []);
 
+  const Component = embedded ? "div" : "section";
+
   return (
-    <section className="py-16 relative z-10">
+    <Component className={`relative z-10 ${embedded ? 'py-8 border border-white/10 bg-white/5 rounded-xl' : 'py-16'}`}>
       <div className="max-w-[1200px] mx-auto px-6 text-center">
         <p className="text-zinc-500 font-mono mb-4">
           LOCAL_BUFFER_ACTIVE
@@ -28,6 +30,6 @@ export default function DatabaseUplinkError({ onRetry }) {
           </button>
         )}
       </div>
-    </section>
+    </Component>
   );
 }
