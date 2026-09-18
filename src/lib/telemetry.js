@@ -127,7 +127,7 @@ export async function flushTelemetryQueue(force = false) {
     const payload = JSON.stringify(currentBatch);
     const rawEndpoint = (typeof import.meta !== 'undefined' && import.meta.env) ? (import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL) : undefined;
     const isValidRemote = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
-    const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry';
+    const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry/ingest';
 
     if (!endpoint) {
       batchQueue = [...currentBatch, ...batchQueue].slice(0, 100); // Restore on fail
