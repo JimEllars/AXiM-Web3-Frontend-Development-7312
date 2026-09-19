@@ -1,5 +1,5 @@
 const DEFAULT_IMAGE = '/axim-og-banner.png';
-const BOT_REGEX = /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Pinterest|Slackbot|TelegramBot|Discordbot|WhatsApp|Googlebot|bingbot/i;
+const BOT_REGEX = /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Pinterest|Slackbot|TelegramBot|Discordbot|WhatsApp|Googlebot|bingbot|GPTBot|ChatGPT-User|ClaudeBot|Claude-Web|anthropic-ai|PerplexityBot|Applebot|Bytespider|Cohere-ai|CCBot|Diffbot|meta-externalagent|Google-Extended/i;
 
 function stripHtml(html) {
   if (!html) return '';

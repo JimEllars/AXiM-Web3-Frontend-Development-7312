@@ -67,5 +67,17 @@ describe('Article Page Sidebar Links', () => {
     expect(screen.getByText(/NDA Generator/i)).toBeTruthy();
     expect(screen.getByText(/Personality Test/i)).toBeTruthy();
 
+    const demandLetterLink = screen.getByText(/Demand Letter Generator/i).closest('a');
+    expect(demandLetterLink.getAttribute('href')).toBe('https://quickdemandletter.com');
+    expect(demandLetterLink.getAttribute('target')).toBe('_blank');
+
+    const ndaLink = screen.getByText(/NDA Generator/i).closest('a');
+    expect(ndaLink.getAttribute('href')).toBe('https://nda.axim.us.com');
+    expect(ndaLink.getAttribute('target')).toBe('_blank');
+
+    const personalityLink = screen.getByText(/Personality Test/i).closest('a');
+    expect(personalityLink.getAttribute('href')).toBe('https://axim.us.com/personalitytest/');
+    expect(personalityLink.getAttribute('target')).toBe('_blank');
+
   });
 });
