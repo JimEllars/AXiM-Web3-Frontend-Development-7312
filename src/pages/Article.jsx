@@ -159,6 +159,31 @@ const { slug } = useParams();
     }
   }, [article]);
 
+    // GENERATE TOC
+  useEffect(() => {
+    if (article && article.content?.rendered) {
+      const rawHtml = DOMPurify.sanitize(article.content.rendered);
+      // We will parse the HTML, extract h2/h3, and give them IDs if they lack them
+      if (typeof window !== 'undefined') {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml, 'text/html');
+        const headings = Array.from(doc.querySelectorAll('h2, h3'));
+        const newToc = headings.map((h, i) => {
+          let id = h.id;
+          if (!id) {
+            id = `heading-${i}`;
+          }
+          return {
+            id,
+            text: h.textContent,
+            level: h.tagName.toLowerCase()
+          };
+        });
+        setToc(newToc);
+      }
+    }
+  }, [article]);
+
   // 1. STRICT SHIELD: Handle Error State FIRST
   if (error) {
     return (
@@ -342,7 +367,18 @@ const { slug } = useParams();
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
               {/* WordPress Core Content Render (Restored Typography) */}
               {(() => {
-  const rawHtml = DOMPurify.sanitize(article.content?.rendered || '');
+    let rawHtml = DOMPurify.sanitize(article.content?.rendered || '');
+  if (typeof window !== 'undefined') {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+    const headings = doc.querySelectorAll('h2, h3');
+    headings.forEach((h, i) => {
+      if (!h.id) {
+        h.id = `heading-${i}`;
+      }
+    });
+    rawHtml = doc.body.innerHTML;
+  }
 
   // Custom simple parser to handle shortcodes
   let parsedContent = [];
@@ -463,7 +499,7 @@ const { slug } = useParams();
                  <div className="flex flex-col">
                    <div className="flex items-center gap-2 flex-wrap">
                      <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Ground Game Canvassing</span>
-                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 uppercase tracking-widest border border-white/5">Coming Soon</span>
+                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 uppercase tracking-widest border border-white/5">🚀 Coming Soon</span>
                    </div>
                    <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Deploy targeted field operations and canvassing pipelines.</span>
                  </div>
