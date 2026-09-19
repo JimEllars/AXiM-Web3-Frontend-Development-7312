@@ -400,37 +400,55 @@ const { slug } = useParams();
           {/* Ecosystem Apps */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
              <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
-               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> AXiM Apps
+               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-zinc-500" /> Public Utilities
              </h4>
              <div className="space-y-4">
-               <a href="https://core.axim.us.com"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'core', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+               <Link to="/early-access"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'ground-game', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-white" />
+                    <SafeIcon icon={LuIcons.LuMapPin} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">AXiM Core</span>
-               </a>
-               <a href="https://passport.axim.us.com"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'passport', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="flex flex-col">
+                   <div className="flex items-center gap-2 flex-wrap">
+                     <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Ground Game Canvassing</span>
+                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 uppercase tracking-widest border border-white/5">Coming Soon</span>
+                   </div>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Field canvassing and outreach orchestration engine.</span>
+                 </div>
+               </Link>
+
+               <Link to="/products/demand-letter-generator"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'demand-letter', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-600 to-cyan-400 flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuKey} className="w-4 h-4 text-white" />
+                    <SafeIcon icon={LuIcons.LuScale} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Passport SSO</span>
-               </a>
-               <a href="https://arc.axim.us.com"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'arc', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
+                 <div className="flex flex-col">
+                   <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Demand Letter Generator</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Automated formal legal notice generation utility.</span>
+                 </div>
+               </Link>
+
+               <Link to="/products/nda-generator"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'nda-generator', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuTerminal} className="w-4 h-4 text-white" />
+                    <SafeIcon icon={LuIcons.LuShield} className="w-4 h-4 text-white" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">ARC Remote</span>
-               </a>
-               <a href="https://coder.axim.us.com"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'coder', article: slug })} className="flex items-center gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
+                 <div className="flex flex-col">
+                   <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">NDA Generator</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Instant non-disclosure agreement drafting and compliance.</span>
+                 </div>
+               </Link>
+
+               <Link to="/products/personality-test"
+                 onClick={() => logTelemetry('sidebar_app_click', { app: 'personality-test', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
-                    <SafeIcon icon={LuIcons.LuCode} className="w-4 h-4 text-black" />
+                    <SafeIcon icon={LuIcons.LuBrain} className="w-4 h-4 text-black" />
                  </div>
-                 <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Coding Lab</span>
-               </a>
+                 <div className="flex flex-col">
+                   <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Personality Test</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Behavioral and psychometric alignment assessment tool.</span>
+                 </div>
+               </Link>
              </div>
           </div>
 
