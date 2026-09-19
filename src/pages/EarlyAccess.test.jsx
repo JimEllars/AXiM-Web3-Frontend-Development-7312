@@ -1,6 +1,6 @@
 import 'global-jsdom/register';
 import React from 'react';
-import { describe, it, beforeEach, vi } from 'vitest';
+import { describe, it, beforeEach, vi, expect } from 'vitest';
 import assert from 'assert';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -130,7 +130,7 @@ describe('EarlyAccess Component', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-        assert.ok(screen.getByText(/Network Uplink Failed/i));
+        expect(screen.getByText(/Network Uplink Failed/i)).toBeTruthy();
     });
   });
 
