@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import useDebounce from '../hooks/useDebounce';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -21,6 +22,27 @@ export default function Support() {
     issue: '',
     attachment: null,
   });
+
+  const [localName, setLocalName] = useState('');
+  const [localEmail, setLocalEmail] = useState('');
+  const [localSubject, setLocalSubject] = useState('');
+  const [localIssue, setLocalIssue] = useState('');
+
+  const debouncedName = useDebounce(localName, 150);
+  const debouncedEmail = useDebounce(localEmail, 150);
+  const debouncedSubject = useDebounce(localSubject, 150);
+  const debouncedIssue = useDebounce(localIssue, 150);
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      name: debouncedName,
+      email: debouncedEmail,
+      subject: debouncedSubject,
+      issue: debouncedIssue
+    }));
+  }, [debouncedName, debouncedEmail, debouncedSubject, debouncedIssue]);
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -264,10 +286,8 @@ export default function Support() {
                       </label>
                       <input
                         type="text"
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
+                        value={localName}
+                        onChange={(e) => setLocalName(e.target.value)}
                         placeholder="John Doe"
                         className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
                       />
@@ -278,10 +298,8 @@ export default function Support() {
                       </label>
                       <input
                         type="email"
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
+                        value={localEmail}
+                        onChange={(e) => setLocalEmail(e.target.value)}
                         required
                         placeholder="email@company.com"
                         className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
@@ -295,10 +313,8 @@ export default function Support() {
                     </label>
                     <input
                       type="text"
-                      value={formData.subject}
-                      onChange={(e) =>
-                        setFormData({ ...formData, subject: e.target.value })
-                      }
+                      value={localSubject}
+                      onChange={(e) => setLocalSubject(e.target.value)}
                       required
                       placeholder="Brief description of your issue"
                       className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors rounded-sm"
@@ -336,10 +352,8 @@ export default function Support() {
                       Message Details
                     </label>
                     <textarea
-                      value={formData.issue}
-                      onChange={(e) =>
-                        setFormData({ ...formData, issue: e.target.value })
-                      }
+                      value={localIssue}
+                      onChange={(e) => setLocalIssue(e.target.value)}
                       required
                       rows="4"
                       placeholder="How can we help you today?"

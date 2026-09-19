@@ -264,30 +264,29 @@ const { slug } = useParams();
       />
 
       {/* Full-Width Immersive Magazine Hero */}
-      <div className="relative w-full min-h-[55vh] md:min-h-[70vh] flex items-end justify-start overflow-hidden bg-gradient-to-br from-gray-950 via-purple-950/40 to-black">
-        {/* Background Featured Image */}
-        <WPImage
-          post={article}
-          src={imageUrl}
-          alt={cleanTitle}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Scrim Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f17] via-[#0b0f17]/80 to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-none" />
+      <div className="relative w-full min-h-[60vh] md:min-h-[75vh] flex items-end justify-center overflow-hidden bg-gradient-to-br from-gray-950 via-purple-950/40 to-black">
+        {/* Background Image: Strictly absolute behind scrim */}
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={cleanTitle}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            loading="eager"
+            fetchPriority="high"
+          />
+        )}
 
-        {/* Title & Metadata Overlay */}
-        <div className="relative z-10 w-full max-w-5xl px-4 sm:px-6 lg:px-8 pb-12 pt-28 text-left">
-          <Link to="/articles" className="inline-flex items-center text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors mb-6 group">
-            <SafeIcon icon={LuIcons.LuArrowLeft} className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        {/* Ambient Scrim Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f17] via-[#0b0f17]/85 to-black/50 z-[1] pointer-events-none" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-[2] pointer-events-none" />
+
+        {/* Overlay Content: Full-width container spanning directly over the hero image */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-32 text-left">
+          <Link className="inline-flex items-center text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors mb-6 group" to="/articles">
+            <SafeIcon className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" icon={LuIcons.LuArrowLeft}/>
             Back to Hub
           </Link>
-          {isWeb3Authenticated && (
-            <div className="mb-4 flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-mono tracking-widest text-emerald-400 uppercase rounded-sm select-none w-fit">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              [ARTICLE_HASH: VERIFIED_ON_CHAIN // ARBITRUM_ONE]
-            </div>
-          )}
+
           <div className="flex items-center gap-3 mb-4">
             <span className="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-500 border border-amber-500/40 uppercase tracking-wider">
               {article.categories?.includes(707) ? 'Daily News' : 'Briefing'}
@@ -296,22 +295,21 @@ const { slug } = useParams();
               {Math.max(1, Math.ceil((article.content?.rendered?.replace(/<[^>]+>/g, '').split(' ').length || 0) / 200))} min read
             </span>
           </div>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] max-w-5xl break-words" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.title?.rendered)}} />
-          <div className="mt-6 flex items-center gap-4 text-sm text-slate-300">
-            <span className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center shrink-0 border border-white/10">
-                <SafeIcon icon={LuIcons.LuUser} className="w-4 h-4 text-slate-400" />
-              </div>
-              <span className="font-semibold">{authorName}</span>
-            </span>
+
+          <h1
+            className="w-full text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] break-words"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.title?.rendered) }}
+          />
+
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-300 border-t border-white/10 pt-4">
+            <span className="font-semibold">{authorName}</span>
             <span className="text-slate-500">•</span>
-            <span className="font-medium tracking-wide">{formattedDate}</span>
-            <span className="text-slate-500 hidden sm:inline">•</span>
-            <div className="hidden sm:flex items-center gap-2 ml-2">
-               <button onClick={handleShare} className="text-zinc-400 hover:text-white transition-colors" title="Share Article">
-                 <SafeIcon icon={LuIcons.LuShare2} className="w-4 h-4" />
-               </button>
-            </div>
+            <span className="font-medium">{formattedDate}</span>
+            <span className="text-slate-500">•</span>
+            <button onClick={handleShare} className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5" title="Share Article">
+              <SafeIcon className="w-4 h-4" icon={LuIcons.LuShare2}/>
+              <span className="text-xs font-mono uppercase">Share</span>
+            </button>
           </div>
         </div>
       </div>

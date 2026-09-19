@@ -33,7 +33,7 @@ describe('Hero Component', () => {
     vi.useRealTimers();
   });
 
-  test('renders main headings and static content', () => {
+test('renders main headings and static content', () => {
     render(
       <MemoryRouter>
         <Hero />
@@ -48,7 +48,12 @@ describe('Hero Component', () => {
 
     // Check CTA buttons exist
     assert.ok(screen.getAllByText(/Explore Business/)[0]);
-    assert.ok(screen.getByText(/Personality Test/));
+
+    // Check Personality Test button is an anchor with correct href
+    const personalityBtn = screen.getByText(/Personality Test/);
+    assert.ok(personalityBtn);
+    assert.strictEqual(personalityBtn.closest('a').getAttribute('href'), 'https://axim.us.com/personalitytest/');
+
     assert.ok(screen.getByText(/Tech & Games/));
   });
 
