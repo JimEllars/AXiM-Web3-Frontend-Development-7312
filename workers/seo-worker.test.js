@@ -26,7 +26,7 @@ describe('seo-worker', () => {
   });
 
   it('intercepts GPTBot/1.2', async () => {
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const request = new Request('https://axim.us.com/article/tech-slug', {
       headers: { 'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)' }
@@ -39,7 +39,7 @@ describe('seo-worker', () => {
   });
 
   it('intercepts ClaudeBot/1.0', async () => {
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const request = new Request('https://axim.us.com/article/tech-slug', {
       headers: { 'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)' }
@@ -51,7 +51,7 @@ describe('seo-worker', () => {
   });
 
   it('intercepts PerplexityBot', async () => {
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const request = new Request('https://axim.us.com/article/tech-slug', {
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/bot)' }

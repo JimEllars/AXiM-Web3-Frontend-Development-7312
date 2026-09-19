@@ -14,7 +14,6 @@ AXiM Development serves enterprise operators, decentralized network engineers, a
 ## Canonical resources
 - [AXiM Hub Homepage](https://axim.us.com/)
 - [Intelligence Hub & Briefings](https://axim.us.com/articles)
-- [Enterprise Web3 Tools](https://axim.us.com/tools)
 - [Games](https://axim.us.com/games)
 - [Services](https://axim.us.com/services)
 - [Make.com Automation Solutions](https://axim.us.com/partners/make)
