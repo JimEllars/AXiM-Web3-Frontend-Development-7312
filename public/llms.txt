@@ -26,11 +26,17 @@ AXiM Development serves enterprise operators, decentralized network engineers, a
 - [Tech Development Hub](https://axim.us.com/tech)
 
 ### Core Apps & Ecosystem
-- [AXiM Core](https://core.axim.us.com)
-- [AXiM ARC Remote Command](https://arc.axim.us.com)
-- [AXiM Coding Lab](https://coder.axim.us.com)
 - [AXiM Support System](https://support.axim.us.com)
 - [AXiM Passport SSO](https://passport.axim.us.com)
+- [Quick Demand Letter Generator](https://quickdemandletter.com) - Generate legally sound demand letters to resolve disputes.
+- [NDA Generator](https://nda.axim.us.com) - Protect intellectual property with ironclad agreements.
+- [Personality Assessment](https://axim.us.com/personalitytest/) - Psychometric 8-function cognitive profiling assessment.
+- [Field Canvassing Operations](https://axim.us.com/early-access) - Deploy targeted field operations and canvassing pipelines.
+
+### Commercial Services
+- [Commercial Exterior](https://axim.us.com/services/commercial-exterior)
+- [Window Cleaning](https://axim.us.com/services/window-cleaning)
+- [Pressure Washing](https://axim.us.com/services/pressure-washing)
 
 ## Crawling and citations
 

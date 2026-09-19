@@ -42,7 +42,7 @@ export default function Article() {
       } catch (err) {
         if (err.name !== 'AbortError') {
           navigator.clipboard.writeText(url);
-          addToast('Link Copied', 'success');
+          addToast('Uplink URL Copied', 'success');
           logTelemetry('article_shared', {
             slug,
             method: 'clipboard_copy'
@@ -52,7 +52,7 @@ export default function Article() {
       }
     } else {
           navigator.clipboard.writeText(url);
-      addToast('Link Copied', 'success');
+      addToast('Uplink URL Copied', 'success');
       logTelemetry('article_shared', {
         slug,
         method: 'clipboard_copy'
@@ -76,6 +76,27 @@ const { slug } = useParams();
     }, 150);
   };
   const [scrollPercent, setScrollPercent] = useState(0);
+  const [toc, setToc] = useState([]);
+  const [activeHeadingId, setActiveHeadingId] = useState(null);
+
+  useEffect(() => {
+    if (toc.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHeadingId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -80% 0px', threshold: 0.1 }
+    );
+    toc.forEach((h) => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [toc]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setScrollPercent(Math.round(latest * 100));
@@ -397,6 +418,37 @@ const { slug } = useParams();
              </a>
            </div>
 
+
+          {/* Briefing Index (TOC) */}
+          {toc.length >= 2 && (
+            <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl sticky top-24 z-10 mb-8">
+              <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
+                <SafeIcon icon={LuIcons.LuList} className="w-4 h-4 text-zinc-500" /> Briefing Index
+              </h4>
+              <ul className="space-y-3">
+                {toc.map((heading) => (
+                  <li key={heading.id} className={`transition-colors ${heading.level === 'h3' ? 'pl-4' : ''} ${activeHeadingId === heading.id ? 'text-axim-purple font-bold' : 'text-zinc-400 hover:text-white'}`}>
+                    <a
+                      href={`#${heading.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const el = document.getElementById(heading.id);
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          // slight offset for fixed header
+                          setTimeout(() => window.scrollBy(0, -100), 10);
+                        }
+                      }}
+                      className="text-xs tracking-wider"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Ecosystem Apps */}
           <div className="bg-[#050505] border border-white/10 p-6 rounded-sm shadow-xl">
              <h4 className="text-sm font-black text-white uppercase tracking-widest mb-5 flex items-center gap-2">
@@ -404,7 +456,7 @@ const { slug } = useParams();
              </h4>
              <div className="space-y-4">
                <Link to="/early-access"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'ground-game', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
+                 onClick={() => logTelemetry('sidebar_public_app_clicked', { app: 'ground_game', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-purple/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-purple to-[#DB2777] flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuMapPin} className="w-4 h-4 text-white" />
                  </div>
@@ -413,42 +465,42 @@ const { slug } = useParams();
                      <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Ground Game Canvassing</span>
                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 uppercase tracking-widest border border-white/5">Coming Soon</span>
                    </div>
-                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Field canvassing and outreach orchestration engine.</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Deploy targeted field operations and canvassing pipelines.</span>
                  </div>
                </Link>
 
-               <Link to="/products/demand-letter-generator"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'demand-letter', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
+               <a href="https://quickdemandletter.com" target="_blank" rel="noopener noreferrer"
+                 onClick={() => logTelemetry('sidebar_public_app_clicked', { app: 'demand_letter', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-cyan-500/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-600 to-cyan-400 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuScale} className="w-4 h-4 text-white" />
                  </div>
                  <div className="flex flex-col">
                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Demand Letter Generator</span>
-                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Automated formal legal notice generation utility.</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Generate legally sound demand letters to resolve disputes.</span>
                  </div>
-               </Link>
+               </a>
 
-               <Link to="/products/nda-generator"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'nda-generator', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
+               <a href="https://nda.axim.us.com" target="_blank" rel="noopener noreferrer"
+                 onClick={() => logTelemetry('sidebar_public_app_clicked', { app: 'nda_generator', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuShield} className="w-4 h-4 text-white" />
                  </div>
                  <div className="flex flex-col">
                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">NDA Generator</span>
-                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Instant non-disclosure agreement drafting and compliance.</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Protect intellectual property with ironclad agreements.</span>
                  </div>
-               </Link>
+               </a>
 
-               <Link to="/products/personality-test"
-                 onClick={() => logTelemetry('sidebar_app_click', { app: 'personality-test', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
+               <a href="https://axim.us.com/personalitytest/" target="_blank" rel="noopener noreferrer"
+                 onClick={() => logTelemetry('sidebar_public_app_clicked', { app: 'personality_test', article: slug })} className="flex items-start gap-4 p-4 bg-[#0F172A] border border-white/5 hover:border-axim-gold/50 transition-colors rounded-sm group shadow-md">
                  <div className="w-8 h-8 rounded bg-gradient-to-br from-axim-gold to-yellow-600 flex items-center justify-center shrink-0">
                     <SafeIcon icon={LuIcons.LuBrain} className="w-4 h-4 text-black" />
                  </div>
                  <div className="flex flex-col">
                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white uppercase tracking-wider">Personality Test</span>
-                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Behavioral and psychometric alignment assessment tool.</span>
+                   <span className="text-[10px] text-zinc-500 mt-1 leading-snug">Psychometric 8-function cognitive profiling assessment.</span>
                  </div>
-               </Link>
+               </a>
              </div>
           </div>
 

@@ -18,6 +18,13 @@ export default function SEO({
 }) {
   const location = useLocation();
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AXiM Development",
+    "url": "https://axim.us.com/"
+  };
+
   const defaultOrgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -33,7 +40,7 @@ export default function SEO({
     }
   };
 
-  const finalSchemas = [...customSchema, defaultOrgSchema];
+  const finalSchemas = location.pathname === '/' ? [...customSchema, defaultOrgSchema, websiteSchema] : [...customSchema, defaultOrgSchema];
 
   const currentUrl = url || `https://axim.us.com${location.pathname}`;
   const metaImage = image || DEFAULT_SOCIAL_IMAGE;

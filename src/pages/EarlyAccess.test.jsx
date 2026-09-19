@@ -130,7 +130,8 @@ describe('EarlyAccess Component', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-        expect(screen.getByText(/Network Uplink Failed/i)).toBeTruthy();
+        const errorElements = screen.getAllByText(/Network Uplink Failed/i);
+        expect(errorElements.length).toBeGreaterThan(0);
     });
   });
 

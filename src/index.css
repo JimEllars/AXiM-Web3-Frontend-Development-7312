@@ -101,11 +101,20 @@ body {
     @apply bg-[#030303] border border-white/5 p-4 rounded-sm font-mono text-xs overflow-x-auto text-zinc-200 mb-6;
   }
   .prose-axim blockquote {
-    @apply border-l-2 border-axim-purple bg-gradient-to-r from-axim-purple/5 to-transparent pl-4 py-2 italic text-zinc-200 font-medium my-6;
+    @apply border-l-2 border-axim-gold bg-white/[0.02] pl-6 py-3 my-8 italic text-zinc-200 text-lg font-serif;
+  }
+  .prose-axim > p:first-of-type::first-letter {
+    float: left;
+    font-size: 3.75rem;
+    line-height: 0.85;
+    padding-right: 0.75rem;
+    font-weight: 900;
+    color: #FFEA00;
+    font-family: inherit;
   }
   .prose-axim h2,
   .prose-axim h3,
   .prose-axim h4 {
-    @apply font-black text-white uppercase tracking-wider mt-8 mb-4;
+    @apply font-black text-white uppercase tracking-[0.1em] mt-12 mb-6 leading-tight;
   }
 }
