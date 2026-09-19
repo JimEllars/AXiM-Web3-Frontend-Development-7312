@@ -256,7 +256,7 @@ export default function ArticleCard({
                 </span>
               )}
               <span className="font-mono text-[10px] text-zinc-500">
-                • {estimateDuration(excerptText)} MIN READ
+                • {readTime} MIN READ
               </span>
             </div>
           </div>
