@@ -40,6 +40,17 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
 
   const nodes = [
     {
+      id: "SpeedReport.org",
+      type: "Satellite App",
+      url: "https://speedreport.org",
+      status: liveMetrics.isReconnecting ? "RECONNECTING..." : "Operational",
+      metrics: [["Latency", liveMetrics.latency || "--"], ["Uptime", liveMetrics.uptime || "--"]],
+      icon: LuIcons.LuActivity,
+      color: liveMetrics.isReconnecting ? "zinc-500" : "emerald-500",
+      pulse: liveMetrics.isReconnecting,
+      external: true
+    },
+    {
       id: 'Support',
       type: 'Satellite App',
       url: 'https://support.axim.us.com',
@@ -102,6 +113,10 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
   ];
 
   const handleLaunch = async (url) => {
+    if (nodes.find(n => n.url === url)?.external) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
     const launchUrl = await generateSsoLaunchUrl(url);
     window.location.href = launchUrl;
   };

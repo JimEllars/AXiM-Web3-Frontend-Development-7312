@@ -6,6 +6,7 @@ import { logTelemetry } from '../lib/telemetry';
 import { generateSsoLaunchUrl } from '../lib/auth-handoff';
 
 const features = [
+  { icon: LuIcons.LuActivity, title: "SpeedReport.org", desc: "Edge Network Diagnostics", url: "https://speedreport.org", external: true },
   { icon: LuIcons.LuZap, title: "Support", desc: "Access the AXiM Support System and ticket dashboard.", url: "https://support.axim.us.com" },
   { icon: LuIcons.LuShieldCheck, title: "Nexus CRM", desc: "Enterprise security cockpit and threat management.", url: "https://asguard.axim.us.com" },
   { icon: LuIcons.LuRefreshCw, title: "Onboard1", desc: "Automated scaling and instance deployment system.", url: "https://greenmachine.axim.us.com" },
@@ -17,6 +18,10 @@ const features = [
 export default function Ecosystem() {
   const handleLaunch = async (url, title) => {
     logTelemetry('ecosystem_feature_clicked', { title });
+    if (features.find(f => f.title === title)?.external) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
     const launchUrl = await generateSsoLaunchUrl(url);
     window.location.href = launchUrl;
   };

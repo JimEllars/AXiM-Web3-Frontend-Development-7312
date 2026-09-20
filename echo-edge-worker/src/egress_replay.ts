@@ -56,92 +56,37 @@ export default {
         });
       }
 
-      // 4. Supabase Setup
-      // using REST fetch since Supabase client might not be installed
-      const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL;
-      const supabaseKey = env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
-
-      if (!supabaseUrl || !supabaseKey) {
-        return new Response(JSON.stringify({ error: 'Server Configuration Error' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-        });
-      }
-
-      const headers = {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
-      };
-
+      const coreUrl = env.AXIM_CORE_URL || "https://core.axim.us.com";
       const results = { successful: [], failed: [] };
-
-      // Helper function to update status
-      const updateRecordStatus = async (id, status) => {
-        await fetch(`${supabaseUrl}/rest/v1/echo_dlq_records?id=eq.${id}`, {
-          method: 'PATCH',
-          headers,
-          body: JSON.stringify({ status })
-        });
-      };
 
       // Process in chunks of 5
       const chunkSize = 5;
       for (let i = 0; i < recordIds.length; i += chunkSize) {
         const chunk = recordIds.slice(i, i + chunkSize);
 
-        const chunkPromises = chunk.map(async (id) => {
+        const chunkPromises = chunk.map(async (recordId) => {
           try {
-            // 4a. Fetch record
-            const getRes = await fetch(`${supabaseUrl}/rest/v1/echo_dlq_records?id=eq.${id}&select=*`, {
-              method: 'GET',
-              headers
+            const fetchRes = await fetch(`${coreUrl}/api/v1/workflows/dispatch`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Axim-Gateway-Token": env.AXIM_GATEWAY_TOKEN || ""
+              },
+              body: JSON.stringify({
+                workflow_type: "echo_dlq_replay",
+                payload: { recordId, action: "replay" },
+                trigger_source: "axim-frontend-edge"
+              })
             });
 
-            if (!getRes.ok) {
-              throw new Error(`Failed to fetch record ${id}`);
-            }
-
-            const data = await getRes.json();
-            if (!data || data.length === 0) {
-              throw new Error(`Record ${id} not found`);
-            }
-            const record = data[0];
-
-            // Set to replaying (handled by ui but edge can ensure it just in case, or ui can handle)
-            // As per instructions, edge executes the replay.
-
-            // 4b. True Fetch Replay
-            let payloadStr = record.payload;
-            try {
-              if (typeof payloadStr !== 'string') {
-                payloadStr = JSON.stringify(payloadStr);
-              }
-            } catch (err) {
-              throw new Error('Failed to serialize payload');
-            }
-
-            let fetchRes;
-            try {
-              fetchRes = await fetch(record.target_destination, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: payloadStr
-              });
-            } catch (networkErr) {
-              throw new Error(`Target network error: ${networkErr.message}`);
-            }
-
-            if (fetchRes.status === 200 || fetchRes.status === 201) {
-              // 4c. Update status to resolved
-              await updateRecordStatus(id, 'resolved');
-              results.successful.push(id);
+            if (fetchRes.status === 200 || fetchRes.status === 201 || fetchRes.status === 202) {
+              results.successful.push(recordId);
             } else {
               throw new Error(`Target returned status ${fetchRes.status}`);
             }
 
           } catch (err) {
-            results.failed.push({ id, error: err.message });
+            results.failed.push({ id: recordId, error: err.message });
           }
         });
 
