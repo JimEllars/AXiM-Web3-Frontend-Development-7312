@@ -1,5 +1,16 @@
 export const generators = [
   {
+    id: "speedreport",
+    title: "SpeedReport.org",
+    tagline: "Enterprise Network Diagnostics & SLA Verification",
+    description: "Commercial-grade internet performance testing, loaded latency (bufferbloat) analysis, VoIP readiness scoring, and 1-click official SLA audit certificates.",
+    category: "Tech & Business Infrastructure",
+    externalUrl: "https://speedreport.org",
+    badge: "New Utility",
+    icon: "Activity",
+    pillars: ["tech", "business"]
+  },
+  {
     id: "axim-personality-test",
     title: "AXiM Personality Assessment",
     category: "Personal Development",

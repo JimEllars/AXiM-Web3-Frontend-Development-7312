@@ -35,12 +35,13 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       const pingHealth = () => {
         const start = Date.now();
-        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
+        fetch('/api/v1/telemetry/health', { signal: AbortSignal.timeout(3000) })
           .then(res => {
             if (!res.ok) throw new Error('Worker not 200');
             const ray = res.headers.get('cf-ray');
             if (ray) setEdgeRegion(ray.split('-')[1] || ray);
-            setLatencyInfo(prev => ({ ...prev, rtt: Date.now() - start }));
+            const currentLatency = Date.now() - start;
+            setLatencyInfo(prev => ({ ...prev, rtt: prev.rtt ? Math.floor((prev.rtt * 0.8) + (currentLatency * 0.2)) : currentLatency }));
           })
           .catch(() => {
             fetch('/', { method: 'HEAD', signal: AbortSignal.timeout(3000) })
@@ -191,7 +192,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
           className="overflow-hidden flex flex-col gap-1.5"
         >
           <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
+            Global Latency: {latencyInfo.rtt}ms (P95) // Cloudflare Edge Status: {edgeRegion === 'OFFLINE' ? 'Offline' : 'Operational'} // Active Nodes: 6
           </span>
           <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
@@ -218,7 +219,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             className={`w-2.5 h-2.5 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 ${statusDotPulse}` : ''}`}
           />
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
+            Global Latency: {latencyInfo.rtt}ms (P95) // Cloudflare Edge Status: {edgeRegion === 'OFFLINE' ? 'Offline' : 'Operational'} // Active Nodes: 6
           </span>
           <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS

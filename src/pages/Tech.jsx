@@ -113,6 +113,7 @@ export default function Tech() {
               <div className="flex flex-col gap-2">
                 <Link to="/store" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'NDA Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Access NDA Generator →</Link>
                 <Link to="/store" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'Paystub Generator' })} className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors">Access Paystub Generator →</Link>
+                <a href="https://speedreport.org" target="_blank" rel="noopener noreferrer" className="text-xs font-bold uppercase text-axim-gold hover:text-white transition-colors" onClick={() => logTelemetry('tech_card_clicked', { section: 'Enterprise Applications', name: 'SpeedReport' })}>Access SpeedReport →</a>
               </div>
             </div>
 

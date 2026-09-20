@@ -39,7 +39,7 @@ describe('TelemetryBar Component', () => {
 
     // Test the text content
     await waitFor(() => {
-        expect(screen.getAllByText((content, element) => content.includes('NET_LATENCY:')).length).toBeGreaterThan(0);
+        expect(screen.getAllByText((content, element) => content.includes('Global Latency:')).length).toBeGreaterThan(0);
         expect(screen.getAllByText((content, element) => content.includes('QUEUE: 0 EVENTS')).length).toBeGreaterThan(0);
         expect(screen.getAllByText((content, element) => content.includes('CONNECTED')).length).toBeGreaterThan(0);
     });
