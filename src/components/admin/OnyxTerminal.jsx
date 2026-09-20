@@ -8,20 +8,20 @@ import DOMPurify from 'dompurify';
 
 
 const TerminalMessageItem = memo(({ item }) => (
-  <div className={`mt-2 ${item.type === 'error' ? 'text-red-500' : item.type === 'success' ? 'text-axim-green' : 'text-zinc-300'}`}>
+  <div className={`mt-2 ${item.type === 'error' ? 'text-rose-500' : item.type === 'success' ? 'text-emerald-400' : 'text-zinc-300'}`}>
      <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.text, { USE_PROFILES: { html: true } }) }} />
   </div>
 ));
 
 const TelemetryEventItem = memo(({ event }) => (
-  <div className="mt-2 text-[10px] break-all border-l-2 border-axim-purple pl-2 py-1">
-     <span className="text-zinc-500">[{new Date(event.timestamp).toLocaleTimeString()}]</span>{" "}
-     <span className={`font-bold ${event.type.includes('error') || event.type.includes('failed') ? 'text-red-400' : 'text-axim-purple'}`}>{event.type.toUpperCase()}</span>
+  <div className="mt-2 text-[10px] break-all border-l-2 border-emerald-500 pl-2 py-1">
+     <span className="text-zinc-500">[{new Date(event.timestamp).toISOString().split('T')[1].replace('Z', '')}]</span>{" "}
+     <span className={`font-bold ${event.type.includes('error') || event.type.includes('failed') ? 'text-red-400' : 'text-emerald-400'}`}>{event.type.toUpperCase()}</span>
      <span className="text-zinc-500"> - {JSON.stringify(event.payload)}</span>
   </div>
 ));
 
-export default function OnyxTerminal() {
+export default function OnyxTerminal({ isActive = true }) {
   const [kvKey, setKvKey] = useState('');
   const [kvValue, setKvValue] = useState('');
   const [autoScroll, setAutoScroll] = useState(true);
@@ -29,6 +29,7 @@ export default function OnyxTerminal() {
   const [responseLog, setResponseLog] = useState('');
   const [replaySpeed, setReplaySpeed] = useState(1);
   const [batchToast, setBatchToast] = useState(null);
+  const [logFilter, setLogFilter] = useState("ALL");
   const [terminalOutput, setTerminalOutput] = useState(() => {
     try {
       const stored = sessionStorage.getItem('AXIM_ONYX_SESSION_LOGS');
@@ -166,9 +167,9 @@ export default function OnyxTerminal() {
         </div>
         <div className="flex items-center gap-4">
           {isStreaming && (
-            <div className="flex items-center gap-2 px-3 py-1 bg-axim-purple/10 border border-axim-purple/30 rounded-sm shadow-[0_0_10px_rgba(147,51,234,0.2)] animate-pulse">
-              <div className="w-2 h-2 rounded-full bg-axim-purple shadow-[0_0_8px_rgba(147,51,234,0.8)]" />
-              <span className="text-[0.65rem] font-mono text-axim-purple uppercase tracking-widest">
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-sm shadow-[0_0_10px_rgba(147,51,234,0.2)] animate-pulse">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(147,51,234,0.8)]" />
+              <span className="text-[0.65rem] font-mono text-emerald-400 uppercase tracking-widest">
                 {connectionStatus === 'STREAMING' ? 'UPLINK ACTIVE' : connectionStatus}
               </span>
             </div>
@@ -179,27 +180,27 @@ export default function OnyxTerminal() {
 
 
       {/* System Operational Verification (SOV) Panel */}
-      <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-axim-purple/30 transition-colors">
+      <div className="bg-black/90/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
-          <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-axim-green" />
+          <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-emerald-400" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Onyx Core Diagnostics Engine</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Identity Gateway Layer</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
+            <span className="px-2 py-1 bg-emerald-400/10 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-emerald-400 text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Edge Data Buffer</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
+            <span className="px-2 py-1 bg-emerald-400/10 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-emerald-400 text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Onyx Swarm Uplink</span>
-            <span className="px-2 py-1 bg-axim-green/10 border border-axim-green/50 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-axim-green text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-green animate-pulse" />[ PASS ]</span>
+            <span className="px-2 py-1 bg-emerald-400/10 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.5)] text-emerald-400 text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />[ PASS ]</span>
           </div>
           <div className="flex items-center justify-between p-3 border border-white/5 bg-black rounded-sm">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Edge Cache Status</span>
-            <span className="px-2 py-1 bg-axim-purple/10 border border-axim-purple/50 shadow-[0_0_8px_rgba(147,51,234,0.5)] text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-axim-purple animate-pulse" />[ HIT // MEM_POOL ]</span>
+            <span className="px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 shadow-[0_0_8px_rgba(147,51,234,0.5)] text-emerald-400 text-[0.65rem] font-mono uppercase tracking-widest rounded-sm flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />[ HIT // MEM_POOL ]</span>
           </div>
         </div>
       </div>
@@ -207,15 +208,15 @@ export default function OnyxTerminal() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
 
       {/* Telemetry Replay Controller */}
-      <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-axim-purple/30 transition-colors">
+      <div className="bg-black/90/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
-          <SafeIcon icon={LuIcons.LuFastForward} className="w-5 h-5 text-axim-purple" />
+          <SafeIcon icon={LuIcons.LuFastForward} className="w-5 h-5 text-emerald-400" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Telemetry Replay Controller</h3>
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Playback Matrix Speed</span>
-             <span className="px-2 py-1 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">{replaySpeed}x</span>
+             <span className="px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[0.65rem] font-mono uppercase tracking-widest rounded-sm">{replaySpeed}x</span>
           </div>
           <input
              type="range"
@@ -250,7 +251,7 @@ export default function OnyxTerminal() {
               type="text"
               value={kvKey}
               onChange={(e) => setKvKey(e.target.value)}
-              className="w-full bg-[#0A0A0A] border border-white/10 p-3 text-white text-sm font-mono focus:border-axim-purple outline-none rounded-sm"
+              className="w-full bg-black/90 border border-white/10 p-3 text-white text-sm font-mono focus:border-emerald-500 outline-none rounded-sm"
             />
           </div>
           <div className="flex-1 flex flex-col">
@@ -258,19 +259,19 @@ export default function OnyxTerminal() {
             <textarea
               value={kvValue}
               onChange={(e) => setKvValue(e.target.value)}
-              className="w-full flex-1 min-h-[250px] bg-[#0A0A0A] border border-white/10 p-3 text-axim-gold text-xs font-mono focus:border-axim-purple outline-none rounded-sm resize-none"
+              className="w-full flex-1 min-h-[250px] bg-black/90 border border-white/10 p-3 text-axim-gold text-xs font-mono focus:border-emerald-500 outline-none rounded-sm resize-none"
             />
           </div>
           <button
             disabled={isTransmitting}
             type="submit"
-            className="w-full py-4 bg-axim-purple text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:bg-white hover:text-black disabled:opacity-50 flex items-center justify-center gap-2 rounded-sm"
+            className="w-full py-4 bg-emerald-500 text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:bg-white hover:text-black disabled:opacity-50 flex items-center justify-center gap-2 rounded-sm"
           >
             {isTransmitting ? (
               <div className="flex items-center gap-2">
                 <div className="flex gap-1">
                   <div className="w-1.5 h-1.5 bg-white/80 animate-pulse rounded-sm" style={{ animationDelay: '0ms' }} />
-                  <div className="w-1.5 h-1.5 bg-axim-purple animate-pulse rounded-sm" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1.5 h-1.5 bg-emerald-500 animate-pulse rounded-sm" style={{ animationDelay: '150ms' }} />
                   <div className="w-1.5 h-1.5 bg-white/80 animate-pulse rounded-sm" style={{ animationDelay: '300ms' }} />
                 </div>
                 Transmitting to Edge...
@@ -305,11 +306,17 @@ export default function OnyxTerminal() {
         </button>
 
         {/* Console Output */}
-        <div className="bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden hover:border-axim-purple/30 transition-colors">
+        <div className="bg-black/90/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-4 font-mono text-xs flex flex-col relative overflow-hidden hover:border-emerald-500/30 transition-colors">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-axim-purple via-[#DB2777] to-transparent opacity-50" />
           <div className="text-zinc-600 mb-4 uppercase tracking-widest border-b border-white/5 pb-2 flex items-center justify-between gap-2">
             <span className="flex items-center gap-2"><SafeIcon icon={LuIcons.LuActivity} className="w-3 h-3" /> Execution Log</span>
-            <button onClick={() => setAutoScroll(!autoScroll)} className={`text-[9px] px-2 py-1 rounded-sm border ${autoScroll ? 'border-axim-purple text-axim-purple bg-axim-purple/10' : 'border-zinc-700 text-zinc-500'}`}>Auto-scroll: {autoScroll ? 'ON' : 'OFF'}</button>
+
+    <div className="flex gap-2">
+      {['ALL', 'SYSTEM', 'SECURITY', 'TELEMETRY', 'ERROR'].map(f => (
+         <button key={f} onClick={() => setLogFilter(f)} className={`text-[9px] px-2 py-1 rounded-sm border ${logFilter === f ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10' : 'border-zinc-700 text-zinc-500'}`}>[{f}]</button>
+      ))}
+    </div>
+    <button onClick={() => setAutoScroll(!autoScroll)} className={`text-[9px] px-2 py-1 rounded-sm border ${autoScroll ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10' : 'border-zinc-700 text-zinc-500'}`}>Auto-scroll: {autoScroll ? 'ON' : 'OFF'}</button>
           </div>
 
           <div
@@ -320,11 +327,11 @@ export default function OnyxTerminal() {
              <div className="animate-pulse">{'> INITIALIZING TERMINAL UPLINK... OK'}</div>
              <div className="animate-pulse animation-delay-200">{'> AWAITING OPERATOR INPUT...'}</div>
 
-             {terminalOutput.map((item, idx) => (
+             {terminalOutput.filter(i => logFilter === 'ALL' || (logFilter === 'ERROR' && i.type === 'error') || (logFilter === 'SYSTEM' && i.type === 'info') || (logFilter === 'SECURITY' && i.type === 'security') ).map((item, idx) => (
                 <TerminalMessageItem key={`term-${idx}`} item={item} />
              ))}
 
-             {telemetryQueue && telemetryQueue.slice(0, 50).map((event) => (
+             {telemetryQueue && telemetryQueue.filter(e => logFilter === 'ALL' || logFilter === 'TELEMETRY').slice(0, 50).map((event) => (
                 <TelemetryEventItem key={event.id} event={event} />
              ))}
           </div>
@@ -334,7 +341,7 @@ export default function OnyxTerminal() {
       {/* Batch Summary Toast */}
       {batchToast && (
         <div className="fixed bottom-6 right-6 bg-black border border-white/10 p-4 rounded-sm shadow-2xl flex flex-col gap-1 font-mono text-[11px] uppercase text-zinc-400 z-50 animate-slide-in">
-          <div className="flex items-center gap-2 text-axim-purple font-black mb-1">
+          <div className="flex items-center gap-2 text-emerald-400 font-black mb-1">
             <SafeIcon icon={LuIcons.LuActivity} className="w-4 h-4" />
             <span>[REPLAY BATCH COMPLETE]</span>
           </div>

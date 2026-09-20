@@ -111,13 +111,13 @@ export default function Footer() {
               </span>
             )}
             <div className="flex gap-4">
-               <a href="mailto:hello@axim.us.com" aria-label="Email AXiM" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'email' })}>
+               <a href="mailto:hello@axim.us.com" aria-label="Email AXiM" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'email' })}>
                  <SafeIcon icon={LuIcons.LuMail} className="w-4 h-4" />
                </a>
-               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'x_twitter' })}>
+               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM Twitter / X" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'x_twitter' })}>
                  <SafeIcon icon={LuIcons.LuTwitter} className="w-4 h-4" />
                </a>
-               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM LinkedIn" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'linkedin' })}>
+               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="AXiM LinkedIn" className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white hover:border-axim-purple transition-colors" onClick={() => logTelemetry('outbound_social_click', { network: 'linkedin' })}>
                  <SafeIcon icon={LuIcons.LuLinkedin} className="w-4 h-4" />
                </a>
             </div>
@@ -129,10 +129,10 @@ export default function Footer() {
               <SafeIcon icon={LuIcons.LuNetwork} className="w-4 h-4 text-axim-purple" /> Business Development
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/services/commercial-exterior" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Services</Link></li>
-              <li><Link to="/products/nexus-crm-course" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
-              <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Demand Letters</a></li>
-              <li><Link to="/business" className="text-axim-purple hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Business Hub →</Link></li>
+              <li><Link to="/services/commercial-exterior" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Commercial Services</Link></li>
+              <li><Link to="/products/nexus-crm-course" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Nexus CRM</Link></li>
+              <li><a href="https://quickdemandletter.com/start?via=axim_hub" target="_blank" rel="noopener noreferrer" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Demand Letters</a></li>
+              <li><Link to="/business" className="text-axim-purple focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Business Hub →</Link></li>
             </ul>
           </div>
 
@@ -142,11 +142,11 @@ export default function Footer() {
               <SafeIcon icon={LuIcons.LuWrench} className="w-4 h-4 text-[#DB2777]" /> Personal Development
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/personal#personality-test" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personality Test</Link></li>
-              <li><Link to="/personal" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personal Growth Articles</Link></li>
-              <li><Link to="/consultation" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Consultation</Link></li>
-              <li><Link to="/early-access" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Early Access</Link></li>
-              <li><Link to="/personal" className="text-[#DB2777] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Personal Hub →</Link></li>
+              <li><Link to="/personal#personality-test" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personality Test</Link></li>
+              <li><Link to="/personal" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Personal Growth Articles</Link></li>
+              <li><Link to="/consultation" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Consultation</Link></li>
+              <li><Link to="/early-access" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Early Access</Link></li>
+              <li><Link to="/personal" className="text-[#DB2777] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">View Personal Hub →</Link></li>
             </ul>
           </div>
 
@@ -156,10 +156,10 @@ export default function Footer() {
               <SafeIcon icon={LuIcons.LuDatabase} className="w-4 h-4 text-axim-gold" /> Tech & Intelligence
             </h2>
             <ul className="space-y-4">
-              <li><Link to="/tech" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Tech Infrastructure</Link></li>
-              <li><Link to="/games" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Games Arcade</Link></li>
-              <li><Link to="/articles" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Articles</Link></li>
-              <li><Link to="/store" className="text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Digital Marketplace</Link></li>
+              <li><Link to="/tech" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Tech Infrastructure</Link></li>
+              <li><Link to="/games" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Games Arcade</Link></li>
+              <li><Link to="/articles" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Articles</Link></li>
+              <li><Link to="/store" className="text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Digital Marketplace</Link></li>
             </ul>
           </div>
 
@@ -180,7 +180,7 @@ export default function Footer() {
                  )}
                </svg>
              </div>
-             <Link to="/terms" className="text-zinc-600 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
+             <Link to="/terms" className="text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-zinc-300 font-mono text-[0.6rem] uppercase tracking-widest transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

@@ -80,10 +80,10 @@ export default function AdminDashboard() {
         </div>
 
         <div className="animate-fade-in bg-[#050505] border border-white/10 rounded-sm shadow-2xl relative overflow-hidden min-h-[600px]">
-           {activeTab === 'terminal' && <OnyxTerminal />}
-           {activeTab === 'leads' && <LeadManager />}
-           {activeTab === 'analytics' && <ContentAnalytics />}
-           {activeTab === 'ecosystem' && <EcosystemRegistry />}
+           {activeTab === 'terminal' && <OnyxTerminal isActive={activeTab === 'terminal'} />}
+           {activeTab === 'leads' && <LeadManager isActive={activeTab === 'leads'} />}
+           {activeTab === 'analytics' && <ContentAnalytics isActive={activeTab === 'analytics'} />}
+           {activeTab === 'ecosystem' && <EcosystemRegistry isActive={activeTab === 'ecosystem'} />}
         </div>
       </motion.section>
     </div>

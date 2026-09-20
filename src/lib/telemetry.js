@@ -78,6 +78,9 @@ export function logTelemetry(type, payload) {
 
   useAximStore.getState().logTelemetryEvent(event);
   batchQueue.push(event);
+  if (batchQueue.length > 50) {
+    batchQueue = batchQueue.slice(batchQueue.length - 50);
+  }
 
   if (batchQueue.length >= 10) {
     flushTelemetryQueue();
@@ -122,6 +125,9 @@ export async function flushTelemetryQueue(force = false) {
 
   const currentBatch = [...batchQueue];
   batchQueue = []; // Clear queue immediately to capture new events while flushing
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
+  }
 
   try {
     const payload = JSON.stringify(currentBatch);
@@ -130,7 +136,10 @@ export async function flushTelemetryQueue(force = false) {
     const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry/ingest';
 
     if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 100); // Restore on fail
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
+  } // Restore on fail
       if (typeof window !== 'undefined') {
         try { localStore.saveTelemetryCache(batchQueue); } catch (e) { /* ignore */ }
       }
@@ -260,7 +269,10 @@ export async function flushTelemetryQueue(force = false) {
       }
     } else {
       // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 100);
+      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
+  }
       if (typeof window !== 'undefined') {
         try {
           const existing = localStore.getTelemetryCache() || [];

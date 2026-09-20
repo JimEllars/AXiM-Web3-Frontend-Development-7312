@@ -74,11 +74,13 @@ export default function TelemetryBar({ label, color, initialValue }) {
     if (typeof window !== 'undefined') {
         window.addEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
         window.addEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
+        window.addEventListener('axim-telemetry-queue-update', handleLocalTelemetryUpdate);
     }
     return () => {
         if (typeof window !== 'undefined') {
             window.removeEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
             window.removeEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
+            window.removeEventListener('axim-telemetry-queue-update', handleLocalTelemetryUpdate);
         }
     }
   }, []);

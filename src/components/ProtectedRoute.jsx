@@ -36,7 +36,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
     }
   }, [isAuthenticated, isRoleAuthorized, isLoading, gracePeriodActive, location.pathname]);
 
-  if (isLoading || isHydrating || isReconnecting || (gracePeriodActive && !isAuthenticated)) {
+  if (isLoading || isHydrating || (gracePeriodActive && !isAuthenticated)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <GlobalLoader />
