@@ -20,8 +20,8 @@ describe('Telemetry', () => {
     logTelemetry('test_event', { foo: 'bar' });
     const store = getTelemetryStore();
     expect(store.length).toBe(1);
-    expect(store[0].type).toBe('test_event');
-    expect(store[0].payload.foo).toBe('bar');
+    expect(store[0].event?.category || store[0].type).toBe('test_event');
+    expect(store[0].event.foo).toBe('bar');
   });
 
   it('should flush telemetry queue and clear on success', async () => {

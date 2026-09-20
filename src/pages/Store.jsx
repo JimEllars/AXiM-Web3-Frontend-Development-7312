@@ -19,7 +19,7 @@ const SelldoneEmbed = ({ product, shelfTitle, isAdblocked }) => {
 
   return (
     <div
-      className="mt-auto pt-4 border-t border-white/10"
+      className="mt-auto pt-4 border-t border-slate-800/80 hover:border-cyan-500/30"
       onClick={() => logTelemetry('marketplace_category_viewed', { category: shelfTitle })}
     >
       {isAdblocked ? (
@@ -27,7 +27,7 @@ const SelldoneEmbed = ({ product, shelfTitle, isAdblocked }) => {
           <p className="text-xs font-bold text-red-400">Marketplace blocked by Tracking Protection. Please disable your Adblocker to view digital assets.</p>
         </div>
       ) : (
-      <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} data-selldone-product-id={product.title.replace(/\s+/g, '-').toLowerCase()} className="relative w-full h-12 bg-white/5 border border-white/10 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
+      <div id={`selldone-embed-container-${product.title.replace(/\s+/g, '-').toLowerCase()}`} data-selldone-product-id={product.title.replace(/\s+/g, '-').toLowerCase()} className="relative w-full h-12 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/30 rounded-sm overflow-hidden flex items-center justify-center group cursor-pointer hover:bg-white/10 transition-colors">
          {isLoading ? (
            <div className="absolute inset-0 bg-axim-purple/20 animate-pulse transition-opacity duration-500" />
          ) : (
@@ -151,7 +151,7 @@ export default function Store() {
       </div>
 
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-8 relative z-10">
-        <div className="flex gap-4 p-1 bg-black/50 border border-white/10 rounded-sm backdrop-blur-md">
+        <div className="flex gap-4 p-1 bg-black/50 border border-slate-800/80 hover:border-cyan-500/30 rounded-sm backdrop-blur-md">
           <button
             onClick={() => setActiveCategory('digital-ip')}
             className={`px-6 py-2 text-xs font-bold uppercase tracking-widest transition-colors rounded-sm ${
@@ -178,12 +178,12 @@ export default function Store() {
       <div className="max-w-7xl mx-auto space-y-16 relative z-10">
         {shelves.map((shelf, sIdx) => (
           <div key={sIdx} className="space-y-6">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider border-b border-slate-800/80 hover:border-cyan-500/30 pb-2">
               {shelf.title}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {shelf.products.filter(p => activeCategory === 'digital-ip' ? p.category !== 'PHYSICAL' : p.category === 'PHYSICAL').map((product, pIdx) => (
-                <div key={pIdx} className="bg-onyx-900/80 backdrop-blur-md border border-white/10 p-6 rounded-lg shadow-xl hover:border-axim-purple/50 transition-colors flex flex-col">
+                <div key={pIdx} className="bg-onyx-900/80 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/30 p-6 rounded-lg shadow-xl hover:border-axim-purple/50 transition-colors flex flex-col">
                   <div className="text-[10px] font-mono text-axim-purple uppercase tracking-widest mb-3">
                     [{product.category}]
                   </div>

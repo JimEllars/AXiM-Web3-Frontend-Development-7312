@@ -185,7 +185,7 @@ export default function Consultation() {
 
       {/* Hero */}
       <motion.section
-        className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-white/10"
+        className="pt-32 pb-16 relative overflow-hidden bg-black border-b border-slate-800/80 hover:border-cyan-500/30"
         onViewportEnter={() => {
           logTelemetry('consultation_page_viewed', { origin: 'public_nav' });
         }}
@@ -239,7 +239,7 @@ export default function Consultation() {
             logTelemetry('consultation_page_viewed', { initialStep: step });
           }}
           viewport={{ once: true, amount: 0.2 }}>
-             <div className="bg-[#050505] border border-white/10 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden min-h-[500px] flex flex-col">
+             <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/30 p-8 md:p-12 rounded-sm shadow-2xl relative overflow-hidden min-h-[500px] flex flex-col">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-axim-purple/5 blur-[80px] pointer-events-none" />
 
                 <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 relative z-10">
@@ -275,22 +275,22 @@ export default function Consultation() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Full Name</label>
-                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="John Doe" />
+                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#0A0A0A] border border-slate-800/80 hover:border-cyan-500/30 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="John Doe" />
                       </div>
                       <div>
                         <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Work Email</label>
-                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="email@company.com" />
+                        <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-[#0A0A0A] border border-slate-800/80 hover:border-cyan-500/30 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="email@company.com" />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">Company Name</label>
-                      <input type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="Optional" />
+                      <input type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full bg-[#0A0A0A] border border-slate-800/80 hover:border-cyan-500/30 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors" placeholder="Optional" />
                     </div>
 
                     <div className="flex-1">
                       <label className="block text-[0.65rem] font-mono text-zinc-500 uppercase tracking-widest mb-2 border-l-2 border-axim-purple pl-2">How can we help you?</label>
-                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-white/10 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
+                      <textarea required value={formData.details} onChange={(e) => setFormData({...formData, details: e.target.value})} className="w-full h-32 bg-[#0A0A0A] border border-slate-800/80 hover:border-cyan-500/30 rounded-sm p-3.5 text-white text-sm focus:outline-none focus:border-axim-purple transition-colors resize-none" placeholder="Provide details regarding your request..." />
                     </div>
 
 
@@ -312,7 +312,7 @@ export default function Consultation() {
                     <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-8 font-mono uppercase tracking-widest">
                       Your architecture parameters have been securely encrypted and routed. An integration specialist will reach out within 24 hours.
                     </p>
-                    <button onClick={() => { logTelemetry('consultation_step_advanced', { currentStep: 'success', nextStep: 1, selectedCategory: null }); setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
+                    <button onClick={() => { logTelemetry('consultation_step_advanced', { currentStep: 'success', nextStep: 1, selectedCategory: null }); setStep(1); setIsSuccess(false); setFormData({ inquiryType: '', name: '', email: '', company: '', details: ''}); }} className="px-8 py-3 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/30 text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm">
                       Submit Another Request
                     </button>
                   </div>

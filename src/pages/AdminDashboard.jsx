@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     <div className="w-full min-h-screen bg-bg-void relative z-10 pb-32">
       <SEO title="Command Center | AXiM Development" />
 
-      <section className="pt-32 pb-8 relative overflow-hidden bg-black border-b border-white/10">
+      <section className="pt-32 pb-8 relative overflow-hidden bg-black border-b border-slate-800/80 hover:border-cyan-500/30">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.1),transparent_50%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="inline-flex items-center space-x-2 px-3 py-1 bg-red-500/10 border border-red-500/30 text-[0.65rem] font-mono uppercase tracking-widest text-red-500 mb-4 rounded-sm">
@@ -60,7 +60,7 @@ export default function AdminDashboard() {
         onViewportEnter={() => { logTelemetry('admin_dashboard_viewed', { initialTab: activeTab }); }}
         viewport={{ once: true, amount: 0.2 }}
       >
-        <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar no-scrollbar border-b border-white/10 pb-4 mb-8">
+        <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar no-scrollbar border-b border-slate-800/80 hover:border-cyan-500/30 pb-4 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
               className={`flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest rounded-sm transition-colors whitespace-nowrap snap-start ${
                 activeTab === tab.id
                   ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-                  : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'
+                  : 'bg-slate-900/60 backdrop-blur-md text-zinc-500 hover:text-white hover:bg-white/10'
               }`}
             >
               <SafeIcon icon={tab.icon} className="w-4 h-4" /> {tab.label}
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        <div className="animate-fade-in bg-[#050505] border border-white/10 rounded-sm shadow-2xl relative overflow-hidden min-h-[600px]">
+        <div className="animate-fade-in bg-slate-900/60 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/30 rounded-sm shadow-2xl relative overflow-hidden min-h-[600px]">
            {activeTab === 'terminal' && <OnyxTerminal isActive={activeTab === 'terminal'} />}
            {activeTab === 'leads' && <LeadManager isActive={activeTab === 'leads'} />}
            {activeTab === 'analytics' && <ContentAnalytics isActive={activeTab === 'analytics'} />}
