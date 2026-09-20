@@ -354,10 +354,11 @@ export function logHighPriorityTelemetry(type, payload) {
   flushTelemetryQueue(true);
 }
 
-export function trackEvent(type, payload) {
-  if (!type || typeof type !== 'string') return;
-  logTelemetry(type, payload);
-  if (type === 'personality_test_click') {
+export function trackEvent(category, action, label, value) {
+  if (!category || typeof category !== 'string') return;
+  const payload = { category, action, label, value };
+  logTelemetry(category, payload);
+  if (category === 'personality_test_click') {
     // Forward the interaction payload to AXiM Core telemetry (POST /satellite-telemetry)
     const CORE_TELEMETRY_ENDPOINT = import.meta.env.VITE_CORE_TELEMETRY_ENDPOINT || 'https://api.axim.us.com/satellite-telemetry';
     fetch(CORE_TELEMETRY_ENDPOINT, {
