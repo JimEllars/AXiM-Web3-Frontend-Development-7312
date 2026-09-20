@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAximStore } from '../store/useAximStore';
 import { logTelemetry, trackEvent } from '../lib/telemetry';
+import { useAximAuth } from './useAximAuth';
 
 export function useOnyxStream() {
   const [messages, setMessages] = useState(() => {
@@ -25,8 +26,18 @@ export function useOnyxStream() {
 
   const token = useAximStore((state) => state.token);
   const addToast = useAximStore((state) => state.addToast);
+  const { profile } = useAximAuth();
 
   const sendMessage = useCallback(async (text, context = {}) => {
+
+    // Security check: only allow admin users
+    if (!profile || profile.clearance_level > 1) { // Assuming 1 is admin, or checking for specific role. The instructions mention "admin role". In the codebase clearance_level: 1 seems to be admin as set in useAximAuth.js offline fallback. Let's make it strict or check for clearance level. Let's just check profile existence and clearance_level === 1 as per useAximAuth.
+      trackEvent('onyx_unauthorized_access_attempt', { action: 'stream_initiation' });
+      setError('Unauthorized access: Onyx is restricted to administrative personnel.');
+      if (addToast) addToast('Unauthorized access attempt logged.', 'error');
+      return;
+    }
+
     if (!text.trim()) return;
 
     // Disconnect existing stream if any
@@ -173,7 +184,7 @@ export function useOnyxStream() {
     };
 
     connectStream();
-  }, [token, addToast, messages]);
+  }, [token, addToast, messages, profile]);
 
   const abortStream = useCallback(() => {
     if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);

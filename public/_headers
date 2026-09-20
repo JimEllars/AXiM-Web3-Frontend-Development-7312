@@ -49,3 +49,9 @@
 
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
+
+/api/support/*
+  Access-Control-Allow-Origin: https://axim.us.com
+  Access-Control-Allow-Methods: POST, OPTIONS
+  Access-Control-Allow-Headers: Content-Type
+  Cache-Control: no-store
