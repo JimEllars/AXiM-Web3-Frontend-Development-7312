@@ -51,10 +51,10 @@ function isValidEvent(event) {
 
 export default {
   async fetch(request, env, ctx) {
-    if (request.method === 'OPTIONS') {
+    if (request.method === 'OPTIONS' || request.method === 'HEAD') {
       const headers = getCorsHeaders(request);
       headers['Access-Control-Allow-Origin'] = '*'; // Ensure broad CORS support on OPTIONS
-      headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      headers['Access-Control-Allow-Methods'] = 'GET, HEAD, POST, OPTIONS';
       headers['Access-Control-Allow-Headers'] = 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client';
 
       return new Response(null, {

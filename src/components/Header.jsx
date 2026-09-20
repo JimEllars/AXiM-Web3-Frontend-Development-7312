@@ -117,7 +117,7 @@ export default function Header() {
                 className={`text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-1 pb-1 border-b-2 ${
                   location.pathname === link.path || location.pathname.startsWith(link.path + '/')
                     ? 'text-white border-[#004040]'
-                    : 'text-zinc-400 border-transparent hover:text-white hover:border-[#004040]/50'
+                    : 'text-zinc-400 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white hover:border-[#004040]/50'
                 }`}
               >
                 {link.name}
@@ -131,7 +131,7 @@ export default function Header() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#004040]/10 blur-[30px] pointer-events-none" />
 
                     {/* Top Level Hub Link */}
-                    <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })} aria-current={location.pathname === link.path || location.pathname.startsWith(link.path + '/') ? "page" : undefined} to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
+                    <Link onClick={() => logTelemetry('nav_link_click', { path: link.path, title: link.name.toLowerCase() })} aria-current={location.pathname === link.path || location.pathname.startsWith(link.path + '/') ? "page" : undefined} to={link.path} className="px-4 py-3 text-[0.65rem] font-black uppercase tracking-widest text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-[#004040] border-b border-white/5 mb-1 transition-colors">
                       View All {link.name}
                     </Link>
 
@@ -172,7 +172,7 @@ export default function Header() {
 
           <button
             onClick={() => logTelemetry('global_cart_clicked', { location: 'header' })}
-            className="selldone-cart-toggle p-2 text-zinc-400 hover:text-white transition-colors relative"
+            className="selldone-cart-toggle p-2 text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white transition-colors relative"
             aria-label="View Cart"
           >
             <SafeIcon icon={LuIcons.LuShoppingBag} className="w-5 h-5" />
@@ -180,9 +180,9 @@ export default function Header() {
           {isAuthenticated ? (
             <div className="flex items-center gap-2 group">
               <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-axim-purple/20 border border-axim-purple/50 text-white font-mono text-xs uppercase tracking-widest hover:bg-axim-purple hover:text-white transition-colors rounded-sm shadow-md"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-axim-purple/20 border border-axim-purple/50 text-white font-mono text-xs uppercase tracking-widest hover:bg-axim-purple focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white transition-colors rounded-sm shadow-md"
               >
-                <SafeIcon className="w-3.5 h-3.5 text-axim-purple group-hover:text-white" icon={LuIcons.LuUserCheck} />
+                <SafeIcon className="w-3.5 h-3.5 text-axim-purple group-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white" icon={LuIcons.LuUserCheck} />
                 <span>Hi {getDisplayName()}</span>
               </Link>
               <span className="hidden xl:inline-flex items-center gap-1 px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-sm select-none pointer-events-none">
@@ -192,7 +192,7 @@ export default function Header() {
             </div>
           ) : (
             <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'unauthenticated' })} to="/auth"
-              className="inline-flex items-center gap-2 px-5 py-2 bg-axim-purple text-white font-black uppercase whitespace-nowrap tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-axim-purple text-white font-black uppercase whitespace-nowrap tracking-widest text-xs hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-black transition-colors rounded-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]"
             >
               <SafeIcon className="w-3.5 h-3.5" icon={LuIcons.LuLogIn} />
               <span>Login</span>
@@ -216,14 +216,14 @@ export default function Header() {
 
           <button
             onClick={() => logTelemetry('global_cart_clicked', { location: 'header' })}
-            className="selldone-cart-toggle p-2 text-zinc-400 hover:text-white transition-colors relative"
+            className="selldone-cart-toggle p-2 text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white transition-colors relative"
             aria-label="View Cart"
           >
             <SafeIcon icon={LuIcons.LuShoppingBag} className="w-5 h-5" />
           </button>
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden relative z-[60] p-2 text-zinc-400 hover:text-[#004040] transition-colors"
+          className="md:hidden relative z-[60] p-2 text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-[#004040] transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle Menu"
         >
@@ -287,7 +287,7 @@ export default function Header() {
           {isAuthenticated ? (
                 <div className="mt-auto pt-4 flex flex-col gap-2">
                   <Link onClick={() => logTelemetry('header_login_cta_clicked', { state: 'authenticated', identity: getDisplayName() })} to="/profile" className="w-full py-4 flex justify-center items-center gap-2 bg-axim-purple/20 border border-axim-purple/50 text-white text-sm font-mono uppercase tracking-widest rounded-sm transition-colors group">
-                  <SafeIcon className="w-4 h-4 text-axim-purple group-hover:text-white" icon={LuIcons.LuUserCheck} />
+                  <SafeIcon className="w-4 h-4 text-axim-purple group-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 hover:text-white" icon={LuIcons.LuUserCheck} />
                   <span>Hi {getDisplayName()}</span>
                   </Link>
                 </div>

@@ -41,6 +41,7 @@ export function useAximAuth() {
   const [isReconnecting, setIsReconnecting] = useState(false);
 
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
+  const addToast = useAximStore((state) => state.addToast);
   const isRefreshing = useRef(false);
 
   const checkDomain = async (currentSession) => {
@@ -188,6 +189,7 @@ trackEvent('auth_success', { method: 'supabase' });
           retries -= 1;
           if (retries === 0) {
              console.warn("[AXiM_AUTH] Session fetch failed after retries.");
+             addToast && addToast('[RPC NODE TIMEOUT: FALLING BACK TO EDGE CACHE]', 'error');
              trackEvent('edge_telemetry_warning', { reason: 'session_fetch_failed', error: fetchError?.message });
           } else {
              await new Promise(r => setTimeout(r, 1000)); // wait 1s before retry

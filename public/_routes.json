@@ -1,24 +1,13 @@
 {
   "version": 1,
-  "include": [
-    "/*"
-  ],
+  "include": ["/*"],
   "exclude": [
+    "/api/*",
     "/assets/*",
-    "/images/*",
-    "/*.ico",
-    "/*.png",
-    "/*.svg",
     "/manifest.json",
     "/robots.txt",
     "/sitemap.xml",
     "/sw.js",
-    "/favicon.ico",
-    "/api/telemetry",
-    "/api/telemetry/*",
-    "/api/rpc",
-    "/api/rpc/*",
-    "/api/wp/*",
-    "/api/workers/*"
+    "/output.css"
   ]
 }
