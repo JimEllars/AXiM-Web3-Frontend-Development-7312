@@ -49,6 +49,7 @@ export default function Support() {
   const [errorMsg, setErrorMsg] = useState('');
   const [networkFault, setNetworkFault] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState(null);
+  const [submittedTicket, setSubmittedTicket] = useState(null);
   const [attachmentError, setAttachmentError] = useState(false);
 
   const showToast = useAximStore((state) => state.showToast);

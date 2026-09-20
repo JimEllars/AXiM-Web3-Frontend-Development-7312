@@ -172,21 +172,21 @@ export default function ArticleCard({
             variant: 'standard'
           });
         }}
-        className="bg-gradient-to-b from-[#080808] to-[#020202] border border-white/10 hover:border-axim-purple/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_25px_rgba(147,51,234,0.15)] transition-all duration-500 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full"
+        className="bg-gradient-to-b from-slate-900/70 via-[#0a0f1d]/80 to-black/95 border border-slate-800/80 hover:border-cyan-500/50 backdrop-blur-md shadow-xl hover:shadow-[0_0_30px_rgba(6,182,212,0.18)] transition-all duration-300 ease-out group rounded-sm overflow-hidden flex flex-col relative block h-full before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-cyan-500/30 before:to-transparent"
       >
         {/* Interactive Neon Hover Ray Overlay */}
         <div
           className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.05), transparent 40%)`,
+            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(6, 182, 212, 0.05), transparent 40%)`,
           }}
         />
 
         {/* Top Container */}
-        <div className="relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask">
+        <div className="relative w-full aspect-[16/9] sm:h-56 overflow-hidden bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/10 rounded-t-sm mask"><div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.6)_100%)] z-10 pointer-events-none" />
           {(!finalImage || imageError) ? (
             <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-onyx-950 to-black border-b border-white/10 relative overflow-hidden flex items-center justify-center">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(147,51,234,0.15),transparent_70%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(6,182,212,0.15),transparent_70%)] pointer-events-none" />
               <SafeIcon className="w-16 h-16 text-white/5 absolute -bottom-3 -right-3" icon={LuIcons.LuHexagon}/>
             </div>
           ) : (
@@ -203,7 +203,7 @@ export default function ArticleCard({
           )}
           {/* Top Corner Badges */}
           <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-            <span className="font-mono font-bold text-[10px] tracking-widest text-purple-300 bg-axim-purple/20 border-axim-purple/40 backdrop-blur-sm border px-2.5 py-1 rounded-sm uppercase">
+            <span className="font-mono font-bold text-[10px] tracking-widest bg-cyan-950/60 text-cyan-400 border border-cyan-800/40 backdrop-blur-sm px-2.5 py-1 rounded-sm uppercase">
               {categoryBadge}
             </span>
             <span className="text-[0.6rem] font-mono text-zinc-300 bg-black/80 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-sm uppercase">
@@ -230,7 +230,7 @@ export default function ArticleCard({
 
           {/* Title Overlay on Thumbnail Bottom Edge */}
           <div className="absolute bottom-0 inset-x-0 p-4 z-20 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pt-8">
-            <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-axim-purple transition-colors duration-300 drop-shadow-md">
+            <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white line-clamp-2 leading-snug group-hover:text-cyan-400 transition-colors duration-300 drop-shadow-md">
               {cleanTitle}
             </h3>
           </div>

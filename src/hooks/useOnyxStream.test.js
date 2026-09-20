@@ -3,6 +3,14 @@ import { renderHook, act } from '@testing-library/react';
 import { useOnyxStream } from './useOnyxStream';
 import * as telemetry from '../lib/telemetry';
 
+
+vi.mock('../hooks/useAximAuth', () => ({
+  useAximAuth: () => ({
+    profile: { clearance_level: 1 },
+    session: {}
+  })
+}));
+
 vi.mock('../store/useAximStore', () => ({
   useAximStore: Object.assign(vi.fn((selector) => {
     const mockStore = {
