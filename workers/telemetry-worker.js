@@ -42,10 +42,7 @@ function isValidEvent(event) {
     event.id.length <= 128 &&
     typeof event.timestamp === 'string' &&
     !Number.isNaN(Date.parse(event.timestamp)) &&
-    (typeof event.type === 'string' || typeof event.event_type === 'string') &&
-    (event.sessionId === undefined || typeof event.sessionId === 'string') &&
-    ((event.type || event.event_type).length <= 128) &&
-    JSON.stringify(event.payload ?? null).length <= 16384
+    (event.sessionId === undefined || typeof event.sessionId === 'string')
   );
 }
 
@@ -120,8 +117,8 @@ export default {
     // Append geo/client data to each event payload securely
     events = events.map(event => ({
       ...event,
-      payload: {
-         ...(event.payload || {}),
+      event: {
+         ...(event.event || {}),
          _cf_geo: geoData,
          edge_latency
       }

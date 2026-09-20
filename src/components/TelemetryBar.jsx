@@ -4,7 +4,9 @@ import { useAximStore } from "../store/useAximStore";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { theme } from "../config/theme";
 
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 export default function TelemetryBar({ label, color, initialValue }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
   const telemetryQueue = useAximStore((state) => state.telemetryQueue);
   const isTelemetryPolling = useAximStore((state) => state.isTelemetryPolling);
@@ -160,14 +162,53 @@ export default function TelemetryBar({ label, color, initialValue }) {
     : (isBuffering ? "!bg-amber-300 !shadow-[0_0_24px_rgba(245,158,11,1)]" : "!bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]");
 
   return (
-    <div aria-live="polite" className={`bg-[${theme.colors.background}]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20 min-h-[48px] md:min-h-[64px]`}>
+    <div aria-live="polite" className={`bg-[${theme.colors.background}]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20`}>
       {/* Mobile view */}
-      <div className="md:hidden flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 brightness-150 ${statusDotPulse}` : ''}`} />
-          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">{label}</span>
-        </div>
-        <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>
+      <div className="md:hidden flex flex-col gap-2">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center justify-between gap-2 w-full focus:outline-none focus:ring-1 focus:ring-axim-purple rounded"
+          aria-expanded={isExpanded}
+          aria-label="Toggle Telemetry Details"
+        >
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 brightness-150 ${statusDotPulse}` : ''}`} />
+            <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">{label}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>
+            {isExpanded ? <LuChevronUp className="w-4 h-4 text-zinc-400" /> : <LuChevronDown className="w-4 h-4 text-zinc-400" />}
+          </div>
+        </button>
+        <motion.div
+          initial="collapsed"
+          animate={isExpanded ? "expanded" : "collapsed"}
+          variants={{
+            expanded: { opacity: 1, height: "auto", marginTop: 8 },
+            collapsed: { opacity: 0, height: 0, marginTop: 0 }
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="overflow-hidden flex flex-col gap-1.5"
+        >
+          <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+            [NET_LATENCY: {latencyInfo.rtt}MS // {latencyInfo.type}] // [EDGE_RAY: {edgeRegion}]
+          </span>
+          <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+            QUEUE: {telemetryQueue?.length || 0} EVENTS
+          </span>
+          <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+            EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
+          </span>
+          <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+            {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}
+          </span>
+          {isWeb3Authenticated && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 font-mono text-[8px] text-emerald-400 uppercase tracking-widest rounded-md select-none pointer-events-none shadow-sm backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              [TELEMETRY_NODE: ARBITRUM_EDGE_ACTIVE]
+            </span>
+          )}
+        </motion.div>
       </div>
 
       {/* Desktop/Tablet view */}

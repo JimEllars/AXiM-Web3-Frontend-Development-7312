@@ -53,8 +53,14 @@ export function logTelemetry(type, payload) {
   const event = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
-    type,
-    payload: { ...payload, perf: globalPerfMetrics },
+    event: { category: type, action: payload?.action, label: payload?.label, value: payload?.value, ...payload },
+    path: typeof window !== 'undefined' ? window.location.pathname : '',
+    performance: {
+      ttfb: globalPerfMetrics.TTFB || 0,
+      fcp: globalPerfMetrics.FCP || 0,
+      cls: globalPerfMetrics.CLS || 0,
+      lcp: globalPerfMetrics.LCP || 0
+    },
     sessionId: typeof window !== 'undefined' ? sessionStorage.getItem('axim_session_id') : undefined,
   };
 
@@ -348,16 +354,17 @@ export function logHighPriorityTelemetry(type, payload) {
   flushTelemetryQueue(true);
 }
 
-export function trackEvent(type, payload) {
-  if (!type || typeof type !== 'string') return;
-  logTelemetry(type, payload);
-  if (type === 'personality_test_click') {
+export function trackEvent(category, action, label, value) {
+  if (!category || typeof category !== 'string') return;
+  const payload = { category, action, label, value };
+  logTelemetry(category, payload);
+  if (category === 'personality_test_click') {
     // Forward the interaction payload to AXiM Core telemetry (POST /satellite-telemetry)
     const CORE_TELEMETRY_ENDPOINT = import.meta.env.VITE_CORE_TELEMETRY_ENDPOINT || 'https://api.axim.us.com/satellite-telemetry';
     fetch(CORE_TELEMETRY_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event: type, payload, timestamp: new Date().toISOString() })
+      body: JSON.stringify({ event: category, payload, timestamp: new Date().toISOString() })
     }).catch(err => {
       if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
         console.warn("[WEBHOOK] AXiM Core Telemetry Forwarding Failed silently.", err);

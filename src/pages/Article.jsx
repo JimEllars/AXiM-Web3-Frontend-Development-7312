@@ -4,6 +4,7 @@ import { fetchPosts } from '../lib/wp-fetch';
 import DOMPurify from 'isomorphic-dompurify';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import SEO from '../components/SEO';
+import GlobalLoader from '../components/GlobalLoader';
 
 import ArticleCard from '../components/ArticleCard';
 import { useAximStore } from '../store/useAximStore';
@@ -203,11 +204,8 @@ const { slug } = useParams();
   // 2. STRICT SHIELD: Handle Loading/Null State SECOND
   if (isLoading || !article) {
     return (
-      <div className="min-h-screen bg-bg-void pt-32 px-6 flex justify-center items-start">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="w-12 h-12 border-4 border-[#004040]/30 border-t-[#004040] rounded-full animate-spin"></div>
-          <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">Decrypting Protocol...</p>
-        </div>
+      <div className="min-h-screen bg-bg-void pt-32 flex justify-center items-start">
+        <GlobalLoader loadingMessage="Decrypting Protocol..." />
       </div>
     );
   }

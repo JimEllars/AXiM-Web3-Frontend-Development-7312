@@ -6,11 +6,11 @@ import SEO from './SEO';
 
 export default function DashboardAccessDenied() {
   return (
-    <div className="w-full min-h-screen bg-[#050505] relative flex items-center justify-center p-6 z-10">
+    <div className="w-full min-h-screen bg-slate-900/60 backdrop-blur-md relative flex items-center justify-center p-6 z-10">
       <SEO title="Access Restricted | AXiM" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.05),transparent_50%)] pointer-events-none" />
 
-      <div className="w-full max-w-lg bg-[#0A0A0A] border border-red-500/20 p-10 rounded-sm text-center shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-lg bg-slate-900/80 border border-red-500/20 p-10 rounded-sm text-center shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
 
         <div className="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
