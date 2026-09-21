@@ -162,3 +162,25 @@ describe('useAximAuth Hook', () => {
   });
 
 });
+
+  test('isHydrating logic works correctly', async () => {
+    const { supabase } = await import('../lib/supabase.js');
+    let resolveGetSession;
+    supabase.auth.getSession.mockImplementationOnce(() => new Promise((resolve) => {
+      resolveGetSession = resolve;
+    }));
+
+    const { result } = renderHook(() => useAximAuth());
+
+    // Initially loading and isHydrating should be true
+    assert.strictEqual(result.current.loading, true);
+    assert.strictEqual(result.current.isHydrating, true);
+
+    // Resolve the promise
+    resolveGetSession({ data: { session: { user: { email: 'test@axim.us.com' } } }, error: null });
+
+    await waitFor(() => {
+      assert.strictEqual(result.current.loading, false);
+      assert.strictEqual(result.current.isHydrating, false);
+    });
+  });

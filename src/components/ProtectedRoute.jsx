@@ -52,7 +52,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
         </div>
       );
     }
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    return <Navigate to={`/auth${location.search ? location.search : ''}`} state={{ from: location }} replace />;
   }
 
   if (adminOnly && !isRoleAuthorized) {
