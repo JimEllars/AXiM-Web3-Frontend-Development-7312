@@ -372,3 +372,94 @@ export function trackEvent(category, action, label, value) {
     });
   }
 }
+
+
+let errorBatchQueue = [];
+let isFlushingErrors = false;
+
+export function captureException(error, errorInfo) {
+  if (typeof window === 'undefined') return;
+  const payload = {
+    id: crypto.randomUUID(),
+    message: error.message,
+    stack: error.stack,
+    componentStack: errorInfo?.componentStack,
+    timestamp: new Date().toISOString(),
+    url: window.location.href,
+    userAgent: navigator.userAgent
+  };
+
+  errorBatchQueue.push(payload);
+
+  if (errorBatchQueue.length >= 10) {
+    flushErrorQueue();
+  }
+}
+
+export async function flushErrorQueue(force = false) {
+  if (errorBatchQueue.length === 0 || isFlushingErrors) return;
+  isFlushingErrors = true;
+
+  const currentBatch = [...errorBatchQueue];
+  errorBatchQueue = [];
+
+  try {
+    const payload = JSON.stringify(currentBatch);
+    const rawEndpoint = (typeof import.meta !== 'undefined' && import.meta.env) ? (import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL) : undefined;
+    const baseEndpoint = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev') ? rawEndpoint : '/api/telemetry';
+    const endpoint = baseEndpoint.includes('ingest') ? baseEndpoint.replace('/ingest', '/errors') : baseEndpoint + '/errors';
+
+    if (force && window.navigator?.sendBeacon) {
+      const blob = new Blob([payload], { type: 'application/json' });
+      window.navigator.sendBeacon(endpoint, blob);
+    } else if (window.fetch) {
+      let retries = 3;
+      const backoffs = [1000, 2000, 4000];
+      let attempt = 0;
+
+      while (retries > 0) {
+        try {
+          const fetchPromise = fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            keepalive: true,
+          });
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
+          const response = await Promise.race([fetchPromise, timeoutPromise]);
+
+          if (response.status === 202 || response.status === 200 || response.status === 204) {
+            break;
+          } else {
+            throw new Error('Server error');
+          }
+        } catch (e) {
+          retries--;
+          if (retries === 0) throw e;
+          await new Promise(r => setTimeout(r, backoffs[attempt] || 4000));
+          attempt++;
+        }
+      }
+    }
+  } catch (err) {
+    // Silently handle flush errors
+    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
+       console.warn("[TELEMETRY] Error sync failed silently.", err.message);
+    }
+  } finally {
+    isFlushingErrors = false;
+  }
+}
+
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    flushErrorQueue();
+  }, 5000); // 5 seconds backoff as requested
+
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushErrorQueue(true);
+  });
+  window.addEventListener('pagehide', () => flushErrorQueue(true));
+  window.addEventListener('beforeunload', () => flushErrorQueue(true));
+  window.addEventListener('unload', () => flushErrorQueue(true));
+}

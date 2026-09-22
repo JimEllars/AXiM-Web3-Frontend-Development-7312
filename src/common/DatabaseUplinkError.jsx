@@ -7,6 +7,10 @@ export default function DatabaseUplinkError({ onRetry, embedded = false }) {
       component: 'DatabaseUplinkError',
       trace: 'Network Timeout or Uplink Failure'
     });
+    logTelemetry('uplink_disconnect', {
+      component: 'DatabaseUplinkError',
+      timestamp: new Date().toISOString()
+    });
   }, []);
 
   const Component = embedded ? "div" : "section";

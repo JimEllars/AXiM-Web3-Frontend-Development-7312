@@ -67,6 +67,63 @@ export default {
     if (request.method === 'GET' && url.pathname === '/api/telemetry/health') {
       return new Response(JSON.stringify({ status: 'OPERATIONAL', node: request.cf?.colo || 'local', timestamp: new Date().toISOString() }), { status: 200, headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' } });
     }
+    if (request.method === 'POST' && (url.pathname === '/api/telemetry/errors' || url.pathname === '/errors')) {
+      let errorsPayload;
+      try {
+        errorsPayload = await request.json();
+      } catch {
+        return jsonResponse({ error: 'Invalid JSON payload.' }, 400, request);
+      }
+      if (!Array.isArray(errorsPayload)) errorsPayload = [errorsPayload];
+
+      ctx.waitUntil(
+        (async () => {
+          try {
+            if (env.AXIM_CORE_URL && env.AXIM_GATEWAY_TOKEN) {
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+              const response = await fetch(`${env.AXIM_CORE_URL}/api/v1/telemetry/errors`, {
+                method: 'POST',
+                headers: {
+                  'X-Axim-Gateway-Token': env.AXIM_GATEWAY_TOKEN,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(errorsPayload),
+                signal: controller.signal
+              });
+
+              clearTimeout(timeoutId);
+
+              if (!response.ok) {
+                throw new Error(`Gateway returned ${response.status}`);
+              }
+            } else {
+              throw new Error('Core URL or Token not set');
+            }
+          } catch (err) {
+            console.warn('Telemetry Errors Gateway ingestion failed, falling back to KV buffer', err);
+            if (env.TELEMETRY_BUFFER_KV) {
+              try {
+                const batchId = crypto.randomUUID();
+                await env.TELEMETRY_BUFFER_KV.put(
+                  `error_batch_${Date.now()}_${batchId}`,
+                  JSON.stringify(errorsPayload),
+                  { expirationTtl: 86400 }
+                );
+              } catch (kvErr) {
+                console.error('Failed to write errors to KV buffer', kvErr);
+              }
+            }
+          }
+        })()
+      );
+
+      const responseHeaders = getCorsHeaders(request);
+      responseHeaders['Access-Control-Allow-Origin'] = '*';
+      return new Response(JSON.stringify({ status: 'errors_accepted' }), { status: 202, headers: responseHeaders });
+    }
+
     if (request.method !== 'POST' || (url.pathname !== '/api/telemetry/ingest' && url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
       return new Response('Not Found or Method Not Allowed', { status: 404, headers: getCorsHeaders(request) });
     }

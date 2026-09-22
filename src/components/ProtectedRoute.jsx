@@ -39,7 +39,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   if (isLoading || isHydrating || (gracePeriodActive && !isAuthenticated)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <GlobalLoader />
+        <GlobalLoader loadingMessage="Hydrating Session Data..." />
       </div>
     );
   }

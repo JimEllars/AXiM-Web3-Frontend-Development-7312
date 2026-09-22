@@ -151,11 +151,9 @@ export function useOnyxStream() {
 
         logTelemetry('onyx_stream_interrupted', { reason: err.message });
 
-        if (retryCount < maxRetries) {
+        if (retryCount < 1) { // Retry once with exponential delay
           retryCount++;
-          const backoff = currentBackoff;
-          const jitter = currentBackoff * 0.2 * (Math.random() * 2 - 1);
-          currentBackoff = Math.min(currentBackoff * 2 + jitter, 16000);
+          const backoff = 2000; // Exponential delay for the first retry
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           trackEvent('onyx_stream_retry', { retryCount, backoff });
 

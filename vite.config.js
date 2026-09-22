@@ -21,6 +21,20 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    host: true
+    host: true,
+    proxy: {
+      '/api/telemetry': {
+        target: 'http://localhost:8787',
+        changeOrigin: true
+      },
+      '/api/wp': {
+        target: 'http://localhost:8788',
+        changeOrigin: true
+      },
+      '/api/rpc': {
+        target: 'http://localhost:8789',
+        changeOrigin: true
+      }
+    }
   }
 });
