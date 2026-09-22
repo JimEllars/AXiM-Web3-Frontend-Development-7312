@@ -218,13 +218,14 @@ export default function TelemetryBar({ label, color, initialValue }) {
           <span
             className={`w-2.5 h-2.5 rounded-full ${statusDotClass} relative inline-block transition-all duration-300 ease-in-out ${pulse ? `scale-150 ${statusDotPulse}` : ''}`}
           />
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+          <span title={`Global Latency: ${latencyInfo.rtt}ms`} className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             Global Latency: {latencyInfo.rtt}ms (P95) // Cloudflare Edge Status: {edgeRegion === 'OFFLINE' ? 'Offline' : 'Operational'} // Active Nodes: 6
           </span>
           <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
-          <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
+          <span title={`Uplink Status: ${edgeRegion === 'OFFLINE' ? 'Offline' : 'Connected'} | RPC Latency: ${latencyInfo.rtt}ms | Edge Region: ${edgeRegion}`} className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm relative group cursor-pointer">
+            <span className={`w-1.5 h-1.5 rounded-full mr-2 ${edgeRegion === 'OFFLINE' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500 animate-pulse'}`}></span>
             EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">

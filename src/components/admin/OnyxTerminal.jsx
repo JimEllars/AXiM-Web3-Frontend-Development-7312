@@ -180,7 +180,7 @@ export default function OnyxTerminal({ isActive = true }) {
 
 
       {/* System Operational Verification (SOV) Panel */}
-      <div className="bg-black/90/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
+      <div className="bg-black/95 backdrop-blur-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
           <SafeIcon icon={LuIcons.LuShieldCheck} className="w-5 h-5 text-emerald-400" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Onyx Core Diagnostics Engine</h3>
@@ -208,7 +208,7 @@ export default function OnyxTerminal({ isActive = true }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
 
       {/* Telemetry Replay Controller */}
-      <div className="bg-black/90/80 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
+      <div className="bg-black/95 backdrop-blur-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-sm p-6 mb-2 hover:border-emerald-500/30 transition-colors">
         <div className="flex items-center gap-3 mb-4">
           <SafeIcon icon={LuIcons.LuFastForward} className="w-5 h-5 text-emerald-400" />
           <h3 className="text-sm font-black text-white uppercase tracking-widest">Telemetry Replay Controller</h3>

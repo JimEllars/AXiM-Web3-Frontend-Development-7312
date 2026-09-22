@@ -1,7 +1,7 @@
 import React from 'react';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
-import { logTelemetry } from '../lib/telemetry';
+import { logTelemetry, captureException } from '../lib/telemetry';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -46,6 +46,7 @@ export default class ErrorBoundary extends React.Component {
       message: error.message,
       stack: errorInfo.componentStack
     });
+    captureException(error, errorInfo);
   }
 
   render() {

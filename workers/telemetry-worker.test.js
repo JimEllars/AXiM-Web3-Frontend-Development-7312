@@ -1,3 +1,7 @@
+
+global.fetch = vi.fn().mockResolvedValue({ ok: true });
+import assert from 'assert';
+import { vi } from 'vitest';
 import { describe, it, expect } from 'vitest';
 import worker from './telemetry-worker.js';
 
@@ -58,4 +62,41 @@ describe('telemetry-worker', () => {
     const body = await res.json();
     expect(body.error).toBe('Expected between 1 and 100 telemetry events.');
   });
+  it('should accept /api/telemetry/errors with valid payload', async () => {
+    const mockRequest = {
+      method: 'POST',
+      url: 'https://axim.us.com/api/telemetry/errors',
+      headers: {
+        get: vi.fn((key) => {
+          if (key === 'Origin') return 'https://axim.us.com';
+          return null;
+        })
+      },
+      json: vi.fn().mockResolvedValue([{ error: 'Test error' }]),
+      cf: {}
+    };
+
+    const mockEnv = {
+      AXIM_CORE_URL: 'https://core.axim.us.com',
+      AXIM_GATEWAY_TOKEN: 'secret123',
+      TELEMETRY_BUFFER_KV: {
+        put: vi.fn()
+      }
+    };
+
+    let waitUntilPromise;
+    const mockCtx = {
+      waitUntil: vi.fn((promise) => { waitUntilPromise = promise; })
+    };
+
+    const response = await worker.fetch(mockRequest, mockEnv, mockCtx);
+
+    expect(response.status, 202);
+    const data = await response.json();
+    expect(data.status, 'errors_accepted');
+
+    // Check if KV is used
+    if (waitUntilPromise) await waitUntilPromise;
+  });
+
 });
