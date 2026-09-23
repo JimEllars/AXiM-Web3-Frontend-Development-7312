@@ -10,7 +10,9 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
   const location = useLocation();
 
-  const [gracePeriodActive, setGracePeriodActive] = useState(true);
+  const [gracePeriodActive, setGracePeriodActive] = useState(() => {
+    return isLoading || isHydrating;
+  });
 
   useEffect(() => {
     let timer;

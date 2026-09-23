@@ -10,6 +10,10 @@
     "/sitemap.xml",
     "/sw.js",
     "/output.css",
-    "/favicon.ico"
+    "/favicon.ico",
+    "/api/telemetry/*",
+    "/api/rpc/*",
+    "/api/wp/*",
+    "/api/seo/*"
   ]
 }

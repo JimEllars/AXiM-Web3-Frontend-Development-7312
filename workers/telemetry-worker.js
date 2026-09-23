@@ -51,7 +51,9 @@ export default {
     if (request.method === 'OPTIONS' || request.method === 'HEAD') {
       const headers = getCorsHeaders(request);
       headers['Access-Control-Allow-Origin'] = '*'; // Ensure broad CORS support on OPTIONS
-      headers['Access-Control-Allow-Methods'] = 'GET, HEAD, POST, OPTIONS';
+      // Added per instructions:
+      headers['Access-Control-Allow-Origin'] = headers['Access-Control-Allow-Origin'] || '*';
+      headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD';
       headers['Access-Control-Allow-Headers'] = 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client';
 
       return new Response(null, {
