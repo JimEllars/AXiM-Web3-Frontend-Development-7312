@@ -409,10 +409,17 @@ export async function flushErrorQueue(force = false) {
     const baseEndpoint = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev') ? rawEndpoint : '/api/telemetry';
     const endpoint = baseEndpoint.includes('ingest') ? baseEndpoint.replace('/ingest', '/errors') : baseEndpoint + '/errors';
 
+    let success = false;
     if (force && window.navigator?.sendBeacon) {
       const blob = new Blob([payload], { type: 'application/json' });
-      window.navigator.sendBeacon(endpoint, blob);
-    } else if (window.fetch) {
+      try {
+        success = window.navigator.sendBeacon(endpoint, blob);
+      } catch (e) {
+        success = false;
+      }
+    }
+
+    if (!success && window.fetch) {
       let retries = 3;
       const backoffs = [1000, 2000, 4000];
       let attempt = 0;

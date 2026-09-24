@@ -54,7 +54,7 @@ export default function OnyxTerminal({ isActive = true }) {
   }, [terminalOutput]);
 
   const telemetryQueue = useAximStore((state) => state.telemetryQueue);
-  const { isStreaming, error, isEdgeCached } = useOnyxStream();
+  const { messages, isStreaming, error, isEdgeCached } = useOnyxStream();
   const connectionStatus = error ? 'Offline Buffer' : isStreaming ? 'Reconnecting...' : (isEdgeCached ? 'EDGE-CACHED' : 'Live Core Connected');
   const logContainerRef = useRef(null);
 
@@ -333,6 +333,13 @@ export default function OnyxTerminal({ isActive = true }) {
 
              {telemetryQueue && telemetryQueue.filter(e => logFilter === 'ALL' || logFilter === 'TELEMETRY').slice(0, 50).map((event) => (
                 <TelemetryEventItem key={event.id} event={event} />
+             ))}
+
+             {messages && messages.map((msg, idx) => (
+                <div key={msg.id} className={`mt-2 ${msg.role === 'user' ? 'text-blue-400' : 'text-zinc-300'}`}>
+                  <span className="font-bold">[{msg.role.toUpperCase()}]: </span>
+                  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(msg.content.replace(/\n/g, '<br/>'), { USE_PROFILES: { html: true } }) }} />
+                </div>
              ))}
           </div>
         </div>

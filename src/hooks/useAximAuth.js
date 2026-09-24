@@ -31,12 +31,19 @@ export function useAximAuth() {
   const [loading, setLoading] = useState(() => {
     if (typeof window === 'undefined') return true;
     const offline = localStore.getOfflineSession();
-
-
-
+    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+      return false;
+    }
     return true;
   });
-  const [isHydrating, setIsHydrating] = useState(true);
+  const [isHydrating, setIsHydrating] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const offline = localStore.getOfflineSession();
+    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
+      return false;
+    }
+    return true;
+  });
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
 
