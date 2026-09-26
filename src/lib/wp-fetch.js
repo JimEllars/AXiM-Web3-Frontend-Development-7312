@@ -2,9 +2,19 @@ import { useAximStore } from '../store/useAximStore';
 import { logTelemetry } from './telemetry';
 import { localStore } from './persistence';
 
+const WORDPRESS_PROXY_URL = (import.meta.env.VITE_WP_PROXY_URL || 'https://wp-proxy.axim.us.com').replace(/\/+$/, '');
+
+export const getWordPressApiUrl = (endpoint) => {
+  if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/')) {
+    throw new Error(`Invalid WordPress API endpoint: ${endpoint}`);
+  }
+
+  return `${WORDPRESS_PROXY_URL}?endpoint=${encodeURIComponent(endpoint)}`;
+};
+
 export const fetchCategoryBySlug = async (slug) => {
   try {
-    const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}`);
+    const res = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/categories?slug=${encodeURIComponent(slug)}`));
     if (!res.ok) return null;
     const data = await res.json();
     return data?.length > 0 ? data[0].id : null;
@@ -227,7 +237,7 @@ async function getCategoryId(apiUrl, slug) {
   const fetchPromise = (async () => {
     try {
       const ts = Date.now();
-      const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/categories?slug=${slug}&_ts=${ts}`, {
+      const res = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/categories?slug=${encodeURIComponent(slug)}&_ts=${ts}`), {
         signal: AbortSignal.timeout(3000)
       });
 
@@ -299,24 +309,24 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         let posts = [];
 
         if (!categorySlug) {
-          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(3000) });
+          postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`), { signal: AbortSignal.timeout(3000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else if (!categoryId) {
           // No category found, fallback to fetching recent posts
 
-          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(3000) });
+          postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`), { signal: AbortSignal.timeout(3000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
         } else {
           // 2. Fetch posts by category ID, ordered by date descending
-          postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(3000) });
+          postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`), { signal: AbortSignal.timeout(3000) });
           if (!postsRes.ok) throw new Error(`Failed to fetch posts: ${postsRes.statusText}`);
           posts = await postsRes.json();
 
           if (!posts || posts.length === 0) {
 
-            postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`, { signal: AbortSignal.timeout(3000) });
+            postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?orderby=date&order=desc&per_page=${limit}&page=${page}&_embed=1&_ts=${ts}`), { signal: AbortSignal.timeout(3000) });
             if (!postsRes.ok) throw new Error(`Failed to fetch fallback posts: ${postsRes.statusText}`);
             posts = await postsRes.json();
           }
@@ -409,7 +419,7 @@ export const fetchPosts = async (params = {}) => {
 
   const queryParams = new URLSearchParams(cleanParams).toString();
   const endpoint = `/wp-json/wp/v2/posts?_embed=1${queryParams ? '&' + queryParams : ''}`;
-  const fetchUrl = `https://wp.axim.us.com${endpoint}`;
+  const fetchUrl = getWordPressApiUrl(endpoint);
 
   let retryCount = 0;
   while (retryCount < 2) {
@@ -510,7 +520,7 @@ export async function fetchArticlesByCategory(categorySlug, limit = 3) {
     const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
     if (!categoryId) return [];
 
-    const postsRes = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1`, { signal: AbortSignal.timeout(3000) });
+    const postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1`), { signal: AbortSignal.timeout(3000) });
     if (!postsRes.ok) return [];
 
     const posts = await postsRes.json();
@@ -574,7 +584,7 @@ export async function fetchPostsByCategorySlug(categorySlug, perPage = 3) {
         return [];
       }
 
-      const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?_embed=1&per_page=${perPage}&categories=${categoryId}`, {
+      const res = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?_embed=1&per_page=${perPage}&categories=${categoryId}`), {
         headers: { 'Cache-Control': 'stale-while-revalidate=86400' },
         signal: AbortSignal.timeout(3000)
       });

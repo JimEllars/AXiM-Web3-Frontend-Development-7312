@@ -371,13 +371,14 @@ describe('fetchPostsByCategory', () => {
   test.skip('should return stale cache if fetch fails and cache exists', async () => {});
 test('should return mapped posts if fetch is successful', async () => {
     global.fetch = async (url) => {
-      if (url.includes('/categories?slug=apps')) {
+      const decodedUrl = decodeURIComponent(url);
+      if (decodedUrl.includes('/categories?slug=apps')) {
         return {
           ok: true,
           json: async () => [{ id: 81, slug: 'apps' }]
         };
       }
-      if (url.includes('/posts?categories=81')) {
+      if (decodedUrl.includes('/posts?categories=81')) {
         return {
           ok: true,
           json: async () => [
@@ -415,13 +416,14 @@ test('should return mapped posts if fetch is successful', async () => {
 
   test('should return mapped posts without featured image if not available', async () => {
     global.fetch = async (url) => {
-      if (url.includes('/categories?slug=apps')) {
+      const decodedUrl = decodeURIComponent(url);
+      if (decodedUrl.includes('/categories?slug=apps')) {
         return {
           ok: true,
           json: async () => [{ id: 81, slug: 'apps' }]
         };
       }
-      if (url.includes('/posts?categories=81')) {
+      if (decodedUrl.includes('/posts?categories=81')) {
         return {
           ok: true,
           json: async () => [

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logTelemetry } from '../lib/telemetry';
 import { useAximStore } from '../store/useAximStore';
 import DOMPurify from 'isomorphic-dompurify';
+import { getWordPressApiUrl } from '../lib/wp-fetch';
 
 import * as LuIcons from 'react-icons/lu';
 import SafeIcon from '../common/SafeIcon';
@@ -100,7 +101,7 @@ export default function GlobalSearch() {
 
       const fetchArticles = async () => {
         try {
-          const res = await fetch(`https://wp.axim.us.com/wp-json/wp/v2/posts?search=${encodeURIComponent(debouncedSearchTerm)}&per_page=5`, {
+          const res = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?search=${encodeURIComponent(debouncedSearchTerm)}&per_page=5`), {
             signal: controller.signal
           });
           if (res.ok) {

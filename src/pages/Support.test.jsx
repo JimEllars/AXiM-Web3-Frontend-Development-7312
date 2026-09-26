@@ -84,6 +84,7 @@ describe('Support Component', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith('https://core.axim.us.com/api/v1/support/ingress', expect.any(Object));
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body)['cf-turnstile-response']).toBe('mock-turnstile-token');
   });
 
 });
