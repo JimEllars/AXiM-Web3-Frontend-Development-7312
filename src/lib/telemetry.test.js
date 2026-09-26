@@ -1,19 +1,22 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { logTelemetry, flushTelemetryQueue, getTelemetryStore } from './telemetry';
+import { __resetTelemetryForTests, logTelemetry, flushTelemetryQueue, getTelemetryStore } from './telemetry';
 import { useAximStore } from '../store/useAximStore';
 
 describe('Telemetry', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    __resetTelemetryForTests();
     useAximStore.setState({ telemetryCollection: [], telemetryQueue: [] });
     // mock global fetch
     global.fetch = vi.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ success: true }) }));
-    global.window = Object.create(window);
     Object.defineProperty(window, 'navigator', {
+        configurable: true,
         value: {
             sendBeacon: vi.fn(),
+            onLine: true,
         },
     });
+    localStorage.clear();
   });
 
   it('should log telemetry events and add to queue', () => {
@@ -43,40 +46,35 @@ describe('Telemetry', () => {
   });
 
   it('should buffer events when fetch rejects and batch flush on reconnect', async () => {
-    // Override fetch to fail
-
-    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     global.fetch.mockRejectedValue(new Error('Network error'));
-
-
-    // Override supabase insert to also fail so it stays in queue
-    const { supabase } = await import('../lib/supabase.js');
-    const supabaseModule = await import('../lib/supabase.js');
-    supabase.from.mockReturnValueOnce({
-      insert: vi.fn().mockRejectedValue(new Error('Supabase error'))
-    });
-    supabaseModule.isSupabaseConfigured = false;
-
     logTelemetry('buffer_test', { data: 1 });
     await flushTelemetryQueue();
+    expect(getTelemetryStore()).toHaveLength(1);
 
-    // The fetch failed, the supabase insert failed, the event should be put back in queue
-    let store = getTelemetryStore();
-    // getTelemetryStore returns the collection which still has the event since it didn't sync
-    expect(store.length).toBeGreaterThan(0);
-
-    // Now simulate success
-    // Force circuit breaker closed for the test
-    const tel = await import('./telemetry.js');
-    if (typeof tel.resetCircuitBreaker === 'function') {
-        tel.resetCircuitBreaker();
-    }
     global.fetch.mockResolvedValue({ ok: true, status: 200, json: () => Promise.resolve({ success: true }) });
     await flushTelemetryQueue();
+    expect(getTelemetryStore()).toHaveLength(0);
+  });
 
-    store = getTelemetryStore();
-    expect(store.length).toBeLessThan(5);
-    consoleSpy.mockRestore();
+  it('persists failed batches under the offline queue key', async () => {
+    global.fetch.mockRejectedValue(new Error('Network error'));
+    logTelemetry('offline_event', { data: 1 });
+    await flushTelemetryQueue();
+
+    const offlineQueue = JSON.parse(localStorage.getItem('axim_telemetry_offline_queue'));
+    expect(offlineQueue).toHaveLength(1);
+    expect(offlineQueue[0].event.category).toBe('offline_event');
+  });
+
+  it('replays the offline queue when the browser comes back online', async () => {
+    localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify([{
+      id: 'offline-event',
+      timestamp: new Date().toISOString(),
+      event: { category: 'offline_event' }
+    }]));
+
+    window.dispatchEvent(new Event('online'));
+    await vi.waitFor(() => expect(global.fetch).toHaveBeenCalled());
   });
 
 });

@@ -1,6 +1,6 @@
 # Telemetry Status
 
-- **Edge Worker Uplink**: Operational. `sendBeacon` integrated for silent payload offloading, with robust retry logic using `fetch` fallback.
-- **Offline Batching**: Persistent via `persistence.js` `localStore.saveTelemetryCache()`. Queue limits enforced at 100 max events.
-- **Circuit Breaker**: Integrated effectively on 5xx / 429 timeouts to suspend retries temporarily.
-- **Cors Management**: Hardened in `telemetry-worker.js`.
+- **Edge Worker Uplink**: Uses a validated `POST` ingest route and a `/api/telemetry/health` response with `status`, `timestamp`, and `version`.
+- **Offline Batching**: Events are stored at `localStorage["axim_telemetry_offline_queue"]`. The queue is capped at 100 events, evicting the oldest non-auth/non-error event first.
+- **Replay Delivery**: Online and unload triggers use `sendBeacon` first where applicable, then `fetch` with `keepalive`. Failed network and 5xx batches retry up to three times with exponential backoff and jitter.
+- **Edge Errors**: Malformed telemetry returns a structured `400`, rate limiting returns `429`, and an unavailable uplink or KV buffer returns `503`. CORS accepts only configured AXiM, Pages preview, and local development origins.

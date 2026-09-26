@@ -1,231 +1,155 @@
-const ALLOWED_ORIGINS = [
+const ALLOWED_ORIGINS = new Set([
+  'https://axim.network',
+  'https://www.axim.network',
   'https://axim.us.com',
   'https://www.axim.us.com',
-  'http://localhost:3000',
   'http://localhost:5173'
-];
+]);
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 120;
+const requestCounts = new Map();
 
-function getCorsHeaders(request) {
-  const origin = request.headers.get('Origin');
-  const isAllowedOrigin = origin && (
-    ALLOWED_ORIGINS.includes(origin) ||
-    origin.endsWith('.pages.dev') ||
-    origin.endsWith('.axim.us.com')
-  );
-  const allowedOrigin = isAllowedOrigin ? origin : ALLOWED_ORIGINS[0];
-  return {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client',
-    'Cache-Control': 'no-store, max-age=0',
-    Vary: 'Origin',
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'SAMEORIGIN',
-    'Referrer-Policy': 'strict-origin-when-cross-origin'
-  };
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  try {
+    const url = new URL(origin);
+    return ALLOWED_ORIGINS.has(origin) || url.protocol === 'https:' && url.hostname.endsWith('.pages.dev');
+  } catch {
+    return false;
+  }
 }
 
-function jsonResponse(payload, status, request) {
-  if (payload && payload.error) {
-    payload = { success: false, error: payload.error, code: status, timestamp: new Date().toISOString() };
-  }
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin');
+  return origin && isAllowedOrigin(origin)
+    ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' }
+    : {};
+}
+
+function jsonResponse(request, status, payload) {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' }
+    headers: {
+      ...corsHeaders(request),
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff'
+    }
   });
 }
 
-function isValidEvent(event) {
+function errorResponse(request, status, error) {
+  return jsonResponse(request, status, {
+    success: false,
+    error,
+    code: status,
+    timestamp: Date.now()
+  });
+}
+
+function rateLimited(request) {
+  const client = request.headers.get('CF-Connecting-IP') || 'anonymous';
+  const now = Date.now();
+  const entry = requestCounts.get(client);
+  const next = !entry || now - entry.startedAt >= RATE_LIMIT_WINDOW_MS
+    ? { startedAt: now, count: 1 }
+    : { ...entry, count: entry.count + 1 };
+
+  requestCounts.set(client, next);
+  return next.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function validEvent(event) {
   return Boolean(
-    event &&
-    typeof event.id === 'string' &&
-    event.id.length <= 128 &&
-    typeof event.timestamp === 'string' &&
-    !Number.isNaN(Date.parse(event.timestamp)) &&
-    (event.sessionId === undefined || typeof event.sessionId === 'string')
+    event
+      && typeof event.id === 'string'
+      && event.id.length <= 128
+      && typeof event.timestamp === 'string'
+      && !Number.isNaN(Date.parse(event.timestamp))
+      && event.event
+      && typeof event.event === 'object'
   );
 }
 
-export default {
-  async fetch(request, env, ctx) {
-    if (request.method === 'OPTIONS' || request.method === 'HEAD') {
-      const headers = getCorsHeaders(request);
-      headers['Access-Control-Allow-Origin'] = '*'; // Ensure broad CORS support on OPTIONS
-      // Added per instructions:
-      headers['Access-Control-Allow-Origin'] = headers['Access-Control-Allow-Origin'] || '*';
-      headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD';
-      headers['Access-Control-Allow-Headers'] = 'Content-Type, X-AXiM-Internal-Key, authorization, x-axim-client';
+async function deliverOrBuffer(events, env) {
+  try {
+    const response = await fetch(`${env.AXIM_CORE_URL}/api/v1/telemetry/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Axim-Gateway-Token': env.AXIM_GATEWAY_TOKEN
+      },
+      body: JSON.stringify(events)
+    });
+    if (response.ok) return true;
+  } catch {
+    // Use the durable edge buffer before reporting the uplink failure.
+  }
 
+  if (!env.TELEMETRY_BUFFER_KV) return false;
+  try {
+    await env.TELEMETRY_BUFFER_KV.put(
+      `telemetry_batch_${Date.now()}_${crypto.randomUUID()}`,
+      JSON.stringify(events),
+      { expirationTtl: 86400 }
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const origin = request.headers.get('Origin');
+
+    if (request.method === 'OPTIONS') {
+      if (!isAllowedOrigin(origin)) return errorResponse(request, 403, 'Origin is not allowed.');
       return new Response(null, {
         status: 204,
-        headers
+        headers: {
+          ...corsHeaders(request),
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, authorization, x-axim-client',
+          'Access-Control-Max-Age': '86400',
+          Vary: 'Origin'
+        }
       });
-
     }
 
-    const url = new URL(request.url);
-    const receivedTime = Date.now();
-
-    if (request.method === 'GET' && url.pathname === '/api/telemetry/health') {
-      return new Response(JSON.stringify({ status: 'OPERATIONAL', node: request.cf?.colo || 'local', timestamp: new Date().toISOString() }), { status: 200, headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' } });
-    }
-    if (request.method === 'POST' && (url.pathname === '/api/telemetry/errors' || url.pathname === '/errors')) {
-      let errorsPayload;
-      try {
-        errorsPayload = await request.json();
-      } catch {
-        return jsonResponse({ error: 'Invalid JSON payload.' }, 400, request);
-      }
-      if (!Array.isArray(errorsPayload)) errorsPayload = [errorsPayload];
-
-      ctx.waitUntil(
-        (async () => {
-          try {
-            if (env.AXIM_CORE_URL && env.AXIM_GATEWAY_TOKEN) {
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-              const response = await fetch(`${env.AXIM_CORE_URL}/api/v1/telemetry/errors`, {
-                method: 'POST',
-                headers: {
-                  'X-Axim-Gateway-Token': env.AXIM_GATEWAY_TOKEN,
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(errorsPayload),
-                signal: controller.signal
-              });
-
-              clearTimeout(timeoutId);
-
-              if (!response.ok) {
-                throw new Error(`Gateway returned ${response.status}`);
-              }
-            } else {
-              throw new Error('Core URL or Token not set');
-            }
-          } catch (err) {
-            console.warn('Telemetry Errors Gateway ingestion failed, falling back to KV buffer', err);
-            if (env.TELEMETRY_BUFFER_KV) {
-              try {
-                const batchId = crypto.randomUUID();
-                await env.TELEMETRY_BUFFER_KV.put(
-                  `error_batch_${Date.now()}_${batchId}`,
-                  JSON.stringify(errorsPayload),
-                  { expirationTtl: 86400 }
-                );
-              } catch (kvErr) {
-                console.error('Failed to write errors to KV buffer', kvErr);
-              }
-            }
-          }
-        })()
-      );
-
-      const responseHeaders = getCorsHeaders(request);
-      responseHeaders['Access-Control-Allow-Origin'] = '*';
-      return new Response(JSON.stringify({ status: 'errors_accepted' }), { status: 202, headers: responseHeaders });
+    if (url.pathname === '/api/telemetry/health' && request.method === 'GET') {
+      return jsonResponse(request, 200, {
+        status: 'ok',
+        timestamp: Date.now(),
+        version: env.TELEMETRY_VERSION || '1.0.0'
+      });
     }
 
-    if (request.method !== 'POST' || (url.pathname !== '/api/telemetry/ingest' && url.pathname !== '/' && url.pathname !== '/telemetry/batch' && url.pathname !== '/api/telemetry')) {
-      return new Response('Not Found or Method Not Allowed', { status: 404, headers: getCorsHeaders(request) });
+    if (request.method !== 'POST' || !['/', '/api/telemetry', '/api/telemetry/ingest', '/telemetry/batch'].includes(url.pathname)) {
+      return errorResponse(request, 404, 'Route not found.');
     }
-
-    const origin = request.headers.get('Origin');
-    const isAllowedOrigin = origin && (ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.pages.dev') || origin.endsWith('.axim.us.com'));
-    if (origin && !isAllowedOrigin) {
-      return new Response('Forbidden', { status: 403, headers: getCorsHeaders(request) });
-    }
-
+    if (!isAllowedOrigin(origin)) return errorResponse(request, 403, 'Origin is not allowed.');
+    if (rateLimited(request)) return errorResponse(request, 429, 'Too many telemetry requests.');
     if (!env.AXIM_CORE_URL || !env.AXIM_GATEWAY_TOKEN) {
-      return jsonResponse({ error: 'Telemetry ingestion is not configured.' }, 503, request);
+      return errorResponse(request, 503, 'Telemetry uplink is unavailable.');
     }
 
     let events;
     try {
       events = await request.json();
     } catch {
-      return jsonResponse({ error: 'Invalid JSON payload.' }, 400, request);
+      return errorResponse(request, 400, 'Invalid JSON payload.');
     }
 
-    if (!Array.isArray(events)) {
-      events = [events];
+    const batch = Array.isArray(events) ? events : [events];
+    if (batch.length === 0 || batch.length > 100 || !batch.every(validEvent)) {
+      return errorResponse(request, 400, 'Telemetry payload structure is invalid.');
     }
 
-    if (events.length === 0 || events.length > 100) {
-      return jsonResponse({ error: 'Expected between 1 and 100 telemetry events.' }, 400, request);
+    if (!await deliverOrBuffer(batch, env)) {
+      return errorResponse(request, 503, 'Telemetry uplink is unavailable.');
     }
-
-    if (!events.every(isValidEvent)) {
-      return jsonResponse({ error: 'Telemetry event validation failed.' }, 400, request);
-    }
-
-    // Capture request CF details (client IP/geo tagging)
-    const geoData = {
-      ip: request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown',
-      country: request.cf?.country || 'unknown',
-      city: request.cf?.city || 'unknown',
-      colo: request.cf?.colo || 'unknown',
-      asn: request.cf?.asn || 'unknown',
-      tlsVersion: request.cf?.tlsVersion || 'unknown',
-      userAgent: request.headers.get('user-agent') || 'unknown'
-    };
-
-    // Calculate edge latency as time from request receipt to this point
-    const edge_latency = Date.now() - receivedTime;
-
-    // Append geo/client data to each event payload securely
-    events = events.map(event => ({
-      ...event,
-      event: {
-         ...(event.event || {}),
-         _cf_geo: geoData,
-         edge_latency
-      }
-    }));
-
-    ctx.waitUntil(
-      (async () => {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-          const response = await fetch(`${env.AXIM_CORE_URL}/api/v1/telemetry/ingest`, {
-            method: 'POST',
-            headers: {
-              'X-Axim-Gateway-Token': env.AXIM_GATEWAY_TOKEN,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(events),
-            signal: controller.signal
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            throw new Error(`Gateway returned ${response.status}`);
-          }
-        } catch (err) {
-          console.warn('Telemetry Gateway ingestion failed, falling back to KV buffer', err);
-          if (env.TELEMETRY_BUFFER_KV) {
-            try {
-              const batchId = crypto.randomUUID();
-              await env.TELEMETRY_BUFFER_KV.put(
-                `telemetry_batch_${Date.now()}_${batchId}`,
-                JSON.stringify(events),
-                { expirationTtl: 86400 } // Keep for 24h
-              );
-            } catch (kvErr) {
-              console.error('Failed to write to KV buffer', kvErr);
-            }
-          }
-        }
-      })()
-    );
-
-    const responseHeaders = getCorsHeaders(request);
-    responseHeaders['Access-Control-Allow-Origin'] = '*';
-
-    return new Response(JSON.stringify({ status: 'accepted' }), { status: 202, headers: responseHeaders });
-
+    return jsonResponse(request, 202, { success: true, status: 'accepted' });
   }
 };
