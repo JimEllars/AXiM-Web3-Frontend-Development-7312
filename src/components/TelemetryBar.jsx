@@ -5,6 +5,7 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { theme } from "../config/theme";
 import SafeIcon from '../common/SafeIcon';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import { getTelemetryHealthEndpoint } from '../lib/telemetry';
 export default function TelemetryBar({ label, color, initialValue }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
@@ -35,7 +36,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       const pingHealth = () => {
         const start = Date.now();
-        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
+        fetch(getTelemetryHealthEndpoint(), { signal: AbortSignal.timeout(3000) })
           .then(res => {
             if (!res.ok) throw new Error('Worker not 200');
             const ray = res.headers.get('cf-ray');

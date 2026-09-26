@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { generateSsoLaunchUrl } from '../lib/auth-handoff';
+import { getTelemetryHealthEndpoint } from '../lib/telemetry';
 
 const { LuZap, LuGlobe, LuCpu, LuFileText, LuPhone, LuShieldCheck, LuBriefcase } = LuIcons;
 
@@ -16,9 +17,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       setLiveMetrics(prev => ({ ...prev, isReconnecting: true }));
       const start = Date.now();
       try {
-        const rawEndpoint = import.meta.env?.VITE_TELEMETRY_ENDPOINT || import.meta.env?.VITE_TELEMETRY_WORKER_URL;
-        const isValidRemote = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
-        const endpoint = isValidRemote ? new URL('/health', rawEndpoint).toString() : '/api/telemetry/health';
+        const endpoint = getTelemetryHealthEndpoint();
 
         // We might not have this endpoint locally mapped, so handle 404 gracefully
         const res = await fetch(endpoint, { method: 'GET', signal: AbortSignal.timeout(5000) });

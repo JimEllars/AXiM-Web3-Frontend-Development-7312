@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { __resetTelemetryForTests, logTelemetry, flushTelemetryQueue, getTelemetryStore } from './telemetry';
+import { __resetTelemetryForTests, getTelemetryHealthEndpoint, logTelemetry, flushTelemetryQueue, getTelemetryStore } from './telemetry';
 import { useAximStore } from '../store/useAximStore';
 
 describe('Telemetry', () => {
@@ -19,12 +19,34 @@ describe('Telemetry', () => {
     localStorage.clear();
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('should log telemetry events and add to queue', () => {
     logTelemetry('test_event', { foo: 'bar' });
     const store = getTelemetryStore();
     expect(store.length).toBe(1);
     expect(store[0].event?.category || store[0].type).toBe('test_event');
     expect(store[0].event.foo).toBe('bar');
+  });
+
+  it('uses the configured Worker health route', () => {
+    vi.stubEnv('VITE_TELEMETRY_ENDPOINT', 'https://telemetry.axim.us.com');
+
+    expect(getTelemetryHealthEndpoint()).toBe('https://telemetry.axim.us.com/api/telemetry/health');
+  });
+
+  it('uses the configured Worker ingest route', async () => {
+    vi.stubEnv('VITE_TELEMETRY_ENDPOINT', 'https://telemetry.axim.us.com');
+    logTelemetry('configured_ingest');
+
+    await flushTelemetryQueue();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://telemetry.axim.us.com/api/telemetry/ingest',
+      expect.objectContaining({ method: 'POST' })
+    );
   });
 
   it('should flush telemetry queue and clear on success', async () => {

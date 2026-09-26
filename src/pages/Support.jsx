@@ -77,6 +77,12 @@ export default function Support() {
     setErrorMsg('');
     setNetworkFault(false);
 
+    if (!turnstileToken) {
+      setErrorMsg('Please complete the Turnstile verification before submitting.');
+      setIsSubmitting(false);
+      return;
+    }
+
     logTelemetry('support_form_submitted', {
       type: formData.priority,
       hasAttachment: !!formData.attachment,
@@ -136,7 +142,10 @@ export default function Support() {
         const coreResponse = await fetch(`${import.meta.env.VITE_CORE_API_URL || 'https://core.axim.us.com'}/api/v1/support/ingress`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ encrypted_payload: encryptedPackage }),
+          body: JSON.stringify({
+            encrypted_payload: encryptedPackage,
+            'cf-turnstile-response': turnstileToken
+          }),
           signal: controller.signal
         });
 

@@ -61,11 +61,25 @@ function enqueueOffline(events) {
   notifyQueueChanged();
 }
 
-function telemetryEndpoint() {
-  const configured = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL;
+function configuredTelemetryEndpoint() {
+  const configured = import.meta.env.VITE_TELEMETRY_ENDPOINT;
   return configured && !configured.includes('your-edge-worker-url') && !configured.includes('workers.dev')
     ? configured
+    : null;
+}
+
+function telemetryEndpoint() {
+  const configured = configuredTelemetryEndpoint();
+  return configured
+    ? new URL('/api/telemetry/ingest', configured).toString()
     : '/api/telemetry/ingest';
+}
+
+export function getTelemetryHealthEndpoint() {
+  const configured = configuredTelemetryEndpoint();
+  return configured
+    ? new URL('/api/telemetry/health', configured).toString()
+    : '/api/telemetry/health';
 }
 
 function delayForAttempt(attempt) {

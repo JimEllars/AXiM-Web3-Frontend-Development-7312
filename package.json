@@ -8,6 +8,7 @@
     "build": "node scripts/generate-sitemap.js && vite build --sourcemap false",
     "lint": "eslint .",
     "preview": "vite preview",
+    "cf:deploy:pages": "wrangler pages deploy dist",
     "cf:deploy:wp-proxy": "wrangler deploy -c workers/wrangler.wp-proxy.toml",
     "cf:deploy:seo": "wrangler deploy -c workers/wrangler.seo.toml",
     "cf:deploy:rpc": "wrangler deploy -c workers/wrangler.rpc.toml",

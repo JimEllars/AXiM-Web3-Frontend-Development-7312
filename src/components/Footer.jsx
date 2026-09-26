@@ -7,6 +7,7 @@ import { logTelemetry } from '../lib/telemetry';
 
 import { useLocation } from 'react-router-dom';
 import { useAximStore } from '../store/useAximStore.js';
+import { getWordPressApiUrl } from '../lib/wp-fetch';
 
 export default function Footer() {
 
@@ -21,7 +22,7 @@ export default function Footer() {
     const measureLatency = async () => {
       const start = performance.now();
       try {
-        const response = await fetch('/wp-json/wp/v2/posts?per_page=1');
+        const response = await fetch(getWordPressApiUrl('/wp-json/wp/v2/posts?per_page=1'));
         const end = performance.now();
         const delta = Math.round(end - start);
 
