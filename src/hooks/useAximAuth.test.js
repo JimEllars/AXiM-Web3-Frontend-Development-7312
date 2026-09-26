@@ -1,8 +1,8 @@
 global.import = { meta: { env: { VITE_ENABLE_WEB3: 'true' } } };
 import 'global-jsdom/register';
-import {  test, describe, afterEach, mock , vi } from 'vitest';
+import { expect, test, describe, afterEach, mock, vi } from 'vitest';
 import assert from 'assert';
-import { renderHook, waitFor, cleanup } from '@testing-library/react';
+import { act, renderHook, waitFor, cleanup } from '@testing-library/react';
 import React from 'react';
 
 // Use vi.mock before importing useAximAuth
@@ -33,6 +33,7 @@ const { localStore } = await import('../lib/persistence.js');
 
 describe('useAximAuth Hook', () => {
   afterEach(() => {
+    vi.useRealTimers();
     cleanup();
     vi.restoreAllMocks();
     vi.spyOn(window, 'alert').mockImplementation(() => {});
@@ -159,6 +160,37 @@ describe('useAximAuth Hook', () => {
       assert.deepStrictEqual(result.current.session, fakeSession);
       assert.strictEqual(result.current.profile.email, 'test@axim.us.com');
     }, { timeout: 1000 });
+  });
+
+  test('keeps the cached session during the three-second reconnect grace period', async () => {
+    const { supabase } = await import('../lib/supabase.js');
+    const cachedSession = { user: { email: 'cached@axim.us.com' } };
+    let authStateChange;
+    localStore.saveOfflineSession(cachedSession);
+    supabase.auth.onAuthStateChange.mockImplementation((callback) => {
+      authStateChange = callback;
+      return { data: { subscription: { unsubscribe: vi.fn() } } };
+    });
+    vi.useFakeTimers();
+    supabase.auth.getSession
+      .mockImplementationOnce(() => new Promise(() => {}))
+      .mockResolvedValueOnce({ data: { session: null }, error: null });
+
+    const { result } = renderHook(() => useAximAuth());
+    expect(result.current.session).toEqual(cachedSession);
+
+    await act(async () => {
+      authStateChange('TOKEN_REFRESHED', null);
+    });
+    expect(result.current.isReconnecting).toBe(true);
+    expect(result.current.isAuthenticated).toBe(true);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+    });
+    expect(result.current.isReconnecting).toBe(false);
+    expect(result.current.session).toEqual(cachedSession);
+    vi.useRealTimers();
   });
 
 });

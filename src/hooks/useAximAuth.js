@@ -71,6 +71,7 @@ export function useAximAuth() {
 
   useEffect(() => {
     let isMounted = true;
+    let reconnectTimer;
 
     // Fast-path rehydration before network call to prevent race condition
     // between Thirdweb wallet connection and Supabase auth state
@@ -140,8 +141,44 @@ trackEvent('auth_success', { method: 'supabase' });
 
     initAuth();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
+    const restoreCachedSession = () => {
+      const cachedSession = localStore.getOfflineSession();
+      if (cachedSession?.timestamp && Date.now() - cachedSession.timestamp < 15 * 60 * 1000) {
+        setSession(cachedSession.session);
+        if (cachedSession.session?.user) {
+          setProfile({ email: cachedSession.session.user.email, clearance_level: 1 });
+        }
+        return true;
+      }
+      return false;
+    };
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       if (isMounted && !isRefreshing.current) {
+        if (!currentSession && event !== 'SIGNED_OUT') {
+          setIsReconnecting(true);
+          reconnectTimer = setTimeout(async () => {
+            try {
+              const { data, error } = await supabase.auth.getSession();
+              if (error) throw error;
+              if (!isMounted) return;
+              if (data.session) {
+                setSession(data.session);
+                setProfile({ email: data.session.user.email, clearance_level: 1 });
+                localStore.saveOfflineSession(data.session);
+              } else if (!restoreCachedSession()) {
+                setSession(null);
+                setProfile(null);
+              }
+            } catch {
+              if (isMounted) restoreCachedSession();
+            } finally {
+              if (isMounted) setIsReconnecting(false);
+            }
+          }, 3000);
+          return;
+        }
+
         setIsBackgroundSyncing(true);
         const isValid = await checkDomain(currentSession);
         setIsBackgroundSyncing(false);
@@ -164,6 +201,7 @@ trackEvent('auth_success', { method: 'supabase' });
 
     return () => {
       isMounted = false;
+      clearTimeout(reconnectTimer);
       if (typeof window !== 'undefined') { window.removeEventListener('wallet_disconnect_clean', handleWalletDisconnect); }
       if (authListener && authListener.subscription) {
         authListener.subscription.unsubscribe();
@@ -287,5 +325,15 @@ trackEvent('auth_success', { method: 'supabase' });
       }
   }, [isWeb3Authenticated, loading]);
 
-  return { profile, loading, isLoading: loading, isHydrating, session, checkDomain, isBackgroundSyncing, isReconnecting };
+  return {
+    profile,
+    loading,
+    isLoading: loading,
+    isHydrating,
+    session,
+    isAuthenticated: Boolean(session) || isWeb3Authenticated,
+    checkDomain,
+    isBackgroundSyncing,
+    isReconnecting
+  };
 }

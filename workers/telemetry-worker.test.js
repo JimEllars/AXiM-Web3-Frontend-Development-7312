@@ -9,9 +9,8 @@ describe('telemetry-worker', () => {
   it('handles OPTIONS request', async () => {
     const req = new Request('https://telemetry.axim.us.com', { method: 'OPTIONS', headers: { Origin: 'https://axim.us.com' } });
     const res = await worker.fetch(req, {}, { waitUntil: () => {} });
-    expect([204, 503]).toContain(res.status);
-    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*');
-    expect(res.headers.get('Access-Control-Allow-Headers')).toContain('X-AXiM-Internal-Key');
+    expect(res.status).toBe(204);
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('https://axim.us.com');
     expect(res.headers.get('Access-Control-Allow-Headers')).toContain('x-axim-client');
   });
 
@@ -21,9 +20,9 @@ describe('telemetry-worker', () => {
     const res = await worker.fetch(req, {}, { waitUntil: () => {} });
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.status).toBe('OPERATIONAL');
-    expect(body.timestamp).toBeDefined();
-    expect(body.node).toBe('TEST_COLO');
+    expect(body.status).toBe('ok');
+    expect(typeof body.timestamp).toBe('number');
+    expect(body.version).toBeDefined();
   });
 
   it('validates payload and returns 400 for invalid JSON', async () => {
@@ -47,7 +46,7 @@ describe('telemetry-worker', () => {
     const res = await worker.fetch(req, { AXIM_CORE_URL: 'http://test', AXIM_GATEWAY_TOKEN: 'token' }, { waitUntil: () => {} });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toBe('Telemetry event validation failed.');
+    expect(body.error).toBe('Telemetry payload structure is invalid.');
   });
 
   it('validates payload and returns 400 for too many events', async () => {
@@ -60,43 +59,34 @@ describe('telemetry-worker', () => {
     const res = await worker.fetch(req, { AXIM_CORE_URL: 'http://test', AXIM_GATEWAY_TOKEN: 'token' }, { waitUntil: () => {} });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toBe('Expected between 1 and 100 telemetry events.');
+    expect(body.error).toBe('Telemetry payload structure is invalid.');
   });
-  it('should accept /api/telemetry/errors with valid payload', async () => {
-    const mockRequest = {
+  it('rejects an unapproved CORS origin', async () => {
+    const req = new Request('https://telemetry.axim.us.com/api/telemetry/ingest', {
       method: 'POST',
-      url: 'https://axim.us.com/api/telemetry/errors',
-      headers: {
-        get: vi.fn((key) => {
-          if (key === 'Origin') return 'https://axim.us.com';
-          return null;
-        })
-      },
-      json: vi.fn().mockResolvedValue([{ error: 'Test error' }]),
-      cf: {}
-    };
+      headers: { Origin: 'https://attacker.example' },
+      body: JSON.stringify([])
+    });
+    const res = await worker.fetch(req, {}, {});
+    expect(res.status).toBe(403);
+    await expect(res.json()).resolves.toMatchObject({ success: false, code: 403 });
+  });
 
-    const mockEnv = {
+  it('returns 503 when neither the uplink nor durable buffer is available', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Uplink unavailable'));
+    const event = { id: 'event-1', timestamp: new Date().toISOString(), event: { category: 'test' } };
+    const req = new Request('https://telemetry.axim.us.com/api/telemetry/ingest', {
+      method: 'POST',
+      headers: { Origin: 'https://axim.us.com' },
+      body: JSON.stringify([event])
+    });
+    const res = await worker.fetch(req, {
       AXIM_CORE_URL: 'https://core.axim.us.com',
-      AXIM_GATEWAY_TOKEN: 'secret123',
-      TELEMETRY_BUFFER_KV: {
-        put: vi.fn()
-      }
-    };
-
-    let waitUntilPromise;
-    const mockCtx = {
-      waitUntil: vi.fn((promise) => { waitUntilPromise = promise; })
-    };
-
-    const response = await worker.fetch(mockRequest, mockEnv, mockCtx);
-
-    expect(response.status, 202);
-    const data = await response.json();
-    expect(data.status, 'errors_accepted');
-
-    // Check if KV is used
-    if (waitUntilPromise) await waitUntilPromise;
+      AXIM_GATEWAY_TOKEN: 'token'
+    }, {});
+    expect(res.status).toBe(503);
+    await expect(res.json()).resolves.toMatchObject({ success: false, code: 503 });
+    fetchSpy.mockRestore();
   });
 
 });

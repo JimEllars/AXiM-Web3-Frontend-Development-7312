@@ -1,472 +1,254 @@
 import { useAximStore } from '../store/useAximStore';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { localStore } from '../lib/persistence';
-import { onFCP, onCLS, onLCP } from 'web-vitals';
+import { onCLS, onFCP, onLCP } from 'web-vitals';
 
+const OFFLINE_QUEUE_KEY = 'axim_telemetry_offline_queue';
+const MAX_QUEUE_SIZE = 100;
+const MAX_BATCH_RETRIES = 3;
+const BATCH_SIZE = 10;
+
+let memoryQueue = [];
 let isFlushing = false;
-let batchQueue = [];
-let isCircuitOpen = false;
-let circuitCooldownUntil = 0; // In-memory queue for dispatching batches
+let performanceMetrics = {};
 
-let hasRehydrated = false;
+function isCriticalEvent(event) {
+  const category = event?.event?.category || event?.type || '';
+  return /auth|error/i.test(category);
+}
 
-export function rehydrateTelemetry() {
-  if (typeof window === 'undefined' || hasRehydrated) return;
-  hasRehydrated = true;
+function readOfflineQueue() {
+  if (typeof window === 'undefined') return [];
+
   try {
-    const cached = localStore.getTelemetryCache();
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      const parsedCache = cached;
-        setTimeout(() => {
-          const store = useAximStore.getState();
-          const currentCollection = store.telemetryCollection || [];
-          const existingIds = new Set(currentCollection.map(e => e.id));
-
-          const uniqueCached = parsedCache.filter(e => !existingIds.has(e.id));
-          if (uniqueCached.length > 0) {
-            useAximStore.setState({ telemetryCollection: [...currentCollection, ...uniqueCached], telemetryQueue: [...(store.telemetryQueue || []), ...uniqueCached] });
-            batchQueue = [...batchQueue, ...uniqueCached];
-          }
-          localStore.saveTelemetryCache([]);
-        }, 0);
-      }
-  } catch (err) {
-    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.error("Failed to rehydrate telemetry from local cache", err); }
+    const queue = JSON.parse(window.localStorage.getItem(OFFLINE_QUEUE_KEY) || '[]');
+    return Array.isArray(queue) ? queue : [];
+  } catch {
+    return [];
   }
 }
 
-// Rehydrate on load
-rehydrateTelemetry();
+function trimQueue(queue) {
+  const result = [...queue];
+
+  while (result.length > MAX_QUEUE_SIZE) {
+    const removableIndex = result.findIndex((event) => !isCriticalEvent(event));
+    result.splice(removableIndex === -1 ? 0 : removableIndex, 1);
+  }
+
+  return result;
+}
+
+function persistOfflineQueue(queue) {
+  if (typeof window === 'undefined') return;
+
+  const trimmed = trimQueue(queue);
+  try {
+    window.localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(trimmed));
+  } catch {
+    // Telemetry must never interfere with application interaction.
+  }
+}
+
+function notifyQueueChanged() {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('axim-telemetry-queue-update', {
+    detail: { count: memoryQueue.length + readOfflineQueue().length }
+  }));
+}
+
+function enqueueOffline(events) {
+  const persisted = readOfflineQueue();
+  persistOfflineQueue([...persisted, ...events]);
+  notifyQueueChanged();
+}
+
+function telemetryEndpoint() {
+  const configured = import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL;
+  return configured && !configured.includes('your-edge-worker-url') && !configured.includes('workers.dev')
+    ? configured
+    : '/api/telemetry/ingest';
+}
+
+function delayForAttempt(attempt) {
+  const exponentialDelay = 250 * (2 ** attempt);
+  const jitter = Math.floor(Math.random() * 150);
+  return exponentialDelay + jitter;
+}
+
+function wait(delay) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+async function dispatchBatch(events, useBeacon) {
+  const endpoint = telemetryEndpoint();
+  const payload = JSON.stringify(events);
+
+  if (useBeacon && typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+    try {
+      if (navigator.sendBeacon(endpoint, new Blob([payload], { type: 'application/json' }))) {
+        return true;
+      }
+    } catch {
+      // Continue with fetch so unloading pages still have a best-effort path.
+    }
+  }
+
+  if (typeof fetch !== 'function') return false;
+
+  for (let attempt = 0; attempt < MAX_BATCH_RETRIES; attempt += 1) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true
+      });
+
+      if (response.ok) return true;
+      if (response.status < 500) return false;
+    } catch {
+      // Network failures are retryable and persist after the final attempt.
+    }
+
+    if (attempt < MAX_BATCH_RETRIES - 1) await wait(delayForAttempt(attempt));
+  }
+
+  return false;
+}
+
+function removeDeliveredEvents(events) {
+  if (typeof useAximStore.setState !== 'function') return;
+
+  const deliveredIds = new Set(events.map((event) => event.id));
+  const state = useAximStore.getState();
+  useAximStore.setState({
+    telemetryCollection: (state.telemetryCollection || []).filter((event) => !deliveredIds.has(event.id)),
+    telemetryQueue: (state.telemetryQueue || []).filter((event) => !deliveredIds.has(event.id))
+  });
+}
 
 export function getTelemetryStore() {
-  return [...useAximStore.getState().telemetryCollection];
+  return [...(useAximStore.getState().telemetryCollection || [])];
 }
 
-let globalPerfMetrics = {};
-if (typeof window !== 'undefined') {
-  onFCP((metric) => { globalPerfMetrics.FCP = metric.value; });
-  onCLS((metric) => { globalPerfMetrics.CLS = metric.value; });
-  onLCP((metric) => { globalPerfMetrics.LCP = metric.value; });
+export function getOfflineTelemetryQueue() {
+  return [...memoryQueue, ...readOfflineQueue()];
 }
 
-export function logTelemetry(type, payload) {
+export function __resetTelemetryForTests() {
+  memoryQueue = [];
+  isFlushing = false;
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(OFFLINE_QUEUE_KEY);
+  }
+}
+
+export function logTelemetry(type, payload = {}) {
   const event = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
-    event: { category: type, action: payload?.action, label: payload?.label, value: payload?.value, ...payload },
-    path: typeof window !== 'undefined' ? window.location.pathname : '',
+    event: { category: type, ...payload },
+    path: typeof window === 'undefined' ? '' : window.location.pathname,
     performance: {
-      ttfb: globalPerfMetrics.TTFB || 0,
-      fcp: globalPerfMetrics.FCP || 0,
-      cls: globalPerfMetrics.CLS || 0,
-      lcp: globalPerfMetrics.LCP || 0
+      ttfb: performanceMetrics.TTFB || 0,
+      fcp: performanceMetrics.FCP || 0,
+      cls: performanceMetrics.CLS || 0,
+      lcp: performanceMetrics.LCP || 0
     },
-    sessionId: typeof window !== 'undefined' ? sessionStorage.getItem('axim_session_id') : undefined,
+    sessionId: typeof window === 'undefined' ? undefined : window.sessionStorage.getItem('axim_session_id')
   };
 
-  // Ensure session id is established silently if not present
   if (typeof window !== 'undefined' && !event.sessionId) {
-    const newSessionId = crypto.randomUUID();
-    sessionStorage.setItem('axim_session_id', newSessionId);
-    event.sessionId = newSessionId;
-  }
-
-  const MAKE_WEBHOOK_URL = import.meta.env?.VITE_MAKE_AUTOMATION_WEBHOOK || null;
-  const HIGH_VALUE_EVENTS = ['vip_consultation_requested', 'store_waitlist_intent', 'checkout_intent'];
-
-  if (HIGH_VALUE_EVENTS.includes(type) && MAKE_WEBHOOK_URL) {
-    fetch(MAKE_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event: type, payload, timestamp: event.timestamp })
-    }).catch(err => { if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[WEBHOOK] Make.com Forwarding Failed silently."); } })
+    event.sessionId = crypto.randomUUID();
+    window.sessionStorage.setItem('axim_session_id', event.sessionId);
   }
 
   useAximStore.getState().logTelemetryEvent(event);
-  batchQueue.push(event);
-  if (batchQueue.length > 50) {
-    batchQueue = batchQueue.slice(batchQueue.length - 50);
+  memoryQueue = trimQueue([...memoryQueue, event]);
+
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    memoryQueue = memoryQueue.filter((queuedEvent) => queuedEvent.id !== event.id);
+    enqueueOffline([event]);
   }
 
-  if (batchQueue.length >= 10) {
-    flushTelemetryQueue();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('axim-telemetry-update', { detail: event }));
   }
 
-  try {
-    if (typeof window !== 'undefined') {
-      const collection = useAximStore.getState().telemetryCollection;
-      localStore.saveTelemetryCache(collection);
-      window.dispatchEvent(new window.CustomEvent('axim-telemetry-update', { detail: event }));
-    }
-  } catch (e) {
-    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.error("Telemetry error", e); }
-  }
-
-  if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
-    console.log(`[TELEMETRY: ${type}]`, payload);
-  }
+  if (memoryQueue.length >= BATCH_SIZE) void flushTelemetryQueue();
+  return event;
 }
 
-export async function flushTelemetryQueue(force = false) {
-  if (isCircuitOpen) {
-    if (Date.now() > circuitCooldownUntil) {
-      isCircuitOpen = false;
-    } else {
-      const currentBatch = [...batchQueue];
-      batchQueue = []; // Clear current queue to prevent endless growing in memory
+export async function flushTelemetryQueue(useBeacon = false) {
+  if (isFlushing) return false;
 
-      // buffer up to 100 events in localStorage silently
-      if (typeof window !== 'undefined') {
-        try {
-          const existing = localStore.getTelemetryCache() || [];
-          const updated = [...existing, ...currentBatch].slice(-100);
-          localStore.saveTelemetryCache(updated);
-        } catch (e) { /* ignore */ }
-      }
-      return;
-    }
+  const persisted = readOfflineQueue();
+  const events = trimQueue([...persisted, ...memoryQueue]);
+  if (events.length === 0) return true;
+
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    memoryQueue = [];
+    persistOfflineQueue(events);
+    notifyQueueChanged();
+    return false;
   }
-  if (isFlushing || batchQueue.length === 0) return;
+
   isFlushing = true;
+  memoryQueue = [];
+  persistOfflineQueue([]);
 
-  const currentBatch = [...batchQueue];
-  batchQueue = []; // Clear queue immediately to capture new events while flushing
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
+  const succeeded = await dispatchBatch(events, useBeacon);
+  if (succeeded) {
+    removeDeliveredEvents(events);
+  } else {
+    enqueueOffline(events);
   }
 
-  try {
-    const payload = JSON.stringify(currentBatch);
-    const rawEndpoint = (typeof import.meta !== 'undefined' && import.meta.env) ? (import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL) : undefined;
-    const isValidRemote = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev');
-    const endpoint = isValidRemote ? rawEndpoint : '/api/telemetry/ingest';
-
-    if (!endpoint) {
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
-  } // Restore on fail
-      if (typeof window !== 'undefined') {
-        try { localStore.saveTelemetryCache(batchQueue); } catch (e) { /* ignore */ }
-      }
-      return;
-    }
-
-    let success = false;
-
-    if (typeof window !== 'undefined') {
-      // Use sendBeacon during page unloads or background batch flushes to prevent network cancellation
-      if (force && window.navigator?.sendBeacon) {
-        const blob = new Blob([payload], { type: 'application/json' });
-        try {
-          success = window.navigator.sendBeacon(endpoint, blob);
-        } catch(e) {
-          success = false;
-        }
-      }
-
-      if (!success && window.fetch) {
-        try {
-          let retries = 3;
-          const backoffs = [1000, 2000, 4000];
-          let attempt = 0;
-
-          let response = null;
-
-          while (retries > 0) {
-            try {
-              const startFetch = Date.now();
-              const fetchPromise = fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: payload,
-                keepalive: true,
-              });
-
-              const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
-              response = await Promise.race([fetchPromise, timeoutPromise]);
-
-              if (response.status === 200 || response.status === 202 || response.status === 204) {
-                 const rtt = Date.now() - startFetch;
-                 globalPerfMetrics.worker_rtt = rtt;
-                 break;
-              } else if (response.status >= 500) {
-                 isCircuitOpen = true;
-                 circuitCooldownUntil = Date.now() + 60000; // 1 minute cooldown
-                 throw new Error('Server error 5xx');
-              } else if (response.status === 429) {
-                 throw new Error('Rate limited');
-              } else {
-                 break;
-              }
-            } catch(e) {
-               if (e.message === 'timeout' || e.message === 'Server error 5xx') {
-                  isCircuitOpen = true;
-                  circuitCooldownUntil = Date.now() + 60000;
-               }
-               retries--;
-               if (retries === 0) throw e;
-               await new Promise(r => setTimeout(r, backoffs[attempt] || 4000));
-               attempt++;
-
-            }
-          }
-
-          if (response && (response.status === 200 || response.status === 202 || response.status === 204)) {
-            success = true;
-            try {
-              if (response.status !== 204 && response.status !== 202) {
-                const responseData = await response.json();
-                console.log('[TELEMETRY_SYNC_SUCCESS]', responseData);
-              }
-            } catch (jsonErr) {
-              if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Could not parse telemetry response JSON", jsonErr); }
-            }
-          } else {
-            success = false;
-          }
-        } catch (fetchErr) {
-          if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Edge telemetry failed", fetchErr); }
-
-          // Using imported isSupabaseConfigured
-
-          if (isSupabaseConfigured) {
-            if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("Falling back to direct Supabase insert"); }
-            try {
-              const { error } = await supabase.from('telemetry_ingress').insert(currentBatch);
-              if (!error) {
-                 success = true;
-                 console.log('[TELEMETRY_SYNC_SUCCESS] Fallback via Supabase direct insert successful');
-              } else {
-                 success = false;
-                 if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn('[TELEMETRY_SYNC_FAILED] Fallback via Supabase direct insert failed', error.message); }
-              }
-            } catch (supabaseErr) {
-              success = false;
-              if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", supabaseErr.message); }
-            }
-          } else {
-            success = false;
-            if (typeof window !== 'undefined') {
-              try {
-                localStore.saveTelemetryCache([...useAximStore.getState().telemetryCollection, ...currentBatch]);
-              } catch(e) { /* ignore */ }
-            }
-          }
-
-          // Dispatch a mock success to keep UI functional and prevent infinite queues if worker is offline
-          window.dispatchEvent(new window.CustomEvent('axim-telemetry-fallback-sync', { detail: { count: currentBatch.length } }));
-        }
-      }
-    }
-
-    if (success) {
-      const store = useAximStore.getState();
-      const idsToRemove = new Set(currentBatch.map(e => e.id));
-
-      const newCollection = store.telemetryCollection.filter(e => !idsToRemove.has(e.id));
-      const newQueue = store.telemetryQueue.filter(e => !idsToRemove.has(e.id));
-
-      useAximStore.setState({ telemetryCollection: newCollection, telemetryQueue: newQueue });
-      if (typeof window !== 'undefined') {
-        localStore.saveTelemetryCache(newCollection);
-      }
-    } else {
-      // Put back in queue if failed
-      batchQueue = [...currentBatch, ...batchQueue].slice(0, 50);
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new window.CustomEvent('axim-telemetry-queue-update', { detail: { count: batchQueue.length } }));
-  }
-      if (typeof window !== 'undefined') {
-        try {
-          const existing = localStore.getTelemetryCache() || [];
-          const updated = [...existing, ...batchQueue].slice(-100);
-          localStore.saveTelemetryCache(updated);
-        } catch (e) { /* ignore */ }
-      }
-    }
-  } catch (err) {
-    if (!isCircuitOpen && import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') { console.warn("[TELEMETRY] Sync failed silently.", err.message); }
-  } finally {
-    isFlushing = false;
-  }
-}
-
-if (typeof window !== 'undefined') {
-  setInterval(() => {
-
-  if (typeof window !== 'undefined' && navigator.onLine) {
-    const systemStatus = {
-       path: window.location.pathname,
-       timestamp: new Date().toISOString(),
-       uplink: navigator.onLine ? 'ONLINE' : 'OFFLINE'
-    };
-    logTelemetry('system_heartbeat', systemStatus);
-  }
-
-    flushTelemetryQueue(false);
-  }, 30000);
-
-  const handleVisibilityChange = () => {
-    if (document.visibilityState === 'hidden') {
-      flushTelemetryQueue(true);
-    }
-  };
-
-  window.addEventListener('visibilitychange', handleVisibilityChange);
-  window.addEventListener('pagehide', () => flushTelemetryQueue(true));
-  window.addEventListener('beforeunload', () => flushTelemetryQueue(true));
-  window.addEventListener('unload', () => flushTelemetryQueue(true));
-  window.addEventListener('online', () => flushTelemetryQueue(true));
-}
-
-export function setupTelemetryHooks() {
-  if (typeof window === 'undefined') return;
-
-  // Wallet hooks
-  window.addEventListener('wallet_connect', (e) => logTelemetry('wallet_connect', e.detail || {}));
-  window.addEventListener('wallet_disconnect', (e) => logTelemetry('wallet_disconnect', e.detail || {}));
-  window.addEventListener('chain_switch', (e) => logTelemetry('chain_switch', e.detail || {}));
-
-  // AI query hook
-  window.addEventListener('ai_query', (e) => logTelemetry('ai_query', e.detail || {}));
-
-  // Core metrics
-  window.addEventListener('error', (e) => logTelemetry('route_error', { message: e.message, filename: e.filename, lineno: e.lineno }));
-
-  if (window.performance) {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const perfData = window.performance.timing;
-        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-        if (pageLoadTime > 0) {
-          logTelemetry('page_latency', { durationMs: pageLoadTime });
-        }
-      }, 0);
-    });
-  }
+  isFlushing = false;
+  notifyQueueChanged();
+  return succeeded;
 }
 
 export function logHighPriorityTelemetry(type, payload) {
-  logTelemetry(type, payload);
-  flushTelemetryQueue(true);
+  const event = logTelemetry(type, payload);
+  void flushTelemetryQueue(true);
+  return event;
 }
 
 export function trackEvent(category, action, label, value) {
-  if (!category || typeof category !== 'string') return;
-  const payload = { category, action, label, value };
-  logTelemetry(category, payload);
-  if (category === 'personality_test_click') {
-    // Forward the interaction payload to AXiM Core telemetry (POST /satellite-telemetry)
-    const CORE_TELEMETRY_ENDPOINT = import.meta.env.VITE_CORE_TELEMETRY_ENDPOINT || 'https://api.axim.us.com/satellite-telemetry';
-    fetch(CORE_TELEMETRY_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event: category, payload, timestamp: new Date().toISOString() })
-    }).catch(err => {
-      if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
-        console.warn("[WEBHOOK] AXiM Core Telemetry Forwarding Failed silently.", err);
-      }
-    });
-  }
+  if (typeof category !== 'string' || category.length === 0) return;
+  logTelemetry(category, { action, label, value });
 }
-
-
-let errorBatchQueue = [];
-let isFlushingErrors = false;
 
 export function captureException(error, errorInfo) {
-  if (typeof window === 'undefined') return;
-  const payload = {
-    id: crypto.randomUUID(),
+  if (!error) return;
+  logHighPriorityTelemetry('application_error', {
     message: error.message,
     stack: error.stack,
-    componentStack: errorInfo?.componentStack,
-    timestamp: new Date().toISOString(),
-    url: window.location.href,
-    userAgent: navigator.userAgent
-  };
-
-  errorBatchQueue.push(payload);
-
-  if (errorBatchQueue.length >= 10) {
-    flushErrorQueue();
-  }
+    componentStack: errorInfo?.componentStack
+  });
 }
 
-export async function flushErrorQueue(force = false) {
-  if (errorBatchQueue.length === 0 || isFlushingErrors) return;
-  isFlushingErrors = true;
+export const flushErrorQueue = flushTelemetryQueue;
 
-  const currentBatch = [...errorBatchQueue];
-  errorBatchQueue = [];
-
-  try {
-    const payload = JSON.stringify(currentBatch);
-    const rawEndpoint = (typeof import.meta !== 'undefined' && import.meta.env) ? (import.meta.env.VITE_TELEMETRY_ENDPOINT || import.meta.env.VITE_TELEMETRY_WORKER_URL) : undefined;
-    const baseEndpoint = Boolean(rawEndpoint) && !rawEndpoint.includes('your-edge-worker-url') && !rawEndpoint.includes('workers.dev') ? rawEndpoint : '/api/telemetry';
-    const endpoint = baseEndpoint.includes('ingest') ? baseEndpoint.replace('/ingest', '/errors') : baseEndpoint + '/errors';
-
-    let success = false;
-    if (force && window.navigator?.sendBeacon) {
-      const blob = new Blob([payload], { type: 'application/json' });
-      try {
-        success = window.navigator.sendBeacon(endpoint, blob);
-      } catch (e) {
-        success = false;
-      }
-    }
-
-    if (!success && window.fetch) {
-      let retries = 3;
-      const backoffs = [1000, 2000, 4000];
-      let attempt = 0;
-
-      while (retries > 0) {
-        try {
-          const fetchPromise = fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-            keepalive: true,
-          });
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
-          const response = await Promise.race([fetchPromise, timeoutPromise]);
-
-          if (response.status === 202 || response.status === 200 || response.status === 204) {
-            break;
-          } else {
-            throw new Error('Server error');
-          }
-        } catch (e) {
-          retries--;
-          if (retries === 0) throw e;
-          await new Promise(r => setTimeout(r, backoffs[attempt] || 4000));
-          attempt++;
-        }
-      }
-    }
-  } catch (err) {
-    // Silently handle flush errors
-    if (import.meta.env?.MODE !== 'production' && process.env.NODE_ENV !== 'production') {
-       console.warn("[TELEMETRY] Error sync failed silently.", err.message);
-    }
-  } finally {
-    isFlushingErrors = false;
-  }
+export function setupTelemetryHooks() {
+  if (typeof window === 'undefined') return;
+  window.addEventListener('wallet_connect', (event) => logTelemetry('wallet_connect', event.detail || {}));
+  window.addEventListener('wallet_disconnect', (event) => logTelemetry('wallet_disconnect', event.detail || {}));
+  window.addEventListener('chain_switch', (event) => logTelemetry('chain_switch', event.detail || {}));
+  window.addEventListener('ai_query', (event) => logTelemetry('ai_query', event.detail || {}));
+  window.addEventListener('error', (event) => logHighPriorityTelemetry('route_error', {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno
+  }));
 }
 
 if (typeof window !== 'undefined') {
-  setInterval(() => {
-    flushErrorQueue();
-  }, 5000); // 5 seconds backoff as requested
+  onFCP((metric) => { performanceMetrics.FCP = metric.value; });
+  onCLS((metric) => { performanceMetrics.CLS = metric.value; });
+  onLCP((metric) => { performanceMetrics.LCP = metric.value; });
 
-  window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') flushErrorQueue(true);
-  });
-  window.addEventListener('pagehide', () => flushErrorQueue(true));
-  window.addEventListener('beforeunload', () => flushErrorQueue(true));
-  window.addEventListener('unload', () => flushErrorQueue(true));
+  window.addEventListener('online', () => { void flushTelemetryQueue(); });
+  window.addEventListener('pagehide', () => { void flushTelemetryQueue(true); });
+  window.addEventListener('beforeunload', () => { void flushTelemetryQueue(true); });
 }

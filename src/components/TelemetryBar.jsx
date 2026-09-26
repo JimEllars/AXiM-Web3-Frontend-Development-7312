@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useAximStore } from "../store/useAximStore";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { theme } from "../config/theme";
-
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import SafeIcon from '../common/SafeIcon';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 export default function TelemetryBar({ label, color, initialValue }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
@@ -35,7 +35,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       const pingHealth = () => {
         const start = Date.now();
-        fetch('/api/v1/telemetry/health', { signal: AbortSignal.timeout(3000) })
+        fetch('/api/telemetry/health', { signal: AbortSignal.timeout(3000) })
           .then(res => {
             if (!res.ok) throw new Error('Worker not 200');
             const ray = res.headers.get('cf-ray');
@@ -163,7 +163,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
     : (isBuffering ? "!bg-amber-300 !shadow-[0_0_24px_rgba(245,158,11,1)]" : "!bg-emerald-300 !shadow-[0_0_24px_rgba(16,185,129,1)]");
 
   return (
-    <div aria-live="polite" className={`bg-[${theme.colors.background}]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20`}>
+    <div aria-live="polite" className={`min-h-8 bg-[${theme.colors.background}]/90 backdrop-blur-xl p-2 md:p-4 rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 hover:border-white/20`}>
       {/* Mobile view */}
       <div className="md:hidden flex flex-col gap-2">
         <button
@@ -178,7 +178,9 @@ export default function TelemetryBar({ label, color, initialValue }) {
           </div>
           <div className="flex items-center gap-2">
             <span className={`${textColor} font-bold text-xs drop-shadow-md`}>{value}%</span>
-            {isExpanded ? <LuChevronUp className="w-4 h-4 text-zinc-400" /> : <LuChevronDown className="w-4 h-4 text-zinc-400" />}
+            {isExpanded
+              ? <SafeIcon icon={LuChevronUp} className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+              : <SafeIcon icon={LuChevronDown} className="w-4 h-4 text-zinc-400" aria-hidden="true" />}
           </div>
         </button>
         <motion.div
@@ -225,7 +227,11 @@ export default function TelemetryBar({ label, color, initialValue }) {
             QUEUE: {telemetryQueue?.length || 0} EVENTS
           </span>
           <span title={`Uplink Status: ${edgeRegion === 'OFFLINE' ? 'Offline' : 'Connected'} | RPC Latency: ${latencyInfo.rtt}ms | Edge Region: ${edgeRegion}`} className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm relative group cursor-pointer">
-            <span className={`w-1.5 h-1.5 rounded-full mr-2 ${edgeRegion === 'OFFLINE' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500 animate-pulse'}`}></span>
+            <SafeIcon
+              icon={edgeRegion === 'OFFLINE' ? LuChevronDown : LuChevronUp}
+              className={`w-3 h-3 mr-2 ${edgeRegion === 'OFFLINE' ? 'text-rose-400' : isBuffering ? 'text-amber-400' : 'text-emerald-400'}`}
+              aria-hidden="true"
+            />
             EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
