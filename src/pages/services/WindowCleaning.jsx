@@ -25,32 +25,64 @@ export default function WindowCleaning() {
   const [activeFaq, setActiveFaq] = useState(null);
 
   const schema = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Residential & Commercial Window Cleaning",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "AXiM Systems"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Longview, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Tyler, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Shreveport, LA"
+        },
+        {
+          "@type": "Place",
+          "name": "Greater Ark-La-Tex Region"
+        }
+      ],
+      "description": "Professional exterior and interior window cleaning. We deliver crystal-clear, streak-free results for residential properties."
+    };
+
+  const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
+    "@type": "LocalBusiness",
+    "name": "AXiM Commercial Services",
+    "image": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
+    "@id": "https://axim.us.com/",
+    "url": "https://axim.us.com/",
+    "telephone": "1-800-555-AXIM",
+    "priceRange": "$$",
+    "areaServed": [
       {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Marcus V." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "The Nexus CRM and automated lead routing systems completely transformed our pipeline. Conversion rates are up 38% since onboarding."
+        "@type": "City",
+        "name": "Longview",
+        "sameAs": "https://en.wikipedia.org/wiki/Longview,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Tyler",
+        "sameAs": "https://en.wikipedia.org/wiki/Tyler,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Shreveport",
+        "sameAs": "https://en.wikipedia.org/wiki/Shreveport,_Louisiana"
+      },
+      {
+        "@type": "Place",
+        "name": "Greater Ark-La-Tex Region"
       }
-    ],
-    "serviceType": "Window Cleaning",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Development"
-    },
-    "areaServed": {
-      "@type": "State",
-      "name": "Service Area"
-    }
+    ]
   };
 
 
@@ -117,7 +149,7 @@ export default function WindowCleaning() {
         title="Professional Window Cleaning Services | AXiM Development"
         description="Get a crystal clear view with our professional window cleaning services. Request a quote today."
         type="website"
-        customSchema={[schema]}
+        customSchema={[schema, localBusinessSchema]}
       />
 
       {/* Hero Section */}

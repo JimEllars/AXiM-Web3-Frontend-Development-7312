@@ -1,17 +1,24 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import worker from './seo-worker.js';
 
+// Minimal mock for HTMLRewriter
+class MockHTMLRewriter {
+  on() { return this; }
+  transform(res) { return res; }
+}
+globalThis.HTMLRewriter = MockHTMLRewriter;
+
 describe('seo-worker', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('forwards non-bot requests to the configured Pages origin', async () => {
+  it('forwards non-html requests to the configured Pages origin', async () => {
     const response = new Response('Pages content', { status: 200 });
     const fetchMock = vi.fn().mockResolvedValue(response);
     vi.stubGlobal('fetch', fetchMock);
-    const request = new Request('https://axim.us.com/articles?category=tech', {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
+    const request = new Request('https://axim.us.com/assets/style.css', {
+      headers: { 'Accept': 'text/css' }
     });
 
     const result = await worker.fetch(request, {
@@ -21,44 +28,54 @@ describe('seo-worker', () => {
     expect(result).toBe(response);
     expect(fetchMock).toHaveBeenCalledOnce();
     expect(fetchMock.mock.calls[0][0].url).toBe(
-      'https://axim-web3-frontend.pages.dev/articles?category=tech'
+      'https://axim-web3-frontend.pages.dev/assets/style.css'
     );
   });
 
-  it('intercepts GPTBot/1.2', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
+  it('intercepts html requests and uses HTMLRewriter', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('html content', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
-    const request = new Request('https://axim.us.com/article/tech-slug', {
-      headers: { 'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)' }
+
+    // Test HTMLRewriter gets used
+    let rewriterCalled = false;
+    class SpyHTMLRewriter {
+      on() { return this; }
+      transform(res) {
+        rewriterCalled = true;
+        return res;
+      }
+    }
+    globalThis.HTMLRewriter = SpyHTMLRewriter;
+
+    const request = new Request('https://axim.us.com/business', {
+      headers: { 'Accept': 'text/html' }
     });
 
-    // We expect it to try to fetch from WP or Cache and NOT just pass through to pages origin
-    const env = { PAGES_ORIGIN: 'https://axim.us.com', WP_API_URL: 'https://wp.axim.us.com', FRONTEND_SEO_CACHE: { get: vi.fn().mockResolvedValue(null), put: vi.fn() } };
+    const env = { PAGES_ORIGIN: 'https://axim.us.com', WP_API_URL: 'https://wp.axim.us.com' };
     await worker.fetch(request, env);
-    expect(env.FRONTEND_SEO_CACHE.get).toHaveBeenCalled();
+    expect(rewriterCalled).toBe(true);
   });
 
-  it('intercepts ClaudeBot/1.0', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
-    vi.stubGlobal('fetch', fetchMock);
-    const request = new Request('https://axim.us.com/article/tech-slug', {
-      headers: { 'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)' }
+  it('redirects trailing slash for articles', async () => {
+    const request = new Request('https://axim.us.com/article/tech-slug/', {
+      headers: { 'Accept': 'text/html' }
     });
 
-    const env = { PAGES_ORIGIN: 'https://axim.us.com', WP_API_URL: 'https://wp.axim.us.com', FRONTEND_SEO_CACHE: { get: vi.fn().mockResolvedValue(null), put: vi.fn() } };
-    await worker.fetch(request, env);
-    expect(env.FRONTEND_SEO_CACHE.get).toHaveBeenCalled();
+    const env = { PAGES_ORIGIN: 'https://axim.us.com' };
+    const response = await worker.fetch(request, env);
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get('Location')).toBe('https://axim.us.com/article/tech-slug');
   });
 
-  it('intercepts PerplexityBot', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{ title: { rendered: 'Test Title' }, excerpt: { rendered: 'Test Excerpt' } }]), { status: 200 }));
-    vi.stubGlobal('fetch', fetchMock);
-    const request = new Request('https://axim.us.com/article/tech-slug', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/bot)' }
+  it('returns 404 for invalid route', async () => {
+    const request = new Request('https://axim.us.com/invalid-route-123', {
+      headers: { 'Accept': 'text/html' }
     });
 
-    const env = { PAGES_ORIGIN: 'https://axim.us.com', WP_API_URL: 'https://wp.axim.us.com', FRONTEND_SEO_CACHE: { get: vi.fn().mockResolvedValue(null), put: vi.fn() } };
-    await worker.fetch(request, env);
-    expect(env.FRONTEND_SEO_CACHE.get).toHaveBeenCalled();
+    const env = { PAGES_ORIGIN: 'https://axim.us.com' };
+    const response = await worker.fetch(request, env);
+
+    expect(response.status).toBe(404);
   });
 });
