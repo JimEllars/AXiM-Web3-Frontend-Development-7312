@@ -19,32 +19,64 @@ export default function PressureWashing() {
   const [submitted, setSubmitted] = useState(false);
 
   const schema = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Pressure Washing & Exterior Restoration",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "AXiM Systems"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Longview, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Tyler, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Shreveport, LA"
+        },
+        {
+          "@type": "Place",
+          "name": "Greater Ark-La-Tex Region"
+        }
+      ],
+      "description": "Professional pressure washing and low-PSI soft wash services for driveways, roofs, and siding."
+    };
+
+  const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
+    "@type": "LocalBusiness",
+    "name": "AXiM Commercial Services",
+    "image": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
+    "@id": "https://axim.us.com/",
+    "url": "https://axim.us.com/",
+    "telephone": "1-800-555-AXIM",
+    "priceRange": "$$",
+    "areaServed": [
       {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Sarah L." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "AXiM Development's tool suite and intelligence articles are our team's go-to resources for scaling our field operations."
+        "@type": "City",
+        "name": "Longview",
+        "sameAs": "https://en.wikipedia.org/wiki/Longview,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Tyler",
+        "sameAs": "https://en.wikipedia.org/wiki/Tyler,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Shreveport",
+        "sameAs": "https://en.wikipedia.org/wiki/Shreveport,_Louisiana"
+      },
+      {
+        "@type": "Place",
+        "name": "Greater Ark-La-Tex Region"
       }
-    ],
-    "serviceType": "Pressure Washing & Roof Soft Wash",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Development"
-    },
-    "areaServed": {
-      "@type": "State",
-      "name": "Service Area"
-    }
+    ]
   };
 
   const handleSurfaceChange = (surface) => {
@@ -73,7 +105,7 @@ export default function PressureWashing() {
         title="Precision Pressure Washing & Exterior Surface Restoration"
         description="Professional pressure washing and low-PSI soft wash services for driveways, roofs, and siding. Request a quote."
         type="website"
-        customSchema={[schema]}
+        customSchema={[schema, localBusinessSchema]}
       />
 
       <motion.div

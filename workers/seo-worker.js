@@ -1,5 +1,5 @@
+/* global HTMLRewriter */
 const DEFAULT_IMAGE = '/axim-og-banner.png';
-const BOT_REGEX = /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Pinterest|Slackbot|TelegramBot|Discordbot|WhatsApp|Googlebot|bingbot|GPTBot|ChatGPT-User|ClaudeBot|Claude-Web|anthropic-ai|PerplexityBot|Applebot|Bytespider|Cohere-ai|CCBot|Diffbot|meta-externalagent|Google-Extended/i;
 
 function stripHtml(html) {
   if (!html) return '';
@@ -15,10 +15,6 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-function toSafeJson(obj) {
-  return JSON.stringify(obj).replace(/</g, '\\u003c');
-}
-
 async function fetchPagesOrigin(request, env) {
   if (!env.PAGES_ORIGIN) {
     throw new Error('PAGES_ORIGIN is not configured');
@@ -32,114 +28,151 @@ async function fetchPagesOrigin(request, env) {
   return fetch(new Request(origin, request));
 }
 
-function cacheHeaders() {
-  return {
-    'Cache-Control': 'public, max-age=600',
-    'Vary': 'User-Agent'
-  };
+class RootInjector {
+  constructor(fallbackContent) {
+    this.fallbackContent = fallbackContent;
+  }
+  element(element) {
+    element.append(this.fallbackContent, { html: true });
+  }
+}
+
+class CanonicalInjector {
+  constructor(canonicalUrl) {
+    this.canonicalUrl = canonicalUrl;
+  }
+  element(element) {
+    element.append(`<link rel="canonical" href="${this.canonicalUrl}" />`, { html: true });
+  }
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const acceptHeader = request.headers.get('accept') || '';
+    const isHtmlRequest = acceptHeader.includes('text/html');
+
+    // Static assets bypass everything
     const isStaticAsset = url.pathname.includes('/assets/') ||
-      /\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json)$/i.test(url.pathname);
+      /\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json|txt|xml)$/i.test(url.pathname);
 
-    if (isStaticAsset) {
+    if (isStaticAsset || !isHtmlRequest) {
       return fetchPagesOrigin(request, env);
     }
 
-    const userAgent = (request.headers.get('user-agent') || '');
-    const isBot = BOT_REGEX.test(userAgent);
-
-    if (!isBot) {
-      return fetchPagesOrigin(request, env);
+    // Trailing slash normalization for articles
+    if (url.pathname.match(/^\/article\/[a-zA-Z0-9_-]+\/$/)) {
+      const newUrl = new URL(url);
+      newUrl.pathname = url.pathname.slice(0, -1);
+      return Response.redirect(newUrl.toString(), 301);
     }
 
-    // Serve from cache if available
-    const cacheKey = request.url;
-    const cached = await env.FRONTEND_SEO_CACHE.get(cacheKey);
-    if (cached) {
-      return new Response(cached, { status: 200, headers: cacheHeaders() });
-    }
+    // We only want HTML rewrites on actual text/html routes
 
-    const articleMatch = url.pathname.match(/^\/articles?\/([a-zA-Z0-9_-]+)$/);
+    // Check against routes
+    const validRoutes = [
+      '/', '/articles', '/business', '/personal', '/games', '/ai', '/tech', '/store',
+      '/partners', '/partners/make', '/partners/powur-solar', '/partners/powur-join', '/partners/chatbase',
+      '/services', '/services/window-cleaning', '/services/pressure-washing', '/services/commercial-exterior',
+      '/consultation', '/support', '/auth', '/terms', '/dashboard/access-denied', '/early-access',
+      '/profile', '/admin'
+    ];
+
+    let isArticleRoute = false;
+    let articleSlug = null;
+    const articleMatch = url.pathname.match(/^\/article\/([a-zA-Z0-9_-]+)$/);
     if (articleMatch) {
-      const slug = articleMatch[1];
+      isArticleRoute = true;
+      articleSlug = articleMatch[1];
+    }
 
-      let article;
+    const isValidRoute = validRoutes.includes(url.pathname) || isArticleRoute;
+    let article;
+
+    if (isArticleRoute) {
       try {
         const wpUrl = typeof env.WP_API_URL !== 'undefined' ? env.WP_API_URL : 'https://wp.axim.us.com';
         const response = await fetch(
-          `${wpUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed=1`,
+          `${wpUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(articleSlug)}&_embed=1`,
           { signal: AbortSignal.timeout(3000) }
         );
         if (response.ok) {
-          [article] = await response.json();
+          const json = await response.json();
+          if (json && json.length > 0) {
+            article = json[0];
+          }
         }
       } catch (error) {
         console.error('Article metadata fetch failed', error);
       }
+    }
 
-      if (!article) {
-        return fetchPagesOrigin(request, env);
-      }
-
-      const title = escapeHtml(`${stripHtml(article.title?.rendered) || 'AXiM Intelligence Briefing'} | AXiM Systems`);
-      const description = escapeHtml((stripHtml(article.excerpt?.rendered) || 'AXiM Development Intelligence Briefing').slice(0, 160));
-      const image = escapeHtml(article._embedded?.['wp:featuredmedia']?.[0]?.source_url || DEFAULT_IMAGE);
-      const canonicalUrl = url.origin + url.pathname;
-      const schema = toSafeJson({
-        '@context': 'https://schema.org',
-        '@type': 'NewsArticle',
-        mainEntityOfPage: canonicalUrl,
-        headline: title,
-        description,
-        image: [image],
-        datePublished: article.date,
-        dateModified: article.modified || article.date,
-        author: {
-          '@type': 'Person',
-          name: article._embedded?.author?.[0]?.name || 'AXiM Development Editorial'
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'AXiM Development',
-          logo: { '@type': 'ImageObject', url: 'https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp' }
-        }
-      });
-
-      const lightweightHtml = `<!DOCTYPE html>
+    if (!isValidRoute && !article) {
+      // Return 404
+      return new Response(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>${title}</title>
-  <meta name="description" content="${description}">
-  <link rel="canonical" href="${canonicalUrl}">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${description}">
-  <meta property="og:image" content="${image}">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="${canonicalUrl}">
-  <meta name="twitter:title" content="${title}">
-  <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="${image}">
-  <script type="application/ld+json">${schema}</script>
+  <title>Page Not Found | AXiM Systems</title>
+  <meta name="robots" content="noindex, nofollow">
 </head>
-<body>
-  <h1>${title}</h1>
-  <p>${description}</p>
-  <img src="${image}" alt="${title}">
+<body class="bg-[#050505] text-white">
+  <div id="root">
+    <h1>404 - Page Not Found</h1>
+    <p>The page you are looking for does not exist.</p>
+    <a href="/">Return Home</a>
+  </div>
 </body>
-</html>`;
-
-      await env.FRONTEND_SEO_CACHE.put(cacheKey, lightweightHtml, { expirationTtl: 600 });
-      return new Response(lightweightHtml, { status: 200, headers: { 'Content-Type': 'text/html', ...cacheHeaders() } });
+</html>`, { status: 404, headers: { 'Content-Type': 'text/html' } });
     }
 
-    // Default handling for other pages if bot
     const rawResponse = await fetchPagesOrigin(request, env);
-    return rawResponse;
+    if (!rawResponse.ok) {
+       return rawResponse;
+    }
+
+    // Inject fallback and canonical
+    const fallbackTitle = isArticleRoute && article ? escapeHtml(`${stripHtml(article.title?.rendered)}`) : 'AXiM Systems Hub';
+    const fallbackDesc = isArticleRoute && article ? escapeHtml((stripHtml(article.excerpt?.rendered)).slice(0, 250)) : 'AXiM Development provides practical automation, decentralized infrastructure, operational intelligence, and business tools.';
+    const canonicalUrl = url.origin + url.pathname;
+
+    const fallbackHtml = `
+      <div style="display:none;" id="seo-fallback">
+        <h1>${fallbackTitle}</h1>
+        <p>${fallbackDesc}</p>
+        <nav>
+          <a href="/services">Services</a> |
+          <a href="/articles">Articles</a> |
+          <a href="/tech">Tech</a> |
+          <a href="/business">Business</a> |
+          <a href="/terms">Terms</a>
+        </nav>
+      </div>
+    `;
+
+    let rewriter = new HTMLRewriter()
+      .on('#root', new RootInjector(fallbackHtml))
+      .on('head', new CanonicalInjector(canonicalUrl));
+
+    // Remove the old canonical if present
+    rewriter = rewriter.on('head link[rel="canonical"]', {
+      element(element) {
+        // If it's not the one we just injected (this is a bit tricky, but HTMLRewriter allows removal of existing ones)
+        // Wait, HTMLRewriter processes in order, we can just remove all existing and let ours be appended.
+        // But our CanonicalInjector just appends to head.
+        element.remove();
+      }
+    });
+
+    const response = rewriter.transform(rawResponse);
+
+    // Ensure we keep the correct content-type but don't cache forever if dynamic
+    const headers = new Headers(response.headers);
+    // Don't modify the cache headers from Pages unless you want to
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: headers
+    });
   }
 };

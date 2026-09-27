@@ -19,29 +19,64 @@ export default function CommercialExterior() {
   const [submitted, setSubmitted] = useState(false);
 
   const schema = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Commercial Exterior Maintenance",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "AXiM Systems"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Longview, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Tyler, TX"
+        },
+        {
+          "@type": "City",
+          "name": "Shreveport, LA"
+        },
+        {
+          "@type": "Place",
+          "name": "Greater Ark-La-Tex Region"
+        }
+      ],
+      "description": "Precision scaling for B2B corporate facilities, high-rises, and HOAs. We provide comprehensive exterior management through customized service contracts."
+    };
+
+  const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
+    "@type": "LocalBusiness",
+    "name": "AXiM Commercial Services",
+    "image": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
+    "@id": "https://axim.us.com/",
+    "url": "https://axim.us.com/",
+    "telephone": "1-800-555-AXIM",
+    "priceRange": "$$",
+    "areaServed": [
       {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "James R." },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "reviewBody": "Exceptional telemetry tracking and edge performance. The ability to manage our entire canvassing network from one command center is invaluable."
+        "@type": "City",
+        "name": "Longview",
+        "sameAs": "https://en.wikipedia.org/wiki/Longview,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Tyler",
+        "sameAs": "https://en.wikipedia.org/wiki/Tyler,_Texas"
+      },
+      {
+        "@type": "City",
+        "name": "Shreveport",
+        "sameAs": "https://en.wikipedia.org/wiki/Shreveport,_Louisiana"
+      },
+      {
+        "@type": "Place",
+        "name": "Greater Ark-La-Tex Region"
       }
-    ],
-    "serviceType": "Enterprise Commercial Exterior & Facility Maintenance",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "AXiM Business Development",
-      "image": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp"
-    }
+    ]
   };
 
   const handleSubmit = (e) => {
@@ -60,7 +95,7 @@ export default function CommercialExterior() {
         title="Commercial Exterior Management & Facility Cleaning"
         description="Enterprise commercial exterior and facility maintenance for high-rises, HOAs, and corporate campuses."
         type="website"
-        customSchema={[schema]}
+        customSchema={[schema, localBusinessSchema]}
       />
 
       <motion.div
