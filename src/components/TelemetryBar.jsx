@@ -5,11 +5,10 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { theme } from "../config/theme";
 import SafeIcon from '../common/SafeIcon';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
-import { getTelemetryHealthEndpoint } from '../lib/telemetry';
+import { getOfflineTelemetryQueue, getTelemetryHealthEndpoint } from '../lib/telemetry';
 export default function TelemetryBar({ label, color, initialValue }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
-  const telemetryQueue = useAximStore((state) => state.telemetryQueue);
   const isTelemetryPolling = useAximStore((state) => state.isTelemetryPolling);
   const isWeb3Authenticated = useAximStore((state) => state.isWeb3Authenticated);
 
@@ -17,24 +16,27 @@ export default function TelemetryBar({ label, color, initialValue }) {
   const [pulse, setPulse] = useState(false);
   const [latencyInfo, setLatencyInfo] = useState({ rtt: 50, type: '4G' });
   const [edgeRegion, setEdgeRegion] = useState('UNKNOWN_RAY');
+  const [offlineQueueCount, setOfflineQueueCount] = useState(() => getOfflineTelemetryQueue().length);
+  const [isHealthLoading, setIsHealthLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && navigator.connection) {
+    if (typeof window !== 'undefined') {
       setLatencyInfo({
-        rtt: navigator.connection.rtt || 50,
-        type: navigator.connection.effectiveType || '4G'
+        rtt: navigator.connection?.rtt || 50,
+        type: navigator.connection?.effectiveType || '4G'
       });
 
       const updateConnection = () => {
         setLatencyInfo({
-          rtt: navigator.connection.rtt || 50,
-          type: navigator.connection.effectiveType || '4G'
+          rtt: navigator.connection?.rtt || 50,
+          type: navigator.connection?.effectiveType || '4G'
         });
       };
 
-      navigator.connection.addEventListener('change', updateConnection);
+      navigator.connection?.addEventListener?.('change', updateConnection);
 
       const pingHealth = () => {
+        setIsHealthLoading(true);
         const start = Date.now();
         fetch(getTelemetryHealthEndpoint(), { signal: AbortSignal.timeout(3000) })
           .then(res => {
@@ -58,14 +60,18 @@ export default function TelemetryBar({ label, color, initialValue }) {
               .catch(() => {
                 setEdgeRegion('OFFLINE');
                 setLatencyInfo({ rtt: 0, type: 'LOCAL' });
+              })
+              .finally(() => {
+                setIsHealthLoading(false);
               });
-          });
+          })
+          .then(() => setIsHealthLoading(false));
       };
       pingHealth();
       const interval = setInterval(pingHealth, 15000);
       return () => {
         clearInterval(interval);
-        navigator.connection.removeEventListener('change', updateConnection);
+        navigator.connection?.removeEventListener?.('change', updateConnection);
       };
     }
   }, []);
@@ -75,16 +81,20 @@ export default function TelemetryBar({ label, color, initialValue }) {
         setPulse(true);
         setTimeout(() => setPulse(false), 300);
     };
+    const handleQueueUpdate = (event) => {
+        setOfflineQueueCount(event.detail?.count ?? getOfflineTelemetryQueue().length);
+        handleLocalTelemetryUpdate(event);
+    };
     if (typeof window !== 'undefined') {
         window.addEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
         window.addEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
-        window.addEventListener('axim-telemetry-queue-update', handleLocalTelemetryUpdate);
+        window.addEventListener('axim-telemetry-queue-update', handleQueueUpdate);
     }
     return () => {
         if (typeof window !== 'undefined') {
             window.removeEventListener('axim-telemetry-update', handleLocalTelemetryUpdate);
             window.removeEventListener('axim-telemetry-fallback-sync', handleLocalTelemetryUpdate);
-            window.removeEventListener('axim-telemetry-queue-update', handleLocalTelemetryUpdate);
+            window.removeEventListener('axim-telemetry-queue-update', handleQueueUpdate);
         }
     }
   }, []);
@@ -153,7 +163,14 @@ export default function TelemetryBar({ label, color, initialValue }) {
         : "text-axim-gold";
 
   const isOffline = edgeRegion === 'OFFLINE';
-  const isBuffering = telemetryQueue?.length > 0;
+  const isBuffering = offlineQueueCount > 0;
+  const queueStatus = isHealthLoading
+    ? <span className="inline-block h-3 w-20 animate-pulse rounded bg-zinc-600/60 align-middle" aria-label="Checking telemetry uplink" />
+    : edgeRegion === 'OFFLINE'
+      ? <span className="text-rose-400">UNREACHABLE</span>
+      : isBuffering
+        ? <span className="text-amber-400">BUFFERING OFFLINE</span>
+        : <span className="text-emerald-400">CONNECTED</span>;
 
   const statusDotClass = isOffline
     ? "bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
@@ -198,10 +215,10 @@ export default function TelemetryBar({ label, color, initialValue }) {
             Global Latency: {latencyInfo.rtt}ms (P95) // Cloudflare Edge Status: {edgeRegion === 'OFFLINE' ? 'Offline' : 'Operational'} // Active Nodes: 6
           </span>
           <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            QUEUE: {telemetryQueue?.length || 0} EVENTS
+            QUEUE: {offlineQueueCount} EVENTS
           </span>
           <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
+            EDGE_UPLINK: {queueStatus}
           </span>
           <span className="inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}
@@ -225,7 +242,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
             Global Latency: {latencyInfo.rtt}ms (P95) // Cloudflare Edge Status: {edgeRegion === 'OFFLINE' ? 'Offline' : 'Operational'} // Active Nodes: 6
           </span>
           <span className="hidden md:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
-            QUEUE: {telemetryQueue?.length || 0} EVENTS
+            QUEUE: {offlineQueueCount} EVENTS
           </span>
           <span title={`Uplink Status: ${edgeRegion === 'OFFLINE' ? 'Offline' : 'Connected'} | RPC Latency: ${latencyInfo.rtt}ms | Edge Region: ${edgeRegion}`} className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm relative group cursor-pointer">
             <SafeIcon
@@ -233,7 +250,7 @@ export default function TelemetryBar({ label, color, initialValue }) {
               className={`w-3 h-3 mr-2 ${edgeRegion === 'OFFLINE' ? 'text-rose-400' : isBuffering ? 'text-amber-400' : 'text-emerald-400'}`}
               aria-hidden="true"
             />
-            EDGE_UPLINK: {edgeRegion === 'OFFLINE' ? <span className="text-rose-400">UNREACHABLE</span> : (telemetryQueue?.length > 0 ? <span className="text-amber-400">BUFFERING OFFLINE</span> : <span className="text-emerald-400">CONNECTED</span>)}
+            EDGE_UPLINK: {queueStatus}
           </span>
           <span className="hidden sm:inline-flex text-[9px] font-mono text-zinc-300 uppercase tracking-widest bg-white/5 px-2.5 py-1 border border-white/10 rounded-md select-none shadow-sm backdrop-blur-sm">
             {isSupabaseConfigured ? '[Live Core Connected]' : '[Sessions: EDGE-CACHED]'}
