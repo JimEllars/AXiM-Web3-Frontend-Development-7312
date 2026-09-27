@@ -51,7 +51,7 @@ function persistOfflineQueue(queue) {
 function notifyQueueChanged() {
   if (typeof window === 'undefined') return;
   window.dispatchEvent(new CustomEvent('axim-telemetry-queue-update', {
-    detail: { count: memoryQueue.length + readOfflineQueue().length }
+    detail: { count: readOfflineQueue().length }
   }));
 }
 
@@ -145,7 +145,7 @@ export function getTelemetryStore() {
 }
 
 export function getOfflineTelemetryQueue() {
-  return [...memoryQueue, ...readOfflineQueue()];
+  return readOfflineQueue();
 }
 
 export function __resetTelemetryForTests() {

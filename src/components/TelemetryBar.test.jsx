@@ -21,6 +21,7 @@ describe('TelemetryBar Component', () => {
   afterEach(() => { cleanup(); });
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
     useAximStore.setState({
       telemetryQueue: [],
       telemetryCollection: [],
@@ -45,15 +46,26 @@ describe('TelemetryBar Component', () => {
     });
   });
 
-  it('renders buffering offline state when fetch fails', async () => {
+  it('renders a degraded state when the telemetry health check fails', async () => {
     global.fetch.mockRejectedValue(new Error('Network offline'));
-    useAximStore.setState({ telemetryQueue: [{ id: 1, type: 'test' }] });
+    localStorage.setItem('axim_telemetry_offline_queue', JSON.stringify([{ id: 1, type: 'test' }]));
 
     const { unmount } = render(<TelemetryBar label="System Status" color="axim-gold" initialValue={100} />);
 
     await waitFor(() => {
         expect(screen.getAllByText((content, element) => content.includes('QUEUE: 1 EVENTS')).length).toBeGreaterThan(0);
-        expect(screen.getAllByText((content, element) => content.includes('BUFFERING OFFLINE')).length).toBeGreaterThan(0);
+        expect(screen.getAllByText((content, element) => content.includes('UNREACHABLE')).length).toBeGreaterThan(0);
+    });
+  });
+
+  it('updates the offline queue count after a replay status event', async () => {
+    render(<TelemetryBar label="System Status" color="axim-gold" initialValue={100} />);
+
+    window.dispatchEvent(new CustomEvent('axim-telemetry-queue-update', { detail: { count: 3 } }));
+
+    await waitFor(() => {
+      expect(screen.getAllByText((content) => content.includes('QUEUE: 3 EVENTS')).length).toBeGreaterThan(0);
+      expect(screen.getAllByText((content) => content.includes('BUFFERING OFFLINE')).length).toBeGreaterThan(0);
     });
   });
 
