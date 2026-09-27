@@ -136,6 +136,42 @@ export default {
     const fallbackDesc = isArticleRoute && article ? escapeHtml((stripHtml(article.excerpt?.rendered)).slice(0, 250)) : 'AXiM Development provides practical automation, decentralized infrastructure, operational intelligence, and business tools.';
     const canonicalUrl = url.origin + url.pathname;
 
+
+    const isServiceRoute = ['/services/commercial-exterior', '/services/pressure-washing', '/services/window-cleaning'].includes(url.pathname);
+
+    let schemaInjection = `
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AXiM Development",
+      "url": "https://axim.us.com",
+      "logo": "https://wp.axim.us.com/wp-content/uploads/2026/09/axim-development-logo-on-dark-600w.webp"
+    }
+    </script>
+    `;
+
+    if (isServiceRoute) {
+      schemaInjection += `
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": ["LocalBusiness", "ProfessionalService"],
+        "name": "AXiM Development",
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "AXiM Development"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Longview", "containedInPlace": { "@type": "State", "name": "Texas" } },
+          { "@type": "City", "name": "Tyler", "containedInPlace": { "@type": "State", "name": "Texas" } },
+          { "@type": "City", "name": "Shreveport", "containedInPlace": { "@type": "State", "name": "Louisiana" } }
+        ]
+      }
+      </script>
+      `;
+    }
+
     const fallbackHtml = `
       <div style="display:none;" id="seo-fallback">
         <h1>${fallbackTitle}</h1>
@@ -148,7 +184,9 @@ export default {
           <a href="/terms">Terms</a>
         </nav>
       </div>
+      ${schemaInjection}
     `;
+
 
     let rewriter = new HTMLRewriter()
       .on('#root', new RootInjector(fallbackHtml))
