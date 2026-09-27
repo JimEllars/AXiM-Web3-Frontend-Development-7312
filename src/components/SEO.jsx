@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
-const DEFAULT_SOCIAL_IMAGE = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
+const DEFAULT_SOCIAL_IMAGE = "https://wp.axim.us.com/wp-content/uploads/2026/09/axim-development-logo-on-dark-600w.webp";
 
 export default function SEO({
   title = "AXiM Development",
@@ -30,7 +30,7 @@ export default function SEO({
     "@type": "Organization",
     "name": "AXiM Development",
     "url": "https://axim.us.com",
-    "logo": "https://wp.axim.us.com/wp-content/uploads/2026/09/AXiM-Development-1200x400-layout684-business-axim-axim-infrastructure-1l9s8d3.webp",
+    "logo": "https://wp.axim.us.com/wp-content/uploads/2026/09/axim-development-logo-on-dark-600w.webp",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
@@ -40,7 +40,29 @@ export default function SEO({
     }
   };
 
-  const finalSchemas = location.pathname === '/' ? [...customSchema, defaultOrgSchema, websiteSchema] : [...customSchema, defaultOrgSchema];
+
+  let localSchemas = [];
+  if (['/services/commercial-exterior', '/services/pressure-washing', '/services/window-cleaning'].includes(location.pathname)) {
+    localSchemas = [{
+      "@context": "https://schema.org",
+      "@type": ["LocalBusiness", "ProfessionalService"],
+      "name": "AXiM Development",
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "AXiM Development"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Longview", "containedInPlace": { "@type": "State", "name": "Texas" } },
+        { "@type": "City", "name": "Tyler", "containedInPlace": { "@type": "State", "name": "Texas" } },
+        { "@type": "City", "name": "Shreveport", "containedInPlace": { "@type": "State", "name": "Louisiana" } }
+      ]
+    }];
+  }
+
+  const finalSchemas = location.pathname === '/'
+    ? [...customSchema, ...localSchemas, defaultOrgSchema, websiteSchema]
+    : [...customSchema, ...localSchemas, defaultOrgSchema];
+
 
   const currentUrl = url || `https://axim.us.com${location.pathname}`;
   const metaImage = image || DEFAULT_SOCIAL_IMAGE;
