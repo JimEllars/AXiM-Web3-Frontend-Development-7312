@@ -47,14 +47,29 @@ class CanonicalInjector {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // Bypass on Non-GET & Dynamic Routes
     const acceptHeader = request.headers.get('accept') || '';
     const isHtmlRequest = acceptHeader.includes('text/html');
-
-    // Static assets bypass everything
     const isStaticAsset = url.pathname.includes('/assets/') ||
       /\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json|txt|xml)$/i.test(url.pathname);
+    const isGet = request.method === 'GET';
+    const hasAuth = request.headers.has('Authorization');
+    const shouldCache = isGet && !hasAuth && isHtmlRequest && !isStaticAsset;
+
+    let cache = (typeof caches !== 'undefined') ? caches.default : null;
+    if (shouldCache && cache) {
+      const cachedResponse = await cache.match(request);
+      if (cachedResponse) {
+        const responseWithHeader = new Response(cachedResponse.body, cachedResponse);
+        responseWithHeader.headers.set('X-Worker-Cache', 'HIT');
+        return responseWithHeader;
+      }
+    }
+
+
 
     if (isStaticAsset || !isHtmlRequest) {
       return fetchPagesOrigin(request, env);
@@ -172,6 +187,60 @@ export default {
       `;
     }
 
+
+    const pathnames = url.pathname.split('/').filter(x => x);
+    let breadcrumbItems = [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://axim.us.com/"
+      }
+    ];
+
+    let currentPath = "https://axim.us.com";
+    pathnames.forEach((segment, index) => {
+      currentPath += `/${segment}`;
+
+      const formatBreadcrumbLabel = (value) => {
+        const map = {
+          'business': 'Business Development',
+          'personal': 'Personal Development',
+          'tech': 'Tech Development',
+          'commercial-exterior': 'Commercial Exterior',
+          'window-cleaning': 'Window Cleaning',
+          'pressure-washing': 'Pressure Washing',
+          'nexus-crm-course': 'Nexus CRM Masterclass'
+        };
+        return map[value.toLowerCase()] || value.toUpperCase();
+      };
+
+      let name = formatBreadcrumbLabel(segment);
+
+      if (index === pathnames.length - 1 && isArticleRoute && article) {
+          name = stripHtml(article.title?.rendered) || name;
+      }
+
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        "position": index + 2,
+        "name": name,
+        "item": currentPath
+      });
+    });
+
+    const breadcrumbSchema = `
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": ${JSON.stringify(breadcrumbItems)}
+    }
+    </script>
+    `;
+
+    schemaInjection += breadcrumbSchema;
+
     const fallbackHtml = `
       <div style="display:none;" id="seo-fallback">
         <h1>${fallbackTitle}</h1>
@@ -204,13 +273,23 @@ export default {
 
     const response = rewriter.transform(rawResponse);
 
-    // Ensure we keep the correct content-type but don't cache forever if dynamic
     const headers = new Headers(response.headers);
-    // Don't modify the cache headers from Pages unless you want to
-    return new Response(response.body, {
+
+    const responseWithHeaders = new Response(response.body, {
       status: response.status,
       statusText: response.statusText,
       headers: headers
     });
+
+    if (shouldCache && response.status === 200 && cache) {
+      responseWithHeaders.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=600');
+      responseWithHeaders.headers.set('X-Worker-Cache', 'MISS');
+      if (ctx && ctx.waitUntil) {
+        ctx.waitUntil(cache.put(request, responseWithHeaders.clone()));
+      }
+    }
+
+    return responseWithHeaders;
+
   }
 };
