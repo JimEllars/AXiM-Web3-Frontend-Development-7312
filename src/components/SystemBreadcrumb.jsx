@@ -32,7 +32,7 @@ export default function SystemBreadcrumb() {
 
 
   const breadcrumbs = [
-    { name: 'AXM_CORE', path: '/dashboard' },
+    { name: 'Home', path: '/' },
     ...pathnames.map((value, index) => {
       const to = `/${pathnames.slice(0, index + 1).join('/')}`;
       return { name: formatBreadcrumbLabel(value || 'UNKNOWN'), path: to };
