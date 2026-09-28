@@ -49,8 +49,8 @@ beforeEach(() => {
       </QueryClientProvider>
     );
     const logoImg = screen.getByAltText('AXiM Development');
-    assert.ok(logoImg.className.includes('h-10'));
-    assert.ok(logoImg.className.includes('md:h-12'));
+    assert.ok(logoImg.className.includes('h-14'));
+    assert.ok(logoImg.className.includes('md:h-[68px]'));
   });
 
 });

@@ -58,9 +58,11 @@ export default function WPImage({ src, alt, className, post, priority, ...props 
     if (isTech) IconComponent = LuIcons.LuCpu;
 
     return (
-      <div className={`w-full h-full aspect-video bg-gradient-to-br from-onyx-800 to-onyx-950 border-b border-white/5 relative overflow-hidden flex items-center justify-center ${className || ''}`}>
+      <div className={`w-full h-full aspect-video bg-navy-900/60 border border-cyan-500/20 rounded-xl relative overflow-hidden flex flex-col items-center justify-center ${className || ''}`}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(253,208,35,0.1),transparent_70%)] pointer-events-none" />
-        <SafeIcon icon={IconComponent} className="w-24 h-24 text-white/5 absolute -bottom-4 -right-4" />
+        <SafeIcon icon={IconComponent} className="w-12 h-12 text-zinc-500 animate-pulse mb-2" />
+        <span className="text-zinc-500 text-xs font-mono uppercase tracking-widest">Media Offline</span>
+
 
         {props.categoryName && (
            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

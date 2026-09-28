@@ -118,6 +118,24 @@ const { slug } = useParams();
 
   useEffect(() => {
     let isMounted = true;
+
+    // Attach error handlers to img tags in the article content dynamically
+    setTimeout(() => {
+      if (typeof document !== 'undefined') {
+        const images = document.querySelectorAll('.prose-axim img');
+        images.forEach(img => {
+          img.addEventListener('error', function() {
+            this.style.display = 'none'; // Hide broken image
+            // Create a placeholder element and insert it before 'this'
+            const placeholder = document.createElement('div');
+            placeholder.className = 'w-full aspect-video bg-navy-900/60 border border-cyan-500/20 rounded-xl flex items-center justify-center my-4';
+            placeholder.innerHTML = '<span class="text-zinc-500 text-xs font-mono uppercase tracking-widest">Media Offline</span>';
+            this.parentNode.insertBefore(placeholder, this);
+          });
+        });
+      }
+    }, 100);
+
     async function loadArticle() {
       setIsLoading(true);
       try {
@@ -163,7 +181,11 @@ const { slug } = useParams();
     // GENERATE TOC
   useEffect(() => {
     if (article && article.content?.rendered) {
-      const rawHtml = DOMPurify.sanitize(article.content.rendered);
+      let htmlContent = article.content.rendered;
+      // Convert relative paths to absolute and ensure https
+      htmlContent = htmlContent.replace(/(?:src|data-src)=["']\/wp-content\/([^"']+)["']/gi, 'src="https://wp.axim.us.com/wp-content/$1"');
+      htmlContent = htmlContent.replace(/(?:src|data-src)=["']http:\/\/([^"']+)["']/gi, 'src="https://$1"');
+      const rawHtml = DOMPurify.sanitize(htmlContent);
       // We will parse the HTML, extract h2/h3, and give them IDs if they lack them
       if (typeof window !== 'undefined') {
         const parser = new DOMParser();
@@ -365,7 +387,10 @@ const { slug } = useParams();
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
               {/* WordPress Core Content Render (Restored Typography) */}
               {(() => {
-    let rawHtml = DOMPurify.sanitize(article.content?.rendered || '');
+    let htmlContent = article.content?.rendered || '';
+    htmlContent = htmlContent.replace(/(?:src|data-src)=["']\/wp-content\/([^"']+)["']/gi, 'src="https://wp.axim.us.com/wp-content/$1"');
+    htmlContent = htmlContent.replace(/(?:src|data-src)=["']http:\/\/([^"']+)["']/gi, 'src="https://$1"');
+    let rawHtml = DOMPurify.sanitize(htmlContent);
   if (typeof window !== 'undefined') {
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
