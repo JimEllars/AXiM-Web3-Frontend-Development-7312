@@ -5,7 +5,7 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { theme } from "../config/theme";
 import SafeIcon from '../common/SafeIcon';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
-import { getOfflineTelemetryQueue, getTelemetryHealthEndpoint } from '../lib/telemetry';
+import { getOfflineTelemetryQueue, ping } from '../lib/telemetry';
 export default function TelemetryBar({ label, color, initialValue }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const telemetryCollection = useAximStore((state) => state.telemetryCollection);
@@ -35,40 +35,20 @@ export default function TelemetryBar({ label, color, initialValue }) {
 
       navigator.connection?.addEventListener?.('change', updateConnection);
 
-      const pingHealth = () => {
+      const pingHealth = async () => {
         setIsHealthLoading(true);
-        const start = Date.now();
-        fetch(getTelemetryHealthEndpoint(), { signal: AbortSignal.timeout(3000) })
-          .then(res => {
-            if (!res.ok) throw new Error('Worker not 200');
-            const ray = res.headers.get('cf-ray');
-            if (ray) setEdgeRegion(ray.split('-')[1] || ray);
-            const currentLatency = Date.now() - start;
-            setLatencyInfo(prev => ({ ...prev, rtt: prev.rtt ? Math.floor((prev.rtt * 0.8) + (currentLatency * 0.2)) : currentLatency }));
-          })
-          .catch(() => {
-            fetch('/', { method: 'HEAD', signal: AbortSignal.timeout(3000) })
-              .then(res => {
-                if (!res.ok) {
-                  setEdgeRegion('OFFLINE');
-                  setLatencyInfo({ rtt: 0, type: 'LOCAL' });
-                  return;
-                }
-                const ray = res.headers.get('cf-ray');
-                if (ray) setEdgeRegion(ray.split('-')[1] || ray);
-              })
-              .catch(() => {
-                setEdgeRegion('OFFLINE');
-                setLatencyInfo({ rtt: 0, type: 'LOCAL' });
-              })
-              .finally(() => {
-                setIsHealthLoading(false);
-              });
-          })
-          .then(() => setIsHealthLoading(false));
+        const result = await ping();
+        if (result.success) {
+            setEdgeRegion(result.region);
+            setLatencyInfo(prev => ({ ...prev, rtt: prev.rtt ? Math.floor((prev.rtt * 0.8) + (result.rtt * 0.2)) : result.rtt }));
+        } else {
+            setEdgeRegion('OFFLINE');
+            setLatencyInfo({ rtt: 0, type: 'LOCAL' });
+        }
+        setIsHealthLoading(false);
       };
       pingHealth();
-      const interval = setInterval(pingHealth, 15000);
+      const interval = setInterval(pingHealth, 30000);
       return () => {
         clearInterval(interval);
         navigator.connection?.removeEventListener?.('change', updateConnection);

@@ -261,6 +261,9 @@ function App() {
           <Suspense fallback={<GlobalLoader />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
