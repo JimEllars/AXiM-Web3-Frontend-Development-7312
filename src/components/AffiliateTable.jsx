@@ -1,5 +1,5 @@
 import React from 'react';
-import { trackEvent } from '../lib/telemetry';
+import { logTelemetry, trackEvent } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 
@@ -43,7 +43,7 @@ export default function AffiliateTable({ products = [] }) {
                 href={product.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackEvent('affiliate_outbound_click', { product: product.name })}
+                onClick={() => logTelemetry('partner_click', { partner_id: product.name, source_page: window.location.pathname, target_url: product.link, timestamp: new Date().toISOString() })}
                 className={`flex items-center justify-center w-full py-3 px-4 text-xs font-black uppercase tracking-widest transition-all rounded-sm shadow-lg ${isTop ? 'bg-axim-gold text-black hover:bg-white hover:text-black' : 'bg-white/10 text-white hover:bg-white/20'}`}
               >
                 Get Started <SafeIcon icon={LuIcons.LuArrowUpRight} className="ml-2 w-4 h-4" />

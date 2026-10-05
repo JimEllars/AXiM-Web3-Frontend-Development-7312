@@ -95,10 +95,19 @@ export default function Consultation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const formDataObj = new FormData(e.target);
+    const turnstileResponse = formDataObj.get('cf-turnstile-response');
+    if (!turnstileResponse) {
+      logTelemetry('security_audit', { event: 'missing_turnstile_token', action: 'consultation_submit' });
+      useAximStore.getState().addToast('Security verification failed. Please check the captcha.', 'error');
+      setIsSubmitting(false);
+      return;
+    }
+
     setNetworkFault(false);
 
 
-    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
+
 
     const missingFields = Object.entries(formData).filter(([key, val]) => (key !== 'company' && !val)).map(([key]) => key);
     if (missingFields.length > 0) {
@@ -145,7 +154,8 @@ export default function Consultation() {
         customer_name: cleanData.name,
         subject: `[Consultation: ${cleanData.inquiryType}] ${cleanData.company || 'Independent'}`,
         description: cleanData.details,
-        source: 'consultation_form'
+        source: 'consultation_form',
+        turnstile_token: turnstileResponse
       };
 
       const { ciphertext, iv } = await encryptPayload(payloadSchema, secret);

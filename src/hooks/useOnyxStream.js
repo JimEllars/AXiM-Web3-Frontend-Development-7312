@@ -69,14 +69,13 @@ export function useOnyxStream() {
 
     const connectStream = async () => {
       try {
-        const endpoint = import.meta.env.VITE_ONYX_WORKER_URL || '/api/v1/onyx/stream';
+        const endpoint = '/api/v1/onyx/stream';
 
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': token ? `Bearer ${token}` : '',
-            'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || ''
+            'Authorization': token ? `Bearer ${token}` : ''
           },
           body: JSON.stringify({ message: text, context }),
           signal: abortControllerRef.current.signal

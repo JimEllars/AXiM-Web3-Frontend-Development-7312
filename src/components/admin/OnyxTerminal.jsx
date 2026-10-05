@@ -125,8 +125,7 @@ export default function OnyxTerminal({ isActive = true }) {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-AXiM-Internal-Key': import.meta.env.VITE_AXIM_INTERNAL_KEY || ''
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ key: kvKey, value: parsedValue })
       });

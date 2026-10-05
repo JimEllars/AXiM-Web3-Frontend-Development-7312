@@ -8,18 +8,7 @@ import { logTelemetry } from '../lib/telemetry';
 import WPImage from '../components/WPImage';
 
 const SkeletonCard = () => (
-  <div className="flex flex-col justify-between p-5 bg-[#050505] border border-white/5 shadow-2xl rounded-2xl animate-pulse min-h-[320px]">
-    <div className="w-full h-48 bg-white/5 rounded-xl mb-4" />
-    <div className="flex-1 flex flex-col justify-between">
-      <div>
-        <div className="w-16 h-3 bg-white/10 rounded-sm mb-4" />
-        <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-3" />
-        <div className="w-full h-4 bg-white/10 rounded-sm mb-1" />
-        <div className="w-5/6 h-4 bg-white/10 rounded-sm" />
-      </div>
-      <div className="w-24 h-4 bg-white/10 rounded-sm mt-6" />
-    </div>
-  </div>
+  <div className="animate-pulse bg-gray-800/50 rounded-xl h-64 border border-white/5 shadow-2xl"></div>
 );
 
 export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectionSubtitle, limit = 3 }) {

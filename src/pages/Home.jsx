@@ -201,7 +201,7 @@ export default function Home() {
           learnMorePath="https://swiy.co/Teach1"
           startNowUrl="https://swiy.co/Teach1"
           theme="purple"
-          onClick={() => logTelemetry('partner_click', { partner: 'teachable', zone: 'homepage_promo' })}
+          onClick={() => logTelemetry('partner_click', { partner_id: 'teachable', source_page: window.location.pathname, target_url: 'https://swiy.co/Teach1', timestamp: new Date().toISOString() })}
         />
 
         {/* 4. Spotlight Category (Strictly Isolated) */}
@@ -223,7 +223,7 @@ export default function Home() {
           learnMorePath="/partners/powur-solar"
           startNowUrl="/partners/powur-solar"
           theme="gold"
-          onClick={() => logTelemetry('partner_click', { partner: 'powur_solar', zone: 'homepage_promo' })}
+          onClick={() => logTelemetry('partner_click', { partner_id: 'powur_solar', source_page: window.location.pathname, target_url: 'https://powur.com/james.ellars/join', timestamp: new Date().toISOString() })}
         />
 
         {/* 6. Featured Application Spotlight */}
