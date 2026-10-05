@@ -266,3 +266,42 @@ if (typeof window !== 'undefined') {
   window.addEventListener('pagehide', () => { void flushTelemetryQueue(true); });
   window.addEventListener('beforeunload', () => { void flushTelemetryQueue(true); });
 }
+
+export async function ping() {
+  const start = Date.now();
+  try {
+    const res = await fetch(getTelemetryHealthEndpoint(), { signal: AbortSignal.timeout(3000) });
+    if (!res.ok) throw new Error('Worker not 200');
+    const ray = res.headers.get('cf-ray');
+    const region = ray ? (ray.split('-')[1] || ray) : 'UNKNOWN_RAY';
+    return {
+      success: true,
+      rtt: Date.now() - start,
+      region
+    };
+  } catch (err) {
+    try {
+      const fbStart = Date.now();
+      const fbRes = await fetch('/', { method: 'HEAD', signal: AbortSignal.timeout(3000) });
+      if (!fbRes.ok) throw new Error('Fallback failed');
+      const ray = fbRes.headers.get('cf-ray');
+      const region = ray ? (ray.split('-')[1] || ray) : 'UNKNOWN_RAY';
+      return {
+        success: true,
+        rtt: Date.now() - fbStart,
+        region
+      };
+    } catch {
+      return {
+        success: false,
+        rtt: 0,
+        region: 'OFFLINE'
+      };
+    }
+  }
+}
+
+export const telemetry = {
+  track: trackEvent,
+  ping
+};

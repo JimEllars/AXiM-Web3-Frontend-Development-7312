@@ -99,4 +99,29 @@ describe('Telemetry', () => {
     await vi.waitFor(() => expect(global.fetch).toHaveBeenCalled());
   });
 
+  it('ping function handles success', async () => {
+    global.fetch.mockResolvedValueOnce({ ok: true, headers: new Headers({ 'cf-ray': '1234-XYZ' }) });
+    const { ping } = await import('./telemetry');
+    const result = await ping();
+    expect(result.success).toBe(true);
+    expect(result.region).toBe('XYZ');
+  });
+
+  it('ping function handles fallback success', async () => {
+    global.fetch.mockRejectedValueOnce(new Error('Network error'));
+    global.fetch.mockResolvedValueOnce({ ok: true, headers: new Headers({ 'cf-ray': '5678-ABC' }) });
+    const { ping } = await import('./telemetry');
+    const result = await ping();
+    expect(result.success).toBe(true);
+    expect(result.region).toBe('ABC');
+  });
+
+  it('ping function handles complete offline failure', async () => {
+    global.fetch.mockRejectedValueOnce(new Error('Network error'));
+    global.fetch.mockRejectedValueOnce(new Error('Fallback error'));
+    const { ping } = await import('./telemetry');
+    const result = await ping();
+    expect(result.success).toBe(false);
+    expect(result.region).toBe('OFFLINE');
+  });
 });
