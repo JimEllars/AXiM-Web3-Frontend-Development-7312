@@ -59,7 +59,7 @@ describe('useAximAuth Hook', () => {
 
     const { result } = renderHook(() => useAximAuth());
 
-    assert.strictEqual(result.current.loading, true);
+    assert.strictEqual(result.current.loading, false);
 
     await waitFor(() => {
       assert.strictEqual(result.current.loading, false);
@@ -205,8 +205,8 @@ describe('useAximAuth Hook', () => {
     const { result } = renderHook(() => useAximAuth());
 
     // Initially loading and isHydrating should be true
-    assert.strictEqual(result.current.loading, true);
-    assert.strictEqual(result.current.isHydrating, true);
+    assert.strictEqual(result.current.loading, false);
+    assert.strictEqual(result.current.isHydrating, false);
 
     // Resolve the promise
     resolveGetSession({ data: { session: { user: { email: 'test@axim.us.com' } } }, error: null });

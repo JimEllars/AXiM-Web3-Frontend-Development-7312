@@ -92,7 +92,7 @@ export async function exchangePassportToken(token) {
  * Performs a background check against AXiM Passport for an active session.
  */
 export async function checkPassportSsoSession() {
-  const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/session`;
+  const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/auth/verify-token`;
 
   let retries = 1;
   let delay = 500;
@@ -104,7 +104,7 @@ export async function checkPassportSsoSession() {
 
     try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal

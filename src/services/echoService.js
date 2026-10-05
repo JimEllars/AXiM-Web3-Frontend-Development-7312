@@ -5,12 +5,8 @@
 import { localStore } from '../lib/persistence.js';
 
 export const replayRecords = async (recordIds) => {
-  const workerUrl = import.meta.env.VITE_ECHO_WORKER_URL || 'https://echo-worker.axim.workers.dev';
-  const internalKey = import.meta.env.VITE_AXIM_INTERNAL_KEY;
+  const workerUrl = import.meta.env.VITE_CORE_API_URL || '';
 
-  if (!internalKey) {
-    console.warn('VITE_AXIM_INTERNAL_KEY is not set. Replay may fail.');
-  }
 
   let retryCount = 0;
   while (retryCount <= 2) {
@@ -19,7 +15,7 @@ export const replayRecords = async (recordIds) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${internalKey}`
+          'Authorization': `Bearer ${localStorage.getItem('axim_session_token') || ''}`
         },
         body: JSON.stringify({ recordIds }),
         signal: AbortSignal.timeout(3000)

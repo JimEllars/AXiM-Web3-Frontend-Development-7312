@@ -23,27 +23,13 @@ export function useAximAuth() {
 
 
     if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-       return { email: offline.session?.user?.email, clearance_level: 1};
+       const email = offline.session?.user?.email; return { email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(email) ? 1 : 2};
     }
     return null;
   });
 
-  const [loading, setLoading] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-      return false;
-    }
-    return true;
-  });
-  const [isHydrating, setIsHydrating] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const offline = localStore.getOfflineSession();
-    if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
-      return false;
-    }
-    return true;
-  });
+  const [loading, setLoading] = useState(false);
+  const [isHydrating, setIsHydrating] = useState(false);
   const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
 
@@ -82,7 +68,7 @@ export function useAximAuth() {
        if (isMounted) {
            setSession(offline.session);
            if (offline.session && offline.session.user) {
-               setProfile({ email: offline.session.user.email, clearance_level: 1});
+               const profileData = { email: offline.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(offline.session.user.email) ? 1 : 2}; setProfile(profileData);
 trackEvent('auth_success', { method: 'offline_cache' });
            }
        }
@@ -91,7 +77,7 @@ trackEvent('auth_success', { method: 'offline_cache' });
        checkPassportSsoSession().then((ssoData) => {
          if (isMounted && ssoData && ssoData.session) {
             setSession(ssoData.session);
-            setProfile(ssoData.profile || { email: ssoData.session?.user?.email, clearance_level: 1 });
+            const email = ssoData.session?.user?.email; const profileData = ssoData.profile || { email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(email) ? 1 : 2 }; setProfile(profileData);
 trackEvent('auth_success', { method: 'passport_sso' });
             const store = useAximStore.getState();
             if (store.setUserSession) store.setUserSession(ssoData.session); // Hydrate Zustand silently
@@ -114,7 +100,7 @@ trackEvent('auth_success', { method: 'passport_sso' });
             setSession(currentSession);
             localStore.saveOfflineSession(currentSession);
             if (currentSession) {
-               setProfile({ email: currentSession.user.email, clearance_level: 1});
+               const profileData = { email: currentSession.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(currentSession.user.email) ? 1 : 2}; setProfile(profileData);
 trackEvent('auth_success', { method: 'supabase' });
             }
           }
@@ -126,7 +112,7 @@ trackEvent('auth_success', { method: 'supabase' });
           if (cachedSession && cachedSession.timestamp && Date.now() - cachedSession.timestamp < 15 * 60 * 1000) {
             setSession(cachedSession.session);
             if (cachedSession.session && cachedSession.session.user) {
-               setProfile({ email: cachedSession.session.user.email, clearance_level: 1});
+               const profileData = { email: cachedSession.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(cachedSession.session.user.email) ? 1 : 2}; setProfile(profileData);
             }
           }
         }
@@ -146,7 +132,7 @@ trackEvent('auth_success', { method: 'supabase' });
       if (cachedSession?.timestamp && Date.now() - cachedSession.timestamp < 15 * 60 * 1000) {
         setSession(cachedSession.session);
         if (cachedSession.session?.user) {
-          setProfile({ email: cachedSession.session.user.email, clearance_level: 1 });
+          const profileData = { email: cachedSession.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(cachedSession.session.user.email) ? 1 : 2}; setProfile(profileData);
         }
         return true;
       }
@@ -164,7 +150,7 @@ trackEvent('auth_success', { method: 'supabase' });
               if (!isMounted) return;
               if (data.session) {
                 setSession(data.session);
-                setProfile({ email: data.session.user.email, clearance_level: 1 });
+                const profileData = { email: data.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(data.session.user.email) ? 1 : 2}; setProfile(profileData);
                 localStore.saveOfflineSession(data.session);
               } else if (!restoreCachedSession()) {
                 setSession(null);
@@ -185,7 +171,7 @@ trackEvent('auth_success', { method: 'supabase' });
         if (isValid) {
           setSession(currentSession);
           if (currentSession) {
-              setProfile({ email: currentSession.user.email, clearance_level: 1});
+              const profileData = { email: currentSession.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(currentSession.user.email) ? 1 : 2}; setProfile(profileData);
               localStore.saveOfflineSession(currentSession);
           } else {
               setProfile(null);
@@ -252,7 +238,7 @@ trackEvent('auth_success', { method: 'supabase' });
            if (isMounted) {
              setSession(offline.session);
              if (offline.session && offline.session.user) {
-               setProfile({ email: offline.session.user.email, clearance_level: 1});
+               const profileData = { email: offline.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(offline.session.user.email) ? 1 : 2}; setProfile(profileData);
              }
            }
         }
@@ -309,7 +295,7 @@ trackEvent('auth_success', { method: 'supabase' });
          if (offline && offline.timestamp && Date.now() - offline.timestamp < 15 * 60 * 1000) {
            setSession(offline.session);
            if (offline.session && offline.session.user) {
-             setProfile({ email: offline.session.user.email, clearance_level: 1});
+             const profileData = { email: offline.session.user.email, clearance_level: ['james.ellars@axim.us.com', 'jrellars@gmail.com'].includes(offline.session.user.email) ? 1 : 2}; setProfile(profileData);
            }
          }
       }
