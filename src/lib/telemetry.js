@@ -21,7 +21,7 @@ function readOfflineQueue() {
   try {
     const queue = JSON.parse(window.localStorage.getItem(OFFLINE_QUEUE_KEY) || '[]');
     return Array.isArray(queue) ? queue : [];
-  } catch {
+  } catch (err) { console.warn('[Telemetry] Non-critical telemetry dispatch error:', err);
     return [];
   }
 }
@@ -43,7 +43,7 @@ function persistOfflineQueue(queue) {
   const trimmed = trimQueue(queue);
   try {
     window.localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(trimmed));
-  } catch {
+  } catch (err) { console.warn('[Telemetry] Non-critical telemetry dispatch error:', err);
     // Telemetry must never interfere with application interaction.
   }
 }
@@ -71,8 +71,8 @@ function configuredTelemetryEndpoint() {
 function telemetryEndpoint() {
   const configured = configuredTelemetryEndpoint();
   return configured
-    ? new URL('/api/telemetry/ingest', configured).toString()
-    : '/api/telemetry/ingest';
+    ? new URL('/api/v1/telemetry/ingest', configured).toString()
+    : '/api/v1/telemetry/ingest';
 }
 
 export function getTelemetryHealthEndpoint() {
@@ -101,7 +101,7 @@ async function dispatchBatch(events, useBeacon) {
       if (navigator.sendBeacon(endpoint, new Blob([payload], { type: 'application/json' }))) {
         return true;
       }
-    } catch {
+    } catch (err) { console.warn('[Telemetry] Non-critical telemetry dispatch error:', err);
       // Continue with fetch so unloading pages still have a best-effort path.
     }
   }
@@ -118,8 +118,9 @@ async function dispatchBatch(events, useBeacon) {
       });
 
       if (response.ok) return true;
+      if (!response.ok && response.status === 405) { console.warn('[Telemetry] Endpoint returned 405; queuing payload in transient session buffer.'); }
       if (response.status < 500) return false;
-    } catch {
+    } catch (err) { console.warn('[Telemetry] Non-critical telemetry dispatch error:', err);
       // Network failures are retryable and persist after the final attempt.
     }
 
@@ -291,7 +292,7 @@ export async function ping() {
         rtt: Date.now() - fbStart,
         region
       };
-    } catch {
+    } catch (err) { console.warn('[Telemetry] Non-critical telemetry dispatch error:', err);
       return {
         success: false,
         rtt: 0,

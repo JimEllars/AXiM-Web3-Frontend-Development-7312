@@ -44,7 +44,7 @@ describe('Telemetry', () => {
     await flushTelemetryQueue();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://telemetry.axim.us.com/api/telemetry/ingest',
+      'https://telemetry.axim.us.com/api/v1/telemetry/ingest',
       expect.objectContaining({ method: 'POST' })
     );
   });

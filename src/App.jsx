@@ -28,6 +28,7 @@ import { createWallet, inAppWallet } from 'thirdweb/wallets';
 
 const Home = lazy(() => import('./pages/Home'));
 const Articles = lazy(() => import('./pages/Articles'));
+const Tools = lazy(() => import('./pages/Tools'));
 
 const Consultation = lazy(() => import('./pages/Consultation'));
 const Support = lazy(() => import('./pages/Support'));
@@ -261,8 +262,6 @@ function App() {
           <Suspense fallback={<GlobalLoader />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
-            <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
