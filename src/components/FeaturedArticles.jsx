@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { logTelemetry } from "../lib/telemetry";
@@ -81,7 +82,7 @@ export default function FeaturedArticles({
           <div className="w-2 h-2 bg-axim-purple rounded-full animate-pulse" />
           {title}
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[480px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[480px]">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
@@ -140,7 +141,7 @@ export default function FeaturedArticles({
       </h2>
 
       {/* Grid Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[480px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[480px]">
         {validArticles.map((article, index) => (
           <ArticleCard
             article={article}
@@ -148,6 +149,11 @@ export default function FeaturedArticles({
             key={article.id || index}
           />
         ))}
+      </div>
+      <div className="mt-12 text-center">
+        <Link className="inline-block px-8 py-3 bg-axim-purple text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)]" to="/articles">
+          View All Articles
+        </Link>
       </div>
     </motion.div>
   );

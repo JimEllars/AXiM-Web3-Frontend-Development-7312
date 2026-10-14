@@ -209,7 +209,7 @@ export default function Home() {
           <FeaturedArticles
             title="Software Spotlight"
             categorySlug="software-spotlight"
-            limit={6}
+            limit={4}
             excludeIds={excludeDailyNewsIds}
             excludeCategories={strictCategoryExclusions}
           />
