@@ -152,7 +152,7 @@ export default function Business() {
         </div>
 
         <CategoryArticleFeed
-          categorySlug="business"
+          categorySlug="business-development"
           sectionTitle="Business Development Briefings & Strategy"
           sectionSubtitle="Field operations, enterprise scaling models, and market intelligence."
           limit={6}

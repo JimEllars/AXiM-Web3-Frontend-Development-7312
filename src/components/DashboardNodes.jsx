@@ -79,16 +79,7 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.asguard === 'operational' ? 'axim-gold' : 'red-500'),
       pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.asguard !== 'operational'
     },
-    {
-      id: 'Onboard1',
-      type: 'Satellite App',
-      url: 'https://greenmachine.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.greenmachine === 'operational' ? 'Operational' : 'Degraded'),
-      metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
-      icon: LuCpu,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.greenmachine === 'operational' ? 'axim-gold' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.greenmachine !== 'operational'
-    },
+
     {
       id: 'Ground Game',
       type: 'Satellite App',

@@ -165,9 +165,9 @@ export default function Home() {
                   </span>
                 )}
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" role="main">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full relative z-10" role="main">
                 {isNewsLoading ? (
-                  [1,2,3,4,5,6].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
+                  [1,2,3,4].map(i => <div key={i} className="min-h-[300px] bg-[#050505] border border-white/5 rounded-sm animate-pulse" />)
                 ) : dailyNews.length === 0 ? (
                   <div className="col-span-1 md:col-span-3 lg:col-span-3 bg-[#050505] border border-white/5 p-8 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest">[ INTELLIGENCE FEED SYNCHRONIZING WITH EDGE NODE ]
                     <button onClick={handleRetryFetch} className="mt-4 px-4 py-1 text-xs border border-onyx-600 text-onyx-400 hover:text-white transition-colors block mx-auto">Retry Connection</button></div>
@@ -184,7 +184,7 @@ export default function Home() {
 
               <div className="mt-12 flex justify-center w-full">
                 <Link to="/articles" onMouseEnter={handleSpeculativeWarmup} onClick={() => logTelemetry('see_all_articles_click', { origin: 'home_daily_news' })}
-                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#090909] hover:bg-[#0f0f0f] border border-white/10 hover:border-axim-purple/50 text-xs font-mono tracking-widest text-zinc-300 hover:text-white uppercase transition-all duration-300 rounded-sm shadow-lg"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-axim-gold text-black font-black uppercase tracking-widest text-xs hover:bg-white transition-colors shadow-[0_0_20px_rgba(255,234,0,0.2)] rounded-sm"
                 >
                   See All Articles
                   <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>

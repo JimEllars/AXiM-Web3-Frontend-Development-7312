@@ -99,14 +99,14 @@ export default function Reviews({ category = "all" }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-onyx-900/60 border border-white/10 rounded-lg p-6 backdrop-blur-md flex flex-col h-full"
+              className="bg-onyx-900/60 border border-white/10 rounded-lg p-6 backdrop-blur-md flex flex-col h-full group hover:-translate-y-1 transition-all duration-300"
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(review.rating)].map((_, j) => (
                   <SafeIcon key={j} icon={LuStar} className="w-4 h-4 text-axim-gold fill-axim-gold" />
                 ))}
               </div>
-              <p className="text-zinc-300 mb-6 flex-grow">"{review.text}"</p>
+              <p className="text-zinc-300 mb-6 flex-grow group-hover:text-white transition-colors duration-300">"{review.text}"</p>
               <div className="mt-auto border-t border-white/10 pt-4">
                 <div className="font-bold text-white">{review.name}</div>
                 <div className="text-xs text-zinc-500 uppercase tracking-widest">{review.company}</div>

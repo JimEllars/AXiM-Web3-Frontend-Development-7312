@@ -209,7 +209,7 @@ export default function Personal() {
       </section>
 
       <CategoryArticleFeed
-        categorySlug="personal"
+        categorySlug="personal-development"
         sectionTitle="Personal Development Insights & Guides"
         sectionSubtitle="In-depth perspectives on cognitive functions, emotional mastery, and individual actualization."
         limit={6}
