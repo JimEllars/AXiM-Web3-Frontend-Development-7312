@@ -9,7 +9,6 @@ const features = [
   { icon: LuIcons.LuActivity, title: "SpeedReport.org", desc: "Edge Network Diagnostics", url: "https://speedreport.org", external: true },
   { icon: LuIcons.LuZap, title: "Support", desc: "Access the AXiM Support System and ticket dashboard.", url: "https://support.axim.us.com" },
   { icon: LuIcons.LuShieldCheck, title: "Nexus CRM", desc: "Enterprise security cockpit and threat management.", url: "https://asguard.axim.us.com" },
-  { icon: LuIcons.LuRefreshCw, title: "Onboard1", desc: "Automated scaling and instance deployment system.", url: "https://greenmachine.axim.us.com" },
   { icon: LuIcons.LuPhone, title: "B2B Scraping Services", desc: "B2B Scraping Services Telephony Core for operational communications.", url: "https://voice.axim.us.com" },
   { icon: LuIcons.LuGlobe, title: "Ground Game", desc: "Canvassing and field operations logistics hub.", url: "https://groundgame.axim.us.com" },
   { icon: LuIcons.LuBriefcase, title: "Personality Test", desc: "Executive metrics and macro-level dashboards.", url: "https://ceodept.axim.us.com" }

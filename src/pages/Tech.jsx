@@ -173,7 +173,7 @@ export default function Tech() {
 
 
       <CategoryArticleFeed
-        categorySlug="tech"
+        categorySlug="tech-development"
         sectionTitle="Technology, AI & Web3 Architecture"
         sectionSubtitle="Edge computing, decentralized mesh networks, and autonomous AI systems."
         limit={6}
