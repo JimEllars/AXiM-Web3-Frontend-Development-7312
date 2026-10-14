@@ -1,5 +1,6 @@
 import React, {  useState , useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
@@ -13,17 +14,6 @@ import { useAximStore } from '../store/useAximStore';
 
 export default function Consultation() {
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
 
   const { scrollYProgress } = useScroll();
 
@@ -38,6 +28,7 @@ export default function Consultation() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const [networkFault, setNetworkFault] = useState(false);
   const [formData, setFormData] = useState({ inquiryType: '', name: '', email: '', company: '', details: '' });
   const { isWeb3Authenticated, walletAddress } = useAximStore();
@@ -95,8 +86,7 @@ export default function Consultation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const formDataObj = new FormData(e.target);
-    const turnstileResponse = formDataObj.get('cf-turnstile-response');
+    const turnstileResponse = turnstileToken;
     if (!turnstileResponse) {
       logTelemetry('security_audit', { event: 'missing_turnstile_token', action: 'consultation_submit' });
       useAximStore.getState().addToast('Security verification failed. Please check the captcha.', 'error');
@@ -304,7 +294,7 @@ export default function Consultation() {
                     </div>
 
 
-                    <div className="cf-turnstile mt-4" data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} data-theme="dark"></div>
+                    <Turnstile siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"} options={{ theme: "dark" }} onSuccess={(token) => setTurnstileToken(token)} className="mt-4" />
 
                     <button onClick={() => logTelemetry('consultation_booking_initiated', { serviceType: formData.inquiryType || 'general_consultation' })} disabled={isSubmitting} type="submit"
  className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">

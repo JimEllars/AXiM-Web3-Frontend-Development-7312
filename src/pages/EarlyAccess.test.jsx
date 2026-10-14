@@ -107,11 +107,7 @@ describe('EarlyAccess Component', () => {
 
   it('handles failed subscription', async () => {
     vi.useRealTimers();
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: false,
-      })
-    );
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
     import.meta.env.VITE_AXIM_CORE_API_URL = 'http://test.url';
     import.meta.env.VITE_AXIM_CORE_ANON_KEY = 'test-secret';
 
