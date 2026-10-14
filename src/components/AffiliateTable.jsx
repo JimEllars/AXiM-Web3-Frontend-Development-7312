@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { logTelemetry, trackEvent } from '../lib/telemetry';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -22,7 +22,25 @@ export default function AffiliateTable({ products = [] }) {
               </div>
             )}
 
-            <div className={`mt-${isTop ? '4' : '0'} flex-grow`}>
+            {product.image && (
+                <div className="w-full h-32 mb-4 relative overflow-hidden rounded-sm bg-navy-900/60 border border-cyan-500/20 flex items-center justify-center">
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                        }}
+                    />
+                    <div className="hidden absolute inset-0 items-center justify-center bg-navy-900/60 flex-col gap-2">
+                        <SafeIcon icon={LuIcons.LuTrendingUp} className="w-8 h-8 text-zinc-500" />
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{product.name}</span>
+                    </div>
+                </div>
+            )}
+
+            <div className={`mt-${isTop && !product.image ? '4' : '0'} flex-grow`}>
               <h3 className="text-xl font-black text-white uppercase tracking-wider mb-2">{product.name}</h3>
               <p className="text-sm text-zinc-400 mb-6">{product.description}</p>
 

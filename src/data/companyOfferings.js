@@ -77,6 +77,15 @@ export const coreLinks = [
 
 export const affiliateProducts = [
   {
+    name: "ClickRank AI",
+    category: "SEO / Marketing",
+    link: "https://clickrank.com",
+    description: "AI-driven SEO optimization and ranking utility.",
+    features: ["Keyword analysis", "Content scoring", "Rank tracking"],
+    isTopChoice: false,
+    image: "https://wp.axim.us.com/wp-content/uploads/2026/09/clickrank-placeholder.webp"
+  },
+  {
     name: "Teachable",
     category: "Education / Course Creation",
     link: "https://swiy.co/Teach1",
