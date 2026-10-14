@@ -185,7 +185,7 @@ const { slug } = useParams();
       // Convert relative paths to absolute and ensure https
       htmlContent = htmlContent.replace(/(?:src|data-src)=["']\/wp-content\/([^"']+)["']/gi, 'src="https://wp.axim.us.com/wp-content/$1"');
       htmlContent = htmlContent.replace(/(?:src|data-src)=["']http:\/\/([^"']+)["']/gi, 'src="https://$1"');
-      const rawHtml = DOMPurify.sanitize(htmlContent);
+      const rawHtml = DOMPurify.sanitize(htmlContent, { ADD_TAGS: ['img'], ADD_ATTR: ['src', 'alt', 'srcset', 'loading', 'width', 'height'] });
       // We will parse the HTML, extract h2/h3, and give them IDs if they lack them
       if (typeof window !== 'undefined') {
         const parser = new DOMParser();
@@ -390,7 +390,7 @@ const { slug } = useParams();
     let htmlContent = article.content?.rendered || '';
     htmlContent = htmlContent.replace(/(?:src|data-src)=["']\/wp-content\/([^"']+)["']/gi, 'src="https://wp.axim.us.com/wp-content/$1"');
     htmlContent = htmlContent.replace(/(?:src|data-src)=["']http:\/\/([^"']+)["']/gi, 'src="https://$1"');
-    let rawHtml = DOMPurify.sanitize(htmlContent);
+    let rawHtml = DOMPurify.sanitize(htmlContent, { ADD_TAGS: ['img'], ADD_ATTR: ['src', 'alt', 'srcset', 'loading', 'width', 'height'] });
   if (typeof window !== 'undefined') {
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
