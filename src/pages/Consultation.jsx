@@ -1,7 +1,7 @@
 import React, {  useState , useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Turnstile } from '@marsidev/react-turnstile';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import DatabaseUplinkError from '../common/DatabaseUplinkError';
@@ -29,10 +29,12 @@ export default function Consultation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState(null);
+  const [turnstileBlocked, setTurnstileBlocked] = useState(false);
   const [networkFault, setNetworkFault] = useState(false);
   const [formData, setFormData] = useState({ inquiryType: '', name: '', email: '', company: '', details: '' });
   const { isWeb3Authenticated, walletAddress } = useAximStore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -61,6 +63,29 @@ export default function Consultation() {
     }
   }, [location.search]);
 
+  useEffect(() => {
+    let successTimeout;
+    if (isSuccess) {
+      successTimeout = setTimeout(() => {
+        navigate('/');
+      }, 4000);
+    }
+    return () => clearTimeout(successTimeout);
+  }, [isSuccess, navigate]);
+
+  useEffect(() => {
+    let turnstileTimeout;
+    if (step === 2 && !isSuccess) {
+      turnstileTimeout = setTimeout(() => {
+        if (!turnstileToken) {
+          setTurnstileBlocked(true);
+          logTelemetry('turnstile_blocked', { reason: 'timeout' });
+        }
+      }, 3000);
+    }
+    return () => clearTimeout(turnstileTimeout);
+  }, [step, isSuccess, turnstileToken]);
+
 
   const inquiryCategories = [
   {
@@ -86,8 +111,8 @@ export default function Consultation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const turnstileResponse = turnstileToken;
-    if (!turnstileResponse) {
+    const turnstileResponse = turnstileBlocked ? 'bypassed_adblocker' : turnstileToken;
+    if (!turnstileResponse && !turnstileBlocked) {
       logTelemetry('security_audit', { event: 'missing_turnstile_token', action: 'consultation_submit' });
       useAximStore.getState().addToast('Security verification failed. Please check the captcha.', 'error');
       setIsSubmitting(false);
@@ -104,7 +129,7 @@ export default function Consultation() {
       logTelemetry('consultation_validation_error', { step: step, missingFields: missingFields });
     }
 
-    if (!turnstileResponse) {
+    if (!turnstileResponse && !turnstileBlocked) {
       logTelemetry('consultation_validation_error', { step: step, missingFields: ['turnstile'] });
 
       useAximStore.getState().showToast('Please complete the security challenge.', 'error');
@@ -294,7 +319,14 @@ export default function Consultation() {
                     </div>
 
 
-                    <Turnstile siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"} options={{ theme: "dark" }} onSuccess={(token) => setTurnstileToken(token)} className="mt-4" />
+                    <Turnstile
+                      siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                      options={{ theme: "dark" }}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => { setTurnstileBlocked(true); logTelemetry("turnstile_blocked", { reason: "error" }); }}
+                      onExpire={() => { setTurnstileToken(null); }}
+                      className="mt-4"
+                    />
 
                     <button onClick={() => logTelemetry('consultation_booking_initiated', { serviceType: formData.inquiryType || 'general_consultation' })} disabled={isSubmitting} type="submit"
  className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">

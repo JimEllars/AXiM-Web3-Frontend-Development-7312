@@ -111,6 +111,20 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
     window.location.href = launchUrl;
   };
 
+  if (!nodeStatuses || liveMetrics.latency === null) {
+    return (
+      <div className="grid grid-cols-1 gap-4 min-h-[500px]">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="p-4 border border-cyan-500/20 bg-onyx-900/50 rounded-sm animate-pulse h-48">
+            <div className="w-12 h-12 bg-white/10 rounded-sm mb-6"></div>
+            <div className="w-3/4 h-6 bg-white/10 rounded-sm mb-2"></div>
+            <div className="w-1/2 h-4 bg-white/5 rounded-sm"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4 min-h-[500px]">
       {nodes.map((node) => (
