@@ -2,6 +2,7 @@ import { useWalletBalance } from 'thirdweb/react';
 import { arbitrum } from 'thirdweb/chains';
 import { client } from '../lib/thirdweb-client';
 import React, { useState } from 'react';
+import GlobalLoader from '../components/GlobalLoader';
 import SEO from '../components/SEO';
 import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
@@ -54,6 +55,11 @@ const [extractingId, setExtractingId] = useState(null);
     }
   }, [isWeb3Authenticated, walletAddress, vaultedAssets]);
 
+
+  // Loading State
+  if (useAximAuth().loading) {
+    return <GlobalLoader loadingMessage="Authenticating Profile..." />;
+  }
 
   // Strict Authentication Gate
   if (!session && !isWeb3Authenticated) {
