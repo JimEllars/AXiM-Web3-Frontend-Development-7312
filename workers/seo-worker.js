@@ -50,6 +50,14 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Trailing slash normalization for articles
+    if (url.pathname.match(/^\/article\/([a-zA-Z0-9_-]+)\/$/)) {
+      const newUrl = new URL(url);
+      newUrl.pathname = url.pathname.slice(0, -1);
+      return Response.redirect(newUrl.toString(), 301);
+    }
+
+
     // Bypass on Non-GET & Dynamic Routes
     const acceptHeader = request.headers.get('accept') || '';
     const isHtmlRequest = acceptHeader.includes('text/html');
@@ -73,13 +81,6 @@ export default {
 
     if (isStaticAsset || !isHtmlRequest) {
       return fetchPagesOrigin(request, env);
-    }
-
-    // Trailing slash normalization for articles
-    if (url.pathname.match(/^\/article\/([a-zA-Z0-9_-]+)\/$/)) {
-      const newUrl = new URL(url);
-      newUrl.pathname = url.pathname.slice(0, -1);
-      return Response.redirect(newUrl.toString(), 301);
     }
 
     // We only want HTML rewrites on actual text/html routes

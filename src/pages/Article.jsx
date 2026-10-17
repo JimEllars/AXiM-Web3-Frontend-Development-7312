@@ -236,7 +236,7 @@ const { slug } = useParams();
   // It is now safe to declare variables that rely on the article object.
   const fallbackImage = "https://wp.axim.us.com/wp-content/uploads/2026/05/AXiM-Systems-1200x628-layout683-axim-infrastructure-axim-axim-1l1j8ci.webp";
   const imageUrl = article.featuredImage || article.thumbnail || fallbackImage;
-  const authorName = article._embedded?.author?.[0]?.name || "AXiM Intel";
+  const authorName = article._embedded?.author?.[0]?.name || "AXiM Systems";
   const formattedDate = new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   // Clean titles and excerpts for schema and meta tags
@@ -368,7 +368,7 @@ const { slug } = useParams();
           />
 
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-300 border-t border-white/10 pt-4">
-            <span className="font-semibold">{authorName}</span>
+            <span className="text-emerald-400 font-mono">By {authorName}</span>
             <span className="text-slate-500">•</span>
             <span className="font-medium">{formattedDate}</span>
             <span className="text-slate-500">•</span>
