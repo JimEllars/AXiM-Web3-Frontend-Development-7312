@@ -57,7 +57,7 @@ export default {
       /\.(js|css|wasm|png|jpg|jpeg|svg|webp|ico|json|txt|xml)$/i.test(url.pathname);
     const isGet = request.method === 'GET';
     const hasAuth = request.headers.has('Authorization');
-    const shouldCache = isGet && !hasAuth && isHtmlRequest && !isStaticAsset;
+    const shouldCache = isGet && !hasAuth && isHtmlRequest && !isStaticAsset && !url.pathname.includes('/api/');
 
     let cache = (typeof caches !== 'undefined') ? caches.default : null;
     if (shouldCache && cache) {
@@ -76,7 +76,7 @@ export default {
     }
 
     // Trailing slash normalization for articles
-    if (url.pathname.match(/^\/article\/[a-zA-Z0-9_-]+\/$/)) {
+    if (url.pathname.match(/^\/article\/([a-zA-Z0-9_-]+)\/$/)) {
       const newUrl = new URL(url);
       newUrl.pathname = url.pathname.slice(0, -1);
       return Response.redirect(newUrl.toString(), 301);
