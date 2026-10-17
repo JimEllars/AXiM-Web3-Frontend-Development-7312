@@ -202,20 +202,7 @@ export default {
     pathnames.forEach((segment, index) => {
       currentPath += `/${segment}`;
 
-      const formatBreadcrumbLabel = (value) => {
-        const map = {
-          'business': 'Business Development',
-          'personal': 'Personal Development',
-          'tech': 'Tech Development',
-          'commercial-exterior': 'Commercial Exterior',
-          'window-cleaning': 'Window Cleaning',
-          'pressure-washing': 'Pressure Washing',
-          'nexus-crm-course': 'Nexus CRM Masterclass'
-        };
-        return map[value.toLowerCase()] || value.toUpperCase();
-      };
-
-      let name = formatBreadcrumbLabel(segment);
+      let name = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
 
       if (index === pathnames.length - 1 && isArticleRoute && article) {
           name = stripHtml(article.title?.rendered) || name;
@@ -258,8 +245,9 @@ export default {
 
 
     let rewriter = new HTMLRewriter()
-      .on('#root', new RootInjector(fallbackHtml))
-      .on('head', new CanonicalInjector(canonicalUrl));
+      .on('#root', new RootInjector(fallbackHtml.replace(schemaInjection, '')))
+      .on('head', new CanonicalInjector(canonicalUrl))
+      .on('head', new RootInjector(schemaInjection));
 
     // Remove the old canonical if present
     rewriter = rewriter.on('head link[rel="canonical"]', {
