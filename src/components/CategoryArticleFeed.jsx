@@ -14,6 +14,8 @@ const SkeletonCard = () => (
 export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectionSubtitle, limit = 3 }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -22,18 +24,50 @@ export default function CategoryArticleFeed({ categorySlug, sectionTitle, sectio
         const data = await fetchPostsByCategorySlug(categorySlug, limit);
         if (isMounted) {
           setArticles(data || []);
+          setIsError(false);
           setLoading(false);
         }
       } catch (err) {
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          setIsError(true);
+          setLoading(false);
+        }
       }
     }
     loadArticles();
     return () => {
       isMounted = false;
     };
-  }, [categorySlug, limit]);
+  }, [categorySlug, limit, retryCount]);
 
+
+  if (isError) {
+    return (
+      <section className="py-16 relative z-10 w-full border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="bg-[#0A0A0A] border border-red-500/20 text-center p-8 rounded-xl backdrop-blur-md">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-full mb-4">
+              <SafeIcon icon={LuIcons.LuTriangleAlert} className="w-8 h-8 text-red-500" />
+            </div>
+            <h3 className="text-xl font-bold text-zinc-300 mb-2">Connection Interrupted</h3>
+            <p className="text-sm text-zinc-400 max-w-md mx-auto mb-6">
+              Network connection interrupted by tracking shield or ad-blocker. Please allow AXiM API requests to view the intelligence feed.
+            </p>
+            <button
+              onClick={() => {
+                setIsError(false);
+                setLoading(true);
+                setRetryCount(prev => prev + 1);
+              }}
+              className="px-6 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-md transition-all font-mono text-sm uppercase tracking-wider"
+            >
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!loading && articles.length === 0) {
     return (
