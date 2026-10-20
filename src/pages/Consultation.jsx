@@ -37,6 +37,11 @@ export default function Consultation() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Reset turnstile token when auth state changes
+    setTurnstileToken(null);
+  }, [walletAddress]);
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const appParam = params.get('app');
     const serviceParam = params.get('service');

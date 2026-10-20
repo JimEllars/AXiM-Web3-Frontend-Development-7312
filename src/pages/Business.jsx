@@ -123,6 +123,37 @@ export default function Business() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
 
 
+
+        {/* Micro-SaaS & CRM Masterclass Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {/* Global Tools Hub */}
+          <Link to={"/tools"} className="group relative bg-[#050505] border border-axim-purple/20 p-8 rounded-sm hover:border-axim-purple/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-axim-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <SafeIcon icon={LuIcons.LuWrench} className="w-8 h-8 text-axim-purple mb-4" />
+            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-axim-purple transition-colors text-white">Micro-SaaS & Tools Hub</h2>
+            <p className="text-sm text-zinc-400 mb-6 font-medium">Access our full suite of automated document generators and enterprise diagnostics.</p>
+            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest">
+              <span>View All Tools</span>
+              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Nexus CRM Masterclass */}
+          <Link to="/products/nexus-crm-course" className="group relative bg-[#050505] border border-emerald-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-4 right-4">
+              <span className="px-2.5 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 rounded-sm">[ACADEMY]</span>
+            </div>
+            <SafeIcon icon={LuIcons.LuGraduationCap} className="w-8 h-8 text-emerald-500 mb-4" />
+            <h2 className="text-xl font-black uppercase tracking-wider mb-2 group-hover:text-emerald-500 transition-colors text-white">Nexus CRM Masterclass</h2>
+            <p className="text-sm text-zinc-400 mb-6 font-medium">Learn the core operating system for distributed network management and enterprise scaling.</p>
+            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-widest">
+              <span>Access Masterclass</span>
+              <SafeIcon icon={LuIcons.LuArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
+
           {/* B2B Intelligence & Articles Card */}
           <Link to="/articles" className="group relative bg-[#050505] border border-cyan-500/20 p-8 rounded-sm hover:border-axim-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
             <div className="absolute inset-0 bg-gradient-to-br from-axim-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

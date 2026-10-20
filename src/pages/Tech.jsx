@@ -5,6 +5,7 @@ import * as LuIcons from 'react-icons/lu';
 import { useAximStore } from '../store/useAximStore';
 import { Link } from 'react-router-dom';
 import CategoryArticleFeed from '../components/CategoryArticleFeed';
+import Ecosystem from '../components/Ecosystem';
 import { logTelemetry, logHighPriorityTelemetry } from '../lib/telemetry';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
@@ -178,6 +179,8 @@ export default function Tech() {
         sectionSubtitle="Edge computing, decentralized mesh networks, and autonomous AI systems."
         limit={6}
       />
+
+      <Ecosystem />
 
       <section className="w-full bg-gradient-to-r from-onyx-900 to-[#0A0A0A] border-t border-b border-white/10 py-16 text-center relative z-10 mt-16">
         <h2 className="text-3xl font-black uppercase tracking-tight mb-8 text-white">Ready to deploy your Tech infrastructure?</h2>

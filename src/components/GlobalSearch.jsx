@@ -163,6 +163,7 @@ export default function GlobalSearch() {
           window.open(url, '_blank');
         } else {
           navigate(item.path);
+          setIsOpen(false);
         }
       } else if (item.slug) {
         window.open(`https://wp.axim.us.com/article/${item.slug}`, '_blank');
@@ -209,8 +210,18 @@ useEffect(() => {
 
   useEffect(() => {
     const handleOpenEvent = () => setIsOpen(true);
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
     window.addEventListener('open-global-search', handleOpenEvent);
-    return () => window.removeEventListener('open-global-search', handleOpenEvent);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('open-global-search', handleOpenEvent);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleOpenModal = () => {
