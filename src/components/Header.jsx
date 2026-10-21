@@ -72,7 +72,15 @@ export default function Header() {
     { name: 'Personal', path: '/personal' },
     { name: 'Tech', path: '/tech' },
     { name: 'Articles', path: '/articles' },
-        { name: 'Support', path: '/support' }
+    {
+      name: 'Ecosystem',
+      path: '/education',
+      dropdown: [
+        { name: 'Education Hub', path: '/education', icon: LuIcons.LuGraduationCap, color: 'text-emerald-400' },
+        { name: 'AXiM Academy', path: 'https://academy.axim.us.com', icon: LuIcons.LuExternalLink, color: 'text-cyan-400' }
+      ]
+    },
+    { name: 'Support', path: '/support' }
   ];
 
   const toggleDropdown = (name) => {
