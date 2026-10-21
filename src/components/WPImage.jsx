@@ -100,7 +100,8 @@ export default function WPImage({ src, alt, className, post, priority, ...props 
         className="absolute inset-0 w-full h-full object-cover"
         onError={handleError}
         referrerPolicy="no-referrer"
-        loading={priority ? "eager" : "lazy"}
+        loading={priority || props.fetchPriority === 'high' ? "eager" : "lazy"}
+        decoding="async"
         {...props}
         />
     </div>

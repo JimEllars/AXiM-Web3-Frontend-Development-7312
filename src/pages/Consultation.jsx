@@ -337,6 +337,12 @@ export default function Consultation() {
  className="w-full py-5 bg-axim-purple text-white font-black uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors rounded-sm shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 flex justify-center items-center gap-2 mt-auto">
                       {isSubmitting ? <><SafeIcon icon={LuIcons.LuLoader} className="w-4 h-4 animate-spin" /> ENCRYPTING PAYLOAD...</> : 'Submit Consultation Request'}
                     </button>
+                    {turnstileBlocked && (
+                      <div className="mt-3 flex items-center justify-center gap-1 text-[10px] font-mono text-amber-500 uppercase tracking-widest text-center">
+                        <SafeIcon className="w-3 h-3" icon={LuIcons.LuShieldAlert}/>
+                        <span>Ad-Blocker detected. Secondary rate-limiting active.</span>
+                      </div>
+                    )}
                   </form>
                 )}
 
