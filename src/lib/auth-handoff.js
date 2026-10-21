@@ -91,23 +91,30 @@ export async function exchangePassportToken(token) {
 /**
  * Performs a background check against AXiM Passport for an active session.
  */
+let globalVerifyController = null;
+
 export async function checkPassportSsoSession() {
   const url = `${import.meta.env.VITE_CORE_API_URL || 'https://passport.axim.us.com'}/api/v1/auth/verify-token`;
+
+  if (globalVerifyController) {
+    globalVerifyController.abort();
+  }
+  globalVerifyController = new AbortController();
+  const currentController = globalVerifyController;
 
   let retries = 1;
   let delay = 500;
   let lastErr;
 
   while (retries >= 0) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500); // 2.5s timeout
+    const timeoutId = setTimeout(() => currentController.abort(), 2500); // 2.5s timeout
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal
+        signal: currentController.signal
       });
 
       clearTimeout(timeoutId);
