@@ -20,6 +20,8 @@ export function useOnyxStream() {
   }, [messages]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState(null);
+  const [consecutiveFailures, setConsecutiveFailures] = useState(0);
+  const [status, setStatus] = useState('operational');
   const [isEdgeCached, setIsEdgeCached] = useState(false);
   const abortControllerRef = useRef(null);
   const retryTimeoutRef = useRef(null);
@@ -65,7 +67,7 @@ export function useOnyxStream() {
 
     let retryCount = 0;
     const maxRetries = 4;
-    let currentBackoff = 1000;
+    let currentBackoff = 2000;
 
     const connectStream = async () => {
       try {
@@ -130,6 +132,8 @@ export function useOnyxStream() {
         }
 
         setIsStreaming(false);
+        setConsecutiveFailures(0);
+        setStatus('operational');
         setMessages(prev => prev.map(msg =>
           msg.id === onyxMessageId
             ? { ...msg, isStreaming: false }
@@ -150,9 +154,16 @@ export function useOnyxStream() {
 
         logTelemetry('onyx_stream_interrupted', { reason: err.message });
 
-        if (retryCount < maxRetries) { // Support multiple retries with exponential backoff
+        if (retryCount < maxRetries) {
           retryCount++;
-          const backoff = currentBackoff;
+          setConsecutiveFailures(prev => {
+            const next = prev + 1;
+            if (next >= 3) {
+              setStatus('degraded');
+            }
+            return next;
+          });
+          const backoff = Math.min(currentBackoff, 30000);
           currentBackoff *= 2; // Exponential delay
           console.warn(`[Onyx Stream] Connection lost. Retrying in ${backoff}ms...`);
           trackEvent('onyx_stream_retry', { retryCount, backoff });
@@ -222,6 +233,10 @@ export function useOnyxStream() {
     };
   }, [isStreaming]);
 
-  return { messages, isStreaming, error, isEdgeCached, sendMessage, abortStream };
+  const liveMetrics = {
+    status: status,
+    failures: consecutiveFailures
+  };
+  return { messages, isStreaming, error, isEdgeCached, sendMessage, abortStream, liveMetrics, status };
 
 }

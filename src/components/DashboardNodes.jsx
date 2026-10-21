@@ -4,11 +4,13 @@ import SafeIcon from '../common/SafeIcon';
 import * as LuIcons from 'react-icons/lu';
 import { generateSsoLaunchUrl } from '../lib/auth-handoff';
 import { getTelemetryHealthEndpoint } from '../lib/telemetry';
+import { useOnyxStream } from '../hooks/useOnyxStream';
 
 const { LuZap, LuGlobe, LuCpu, LuFileText, LuPhone, LuShieldCheck, LuBriefcase } = LuIcons;
 
 export default function DashboardNodes({ nodeStatuses, selectedNode, setSelectedNode }) {
   const [liveMetrics, setLiveMetrics] = useState({ latency: null, uptime: null, isReconnecting: false });
+  const { liveMetrics: streamMetrics } = useOnyxStream();
 
   useEffect(() => {
     let isMounted = true;
@@ -42,63 +44,63 @@ export default function DashboardNodes({ nodeStatuses, selectedNode, setSelected
       id: "SpeedReport.org",
       type: "Satellite App",
       url: "https://speedreport.org",
-      status: liveMetrics.isReconnecting ? "RECONNECTING..." : "Operational",
+      status: liveMetrics.isReconnecting ? "RECONNECTING..." : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : "Operational",
       metrics: [["Latency", liveMetrics.latency || "--"], ["Uptime", liveMetrics.uptime || "--"]],
       icon: LuIcons.LuActivity,
-      color: liveMetrics.isReconnecting ? "zinc-500" : "emerald-500",
-      pulse: liveMetrics.isReconnecting,
+      color: liveMetrics.isReconnecting ? "zinc-500" : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : "emerald-500",
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback',
       external: true
     },
     {
       id: 'Support',
       type: 'Satellite App',
       url: 'https://support.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.support === 'operational' ? 'Operational' : 'Degraded'),
+      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.support === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuGlobe,
-      color: liveMetrics.isReconnecting ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.support === 'operational' ? 'emerald-500' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.support !== 'operational'
+      color: liveMetrics.isReconnecting ? 'amber-500' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.support === 'operational' ? 'emerald-500' : 'red-500'),
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' || !nodeStatuses || nodeStatuses?.support !== 'operational'
     },
     {
       id: 'B2B Scraping Services',
       type: 'Satellite App',
       url: 'https://voice.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.voice === 'operational' ? 'Operational' : 'Degraded'),
+      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.voice === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuPhone,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.voice === 'operational' ? 'axim-gold' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.voice !== 'operational'
+      color: liveMetrics.isReconnecting ? 'zinc-500' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.voice === 'operational' ? 'axim-gold' : 'red-500'),
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' || !nodeStatuses || nodeStatuses?.voice !== 'operational'
     },
     {
       id: 'Nexus CRM',
       type: 'Satellite App',
       url: 'https://asguard.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.asguard === 'operational' ? 'Operational' : 'Degraded'),
+      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.asguard === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuShieldCheck,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.asguard === 'operational' ? 'axim-gold' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.asguard !== 'operational'
+      color: liveMetrics.isReconnecting ? 'zinc-500' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.asguard === 'operational' ? 'axim-gold' : 'red-500'),
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' || !nodeStatuses || nodeStatuses?.asguard !== 'operational'
     },
 
     {
       id: 'Ground Game',
       type: 'Satellite App',
       url: 'https://groundgame.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.groundgame === 'operational' ? 'Operational' : 'Degraded'),
+      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.groundgame === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuGlobe,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.groundgame === 'operational' ? 'axim-gold' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.groundgame !== 'operational'
+      color: liveMetrics.isReconnecting ? 'zinc-500' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.groundgame === 'operational' ? 'axim-gold' : 'red-500'),
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' || !nodeStatuses || nodeStatuses?.groundgame !== 'operational'
     },
     {
       id: 'Personality Test',
       type: 'Satellite App',
       url: 'https://ceodept.axim.us.com',
-      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.ceodept === 'operational' ? 'Operational' : 'Degraded'),
+      status: liveMetrics.isReconnecting ? 'RECONNECTING...' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'DEGRADED' : (!nodeStatuses ? 'WAITING_FOR_UPLINK...' : nodeStatuses?.ceodept === 'operational' ? 'Operational' : 'Degraded'),
       metrics: [['Latency', liveMetrics.latency || '--'], ['Uptime', liveMetrics.uptime || '--']],
       icon: LuBriefcase,
-      color: liveMetrics.isReconnecting ? 'zinc-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.ceodept === 'operational' ? 'axim-gold' : 'red-500'),
-      pulse: liveMetrics.isReconnecting || !nodeStatuses || nodeStatuses?.ceodept !== 'operational'
+      color: liveMetrics.isReconnecting ? 'zinc-500' : streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' ? 'amber-500' : (!nodeStatuses ? 'zinc-500' : nodeStatuses?.ceodept === 'operational' ? 'axim-gold' : 'red-500'),
+      pulse: liveMetrics.isReconnecting || streamMetrics?.status === 'degraded' || streamMetrics?.status === 'fallback' || !nodeStatuses || nodeStatuses?.ceodept !== 'operational'
     }
   ];
 
