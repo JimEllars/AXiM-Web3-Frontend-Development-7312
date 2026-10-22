@@ -5,7 +5,7 @@ import { localStore } from './persistence';
 const WORDPRESS_PROXY_URL = (import.meta.env.VITE_WP_PROXY_URL || 'https://wp-proxy.axim.us.com').replace(/\/+$/, '');
 
 export const getWordPressApiUrl = (endpoint) => {
-  if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/')) {
+  if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/') && !endpoint.startsWith('/graphql')) {
     throw new Error(`Invalid WordPress API endpoint: ${endpoint}`);
   }
 
@@ -139,7 +139,7 @@ export async function getWordPressPost(slug) {
   }
 
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
-  const url = '${WORDPRESS_PROXY_URL}/graphql';
+  const url = getWordPressApiUrl('/graphql');
   if (!url) return null;
 
   const cacheKey = `gql-post-${slug}`;
