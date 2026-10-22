@@ -45,6 +45,7 @@ export default function Consultation() {
     const params = new URLSearchParams(location.search);
     const appParam = params.get('app');
     const serviceParam = params.get('service');
+    const pillarParam = params.get('pillar');
 
     let preselectedInquiry = null;
 
@@ -54,8 +55,12 @@ export default function Consultation() {
       preselectedInquiry = 'Ground Game Canvassing Access';
     } else if (appParam === 'recruitflow') {
       preselectedInquiry = 'RecruitFlow Talent Operations';
-    } else if (params.get('pillar') === 'personal' || params.get('module')) {
-      const moduleName = params.get('module') || 'Personal Growth Framework';
+    } else if (pillarParam === 'tech') {
+      preselectedInquiry = 'Tech Infrastructure';
+    } else if (pillarParam === 'business') {
+      preselectedInquiry = 'Sales & Leadership Training';
+    } else if (pillarParam === 'personal' || params.get('module')) {
+      const moduleName = params.get('module') || 'Personal Development & Growth';
       preselectedInquiry = `Personal Development: ${moduleName}`;
     } else if (serviceParam === 'commercial_exterior') {
       preselectedInquiry = 'Commercial Exterior Maintenance';
