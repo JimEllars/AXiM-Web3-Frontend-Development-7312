@@ -96,39 +96,43 @@ export function useOnyxStream() {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        let buffer = '';
+        let buffer = "";
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
+            buffer += decoder.decode(value, { stream: true });
 
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
 
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === '[DONE]') break;
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6);
+                if (data === "[DONE]") break;
 
-              try {
-                const parsed = JSON.parse(data);
-                if (parsed.error) throw new Error(parsed.error);
-                if (parsed.type === 'keepalive' || parsed.type === 'ping') continue;
+                try {
+                  const parsed = JSON.parse(data);
+                  if (parsed.error) throw new Error(parsed.error);
+                  if (parsed.type === "keepalive" || parsed.type === "ping") continue;
 
-                if (parsed.content) {
-                  setMessages(prev => prev.map(msg =>
-                    msg.id === onyxMessageId
-                      ? { ...msg, content: msg.content + parsed.content }
-                      : msg
-                  ));
+                  if (parsed.content) {
+                    setMessages(prev => prev.map(msg =>
+                      msg.id === onyxMessageId
+                        ? { ...msg, content: msg.content + parsed.content }
+                        : msg
+                    ));
+                  }
+                } catch (e) {
+                  console.warn("[SSE Parse Error]", e);
                 }
-              } catch (e) {
-                console.warn('[SSE Parse Error]', e);
               }
             }
           }
+        } finally {
+          reader.cancel().catch(() => {});
         }
 
         setIsStreaming(false);
