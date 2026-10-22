@@ -1,3 +1,4 @@
+import { getWordPressApiUrl } from '../lib/wp-fetch';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { supabase } from '../lib/supabase.js';
@@ -146,7 +147,7 @@ export const useAximStore = create(
 
     const fetchTelemetry = async () => {
       try {
-        const response = await fetch('https://wp.axim.us.com/wp-json/wp/v2/posts?per_page=1');
+        const response = await fetch(getWordPressApiUrl('/wp-json/wp/v2/posts?per_page=1'));
         if (response.ok) {
           const data = await response.json();
           if (data && typeof data === 'object') {
@@ -244,7 +245,7 @@ export const useAximStore = create(
         return session;
       } else {
         // Fallback or old method
-        const response = await fetch('https://wp.axim.us.com/wp-json/axim/v1/passport-verify', {
+        const response = await fetch(getWordPressApiUrl('/wp-json/axim/v1/passport-verify'), {
           credentials: 'include',
         });
 

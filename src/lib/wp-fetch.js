@@ -139,7 +139,7 @@ export async function getWordPressPost(slug) {
   }
 
   // Use import.meta.env in Vite, fallback to process.env for Node.js tests
-  const url = 'https://wp.axim.us.com/graphql';
+  const url = '${WORDPRESS_PROXY_URL}/graphql';
   if (!url) return null;
 
   const cacheKey = `gql-post-${slug}`;
@@ -303,7 +303,7 @@ export async function fetchPostsByCategory(categorySlug, limit = 5, page = 1) {
         const ts = Date.now();
 
         // 1. Fetch category ID by slug (utilizing cache to prevent N+1)
-        const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
+        const categoryId = await getCategoryId(WORDPRESS_PROXY_URL, categorySlug);
 
         let postsRes;
         let posts = [];
@@ -517,7 +517,7 @@ export async function getAiEgressPayload() {
  */
 export async function fetchArticlesByCategory(categorySlug, limit = 3) {
   try {
-    const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
+    const categoryId = await getCategoryId(WORDPRESS_PROXY_URL, categorySlug);
     if (!categoryId) return [];
 
     const postsRes = await fetch(getWordPressApiUrl(`/wp-json/wp/v2/posts?categories=${categoryId}&orderby=date&order=desc&per_page=${limit}&_embed=1`), { signal: AbortSignal.timeout(6000) });
@@ -578,7 +578,7 @@ export async function fetchPostsByCategorySlug(categorySlug, perPage = 3) {
 
   const fetchPromise = (async () => {
     try {
-      const categoryId = await getCategoryId('https://wp.axim.us.com', categorySlug);
+      const categoryId = await getCategoryId(WORDPRESS_PROXY_URL, categorySlug);
       if (!categoryId) {
         console.warn(`[wp-fetch] Category not found for slug: ${categorySlug}`);
         return [];

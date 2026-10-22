@@ -1,11 +1,20 @@
 export default {
   async fetch(request, env, ctx) {
+
+    const isAllowedOrigin = (origin) => {
+      if (!origin) return false;
+      return origin === 'https://axim.us.com' || origin === 'http://localhost:5173';
+    };
+
+    const origin = request.headers.get('Origin');
+    const allowOrigin = isAllowedOrigin(origin) ? origin : 'https://axim.us.com';
+
     // 1. Handle CORS Preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': allowOrigin,
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, authorization, x-axim-client',
         },
@@ -41,7 +50,7 @@ export default {
           headers: {
             'Content-Type': 'application/json',
             'Cache-Control': 'public, max-age=3600',
-            'Access-Control-Allow-Origin': '*'
+            'Access-Control-Allow-Origin': allowOrigin
           }
         });
       } catch (err) {
@@ -53,16 +62,64 @@ export default {
       const url = new URL(request.url);
       const endpoint = url.searchParams.get('endpoint');
 
+      // CGI Injection check
+      const queryStr = url.search || '';
+      if (queryStr.includes('?-d') ||
+          queryStr.includes('auto_prepend_file') ||
+          queryStr.includes('auto_append_file') ||
+          queryStr.includes('allow_url_include') ||
+          queryStr.includes('disable_functions') ||
+          queryStr.includes('open_basedir')) {
+        console.warn('SECURITY ALERT: Blocked CGI injection attempt');
+        return new Response(JSON.stringify({ success: false, error: 'Forbidden' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+      }
+
       let fetchUrl;
+      let pathToCheck = '';
 
       // Ensure that the target URL explicitly includes the incoming query string.
+
+      // Extract path to check
+      if (endpoint) {
+         try {
+           const parsedEndpoint = new URL('https://wp.axim.us.com' + endpoint);
+           pathToCheck = parsedEndpoint.pathname;
+         } catch(e) {
+           pathToCheck = endpoint;
+         }
+      } else {
+         pathToCheck = url.pathname.replace('/api/wp', '');
+      }
+
+      // Explicit Denylist
+      if (pathToCheck.includes('/wp-admin') ||
+          pathToCheck.includes('/wp-login.php') ||
+          pathToCheck.includes('xmlrpc.php') ||
+          pathToCheck.endsWith('.php')) {
+         return new Response(JSON.stringify({ success: false, error: 'Forbidden' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // Strict Allowlist
+      const allowedPaths = [
+        '/wp-json/wp/v2/posts',
+        '/wp-json/wp/v2/media',
+        '/wp-json/wp/v2/categories',
+        '/wp-json/wp/v2/tags',
+        '/wp-content/uploads/'
+      ];
+
+      const isAllowed = allowedPaths.some(p => pathToCheck.startsWith(p));
+      if (!isAllowed) {
+         return new Response(JSON.stringify({ success: false, error: 'Forbidden path' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+      }
+
       if (endpoint) {
         if (!endpoint.startsWith('/wp-json/') && !endpoint.startsWith('/wp/')) {
           return new Response(JSON.stringify({ success: false, error: 'Invalid or missing endpoint parameter.', code: 403, timestamp: new Date().toISOString() }), {
             status: 403,
             headers: {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*'
+              'Access-Control-Allow-Origin': allowOrigin
             }
           });
         }
@@ -87,7 +144,7 @@ export default {
             status: 403,
             headers: {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*'
+              'Access-Control-Allow-Origin': allowOrigin
             }
           });
         }
@@ -144,7 +201,7 @@ export default {
       // 5. Build Response with Permissive CORS and Caching
       const responseBody = await wpResponse.arrayBuffer(); // Read body safely
       const headers = new Headers(wpResponse.headers);
-      headers.set('Access-Control-Allow-Origin', '*');
+      headers.set('Access-Control-Allow-Origin', allowOrigin);
       headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
       headers.set('X-Content-Type-Options', 'nosniff');
       headers.set('X-Frame-Options', 'SAMEORIGIN');
@@ -184,7 +241,7 @@ export default {
         status: 503,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': allowOrigin
         }
       });
     }

@@ -139,7 +139,14 @@ export default function Business() {
           </Link>
 
           {/* Nexus CRM Masterclass */}
-          <a href="https://academy.axim.us.com/course/nexus-crm" target="_blank" rel="noopener noreferrer" onClick={() => logTelemetry('academy_funnel_click', { track: 'CRM Masterclass' })} className="group relative bg-[#050505] border border-emerald-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
+          <a href="https://academy.axim.us.com/course/nexus-crm" target="_blank" rel="noopener noreferrer" onClick={(e) => {
+              e.preventDefault();
+              logTelemetry('academy_funnel_click', { track: 'CRM Masterclass' });
+              const affiliateId = localStorage.getItem('axim_affiliate_id');
+              let url = 'https://academy.axim.us.com/course/nexus-crm';
+              if (affiliateId) url += '?ref=' + affiliateId;
+              window.open(url, '_blank', 'noopener,noreferrer');
+            }} className="group relative bg-[#050505] border border-emerald-500/20 p-8 rounded-sm hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-xl hover:bg-white/5">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-4 right-4">
               <span className="px-2.5 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 rounded-sm">[ACADEMY]</span>
