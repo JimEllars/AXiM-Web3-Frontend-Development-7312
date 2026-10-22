@@ -7,7 +7,12 @@ import { logTelemetry } from '../lib/telemetry';
 export default function Education() {
   const handleAcademyClick = (trackName, url) => {
     logTelemetry('academy_funnel_click', { track: trackName });
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const affiliateId = localStorage.getItem('axim_affiliate_id');
+    let finalUrl = url;
+    if (affiliateId) {
+      finalUrl += url.includes('?') ? `&ref=${affiliateId}` : `?ref=${affiliateId}`;
+    }
+    window.open(finalUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -66,7 +71,7 @@ export default function Education() {
               Game development, introductory logic, and foundational systems engineering. Bridge the gap between theory and digital creation.
             </p>
             <button
-              onClick={() => handleAcademyClick('Creative Labs', 'https://academy.axim.us.com/?category=Creative')}
+              onClick={() => handleAcademyClick('Creative Labs', 'https://academy.axim.us.com/?category=Creative%20Labs')}
               className="mt-auto flex items-center justify-between w-full px-4 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-widest hover:bg-cyan-500 hover:text-black transition-colors group/btn"
             >
               <span>Explore Track</span>
@@ -84,7 +89,7 @@ export default function Education() {
               Advanced B2B operations, CRM mastery, and enterprise automation. Equip yourself with the skills to architect and scale modern digital businesses.
             </p>
             <button
-              onClick={() => handleAcademyClick('Professional Edge', 'https://academy.axim.us.com/?category=Professional')}
+              onClick={() => handleAcademyClick('Professional Edge', 'https://academy.axim.us.com/?category=Professional%20Edge')}
               className="mt-auto flex items-center justify-between w-full px-4 py-3 bg-axim-purple/10 border border-axim-purple/30 text-axim-purple text-xs font-bold uppercase tracking-widest hover:bg-axim-purple hover:text-white transition-colors group/btn"
             >
               <span>Explore Track</span>

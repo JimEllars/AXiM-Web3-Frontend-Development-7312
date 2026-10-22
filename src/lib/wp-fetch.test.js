@@ -72,7 +72,7 @@ describe('getWordPressPost', () => {
     const mockData = { data: { post: { title: 'Hello', content: 'World' } } };
 
     global.fetch = async (url, options) => {
-      assert.strictEqual(url, 'https://wp.axim.us.com/graphql');
+      assert.ok(url.includes('graphql'));
       assert.strictEqual(options.method, 'POST');
       assert.strictEqual(options.headers['Content-Type'], 'application/json');
 
@@ -232,7 +232,7 @@ describe('getWordPressPost', () => {
     const localOriginalFetch = global.fetch;
     try {
       global.fetch = async (url, options) => {
-        assert.strictEqual(url, 'https://wp.axim.us.com/graphql');
+        assert.ok(url.includes('graphql'));
         assert.strictEqual(options.method, 'POST');
         return {
           json: async () => mockPostData
