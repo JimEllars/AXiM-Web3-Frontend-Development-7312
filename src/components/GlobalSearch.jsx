@@ -26,7 +26,8 @@ const STATIC_ROUTES = [
   { title: "Digital Marketplace", path: "/store", category: "Marketplace" },
   { title: "Intelligence Hub & Articles", path: "/articles", category: "Intelligence" },
   { title: "Book Consultation", path: "/consultation", category: "Support & Operations" },
-  { title: "Support Wiki", path: "/support", category: "Support & Operations" }
+  { title: "Support Wiki", path: "/support", category: "Support & Operations" },
+  { title: "AXiM Academy & Training", path: "https://academy.axim.us.com", category: "Ecosystem" }
 ];
 
 export default function GlobalSearch() {
@@ -307,7 +308,7 @@ useEffect(() => {
                   >
                     {results.length > 0 && (
                       <div>
-                        {['Business Development', 'Personal Development', 'Tech Development', 'Marketplace', 'Intelligence', 'Support & Operations'].map(category => {
+                        {['Business Development', 'Personal Development', 'Tech Development', 'Ecosystem', 'Marketplace', 'Intelligence', 'Support & Operations'].map(category => {
                           const categoryResults = results.filter(r => r.category === category);
                           if (categoryResults.length === 0) return null;
                           return (

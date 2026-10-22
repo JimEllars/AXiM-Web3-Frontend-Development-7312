@@ -70,7 +70,14 @@ export const coreLinks = [
     title: "AXiM Courses",
     desc: "Technical training and certification catalog.",
     iconName: "LuGraduationCap",
-    externalUrl: "https://axim.us.com/courses/"
+    externalUrl: "https://academy.axim.us.com"
+  },
+  {
+    id: "C_NEXUS_CRM",
+    title: "Nexus CRM Masterclass",
+    desc: "Learn the core operating system for distributed network management.",
+    iconName: "LuGraduationCap",
+    externalUrl: "https://academy.axim.us.com/course/nexus-crm"
   }
 ];
 

@@ -27,6 +27,7 @@ import { client } from './lib/thirdweb-client.js';
 import { createWallet, inAppWallet } from 'thirdweb/wallets';
 
 const Home = lazy(() => import('./pages/Home'));
+const Education = lazy(() => import('./pages/Education'));
 const Articles = lazy(() => import('./pages/Articles'));
 const Tools = lazy(() => import('./pages/Tools'));
 
@@ -265,6 +266,7 @@ function App() {
             <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
             <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
             <Route path="/business" element={<PageTransition><Business /></PageTransition>} />
+            <Route path="/education" element={<PageTransition><Education /></PageTransition>} />
                         <Route path="/personal" element={<PageTransition><Personal /></PageTransition>} />
             <Route path="/games" element={<PageTransition><Games /></PageTransition>} />
             <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
